@@ -81,6 +81,9 @@ int executor(void* eid)
 
         http::rproc::header(process,rd);
 
+        if(!rd.cookie)
+            rd.cookie=new cookiedata("");
+
         log("executor.cpp","getting page");
 
         pagedata result;
@@ -120,6 +123,7 @@ void header(http::request& process,rdata& rd)
     hss.add_token(token("Host: ",1));
     hss.add_token(token("User-Agent: ",2));
     hss.add_token(token("Referer: ",3));
+    hss.add_token(token("Cookie: ",4));
 
     while(hss.pos<hss.str.size())
     {
@@ -135,6 +139,9 @@ void header(http::request& process,rdata& rd)
                 break;
             case 3:
                 rd.referer=hss.to("\r\n");
+                break;
+            case 4:
+                rd.cookie=new cookiedata(hss.to("\r\n"));
                 break;
         }
     }
@@ -161,9 +168,9 @@ void ex(pagedata& pd,rdata* rd)
         snd+=http::headers::alive+http::headers::alivetimeout;
         snd+="Content-Type: "+rd->ctype+"\r\nContent-Length: ";
         snd+=its(ts.size);
-        //snd+="\r\n";
-        //snd+=rd->cookie->gethead();
-        snd+="\r\n\r\n";
+        snd+="\r\n";
+        snd+=rd->cookie->gethead();
+        snd+="\r\n";
         string snd2="\r\n";
 
         pd.size=snd.size()+ts.size+snd2.size();
