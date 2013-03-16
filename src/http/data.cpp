@@ -60,6 +60,11 @@ pagedata e501;
 pagedata e505;
 }
 
+namespace manager
+{
+int rate=0;
+}
+
 }
 
 

@@ -94,6 +94,11 @@ extern pagedata e501;
 extern pagedata e505;
 }
 
+namespace manager
+{
+extern int rate;
+}
+
 }
 
 #endif // DATA_H_INCLUDED

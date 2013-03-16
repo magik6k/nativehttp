@@ -22,3 +22,30 @@ freely, subject to the following restrictions:
 */
 
 #include "../nativehttp.h"
+#include "manager.h"
+#include "data.h"
+
+namespace http
+{
+namespace manager
+{
+int manager(void* unused)
+{
+    while(1)
+    {
+        http::manager::timeouts();
+        http::manager::wait();
+    }
+    return 1;
+}
+void timeouts()
+{
+
+}
+void wait()
+{
+    SDL_Delay(http::manager::rate*1000);
+}
+
+}
+}

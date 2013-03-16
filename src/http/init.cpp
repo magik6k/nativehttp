@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "newclient.h"
 #include "sender.h"
 #include "error.h"
+#include "manager.h"
 
 namespace http
 {
@@ -53,6 +54,7 @@ void datainit()
     http::execUnits=new http::Sexecutor[http::Nexec];
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
+    http::manager::rate=cfg->get_int("managerrate");
 
     http::error::e400=http::error::load_error(cfg->get_var("error400"),"400 Bad Request");
     http::error::e403=http::error::load_error(cfg->get_var("error403"),"403 Forbidden");
@@ -84,6 +86,7 @@ void startsystem()
 {
     SDL_CreateThread(http::newclient,NULL);
     SDL_CreateThread(http::sender::sender,NULL);
+    SDL_CreateThread(http::manager::manager,NULL);
 }
 
 
