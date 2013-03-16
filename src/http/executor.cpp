@@ -34,6 +34,8 @@ namespace http
 
 int executor(void* eid)
 {
+    http::Sexecutor* exc=(http::Sexecutor*)eid;
+    exc->state=-1;
     while(true)
     {
         if(http::toexec.size()<=0)
@@ -85,6 +87,7 @@ int executor(void* eid)
 
         http::rproc::header(process,rd,ld);
 
+
         if(!rd.cookie)
             rd.cookie=new cookiedata("");
 
@@ -100,12 +103,21 @@ int executor(void* eid)
                 {
                     delete rd.get;
                 }
-
+                exc->fd1=NULL;exc->fd2=NULL;
+                exc->state=time(0);
+                exc->in=3;
                 http::sender::sendNow(process.uid,http::error::e403.size,http::error::e403.data,false);
+                exc->state=-1;
+                exc->in=0;
                 http::kickclient(process.uid);
                 continue;
             }
+            exc->fd1=rd.cookie;exc->fd2=rd.get;
+            exc->state=time(0);
+            exc->in=1;
             http::rproc::post(rd,process,ld);
+            exc->state=-1;
+            exc->in=0;
             if(!rd.post)
             {
                 if(rd.cookie)
@@ -122,11 +134,15 @@ int executor(void* eid)
             }
         }
 
-        log("executor.cpp","getting page");
 
         pagedata result;
+        exc->fd1=rd.cookie;exc->fd2=rd.get;
+        exc->in=2;
+        exc->state=time(0);
         if(http::rproc::ex(result,&rd))
         {
+            exc->state=-1;
+            exc->in=0;
             if(rd.cookie)
             {
                 delete rd.cookie;
@@ -139,6 +155,8 @@ int executor(void* eid)
             http::unlockclient(process.uid);
             continue;
         }
+        exc->state=-1;
+        exc->in=0;
 
         if(rd.cookie)
         {

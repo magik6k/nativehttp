@@ -57,11 +57,15 @@ struct outdata
 struct Sexecutor
 {
     SDL_Thread* etheard;
-    int state;//ms of execution OR -1 when waiting
+    long int state;//time execution/post reciving started OR -1 when waiting or requies stability
+    int in;//3 - kick, 2 - exec, 1 - post recv/kicki, 0-nothing
+
+    void* fd1;
+    void* fd2;
 };
 
 extern int maxConnections;
-extern int maxPost;
+extern unsigned int maxPost;
 
 extern TCPsocket* connected;
 extern SDLNet_SocketSet CSet;
@@ -97,6 +101,8 @@ extern pagedata e505;
 namespace manager
 {
 extern int rate;
+extern int postto;
+extern int execto;
 }
 
 }

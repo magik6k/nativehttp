@@ -28,7 +28,7 @@ namespace http
 {
 
 int maxConnections=0;
-int maxPost=0;
+unsigned int maxPost=0;
 
 TCPsocket* connected=NULL;
 SDLNet_SocketSet CSet=NULL;
@@ -63,6 +63,8 @@ pagedata e505;
 namespace manager
 {
 int rate=0;
+int postto=-1;
+int execto=-1;
 }
 
 }

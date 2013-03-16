@@ -54,7 +54,10 @@ void datainit()
     http::execUnits=new http::Sexecutor[http::Nexec];
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
+
     http::manager::rate=cfg->get_int("managerrate");
+    http::manager::postto=cfg->get_int("posttimeout");
+    http::manager::execto=cfg->get_int("exectimeout");
 
     http::error::e400=http::error::load_error(cfg->get_var("error400"),"400 Bad Request");
     http::error::e403=http::error::load_error(cfg->get_var("error403"),"403 Forbidden");
@@ -68,6 +71,7 @@ void executorinit()
     for(int i=0; i<http::Nexec; i++)
     {
         http::execUnits[i].state=-1;
+        http::execUnits[i].in=0;
         http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
     }
 }
