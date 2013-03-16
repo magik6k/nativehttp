@@ -118,6 +118,8 @@ void header(http::request& process,rdata& rd)
 
     hss.add_token(token("\r\n\r\n",0));
     hss.add_token(token("Host: ",1));
+    hss.add_token(token("User-Agent: ",2));
+    hss.add_token(token("Referer: ",3));
 
     while(hss.pos<hss.str.size())
     {
@@ -127,6 +129,12 @@ void header(http::request& process,rdata& rd)
         {
             case 1:
                 rd.host=hss.to("\r\n");
+                break;
+            case 2:
+                rd.userAgent=hss.to("\r\n");
+                break;
+            case 3:
+                rd.referer=hss.to("\r\n");
                 break;
         }
     }

@@ -49,7 +49,7 @@ private:
 
 public:
 
-    int pos;
+    unsigned int pos;
     string str;
 
     void set(string s);

@@ -43,7 +43,7 @@ queue<outdata>tosend;
 
 namespace headers
 {
-    string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\n";
+    string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.0\r\n";
     string alive="Connection: keep-alive\r\nKeep-Alive: timeout=";
     string alivetimeout;
 }
