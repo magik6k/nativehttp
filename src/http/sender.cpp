@@ -28,35 +28,35 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    namespace sender
+namespace sender
+{
+int sender(void* unused)
+{
+    while(1)
     {
-        int sender(void* unused)
+        if(http::tosend.empty())
         {
-            while(1)
-            {
-                if(http::tosend.empty())
-                {
-                    SDL_Delay(1);
-                    continue;
-                }
-                outdata proc=http::tosend.front();
-                http::tosend.pop();
-
-                SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
-
-                if(proc.fas)
-                {
-                    delete[] proc.data;
-                }
-            }
-            return 1;
+            SDL_Delay(1);
+            continue;
         }
-        void send(int uid, unsigned long datasize, char* data, bool free)
+        outdata proc=http::tosend.front();
+        http::tosend.pop();
+
+        SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+
+        if(proc.fas)
         {
-            outdata t={uid,datasize,data,free};
-            http::tosend.push(t);
+            delete[] proc.data;
         }
     }
+    return 1;
+}
+void send(int uid, unsigned long datasize, char* data, bool free)
+{
+    outdata t= {uid,datasize,data,free};
+    http::tosend.push(t);
+}
+}
 }
 
 

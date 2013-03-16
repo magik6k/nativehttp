@@ -92,11 +92,33 @@ int executor(void* eid)
         {
             if(ld.clen>http::maxPost)
             {
-            http::unlockclient(process.uid);
-            continue;
-            //403 Forbidden
+                if(rd.cookie)
+                {
+                    delete rd.cookie;
+                }
+                if(rd.get)
+                {
+                    delete rd.get;
+                }
+                http::unlockclient(process.uid);
+                continue;
+                //403 Forbidden
             }
             http::rproc::post(rd,process,ld);
+            if(!rd.post)
+            {
+                if(rd.cookie)
+                {
+                    delete rd.cookie;
+                }
+                if(rd.get)
+                {
+                    delete rd.get;
+                }
+
+                http::unlockclient(process.uid);
+                continue;//will be disconnected
+            }
         }
 
         log("executor.cpp","getting page");
@@ -147,21 +169,21 @@ void header(http::request& process,rdata& rd, http::rproc::lrqd& ld)
         if(pt.id==0)break;
         switch(pt.id)
         {
-            case 1:
-                rd.host=hss.to("\r\n");
-                break;
-            case 2:
-                rd.userAgent=hss.to("\r\n");
-                break;
-            case 3:
-                rd.referer=hss.to("\r\n");
-                break;
-            case 4:
-                rd.cookie=new cookiedata(hss.to("\r\n"));
-                break;
-            case 5:
-                ld.clen=strtol(hss.to("\r\n").c_str(), NULL, 10);
-                break;
+        case 1:
+            rd.host=hss.to("\r\n");
+            break;
+        case 2:
+            rd.userAgent=hss.to("\r\n");
+            break;
+        case 3:
+            rd.referer=hss.to("\r\n");
+            break;
+        case 4:
+            rd.cookie=new cookiedata(hss.to("\r\n"));
+            break;
+        case 5:
+            ld.clen=strtol(hss.to("\r\n").c_str(), NULL, 10);
+            break;
         }
     }
 
@@ -180,7 +202,11 @@ void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
         while(0<ltrv)
         {
             int rv=SDLNet_TCP_Recv(process.sender,tv+ar,ltrv);
-            if(rv==-1){delete[] tv;break;}
+            if(rv==-1)
+            {
+                delete[] tv;
+                break;
+            }
             ar+=rv;
             ltrv-=rv;
             (tv+ar)[0]=0;
@@ -259,8 +285,8 @@ void ex(pagedata& pd,rdata* rd)
     }
     break;
     default:
-    log("executor.cpp","not found");
-    ///404 here<<<<
+        log("executor.cpp","not found");
+        ///404 here<<<<
     }
 
 }

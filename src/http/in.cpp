@@ -44,7 +44,7 @@ int reciver()
         cr=SDLNet_CheckSockets(http::CSet,0);
         if(cr!=0&&cr!=-1)
         {
-            for(int i=0;i<http::maxConnections&&cr>0;i++)
+            for(int i=0; i<http::maxConnections&&cr>0; i++)
             {
                 if(http::connected[i]!=NULL&&!http::ulock[i])
                 {

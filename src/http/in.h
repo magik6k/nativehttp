@@ -26,8 +26,8 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    void unlockclient(int i);
-    int reciver();
+void unlockclient(int i);
+int reciver();
 }
 
 #endif // IN_H_INCLUDED

@@ -25,8 +25,8 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    int newclient(void* d);
-    void disconnect(int i);
+int newclient(void* d);
+void disconnect(int i);
 }
 
 #endif // NEWCLIENT_H_INCLUDED

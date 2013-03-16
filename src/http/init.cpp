@@ -30,52 +30,52 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    void sdlinit()
-    {
-        SDL_Init(SDL_INIT_TIMER);
-        SDLNet_Init();
-    }
-    void datainit()
-    {
-        http::maxConnections=cfg->get_int("maxconnections");
-        http::maxPost=cfg->get_int("max_post");
+void sdlinit()
+{
+    SDL_Init(SDL_INIT_TIMER);
+    SDLNet_Init();
+}
+void datainit()
+{
+    http::maxConnections=cfg->get_int("maxconnections");
+    http::maxPost=cfg->get_int("max_post");
 
-        http::connected=new TCPsocket[http::maxConnections];
-        http::ulock=new bool[http::maxConnections];
-        for(int i=0;i<http::maxConnections;i++)
-        {
-            http::connected[i]=NULL;
-            http::ulock[i]=false;
-        }
-        http::CSet=SDLNet_AllocSocketSet(http::maxConnections);
-        http::Nexec=cfg->get_int("exec_theards");
-        http::execUnits=new http::Sexecutor[http::Nexec];
-        http::mExecQ=cfg->get_int("maxexecutionqueue");
-        http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
-    }
-    void executorinit()
+    http::connected=new TCPsocket[http::maxConnections];
+    http::ulock=new bool[http::maxConnections];
+    for(int i=0; i<http::maxConnections; i++)
     {
-        for(int i=0;i<http::Nexec;i++)
-        {
-            http::execUnits[i].state=-1;
-            http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
-        }
+        http::connected[i]=NULL;
+        http::ulock[i]=false;
     }
-    void netstart()
+    http::CSet=SDLNet_AllocSocketSet(http::maxConnections);
+    http::Nexec=cfg->get_int("exec_theards");
+    http::execUnits=new http::Sexecutor[http::Nexec];
+    http::mExecQ=cfg->get_int("maxexecutionqueue");
+    http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
+}
+void executorinit()
+{
+    for(int i=0; i<http::Nexec; i++)
     {
-        IPaddress tmp;
-        SDLNet_ResolveHost(&tmp,NULL,cfg->get_int("port"));
-        http::server=SDLNet_TCP_Open(&tmp);
-        if(!http::server)
-        {
-            printf("INIT: %s\n", SDLNet_GetError());
-            exit(1);
-        }
+        http::execUnits[i].state=-1;
+        http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
     }
-    void startsystem()
+}
+void netstart()
+{
+    IPaddress tmp;
+    SDLNet_ResolveHost(&tmp,NULL,cfg->get_int("port"));
+    http::server=SDLNet_TCP_Open(&tmp);
+    if(!http::server)
     {
-        SDL_CreateThread(http::newclient,NULL);
-        SDL_CreateThread(http::sender::sender,NULL);
+        printf("INIT: %s\n", SDLNet_GetError());
+        exit(1);
     }
+}
+void startsystem()
+{
+    SDL_CreateThread(http::newclient,NULL);
+    SDL_CreateThread(http::sender::sender,NULL);
+}
 }
 

@@ -25,11 +25,11 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    void sdlinit();
-    void datainit();
-    void executorinit();
-    void netstart();
-    void startsystem();
+void sdlinit();
+void datainit();
+void executorinit();
+void netstart();
+void startsystem();
 }
 
 #endif // HTTPINIT_H_INCLUDED

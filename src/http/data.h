@@ -79,9 +79,9 @@ extern queue<outdata>tosend;
 
 namespace headers
 {
-    extern string standard;
-    extern string alive;
-    extern string alivetimeout;
+extern string standard;
+extern string alive;
+extern string alivetimeout;
 }
 
 

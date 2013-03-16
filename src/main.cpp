@@ -37,12 +37,12 @@ int main(int argc, char *argv[])
     cout << "nativehttp DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
     bool dmnz=false;
 
-    for(int i=1;i<argc;i++)
+    for(int i=1; i<argc; i++)
     {
         switch(argv[i][1])
         {
-            case 'd':
-                dmnz=true;
+        case 'd':
+            dmnz=true;
         }
     }
     cfg = new Ccfg("/etc/nativehttp/config.cfg");

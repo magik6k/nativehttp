@@ -26,52 +26,52 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    void disconnect(int i)
+void disconnect(int i)
+{
+    if(http::connected[i])
     {
-        if(http::connected[i])
+        SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
+        SDLNet_TCP_Close(http::connected[i]);
+        http::connected[i]=NULL;
+    }
+}
+int findfreeslot()
+{
+    for(int i=0; i<http::maxConnections; i++)
+    {
+        if(!connected[i])
         {
-            SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
-            SDLNet_TCP_Close(http::connected[i]);
-            http::connected[i]=NULL;
+            return i;
         }
     }
-    int findfreeslot()
-    {
-        for(int i=0;i<http::maxConnections;i++)
-        {
-            if(!connected[i])
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
+    return -1;
+}
 
-     int newclient(void* d)
-     {
-         TCPsocket tclient=NULL;
-         int toslot=-1;
-         while(1)
-         {
-            if((tclient=SDLNet_TCP_Accept(server)))
+int newclient(void* d)
+{
+    TCPsocket tclient=NULL;
+    int toslot=-1;
+    while(1)
+    {
+        if((tclient=SDLNet_TCP_Accept(server)))
+        {
+            if((toslot=findfreeslot())!=-1)
             {
-                if((toslot=findfreeslot())!=-1)
-                {
-                    http::connected[toslot]=tclient;
-                    tclient=NULL;
-                    SDLNet_TCP_AddSocket(http::CSet,http::connected[toslot]);
-                    log("newclient.cpp","new client");
-                }
-                else
-                {
-                    SDLNet_TCP_Close(tclient);//full server
-                }
+                http::connected[toslot]=tclient;
+                tclient=NULL;
+                SDLNet_TCP_AddSocket(http::CSet,http::connected[toslot]);
+                log("newclient.cpp","new client");
             }
             else
             {
-                SDL_Delay(1);
+                SDLNet_TCP_Close(tclient);//full server
             }
-         }
-        return 0;
-     }
+        }
+        else
+        {
+            SDL_Delay(1);
+        }
+    }
+    return 0;
+}
 }

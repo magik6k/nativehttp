@@ -27,11 +27,11 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    namespace sender
-    {
-        int sender(void* unused);
-        void send(int uid, unsigned long datasize, char* data, bool free);
-    }
+namespace sender
+{
+int sender(void* unused);
+void send(int uid, unsigned long datasize, char* data, bool free);
+}
 }
 
 #endif // SENDER_H_INCLUDED
