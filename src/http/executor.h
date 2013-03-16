@@ -33,6 +33,7 @@ namespace rproc
 {
 void ex(pagedata& pd,rdata* rd);
 void line0(http::request& process,rdata& rd);
+void header(http::request& process,rdata& rd);
 }
 }
 

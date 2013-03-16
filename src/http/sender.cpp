@@ -42,9 +42,7 @@ namespace http
                 outdata proc=http::tosend.front();
                 http::tosend.pop();
 
-                logid(proc.uid,"sender.cpp","sending");
-                cout << proc.data<<endl;
-                cout << "sent "<<SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size)<<"/"<<proc.size<<" bytes of data\n";
+                SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
 
                 if(proc.fas)
                 {

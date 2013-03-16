@@ -79,7 +79,7 @@ int executor(void* eid)
             continue;
         }
 
-        ///handle here rest of header!!
+        http::rproc::header(process,rd);
 
         log("executor.cpp","getting page");
 
@@ -108,6 +108,30 @@ int executor(void* eid)
 
 namespace rproc
 {
+
+void header(http::request& process,rdata& rd)
+{
+    superstring hss(process.request);
+    hss.to("\r\n");
+    hss.str=hss.to("\r\n\r\n");
+    hss.pos=0;
+
+    hss.add_token(token("\r\n\r\n",0));
+    hss.add_token(token("Host: ",1));
+
+    while(hss.pos<hss.str.size())
+    {
+        token pt=hss.tok();
+        if(pt.id==0)break;
+        switch(pt.id)
+        {
+            case 1:
+                rd.host=hss.to("\r\n");
+                break;
+        }
+    }
+
+}
 
 void ex(pagedata& pd,rdata* rd)
 {
