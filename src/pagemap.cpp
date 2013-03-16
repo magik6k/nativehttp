@@ -187,7 +187,7 @@ drch:
 
                             page tmp;
                             nativepage* ntm = new nativepage;
-                            cout << "file "<<"/tmp/nativehttp/nhpage_"+pname+".so"<<endl;
+                            if(shw)cout << "file "<<"/tmp/nativehttp/nhpage_"+pname+".so"<<endl;
                             ntm->handle = dlopen(("/tmp/nativehttp/nhpage_"+pname+".so").c_str(), RTLD_NOW|RTLD_LOCAL);
                             if(!ntm->handle)
                             {
@@ -222,7 +222,6 @@ drch:
                                         superstring pgac(files[i]);
                                         string furi=pgac.from(d);
                                         urimp tmu= {'/'+furi,int(base.size())-1};
-                                        log("pagemap.cpp:225","add np:"+furi);
                                         uris.push_back(tmu);
                                     }
                                 }
@@ -259,7 +258,6 @@ drch:
             superstring pgac(files[i]);
             string furi=pgac.from(d);
             urimp tmu = {'/'+furi,int(base.size())-1};
-            log("pagemap.cpp:262","file: "+furi);
             uris.push_back(tmu);
         }
     }

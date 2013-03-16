@@ -60,7 +60,6 @@ int newclient(void* d)
                 http::connected[toslot]=tclient;
                 tclient=NULL;
                 SDLNet_TCP_AddSocket(http::CSet,http::connected[toslot]);
-                log("newclient.cpp","new client");
             }
             else
             {

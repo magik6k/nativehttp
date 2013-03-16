@@ -34,7 +34,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "nativehttp DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
+    cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
     bool dmnz=false;
 
     for(int i=1; i<argc; i++)
@@ -45,29 +45,19 @@ int main(int argc, char *argv[])
             dmnz=true;
         }
     }
+    cout << "pre-init\n";
     cfg = new Ccfg("/etc/nativehttp/config.cfg");
     charset = cfg->get_var("charset");
-    //postmax = cfg->get_int("max_post");
     default_mime = cfg->get_var("default_content_type");
     if(cfg->get_int("instantso"))
     {
         setbuf(stdout, NULL);
     }
     mime = new mimec;
+    log("INIT","Mapping server directory, loading native pages");
     pmap.page_mapper_init(cfg->get_var("files_location"));
-    /*
-    int logl=cfg->get_int("log_lenght");
-    if(logl>0)
-    {
-        gstats.hourly=new int[logl];
-        gstats.loghours=logl;
-        for(int i=0;i<gstats.loghours-1;i++)
-        {
-            gstats.hourly[i]=0;
-        }
-    }
-    */
-    cout << "starting http system\n";
+
+    log("INIT","Starting HTTP system");
 
     http::sdlinit();
     http::datainit();
@@ -75,10 +65,30 @@ int main(int argc, char *argv[])
     http::netstart();
     http::startsystem();
 
-    cout << "Ready!\n";
+    log("INIT","Ready");
     if(dmnz)deamonize();
 
     http::reciver();
 
     return 0;
+}
+
+
+string its(int n)
+{
+    string tmp, ret;
+    if(n < 0)
+    {
+        ret="-";
+        n=-n;
+    }
+    do
+    {
+        tmp+=n%10+48;
+        n-=n%10;
+    }
+    while(n/=10);
+    for(int i=tmp.size()-1; i>=0; i--)
+        ret+=tmp[i];
+    return ret;
 }

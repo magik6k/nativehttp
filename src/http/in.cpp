@@ -59,11 +59,12 @@ int reciver()
                     {
                         cr--;
                         http::request trq;
-                        trq.request.resize(HTTP_MAX_USER_HEADER_SIZE);
+                        trq.request.resize(HTTP_MAX_USER_HEADER_SIZE+1);
                         ra=SDLNet_TCP_Recv(http::connected[i],(void*)trq.request.c_str(),HTTP_MAX_USER_HEADER_SIZE);
                         if(ra>0)
                         {
-                            logid(i,"in.cpp","Recived");
+                            ((char*)trq.request.c_str())[ra]=0;
+                            trq.request.resize(ra);
                             SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
                             http::ulock[i]=true;
                             trq.sender=http::connected[i];
@@ -74,7 +75,6 @@ int reciver()
                         else
                         {
                             http::disconnect(i);
-                            logid(i,"in.cpp","User disconected");
                         }
                     }
                 }

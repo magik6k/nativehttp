@@ -51,7 +51,6 @@ int executor(void* eid)
         http::toexec.front().taken=true;
         http::request process=http::toexec.front();
         http::toexec.pop();
-        log("executor.cpp","execution start");
 
         rdata rd;
         http::rproc::lrqd ld;
@@ -63,8 +62,6 @@ int executor(void* eid)
         ld.clen=0;
 
         http::rproc::line0(process,rd,ld);
-
-        logid(process.method,"executor.cpp",rd.uri);
 
         if(process.method==0)
         {
@@ -173,7 +170,6 @@ int executor(void* eid)
         }
 
         http::unlockclient(process.uid);
-        log("executor.cpp","done");
     }
     return 1;
 }
@@ -227,7 +223,6 @@ void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
     ars.str=ars.from("\r\n\r\n");
     if(ars.str.size()<ld.clen)
     {
-        log("executor.cpp","out post");
         unsigned int ltrv=ld.clen-ars.str.size();
         char* tv=new char[ltrv+1];
         unsigned int ar=0;
@@ -257,7 +252,6 @@ bool ex(pagedata& pd,rdata* rd)
     {
     case page_native:
     {
-        log("executor.cpp","native page");
 
         rd->ctype="text/html;charset="+charset;
         rd->response="200 OK";

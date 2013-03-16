@@ -44,7 +44,6 @@ pagedata::pagedata()
 
 extern "C" void attach_uri(string uri,bool top)
 {
-    log("api.cpp", "register address: "+uri);
     pmap.adduri(uri,top);
 }
 
