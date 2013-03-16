@@ -56,6 +56,14 @@ void send(int uid, unsigned long datasize, char* data, bool free)
     outdata t= {uid,datasize,data,free};
     http::tosend.push(t);
 }
+void sendNow(int uid, unsigned long datasize, char* data, bool free)
+{
+    SDLNet_TCP_Send(http::connected[uid],data,datasize);
+    if(free)
+    {
+        delete[] data;
+    }
+}
 }
 }
 

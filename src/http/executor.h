@@ -39,7 +39,7 @@ struct lrqd
 };
 
 void post(rdata& rd, http::request& process, http::rproc::lrqd& ld);
-void ex(pagedata& pd,rdata* rd);
+bool ex(pagedata& pd,rdata* rd);
 void line0(http::request& process,rdata& rd, http::rproc::lrqd& ld);
 void header(http::request& process,rdata& rd, http::rproc::lrqd& ld);
 }

@@ -84,6 +84,15 @@ extern string alive;
 extern string alivetimeout;
 }
 
+namespace error
+{
+extern pagedata e400;
+extern pagedata e403;
+extern pagedata e404;
+extern pagedata e500;
+extern pagedata e501;
+extern pagedata e505;
+}
 
 }
 

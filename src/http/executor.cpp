@@ -66,19 +66,19 @@ int executor(void* eid)
 
         if(process.method==0)
         {
-            //400 Bad Request
+            http::sender::send(process.uid,http::error::e400.size,http::error::e400.data,false);
             http::unlockclient(process.uid);
             continue;
         }
         if(process.method==3)
         {
-            //501 Not Implemented
+            http::sender::send(process.uid,http::error::e501.size,http::error::e501.data,false);
             http::unlockclient(process.uid);
             continue;
         }
         if(!process.http11)
         {
-            //505 HTTP Version Not Supported
+            http::sender::send(process.uid,http::error::e505.size,http::error::e505.data,false);
             http::unlockclient(process.uid);
             continue;
         }
@@ -100,9 +100,10 @@ int executor(void* eid)
                 {
                     delete rd.get;
                 }
-                http::unlockclient(process.uid);
+
+                http::sender::sendNow(process.uid,http::error::e403.size,http::error::e403.data,false);
+                http::kickclient(process.uid);
                 continue;
-                //403 Forbidden
             }
             http::rproc::post(rd,process,ld);
             if(!rd.post)
@@ -124,7 +125,20 @@ int executor(void* eid)
         log("executor.cpp","getting page");
 
         pagedata result;
-        http::rproc::ex(result,&rd);
+        if(http::rproc::ex(result,&rd))
+        {
+            if(rd.cookie)
+            {
+                delete rd.cookie;
+            }
+            if(rd.get)
+            {
+                delete rd.get;
+            }
+            http::sender::send(process.uid,http::error::e404.size,http::error::e404.data,false);
+            http::unlockclient(process.uid);
+            continue;
+        }
 
         if(rd.cookie)
         {
@@ -217,7 +231,7 @@ void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
     rd.post=new postgetdata(ars.str);
 }
 
-void ex(pagedata& pd,rdata* rd)
+bool ex(pagedata& pd,rdata* rd)
 {
     page pid = pmap.by_uri(rd->uri);
 
@@ -248,6 +262,7 @@ void ex(pagedata& pd,rdata* rd)
         memcpy(pd.data+snd.size(),ts.data,ts.size);
         memcpy(pd.data+snd.size()+ts.size,snd2.c_str(),snd2.size());
         delete[]ts.data;
+        return false;
     }
     break;
     case page_file:
@@ -259,6 +274,7 @@ void ex(pagedata& pd,rdata* rd)
         {
             fseek(f,0,SEEK_END);
             int size = ftell(f);
+            fseek(f,0,SEEK_SET);
             rewind(f);
             string snd("HTTP/1.1 200 OK\r\n");
             snd += http::headers::standard;
@@ -277,17 +293,18 @@ void ex(pagedata& pd,rdata* rd)
             memcpy(pd.data+snd.size()+size,snd2.c_str(),snd2.size());
             delete[] b;
             fclose(f);
+            return false;
         }
         else
         {
-            ///404 HERE  <<<<<<<<<
+            return true;
         }
     }
     break;
     default:
-        log("executor.cpp","not found");
-        ///404 here<<<<
+        return true;
     }
+    return true;
 
 }
 

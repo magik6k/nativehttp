@@ -31,6 +31,7 @@ namespace sender
 {
 int sender(void* unused);
 void send(int uid, unsigned long datasize, char* data, bool free);
+void sendNow(int uid, unsigned long datasize, char* data, bool free);
 }
 }
 

@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "executor.h"
 #include "newclient.h"
 #include "sender.h"
+#include "error.h"
 
 namespace http
 {
@@ -52,6 +53,13 @@ void datainit()
     http::execUnits=new http::Sexecutor[http::Nexec];
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
+
+    http::error::e400=http::error::load_error(cfg->get_var("error400"),"400 Bad Request");
+    http::error::e403=http::error::load_error(cfg->get_var("error403"),"403 Forbidden");
+    http::error::e404=http::error::load_error(cfg->get_var("error404"),"404 Not Found");
+    http::error::e501=http::error::load_error(cfg->get_var("error501"),"501 Not Implemented");
+    http::error::e505=http::error::load_error(cfg->get_var("error505"),"505 HTTP Version Not Supported");
+
 }
 void executorinit()
 {
@@ -77,5 +85,7 @@ void startsystem()
     SDL_CreateThread(http::newclient,NULL);
     SDL_CreateThread(http::sender::sender,NULL);
 }
+
+
 }
 

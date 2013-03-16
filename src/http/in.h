@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 namespace http
 {
 void unlockclient(int i);
+void kickclient(int i);
 int reciver();
 }
 

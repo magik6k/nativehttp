@@ -50,6 +50,16 @@ string alive="Connection: keep-alive\r\nKeep-Alive: timeout=";
 string alivetimeout;
 }
 
+namespace error
+{
+pagedata e400;
+pagedata e403;
+pagedata e404;
+pagedata e500;
+pagedata e501;
+pagedata e505;
+}
+
 }
 
 

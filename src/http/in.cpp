@@ -36,6 +36,13 @@ void unlockclient(int i)
     SDLNet_TCP_AddSocket(http::CSet,http::connected[i]);
 }
 
+void kickclient(int i)
+{
+    http::ulock[i]=false;
+    SDLNet_TCP_Close(http::connected[i]);
+    http::connected[i]=NULL;
+}
+
 int reciver()
 {
     int cr,ra;
