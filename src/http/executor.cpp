@@ -52,11 +52,15 @@ int executor(void* eid)
         log("executor.cpp","execution start");
 
         rdata rd;
+        http::rproc::lrqd ld;
+
         rd.get=NULL;
         rd.post=NULL;
         rd.cookie=NULL;
 
-        http::rproc::line0(process,rd);
+        ld.clen=0;
+
+        http::rproc::line0(process,rd,ld);
 
         logid(process.method,"executor.cpp",rd.uri);
 
@@ -79,10 +83,21 @@ int executor(void* eid)
             continue;
         }
 
-        http::rproc::header(process,rd);
+        http::rproc::header(process,rd,ld);
 
         if(!rd.cookie)
             rd.cookie=new cookiedata("");
+
+        if(ld.clen>0&&process.method==2)
+        {
+            if(ld.clen>http::maxPost)
+            {
+            http::unlockclient(process.uid);
+            continue;
+            //403 Forbidden
+            }
+            http::rproc::post(rd,process,ld);
+        }
 
         log("executor.cpp","getting page");
 
@@ -112,7 +127,7 @@ int executor(void* eid)
 namespace rproc
 {
 
-void header(http::request& process,rdata& rd)
+void header(http::request& process,rdata& rd, http::rproc::lrqd& ld)
 {
     superstring hss(process.request);
     hss.to("\r\n");
@@ -124,6 +139,7 @@ void header(http::request& process,rdata& rd)
     hss.add_token(token("User-Agent: ",2));
     hss.add_token(token("Referer: ",3));
     hss.add_token(token("Cookie: ",4));
+    hss.add_token(token("Content-Length: ",5));
 
     while(hss.pos<hss.str.size())
     {
@@ -143,9 +159,36 @@ void header(http::request& process,rdata& rd)
             case 4:
                 rd.cookie=new cookiedata(hss.to("\r\n"));
                 break;
+            case 5:
+                ld.clen=strtol(hss.to("\r\n").c_str(), NULL, 10);
+                break;
         }
     }
 
+}
+
+void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
+{
+    superstring ars(process.request);
+    ars.str=ars.from("\r\n\r\n");
+    if(ars.str.size()<ld.clen)
+    {
+        log("executor.cpp","out post");
+        unsigned int ltrv=ld.clen-ars.str.size();
+        char* tv=new char[ltrv+1];
+        unsigned int ar=0;
+        while(0<ltrv)
+        {
+            int rv=SDLNet_TCP_Recv(process.sender,tv+ar,ltrv);
+            if(rv==-1){delete[] tv;break;}
+            ar+=rv;
+            ltrv-=rv;
+            (tv+ar)[0]=0;
+        }
+        ars.str+=tv;
+        delete[] tv;
+    }
+    rd.post=new postgetdata(ars.str);
 }
 
 void ex(pagedata& pd,rdata* rd)
@@ -222,13 +265,13 @@ void ex(pagedata& pd,rdata* rd)
 
 }
 
-void line0(http::request& process,rdata& rd)
+void line0(http::request& process,rdata& rd, http::rproc::lrqd& ld)
 {
     superstring rss(superstring(process.request).to("\r\n"));
     rss.add_token(token(" ",0));
     rss.add_token(token("GET",1));
     rss.add_token(token("HEAD",3));
-    rss.add_token(token("POST",3));
+    rss.add_token(token("POST",2));
     rss.add_token(token("DELETE",3));
     rss.add_token(token("TRACE",3));
     rss.add_token(token("CONNECT",3));

@@ -38,6 +38,8 @@ namespace http
     void datainit()
     {
         http::maxConnections=cfg->get_int("maxconnections");
+        http::maxPost=cfg->get_int("max_post");
+
         http::connected=new TCPsocket[http::maxConnections];
         http::ulock=new bool[http::maxConnections];
         for(int i=0;i<http::maxConnections;i++)

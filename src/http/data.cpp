@@ -28,6 +28,8 @@ namespace http
 {
 
 int maxConnections=0;
+int maxPost=0;
+
 TCPsocket* connected=NULL;
 SDLNet_SocketSet CSet=NULL;
 TCPsocket server=NULL;

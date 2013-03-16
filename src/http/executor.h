@@ -29,11 +29,19 @@ freely, subject to the following restrictions:
 namespace http
 {
 int executor(void* eid);
+
 namespace rproc
 {
+
+struct lrqd
+{
+    unsigned int clen;
+};
+
+void post(rdata& rd, http::request& process, http::rproc::lrqd& ld);
 void ex(pagedata& pd,rdata* rd);
-void line0(http::request& process,rdata& rd);
-void header(http::request& process,rdata& rd);
+void line0(http::request& process,rdata& rd, http::rproc::lrqd& ld);
+void header(http::request& process,rdata& rd, http::rproc::lrqd& ld);
 }
 }
 

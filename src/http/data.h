@@ -61,10 +61,13 @@ struct Sexecutor
 };
 
 extern int maxConnections;
+extern int maxPost;
+
 extern TCPsocket* connected;
 extern SDLNet_SocketSet CSet;
 extern TCPsocket server;
 extern bool* ulock;
+
 
 extern int Nexec;
 extern Sexecutor* execUnits;
