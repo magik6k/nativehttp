@@ -85,13 +85,6 @@ int executor(void* eid)
         pagedata result;
         http::rproc::ex(result,&rd);
 
-
-
-        if(result.data)
-        {
-            cout << result.data<<endl;
-            delete[] result.data;
-        }
         if(rd.cookie)
         {
             delete rd.cookie;
@@ -100,6 +93,13 @@ int executor(void* eid)
         {
             delete rd.get;
         }
+
+        if(result.data)
+        {
+            cout << result.data<<endl;
+            delete[] result.data;
+        }
+
 
         http::unlockclient(process.uid);
         log("executor.cpp","done");

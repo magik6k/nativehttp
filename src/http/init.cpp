@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "executor.h"
 #include "newclient.h"
+#include "sender.h"
 
 namespace http
 {
@@ -72,6 +73,7 @@ namespace http
     void startsystem()
     {
         SDL_CreateThread(http::newclient,NULL);
+        SDL_CreateThread(http::sender::sender,NULL);
     }
 }
 

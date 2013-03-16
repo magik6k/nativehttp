@@ -21,27 +21,17 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "../nativehttp.h"
-#include "../protocol.h"
-#include "sender.h"
+
+#ifndef SENDER_H_INCLUDED
+#define SENDER_H_INCLUDED
 
 namespace http
 {
     namespace sender
     {
-        int sender(void* unused)
-        {
-            while(1)
-            {
-                SDL_Delay(1);
-            }
-            return 1;
-        }
-        void send(int uid, uint32_t datasize, void* data, bool free)
-        {
-
-        }
+        int sender(void* unused);
+        void send(int uid, uint32_t datasize, void* data, bool free);
     }
 }
 
-
+#endif // SENDER_H_INCLUDED
