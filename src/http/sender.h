@@ -30,7 +30,7 @@ namespace http
     namespace sender
     {
         int sender(void* unused);
-        void send(int uid, uint32_t datasize, void* data, bool free);
+        void send(int uid, unsigned long datasize, char* data, bool free);
     }
 }
 

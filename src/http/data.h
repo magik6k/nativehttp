@@ -48,9 +48,10 @@ struct request
 
 struct outdata
 {
-    string header;
+    int uid;
     unsigned long size;
-    void* data;
+    char* data;
+    bool fas;//free after sending
 };
 
 struct Sexecutor

@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "executor.h"
 #include "data.h"
 #include "in.h"
+#include "sender.h"
 
 namespace http
 {
@@ -96,10 +97,8 @@ int executor(void* eid)
 
         if(result.data)
         {
-            cout << result.data<<endl;
-            delete[] result.data;
+            http::sender::send(process.uid,result.size,result.data,true);
         }
-
 
         http::unlockclient(process.uid);
         log("executor.cpp","done");
@@ -132,7 +131,7 @@ void ex(pagedata& pd,rdata* rd)
         snd+=its(ts.size);
         //snd+="\r\n";
         //snd+=rd->cookie->gethead();
-        snd+="\r\n";
+        snd+="\r\n\r\n";
         string snd2="\r\n";
 
         pd.size=snd.size()+ts.size+snd2.size();

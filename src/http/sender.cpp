@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 #include "../nativehttp.h"
 #include "../protocol.h"
 #include "sender.h"
+#include "data.h"
 
 namespace http
 {
@@ -33,13 +34,29 @@ namespace http
         {
             while(1)
             {
-                SDL_Delay(1);
+                if(http::tosend.empty())
+                {
+                    SDL_Delay(1);
+                    continue;
+                }
+                outdata proc=http::tosend.front();
+                http::tosend.pop();
+
+                logid(proc.uid,"sender.cpp","sending");
+                cout << proc.data<<endl;
+                cout << "sent "<<SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size)<<"/"<<proc.size<<" bytes of data\n";
+
+                if(proc.fas)
+                {
+                    delete[] proc.data;
+                }
             }
             return 1;
         }
-        void send(int uid, uint32_t datasize, void* data, bool free)
+        void send(int uid, unsigned long datasize, char* data, bool free)
         {
-
+            outdata t={uid,datasize,data,free};
+            http::tosend.push(t);
         }
     }
 }
