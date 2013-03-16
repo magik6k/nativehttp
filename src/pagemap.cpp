@@ -259,6 +259,7 @@ drch:
             superstring pgac(files[i]);
             string furi=pgac.from(d);
             urimp tmu = {'/'+furi,int(base.size())-1};
+            log("pagemap.cpp:262","file: "+furi);
             uris.push_back(tmu);
         }
     }

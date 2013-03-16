@@ -163,6 +163,7 @@ struct rdata
     cookiedata* cookie;
     postgetdata* get;
     postgetdata* post;
+    string response;
     string userAgent;
     string referer;
     string host;

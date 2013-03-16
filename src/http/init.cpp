@@ -48,6 +48,7 @@ namespace http
         http::Nexec=cfg->get_int("exec_theards");
         http::execUnits=new http::Sexecutor[http::Nexec];
         http::mExecQ=cfg->get_int("maxexecutionqueue");
+        http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
     }
     void executorinit()
     {

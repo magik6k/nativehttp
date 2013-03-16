@@ -121,10 +121,14 @@ void ex(pagedata& pd,rdata* rd)
         log("executor.cpp","native page");
 
         rd->ctype="text/html;charset="+charset;
-        nativepage *npp = (nativepage*)pid.data;
-        pagedata ts=npp->page(rd);
+        rd->response="200 OK";
 
-        string snd = "HTTP/1.1 200 OK\r\nContent-Type: "+rd->ctype+"\r\nContent-Length: ";
+        nativepage *npp = (nativepage*)pid.data;
+        pagedata ts=npp->page(rd);//<<<execution of page
+
+        string snd = "HTTP/1.1 "+rd->response+"\r\n"+http::headers::standard;
+        snd+=http::headers::alive+http::headers::alivetimeout;
+        snd+="Content-Type: "+rd->ctype+"\r\nContent-Length: ";
         snd+=its(ts.size);
         //snd+="\r\n";
         //snd+=rd->cookie->gethead();
@@ -150,6 +154,8 @@ void ex(pagedata& pd,rdata* rd)
             int size = ftell(f);
             rewind(f);
             string snd("HTTP/1.1 200 OK\r\n");
+            snd += http::headers::standard;
+            snd += http::headers::alive+http::headers::alivetimeout;
             snd += ct;
             snd += "\r\nContent-Length: ";
             snd += its(size);

@@ -41,6 +41,13 @@ uint32_t mExecQ;
 queue<request>toexec;
 queue<outdata>tosend;
 
+namespace headers
+{
+    string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\n";
+    string alive="Connection: keep-alive\r\nKeep-Alive: timeout=";
+    string alivetimeout;
+}
+
 }
 
 

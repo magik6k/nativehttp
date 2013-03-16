@@ -73,6 +73,13 @@ extern uint32_t mExecQ;
 extern queue<request>toexec;
 extern queue<outdata>tosend;
 
+namespace headers
+{
+    extern string standard;
+    extern string alive;
+    extern string alivetimeout;
+}
+
 
 }
 
