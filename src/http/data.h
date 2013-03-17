@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "../nativehttp.h"
 #include "../protocol.h"
 #include <SDL/SDL_net.h>
-#include <queue>
+#include "../data/queue.h"
 using namespace std;
 
 #define HTTP_MAX_USER_HEADER_SIZE 8194 //orginal 2^13+2
@@ -38,7 +38,7 @@ struct request
 {
     TCPsocket sender;
     const char* request;
-    bool taken;
+    int taken;
     int uid;
 
     int method;
@@ -61,6 +61,7 @@ struct Sexecutor
     SDL_Thread* etheard;
     long int state;//time execution/post reciving started OR -1 when waiting or requies stability
     int in;//3 - kick, 2 - exec, 1 - post recv/kicki, 0-nothing
+    int id;
 
     void* fd1;
     void* fd2;
@@ -80,8 +81,8 @@ extern Sexecutor* execUnits;
 
 extern uint32_t mExecQ;
 
-extern queue<request>toexec;
-extern queue<outdata>tosend;
+extern data::queue<request>toexec;
+extern data::queue<outdata>tosend;
 
 namespace headers
 {

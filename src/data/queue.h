@@ -42,6 +42,8 @@ namespace data
         size_t elems;
 
         public:
+        T dflt;
+
         queue();
         ~queue();
 
@@ -49,8 +51,10 @@ namespace data
         int pop();
 
         size_t size();
+        int empty();
 
-        T front();
+        T& front();
+        T& front(int& state);
 
     };
 
@@ -94,21 +98,41 @@ namespace data
             oldest=oldest->newer;
             if(oldest)oldest->older=NULL;
             if(!oldest)newest=NULL;
-            delete tf;
+            if(tf)delete tf;
             elems--;
             return 0;
         }
         return 1;
     }
 
-    template<class T>T queue<T>::front()
+    template<class T>T& queue<T>::front()
     {
         return oldest->d;
+    }
+
+    template<class T>T& queue<T>::front(int& state)
+    {
+        if(oldest)
+        {
+            state=0;
+            return oldest->d;
+        }
+        else
+        {
+            state=1;
+            return dflt;//this is stil very bad option, but anyways better than returning nothing
+        }
+
     }
 
     template<class T>size_t queue<T>::size()
     {
         return elems;
+    }
+
+    template<class T>int queue<T>::empty()
+    {
+        return (elems==0);cout << elems << (elems==0)<<endl;
     }
 }
 

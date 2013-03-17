@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 
+#include <signal.h>
 #include "../nativehttp.h"
 #include "../protocol.h"
 #include "executor.h"
@@ -31,14 +32,21 @@ freely, subject to the following restrictions:
 namespace http
 {
 
+void sig_func(int sig)
+{
+ printf("Caught signal: %d\n",sig);
+ //signal(SIGSEGV,sig_func);
+}
+
 
 int executor(void* eid)
 {
+    signal(SIGSEGV,sig_func);
     http::Sexecutor* exc=(http::Sexecutor*)eid;
     exc->state=-1;
     rdata rd;
     http::rproc::lrqd ld;
-
+    int ts=0;
     while(true)
     {
         if(http::toexec.size()<=0)
@@ -46,13 +54,16 @@ int executor(void* eid)
             SDL_Delay(1);
             continue;
         }
-        if(http::toexec.front().taken)
+        if(http::toexec.front(ts).taken>0)
         {
             SDL_Delay(1);
             continue;
         }
-        http::toexec.front().taken=true;
-        http::request process=http::toexec.front();
+        if(ts==1)continue;
+        http::toexec.front().taken=exc->id;
+        http::request process=http::toexec.front(ts);
+        if(ts==1)continue;
+        if(http::toexec.front().taken!=exc->id)continue;
         http::toexec.pop();
 
 

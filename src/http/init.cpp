@@ -72,6 +72,7 @@ void executorinit()
     {
         http::execUnits[i].state=-1;
         http::execUnits[i].in=0;
+        http::execUnits[i].id=i;
         http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
     }
 }

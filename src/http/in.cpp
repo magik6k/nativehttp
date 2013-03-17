@@ -68,7 +68,7 @@ int reciver()
                             SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
                             http::ulock[i]=true;
                             trq.sender=http::connected[i];
-                            trq.taken=false;
+                            trq.taken=-1;
                             trq.uid=i;
                             http::toexec.push(trq);
                         }

@@ -40,8 +40,8 @@ Sexecutor* execUnits=NULL;
 
 uint32_t mExecQ;
 
-queue<request>toexec;
-queue<outdata>tosend;
+data::queue<request>toexec;
+data::queue<outdata>tosend;
 
 namespace headers
 {

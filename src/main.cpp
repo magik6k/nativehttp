@@ -35,29 +35,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    data::queue<int> tq;
-    tq.push(2);
-    tq.push(5);
-    tq.push(3);
-
-    cout <<tq.front()<<", "<<tq.size()<<endl;
-    tq.pop();
-
-    cout <<tq.front()<<", "<<tq.size()<<endl;
-    tq.pop();
-
-    cout <<tq.front()<<", "<<tq.size();
-    tq.pop();
-    cout << " - "<<tq.size()<<endl;
-
-    tq.push(7);
-    cout <<tq.front()<<", "<<tq.size();
-    tq.pop();
-    cout << " - "<<tq.size()<<endl;
-
-
-    return 0;
-
     cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
     bool dmnz=false;
 
