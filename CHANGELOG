@@ -1,0 +1,63 @@
+NativeHTTP By magik6000
+for more info visit eleinfo.cba.pl
+
+1703.13:
+-New HTTP engine
+-few bugfixes
+-New, error pages
+-Now on GitHUB
+-Much more
+
+-----Older:
+version 0, release 3, patch 3(v0r3p3)
+-default Content-tpye can be set in config
+-content type can be set by native pages
+-fixed bug with no 404 error
+-server is demonizing wits '-d' parameter
+-simple statistics of hits[will be expanded]
+
+version 0, release 3, patch 2(v0r3p2)
+-Fixed reciving requests with long POST data
+-Setting in configuration file to set maximal amount of POST data
+
+version 0, release 3, patch 1(v0r3p1)
+-bug fixes in .nhp parser
+-few bug fixes in page-mapper
+-bug fix in nbase loader
+-added -fPIC parameter to nhp compilation process
+-remote user IP address fot native pages
+-single nbase file is now open once[nbase_open function returns same pointer to file]
+-added function to decode post data[% codes and '+' spaces]
+-config - new option for instant stdout[w/o buffering]
+
+version 0, release 3, patch 0(v0r3p0)
+-NativeHTTP DataBase preview[nbase]
+
+version 0, release 2, patch 0(v0r2p0)
+-class definitions for session menager(NOT IMPLEMENTED!/NOT DONE!)//removed in v0r3p0, to be done in future
+-NativeHTTP Pages - nhp(parsing, compilation, loading, execution)
+-superstring v0.1.2
+
+version 0, release 1, patch 1(v0r1p1)
+-headers "user-agent" and "referer" for native pages
+-uri for native pages
+-repaired uri parsing bug(uri /site.so?param=test is file /pagedir/site.so, server searched for /pagedir/site.so?param=test)
+-uri params
+-post data
+
+version 0, release 1, patch 0(v0r1p0)
+-Cookies
+-request data for 'page' function
+-parsing of rest of HTTP/1.1 request headers will be relased in patch cause of bugs
+
+version 0, release 0, patch 1(v0r0p1)
+-added Ccfg lib 1.2(from my previous projects)
+-binding native pages to uris(attach_uri function)
+-removed unused datastring.cpp
+-superstring v0.1.1
+
+version 0, release 0, patch 0(v0r0p0)
+-loading native web pages
+-very basic HTTP protocol
+-superstring v0.1
+

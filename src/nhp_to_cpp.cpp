@@ -48,7 +48,7 @@ string parse_nhp(string nhp)
         {
             if(data.check("\\"))
             {
-                data.pos+=2;
+                //data.pos+=2;
                 //csc=true;
             }
             if(data.check("\"")&&!nap)
