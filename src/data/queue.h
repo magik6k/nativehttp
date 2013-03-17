@@ -20,59 +20,37 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
+#ifndef QUEUE_H_INCLUDED
+#define QUEUE_H_INCLUDED
 
-#include "../nativehttp.h"
-#include "data.h"
-
-namespace http
+namespace data
 {
+    template<class T>struct qelm
+    {
+        T d;
+        qelm<T>* newer;
+        qelm<T>* older;
+    };
 
-int maxConnections=0;
-unsigned int maxPost=0;
+    template<class T>class queue
+    {
+        private:
+        qelm<T>* newest;
+        qelm<T>* oldest;
+        int elems;
 
-TCPsocket* connected=NULL;
-SDLNet_SocketSet CSet=NULL;
-TCPsocket server=NULL;
-bool* ulock=NULL;
+        public:
+        queue();
+        ~queue();
 
-int Nexec;
-Sexecutor* execUnits=NULL;
+        void push(T tp);
+        void pop();
 
-uint32_t mExecQ;
+        void size();
 
-queue<request>toexec;
-queue<outdata>tosend;
+        T front();
 
-namespace headers
-{
-string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.0\r\n";
-string alive="Connection: keep-alive\r\nKeep-Alive: timeout=";
-string alivetimeout;
+    };
 }
 
-namespace error
-{
-pagedata e400;
-pagedata e403;
-pagedata e404;
-pagedata e500;
-pagedata e501;
-pagedata e505;
-}
-
-namespace manager
-{
-int rate=0;
-int postto=-1;
-int execto=-1;
-}
-
-void request::free()
-{
-    delete request;
-}
-
-}
-
-
-
+#endif // QUEUE_H_INCLUDED

@@ -37,13 +37,15 @@ namespace http
 struct request
 {
     TCPsocket sender;
-    string request;
+    const char* request;
     bool taken;
     int uid;
 
     int method;
     bool http11;
     void* post;
+
+    void free();
 };
 
 struct outdata

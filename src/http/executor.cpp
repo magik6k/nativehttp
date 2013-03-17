@@ -36,6 +36,9 @@ int executor(void* eid)
 {
     http::Sexecutor* exc=(http::Sexecutor*)eid;
     exc->state=-1;
+    rdata rd;
+    http::rproc::lrqd ld;
+
     while(true)
     {
         if(http::toexec.size()<=0)
@@ -52,8 +55,7 @@ int executor(void* eid)
         http::request process=http::toexec.front();
         http::toexec.pop();
 
-        rdata rd;
-        http::rproc::lrqd ld;
+
 
         rd.get=NULL;
         rd.post=NULL;
