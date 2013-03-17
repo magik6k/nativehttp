@@ -288,11 +288,11 @@ page page_mapper::by_uri(string u)
             {
                 if(uris[j].u[dn[j]]==u[i]||uris[j].u[dn[j]]=='*')
                 {
-                    if(uris[j].u.size()==dn[j]+1&&u.size()==dn[j]+1)
+                    if(uris[j].u.size()==unsigned(dn[j])+1&&u.size()==unsigned(dn[j])+1)
                     {
                         return base[uris[j].sid];
                     }
-                    else if(uris[j].u.size()==dn[j]+1&&uris[j].u[dn[j]]=='*')
+                    else if(uris[j].u.size()==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
                     {
                         t=base[uris[j].sid];
                     }

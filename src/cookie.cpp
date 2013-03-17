@@ -36,7 +36,7 @@ cookiedata::cookiedata(string strcookie)
 
 string cookiedata::get(string name)
 {
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i].name==name)
         {

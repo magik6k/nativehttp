@@ -43,13 +43,13 @@ string parse_nhp(string nhp)
     while(data.pos<data.str.size())
     {
         bool nap=false;
-        bool csc=false;
+        //bool csc=false;
         if(scope!=nhps_html)
         {
             if(data.check("\\"))
             {
-                //data.pos+=2;
-                csc=true;
+                data.pos+=2;
+                //csc=true;
             }
             if(data.check("\"")&&!nap)
             {
@@ -152,7 +152,7 @@ string parse_nhp(string nhp)
         }
         if(!nap)
         {
-            char tc=data.str[data.pos];
+            //char tc=data.str[data.pos];
             switch(scope)
             {
             case nhps_html:

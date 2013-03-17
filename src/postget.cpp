@@ -36,7 +36,7 @@ postgetdata::postgetdata(string dstr)
 
 string postgetdata::get(string name)
 {
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i].name==name)
         {
@@ -61,9 +61,9 @@ extern "C" string decode_poststring(string str)
             char t[3]= {0,0,0};
             t[0]=s.str[s.pos-2];
             t[1]=s.str[s.pos-1];
-            char op=0;
+            unsigned int op=0;
             sscanf(t,"%x",&op);
-            o+=op;
+            o+=(char)op;
         }
     }
     return o;

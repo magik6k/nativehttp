@@ -115,7 +115,7 @@ void Ccfg::parse_file(const char* f)
 string Ccfg::get_var(string name)
 {
 
-    int i=0;
+    unsigned int i=0;
 
     while(i!=fileds.size())
     {
@@ -133,7 +133,8 @@ string Ccfg::get_var(string name)
 int Ccfg::get_int(string name)
 {
     string s=this->get_var(name);
-    int tmp=0,i=0;
+    int tmp=0;
+    unsigned int i=0;
     bool m=false;
     if(s[0]=='-')
     {

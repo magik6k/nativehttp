@@ -57,11 +57,11 @@ void superstring::add_token(token t)
 
 token superstring::tok()
 {
-    vector<int>d(tokens.size(),0);
+    vector<unsigned int>d(tokens.size(),0);
 
     while(pos<str.size())
     {
-        for(int i=0; i<tokens.size(); i++)
+        for(unsigned int i=0; i<tokens.size(); i++)
         {
             if(str[pos]==tokens[i].s[d[i]])
             {
@@ -84,12 +84,12 @@ token superstring::tok()
 
 token superstring::tok(string& opt)
 {
-    vector<int>d(tokens.size(),0);
+    vector<unsigned int>d(tokens.size(),0);
 
     while(pos<str.size())
     {
         opt+=str[pos];
-        for(int i=0; i<tokens.size(); i++)
+        for(unsigned int i=0; i<tokens.size(); i++)
         {
             if(str[pos]==tokens[i].s[d[i]])
             {
@@ -113,7 +113,7 @@ token superstring::tok(string& opt)
 string superstring::to(string fend)
 {
     rae=false;
-    int c=0;
+    unsigned int c=0;
     string rt;
     string prt;
     while(pos<str.size())
@@ -145,7 +145,7 @@ string superstring::to(string fend)
 
 string superstring::from(string start)
 {
-    int c=0;
+    unsigned int c=0;
     string rt;
     while(pos<str.size())
     {
@@ -194,7 +194,7 @@ string superstring::back_to(string fend)
     {
         nfe+=fend[i];
     }
-    int c=0;
+    unsigned int c=0;
     string rt;
     string prt;
     while(pos>0)
@@ -286,8 +286,8 @@ void superstring::clear_tokens()
 int superstring::check(string sch)
 {
 
-    int left=sch.size();
-    int tpos=pos;
+    unsigned int left=sch.size();
+    unsigned int tpos=pos;
     while(left>0&&tpos<str.size())
     {
         if(str[tpos]==sch[sch.size()-left])

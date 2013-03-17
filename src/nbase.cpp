@@ -26,7 +26,7 @@ struct nbfhead
 {
     char fid[4];
     int v;
-    int tables;
+    unsigned int tables;
 };
 
 ///nbase class
@@ -40,6 +40,7 @@ public:
         size_t strs=str.size();
         fwrite(&strs,sizeof(size_t),1,fp);
         fwrite(str.c_str(),1,strs,fp);
+        return strs;
     }
     int readstr(FILE* fp)
     {
@@ -47,6 +48,7 @@ public:
         fread(&strs,sizeof(size_t),1,fp);
         str.resize(strs);
         fread((char*)str.c_str(),1,strs,fp);
+        return strs;
     }
     nbfstring()
     {
@@ -68,7 +70,7 @@ nbase::nbase(string file)
         fread(&head,sizeof(nbfhead),1,bf);
         if(string(head.fid)=="nbB"&&head.v==NB_VERSION)
         {
-            for(int i=0; i<head.tables; i++)
+            for(unsigned int i=0; i<head.tables; i++)
             {
                 nbfstring tabname;
                 tabname.readstr(bf);
@@ -87,7 +89,7 @@ nbase::nbase(string file)
 
                     size_t rnum=0;
                     fread(&rnum,sizeof(size_t),1,bf);
-                    for(int j=0; j<rnum; j++)
+                    for(unsigned int j=0; j<rnum; j++)
                     {
                         for(int k=0; k<cln; k++)
                         {
@@ -107,7 +109,7 @@ nbase::nbase(string file)
 
 int nbase::istable(string name)
 {
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==name)
         {
@@ -126,7 +128,7 @@ int nbase::createtable(string name, string* columns, int cnum)
 
 int nbase::insert(string tabname, string* rowdata)
 {
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==tabname)
         {
@@ -139,11 +141,11 @@ int nbase::insert(string tabname, string* rowdata)
 nbresult nbase::operator()(string table)
 {
     nbresult rt;
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==table)
         {
-            for(int j=0; j<data[i]->data.size(); j++)
+            for(unsigned int j=0; j<data[i]->data.size(); j++)
             {
                 rt.res.push_back(data[i]->data[j]->data);
             }
@@ -156,11 +158,11 @@ nbresult nbase::operator()(string table)
 nbresult nbase::operator()(string table, nbfilter flt, void* fltdata)
 {
     nbresult rt;
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==table)
         {
-            for(int j=0; j<data[i]->data.size(); j++)
+            for(unsigned int j=0; j<data[i]->data.size(); j++)
             {
                 if((*flt)(data[i]->data[j]->data,fltdata))
                 {
@@ -176,7 +178,7 @@ nbresult nbase::operator()(string table, nbfilter flt, void* fltdata)
 int nbase::del(string tabname, nbfilter flt, void* fltdata)
 {
     int o=-1;
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==tabname)
         {
@@ -217,7 +219,7 @@ vector<nbblt>nbopls;
 
 extern "C" nbase* nbase_open(string file)
 {
-    for(int i=0; i<nbopls.size(); i++)
+    for(unsigned int i=0; i<nbopls.size(); i++)
     {
         if(nbopls[i].f==file)
         {
@@ -269,7 +271,7 @@ int nbase::save()
     nbfhead head= {{'n','b','B',0},NB_VERSION,data.size()};
     fwrite(&head,sizeof(nbfhead),1,bf);
 
-    for(int i=0; i<data.size(); i++)
+    for(unsigned int i=0; i<data.size(); i++)
     {
         nbfstring tabname(data[i]->name);///table head - nbstr(name), colnum, str[cols], rownum
         tabname.writestr(bf);
@@ -323,7 +325,7 @@ int nbresult::filter(nbfilter flt, void* fltdata)
 {
     int o=0;
     vector<string*>nvec;
-    for(int i=0; i<res.size(); i++)
+    for(unsigned int i=0; i<res.size(); i++)
     {
         if((*flt)(res[i],fltdata))
         {
