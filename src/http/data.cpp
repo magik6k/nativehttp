@@ -43,6 +43,13 @@ uint32_t mExecQ;
 data::queue<request>toexec;
 data::queue<outdata>tosend;
 
+SDL_mutex* mtx_exec=NULL;
+SDL_mutex* mtx_snd=NULL;
+
+SDL_Thread* theard_nc=NULL;
+SDL_Thread* theard_sd=NULL;
+SDL_Thread* theard_mg=NULL;
+
 namespace headers
 {
 string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.0\r\n";

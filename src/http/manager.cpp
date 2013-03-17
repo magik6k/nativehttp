@@ -30,6 +30,55 @@ namespace http
 {
 namespace manager
 {
+
+void sig(int sig)
+{
+    logid(sig,"manager.cpp","SIG");
+    if(sig==11)
+    {
+        /*
+        log("manager.cpp","CRITICAL ERROR (SIGSEGV)");
+        log("manager.cpp","trying to rescue, restarting http system");
+        log("restarting","killing theards");
+        SDL_KillThread(http::theard_sd);
+        SDL_KillThread(http::theard_mg);
+        SDL_KillThread(http::theard_mg);
+        log("restarting","killing execution units");
+        for(int i=0;i<http::Nexec;i++)
+        {
+            SDL_KillThread(http::execUnits[i].etheard);
+        }
+        log("restarting","disconnectig users");
+
+
+        log("restarting","cleaning");
+
+        */
+        if(SDL_GetThreadID(http::theard_mg)==SDL_ThreadID())
+        {
+            cout << "manager crash\n";
+        }
+        if(SDL_GetThreadID(http::theard_nc)==SDL_ThreadID())
+        {
+            cout << "ACT module crash\n";
+        }
+        if(SDL_GetThreadID(http::theard_sd)==SDL_ThreadID())
+        {
+            cout << "Sender crash\n";
+        }
+
+        for(int i=0;i<http::Nexec;i++)
+        {
+            if(SDL_GetThreadID(http::execUnits[i].etheard)==SDL_ThreadID())
+            {
+                cout << "theard crashed - "<<i<<endl;
+                SDL_KillThread(http::execUnits[i].etheard);
+            }
+        }
+
+    }
+}
+
 int manager(void* unused)
 {
     if(http::manager::rate==-1)return 0;

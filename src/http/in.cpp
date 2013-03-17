@@ -70,7 +70,9 @@ int reciver()
                             trq.sender=http::connected[i];
                             trq.taken=-1;
                             trq.uid=i;
+                            SDL_mutexP(http::mtx_exec);
                             http::toexec.push(trq);
+                            SDL_mutexV(http::mtx_exec);
                         }
                         else
                         {

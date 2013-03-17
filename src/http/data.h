@@ -84,6 +84,13 @@ extern uint32_t mExecQ;
 extern data::queue<request>toexec;
 extern data::queue<outdata>tosend;
 
+extern SDL_mutex* mtx_exec;
+extern SDL_mutex* mtx_snd;
+
+extern SDL_Thread* theard_nc;
+extern SDL_Thread* theard_sd;
+extern SDL_Thread* theard_mg;
+
 namespace headers
 {
 extern string standard;

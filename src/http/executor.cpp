@@ -21,7 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include <signal.h>
+
 #include "../nativehttp.h"
 #include "../protocol.h"
 #include "executor.h"
@@ -32,16 +32,8 @@ freely, subject to the following restrictions:
 namespace http
 {
 
-void sig_func(int sig)
-{
- printf("Caught signal: %d\n",sig);
- //signal(SIGSEGV,sig_func);
-}
-
-
 int executor(void* eid)
 {
-    signal(SIGSEGV,sig_func);
     http::Sexecutor* exc=(http::Sexecutor*)eid;
     exc->state=-1;
     rdata rd;
@@ -49,23 +41,41 @@ int executor(void* eid)
     int ts=0;
     while(true)
     {
+        SDL_mutexP(http::mtx_exec);
         if(http::toexec.size()<=0)
         {
+            SDL_mutexV(http::mtx_exec);
             SDL_Delay(1);
             continue;
         }
         if(http::toexec.front(ts).taken>0)
         {
+            SDL_mutexV(http::mtx_exec);
             SDL_Delay(1);
             continue;
         }
-        if(ts==1)continue;
+        if(ts==1)
+        {
+            SDL_mutexV(http::mtx_exec);
+            SDL_Delay(1);
+            continue;
+        }
         http::toexec.front().taken=exc->id;
         http::request process=http::toexec.front(ts);
-        if(ts==1)continue;
-        if(http::toexec.front().taken!=exc->id)continue;
+        if(ts==1)
+        {
+            SDL_mutexV(http::mtx_exec);
+            SDL_Delay(1);
+            continue;
+        }
+        if(http::toexec.front().taken!=exc->id)
+        {
+            SDL_mutexV(http::mtx_exec);
+            SDL_Delay(1);
+            continue;
+        }
         http::toexec.pop();
-
+        SDL_mutexV(http::mtx_exec);
 
 
         rd.get=NULL;
@@ -161,7 +171,9 @@ int executor(void* eid)
             {
                 delete rd.get;
             }
+            SDL_mutexP(http::mtx_snd);
             http::sender::send(process.uid,http::error::e404.size,http::error::e404.data,false);
+            SDL_mutexV(http::mtx_snd);
             http::unlockclient(process.uid);
             continue;
         }

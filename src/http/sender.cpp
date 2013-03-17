@@ -35,6 +35,7 @@ int sender(void* unused)
     int ts=0;
     while(1)
     {
+        SDL_mutexP(http::mtx_snd);
         if(http::tosend.empty())
         {
             SDL_Delay(1);
@@ -43,6 +44,7 @@ int sender(void* unused)
         outdata proc=http::tosend.front(ts);
         if(ts==1)continue;
         http::tosend.pop();
+        SDL_mutexV(http::mtx_snd);
 
         SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
 
