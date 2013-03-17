@@ -40,12 +40,18 @@ directories:
 	mkdir /etc/nativehttp
 	mkdir /var/www
 	mkdir /var/www/error
+	mkdir /usr/include/nativehttp
 
 install: directories all
 	cp ./bin/* /usr/bin
 	cp ./etc/* /etc/nativehttp
 	cp ./var/error/* /var/www/error
-	cp ./include/* /usr/include	
+	cp ./include/* /usr/include/nativehttp
+
+remove:
+	rm -r /etc/nativehttp
+	rm -r /usr/include/nativehttp
+	rm /usr/bin/nativehttp
 
 all: nativehttp
 	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
