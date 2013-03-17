@@ -1,9 +1,9 @@
-NativeHTTP (c) Łukasz magik6000/magik6k Magiera
+NativeHTTP
 ==========
 
-C++ Web server for serving C++ web pages!
+A C++ Web server for serving C++ web pages!
 
-more info at http://nativehttp.org
+More info can be found at http://nativehttp.org
 
 depends on:
 g++
