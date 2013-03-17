@@ -21,3 +21,59 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "queue.h"
+
+namespace data
+{
+    template<class T>queue<T>::queue()
+    {
+        newest=NULL;
+        oldest=NULL;
+        elems=0;
+    }
+
+    template<class T>queue<T>::~queue()
+    {
+        while(newest)this->pop();
+    }
+
+    template<class T>int queue<T>::push(T tp)
+    {
+        qelm<T>* nqe=new qelm<T>;
+        if(!nqe)return 1;
+        nqe->d=tp;
+        nqe->newer=NULL;
+        nqe->older=NULL;
+
+        if(newest)
+        {
+            newest->newer=nqe;
+            nqe.older=newest;
+        }
+        newest=nqe;
+        if(!oldest)oldest=nqe;
+
+        elems++;
+        return 0;
+    }
+
+    template<class T>int queue<T>::pop()
+    {
+        if(oldest)
+        {
+            qelm<T>* tf=oldest;
+            oldest=oldest->newer;
+            oldest.older=NULL;
+            if(!oldest)newest=NULL;
+            delete tf;
+            elems--;
+            return 0;
+        }
+        return 1;
+    }
+
+    template<class T>T queue<T>::front()
+    {
+        return oldest->d;
+    }
+
+}

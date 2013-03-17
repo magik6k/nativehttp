@@ -23,6 +23,8 @@ freely, subject to the following restrictions:
 #ifndef QUEUE_H_INCLUDED
 #define QUEUE_H_INCLUDED
 
+#include <stdio.h>
+
 namespace data
 {
     template<class T>struct qelm
@@ -37,16 +39,16 @@ namespace data
         private:
         qelm<T>* newest;
         qelm<T>* oldest;
-        int elems;
+        size_t elems;
 
         public:
         queue();
         ~queue();
 
-        void push(T tp);
-        void pop();
+        int push(T tp);
+        int pop();
 
-        void size();
+        size_t size();
 
         T front();
 
