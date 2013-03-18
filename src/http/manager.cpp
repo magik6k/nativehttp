@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "manager.h"
 #include "data.h"
 #include "executor.h"
+#include "sender.h"
 
 namespace http
 {
@@ -64,15 +65,22 @@ void sig(int sig)
         }
         if(SDL_GetThreadID(http::theard_sd)==SDL_ThreadID())
         {
-            cout << "Sender crash\n";
+            log("WARNING","Sender theard crashed, rescuing");
+            SDL_mutexV(http::mtx_snd);//may be needed
+            SDL_KillThread(http::theard_sd);
+            http::theard_sd=SDL_CreateThread(http::sender::sender,NULL);
         }
 
-        for(int i=0;i<http::Nexec;i++)
+        for(int i=0; i<http::Nexec; i++)
         {
             if(SDL_GetThreadID(http::execUnits[i].etheard)==SDL_ThreadID())
             {
-                cout << "theard crashed - "<<i<<endl;
+                logid(i,"WARNING","Execution theard crashed, rescuing");
                 SDL_KillThread(http::execUnits[i].etheard);
+                http::execUnits[i].state=-1;
+                http::execUnits[i].in=0;
+                http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
+
             }
         }
 
@@ -91,40 +99,40 @@ int manager(void* unused)
 }
 void timeouts()
 {
-    for(int i=0;i<http::Nexec;i++)
+    for(int i=0; i<http::Nexec; i++)
     {
         if(http::execUnits[i].state!=-1)
         {
             switch(http::execUnits[i].in)
             {
-                case 1:
-                case 3:
-                    if(time(0)-http::execUnits[i].in>http::manager::postto&&postto!=-1)
-                    {
-                        if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
-                        if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;
-                        SDL_KillThread(http::execUnits[i].etheard);
-                        http::execUnits[i].in=0;
-                        http::execUnits[i].state=-1;
-                        http::execUnits[i].fd1=NULL;
-                        http::execUnits[i].fd2=NULL;
-                        SDL_CreateThread(http::executor,&(http::execUnits[i]));
-                    }
-                    break;
-                case 2:
-                    if(time(0)-http::execUnits[i].in>http::manager::postto&&execto!=-1)
-                    {
-                        logid(i,"manager.cpp","PAGE EXECUTION TIMEOUT");
-                        if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
-                        if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;
-                        SDL_KillThread(http::execUnits[i].etheard);
-                        http::execUnits[i].in=0;
-                        http::execUnits[i].state=-1;
-                        http::execUnits[i].fd1=NULL;
-                        http::execUnits[i].fd2=NULL;
-                        SDL_CreateThread(http::executor,&(http::execUnits[i]));
-                    }
-                    break;
+            case 1:
+            case 3:
+                if(time(0)-http::execUnits[i].in>http::manager::postto&&postto!=-1)
+                {
+                    if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
+                    if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;
+                    SDL_KillThread(http::execUnits[i].etheard);
+                    http::execUnits[i].in=0;
+                    http::execUnits[i].state=-1;
+                    http::execUnits[i].fd1=NULL;
+                    http::execUnits[i].fd2=NULL;
+                    SDL_CreateThread(http::executor,&(http::execUnits[i]));
+                }
+                break;
+            case 2:
+                if(time(0)-http::execUnits[i].in>http::manager::postto&&execto!=-1)
+                {
+                    logid(i,"manager.cpp","PAGE EXECUTION TIMEOUT");
+                    if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
+                    if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;
+                    SDL_KillThread(http::execUnits[i].etheard);
+                    http::execUnits[i].in=0;
+                    http::execUnits[i].state=-1;
+                    http::execUnits[i].fd1=NULL;
+                    http::execUnits[i].fd2=NULL;
+                    SDL_CreateThread(http::executor,&(http::execUnits[i]));
+                }
+                break;
             }
         }
     }

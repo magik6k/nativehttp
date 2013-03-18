@@ -90,18 +90,21 @@ int executor(void* eid)
         {
             http::sender::send(process.uid,http::error::e400.size,http::error::e400.data,false);
             http::unlockclient(process.uid);
+            delete[] process.request;
             continue;
         }
         if(process.method==3)
         {
             http::sender::send(process.uid,http::error::e501.size,http::error::e501.data,false);
             http::unlockclient(process.uid);
+            delete[] process.request;
             continue;
         }
         if(!process.http11)
         {
             http::sender::send(process.uid,http::error::e505.size,http::error::e505.data,false);
             http::unlockclient(process.uid);
+            delete[] process.request;
             continue;
         }
 
@@ -109,7 +112,9 @@ int executor(void* eid)
 
 
         if(!rd.cookie)
+        {
             rd.cookie=new cookiedata("");
+        }
 
         if(ld.clen>0&&process.method==2)
         {
@@ -123,19 +128,28 @@ int executor(void* eid)
                 {
                     delete rd.get;
                 }
-                exc->fd1=NULL;exc->fd2=NULL;
+                if(rd.post)
+                {
+                    delete rd.post;
+                }
+                exc->fd1=NULL;
+                exc->fd2=NULL;
                 exc->state=time(0);
                 exc->in=3;
                 http::sender::sendNow(process.uid,http::error::e403.size,http::error::e403.data,false);
                 exc->state=-1;
                 exc->in=0;
                 http::kickclient(process.uid);
+                delete[] process.request;
                 continue;
             }
-            exc->fd1=rd.cookie;exc->fd2=rd.get;
+            exc->fd1=rd.cookie;
+            exc->fd2=rd.get;
             exc->state=time(0);
             exc->in=1;
             http::rproc::post(rd,process,ld);
+            delete[] process.request;
+            process.request=NULL;
             exc->state=-1;
             exc->in=0;
             if(!rd.post)
@@ -148,7 +162,10 @@ int executor(void* eid)
                 {
                     delete rd.get;
                 }
-
+                if(rd.post)
+                {
+                    delete rd.post;
+                }
                 http::unlockclient(process.uid);
                 continue;//will be disconnected
             }
@@ -156,7 +173,8 @@ int executor(void* eid)
 
 
         pagedata result;
-        exc->fd1=rd.cookie;exc->fd2=rd.get;
+        exc->fd1=rd.cookie;
+        exc->fd2=rd.get;
         exc->in=2;
         exc->state=time(0);
         if(http::rproc::ex(result,&rd))
@@ -170,6 +188,10 @@ int executor(void* eid)
             if(rd.get)
             {
                 delete rd.get;
+            }
+            if(rd.post)
+            {
+                delete rd.post;
             }
             SDL_mutexP(http::mtx_snd);
             http::sender::send(process.uid,http::error::e404.size,http::error::e404.data,false);
@@ -187,6 +209,10 @@ int executor(void* eid)
         if(rd.get)
         {
             delete rd.get;
+        }
+        if(rd.post)
+        {
+            delete rd.post;
         }
 
         if(result.data)
@@ -257,14 +283,18 @@ void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
             if(rv==-1)
             {
                 delete[] tv;
+                tv=NULL;
                 break;
             }
             ar+=rv;
             ltrv-=rv;
             (tv+ar)[0]=0;
         }
-        ars.str+=tv;
-        delete[] tv;
+        if(tv)
+        {
+            ars.str+=tv;
+            delete[] tv;
+        }
     }
     rd.post=new postgetdata(ars.str);
 }
@@ -282,8 +312,9 @@ bool ex(pagedata& pd,rdata* rd)
         rd->response="200 OK";
 
         nativepage *npp = (nativepage*)pid.data;
+        SDL_mutexP(http::mtx_exec2);
         pagedata ts=npp->page(rd);//<<<execution of page
-
+        SDL_mutexV(http::mtx_exec2);
         string snd = "HTTP/1.1 "+rd->response+"\r\n"+http::headers::standard;
         snd+=http::headers::alive+http::headers::alivetimeout;
         snd+="Content-Type: "+rd->ctype+"\r\nContent-Length: ";
@@ -304,7 +335,6 @@ bool ex(pagedata& pd,rdata* rd)
     break;
     case page_file:
     {
-        string ct=mime->get_ctype((char*)pid.data);
 
         FILE* f=fopen((const char*)pid.data,"r");
         if(f)
@@ -316,7 +346,7 @@ bool ex(pagedata& pd,rdata* rd)
             string snd("HTTP/1.1 200 OK\r\n");
             snd += http::headers::standard;
             snd += http::headers::alive+http::headers::alivetimeout;
-            snd += ct;
+            snd += mime->get_ctype((char*)pid.data);
             snd += "\r\nContent-Length: ";
             snd += its(size);
             snd += "\r\n\r\n";

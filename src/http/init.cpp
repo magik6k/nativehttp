@@ -55,6 +55,7 @@ void datainit()
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
 
+    http::mtx_exec2=SDL_CreateMutex();
     http::mtx_exec=SDL_CreateMutex();
     http::mtx_snd=SDL_CreateMutex();
 

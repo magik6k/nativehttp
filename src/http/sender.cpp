@@ -35,12 +35,13 @@ int sender(void* unused)
     int ts=0;
     while(1)
     {
-        SDL_mutexP(http::mtx_snd);
+
         if(http::tosend.empty())
         {
             SDL_Delay(1);
             continue;
         }
+        SDL_mutexP(http::mtx_snd);
         outdata proc=http::tosend.front(ts);
         if(ts==1)continue;
         http::tosend.pop();
