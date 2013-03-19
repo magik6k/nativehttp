@@ -43,6 +43,10 @@ NHO = $(NHS:%.cpp=%.o)
 
 NHTO = $(NHTS:%.cpp=%.o)
 
+all: nativehttp btest
+	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
+	$(CXX) $(FLAGS) $(NHTO) $(LIBS) -o $(TOUT)
+
 directories:
 	mkdir /etc/nativehttp
 	mkdir /var/www
@@ -62,11 +66,6 @@ remove:
 	rm -r /etc/nativehttp
 	rm -r /usr/include/nativehttp
 	rm /usr/bin/nativehttp
-
-all: nativehttp btest
-	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
-	$(CXX) $(FLAGS) $(NHTO) $(LIBS) -o $(TOUT)
-
 
 nativehttp: $(NHO)
 
