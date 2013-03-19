@@ -25,8 +25,11 @@ freely, subject to the following restrictions:
 #include <sys/stat.h>
 #include <unistd.h>
 
+bool deamonized=false;
+
 void deamonize()
 {
+    log("system.cpp","demonizing");
     pid_t pid, sid;
     pid=fork();
     if (pid<0)
@@ -47,6 +50,7 @@ void deamonize()
     {
         exit(EXIT_FAILURE);
     }
+    deamonized=true;
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);

@@ -100,5 +100,6 @@ extern Ccfg *cfg;
 extern int postmax;
 extern string default_mime;
 extern sstat gstats;
+extern bool deamonized;
 
 #endif // PROTOCOL_H_INCLUDED

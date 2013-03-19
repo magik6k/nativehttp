@@ -1,10 +1,15 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+1903.13:
+-bugfixes
+-fixed many memory leaks
+-better stability
+
 1703.13:
 -New HTTP engine
 -few bugfixes
--New, error pages
+-New error pages
 -Now on GitHUB
 -Much more
 

@@ -81,7 +81,7 @@ extern Sexecutor* execUnits;
 
 extern uint32_t mExecQ;
 
-extern data::queue<request>toexec;
+extern data::queue<request*>toexec;
 extern data::queue<outdata>tosend;
 
 extern SDL_mutex* mtx_exec2;

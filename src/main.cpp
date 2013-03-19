@@ -61,8 +61,9 @@ int main(int argc, char *argv[])
     mime = new mimec;
     log("INIT","Mapping server directory, loading native pages");
     pmap.page_mapper_init(cfg->get_var("files_location"));
-
+    if(dmnz)deamonize();
     log("INIT","Starting HTTP system");
+
 
     http::sdlinit();
     http::datainit();
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
     http::startsystem();
 
     log("INIT","Ready");
-    if(dmnz)deamonize();
+
 
     http::reciver();
 

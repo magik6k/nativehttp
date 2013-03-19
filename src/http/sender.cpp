@@ -47,7 +47,7 @@ int sender(void* unused)
         http::tosend.pop();
         SDL_mutexV(http::mtx_snd);
 
-        SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+        if(http::connected[proc.uid])SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
 
         if(proc.fas)
         {

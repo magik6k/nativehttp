@@ -48,7 +48,7 @@ int executor(void* eid)
             SDL_Delay(1);
             continue;
         }
-        if(http::toexec.front(ts).taken>0)
+        if(http::toexec.front(ts)->taken>0)
         {
             SDL_mutexV(http::mtx_exec);
             SDL_Delay(1);
@@ -60,16 +60,17 @@ int executor(void* eid)
             SDL_Delay(1);
             continue;
         }
-        http::toexec.front().taken=exc->id;
-        http::request process=http::toexec.front(ts);
+        http::toexec.front()->taken=exc->id;
+        http::request* process=http::toexec.front(ts);
         if(ts==1)
         {
             SDL_mutexV(http::mtx_exec);
             SDL_Delay(1);
             continue;
         }
-        if(http::toexec.front().taken!=exc->id)
+        if(http::toexec.front()->taken!=exc->id)//it's just impossible, but...
         {
+            log("IMPOSSIBLE ERROR","This error is impossible to occur, if you see this, god will left you..");
             SDL_mutexV(http::mtx_exec);
             SDL_Delay(1);
             continue;
@@ -86,25 +87,27 @@ int executor(void* eid)
 
         http::rproc::line0(process,rd,ld);
 
-        if(process.method==0)
+        if(process->method==0)
         {
-            http::sender::send(process.uid,http::error::e400.size,http::error::e400.data,false);
-            http::unlockclient(process.uid);
-            delete[] process.request;
+
+            http::sender::send(process->uid,http::error::e400.size,http::error::e400.data,false);
+            http::unlockclient(process->uid);
+            delete[] process->request;
             continue;
         }
-        if(process.method==3)
+        if(process->method==3)
         {
-            http::sender::send(process.uid,http::error::e501.size,http::error::e501.data,false);
-            http::unlockclient(process.uid);
-            delete[] process.request;
+            http::sender::send(process->uid,http::error::e501.size,http::error::e501.data,false);
+            http::unlockclient(process->uid);
+            delete[] process->request;
             continue;
         }
-        if(!process.http11)
+        if(!process->http11)
         {
-            http::sender::send(process.uid,http::error::e505.size,http::error::e505.data,false);
-            http::unlockclient(process.uid);
-            delete[] process.request;
+            http::sender::send(process->uid,http::error::e505.size,http::error::e505.data,false);
+            http::unlockclient(process->uid);
+            delete[] process->request;
+            delete process;
             continue;
         }
 
@@ -116,7 +119,7 @@ int executor(void* eid)
             rd.cookie=new cookiedata("");
         }
 
-        if(ld.clen>0&&process.method==2)
+        if(ld.clen>0&&process->method==2)
         {
             if(ld.clen>http::maxPost)
             {
@@ -136,11 +139,12 @@ int executor(void* eid)
                 exc->fd2=NULL;
                 exc->state=time(0);
                 exc->in=3;
-                http::sender::sendNow(process.uid,http::error::e403.size,http::error::e403.data,false);
+                http::sender::sendNow(process->uid,http::error::e403.size,http::error::e403.data,false);
                 exc->state=-1;
                 exc->in=0;
-                http::kickclient(process.uid);
-                delete[] process.request;
+                http::kickclient(process->uid);
+                delete[] process->request;
+                delete process;
                 continue;
             }
             exc->fd1=rd.cookie;
@@ -148,12 +152,13 @@ int executor(void* eid)
             exc->state=time(0);
             exc->in=1;
             http::rproc::post(rd,process,ld);
-            delete[] process.request;
-            process.request=NULL;
             exc->state=-1;
             exc->in=0;
             if(!rd.post)
             {
+                delete[] process->request;
+                delete process;
+                process->request=NULL;
                 if(rd.cookie)
                 {
                     delete rd.cookie;
@@ -166,11 +171,12 @@ int executor(void* eid)
                 {
                     delete rd.post;
                 }
-                http::unlockclient(process.uid);
+                http::unlockclient(process->uid);
                 continue;//will be disconnected
             }
         }
-
+        delete[] process->request;
+        process->request=NULL;
 
         pagedata result;
         exc->fd1=rd.cookie;
@@ -193,10 +199,10 @@ int executor(void* eid)
             {
                 delete rd.post;
             }
-            SDL_mutexP(http::mtx_snd);
-            http::sender::send(process.uid,http::error::e404.size,http::error::e404.data,false);
-            SDL_mutexV(http::mtx_snd);
-            http::unlockclient(process.uid);
+            http::sender::send(process->uid,http::error::e404.size,http::error::e404.data,false);
+            http::unlockclient(process->uid);
+            delete process;
+            process=NULL;
             continue;
         }
         exc->state=-1;
@@ -217,10 +223,14 @@ int executor(void* eid)
 
         if(result.data)
         {
-            http::sender::send(process.uid,result.size,result.data,true);
+            SDL_mutexP(http::mtx_snd);
+            http::sender::send(process->uid,result.size,result.data,true);
+            SDL_mutexV(http::mtx_snd);
         }
 
-        http::unlockclient(process.uid);
+        http::unlockclient(process->uid);
+        delete process;
+        process=NULL;
     }
     return 1;
 }
@@ -228,9 +238,9 @@ int executor(void* eid)
 namespace rproc
 {
 
-void header(http::request& process,rdata& rd, http::rproc::lrqd& ld)
+void header(http::request* process,rdata& rd, http::rproc::lrqd& ld)
 {
-    superstring hss(process.request);
+    superstring hss(process->request);
     hss.to("\r\n");
     hss.str=hss.to("\r\n\r\n");
     hss.pos=0;
@@ -265,12 +275,13 @@ void header(http::request& process,rdata& rd, http::rproc::lrqd& ld)
             break;
         }
     }
+    hss.str.clear();
 
 }
 
-void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
+void post(rdata& rd, http::request* process, http::rproc::lrqd& ld)
 {
-    superstring ars(process.request);
+    superstring ars(process->request);
     ars.str=ars.from("\r\n\r\n");
     if(ars.str.size()<ld.clen)
     {
@@ -279,7 +290,7 @@ void post(rdata& rd, http::request& process, http::rproc::lrqd& ld)
         unsigned int ar=0;
         while(0<ltrv)
         {
-            int rv=SDLNet_TCP_Recv(process.sender,tv+ar,ltrv);
+            int rv=SDLNet_TCP_Recv(process->sender,tv+ar,ltrv);
             if(rv==-1)
             {
                 delete[] tv;
@@ -375,9 +386,9 @@ bool ex(pagedata& pd,rdata* rd)
 
 }
 
-void line0(http::request& process,rdata& rd, http::rproc::lrqd& ld)
+void line0(http::request* process,rdata& rd, http::rproc::lrqd& ld)
 {
-    superstring rss(superstring(process.request).to("\r\n"));
+    superstring rss(superstring(process->request).to("\r\n"));
     rss.add_token(token(" ",0));
     rss.add_token(token("GET",1));
     rss.add_token(token("HEAD",3));
@@ -387,12 +398,12 @@ void line0(http::request& process,rdata& rd, http::rproc::lrqd& ld)
     rss.add_token(token("CONNECT",3));
     rss.add_token(token("OPTIONS",3));
 
-    process.method=rss.tok().id;
+    process->method=rss.tok().id;
 
     rss.clear_tokens();
     rss.pos++;
     superstring rawuri(rss.to(" "));
-    process.http11=rss.check("HTTP/1.1");
+    process->http11=rss.check("HTTP/1.1");
 
     rd.uri=rawuri.to("?");
     string gu=rawuri.to("#");
