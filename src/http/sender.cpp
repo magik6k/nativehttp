@@ -32,17 +32,22 @@ namespace sender
 {
 int sender(void* unused)
 {
+    int ts=0;
     while(1)
     {
+
         if(http::tosend.empty())
         {
             SDL_Delay(1);
             continue;
         }
-        outdata proc=http::tosend.front();
+        SDL_mutexP(http::mtx_snd);
+        outdata proc=http::tosend.front(ts);
+        if(ts==1)continue;
         http::tosend.pop();
+        SDL_mutexV(http::mtx_snd);
 
-        SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+        if(http::connected[proc.uid])SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
 
         if(proc.fas)
         {

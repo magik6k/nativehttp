@@ -55,6 +55,10 @@ void datainit()
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
 
+    http::mtx_exec2=SDL_CreateMutex();
+    http::mtx_exec=SDL_CreateMutex();
+    http::mtx_snd=SDL_CreateMutex();
+
     http::manager::rate=cfg->get_int("managerrate");
     http::manager::postto=cfg->get_int("posttimeout");
     http::manager::execto=cfg->get_int("exectimeout");
@@ -72,6 +76,7 @@ void executorinit()
     {
         http::execUnits[i].state=-1;
         http::execUnits[i].in=0;
+        http::execUnits[i].id=i;
         http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
     }
 }
@@ -88,9 +93,9 @@ void netstart()
 }
 void startsystem()
 {
-    SDL_CreateThread(http::newclient,NULL);
-    SDL_CreateThread(http::sender::sender,NULL);
-    SDL_CreateThread(http::manager::manager,NULL);
+    http::theard_nc=SDL_CreateThread(http::newclient,NULL);
+    http::theard_sd=SDL_CreateThread(http::sender::sender,NULL);
+    http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
 }
 
 

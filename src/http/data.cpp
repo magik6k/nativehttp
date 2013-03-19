@@ -40,8 +40,16 @@ Sexecutor* execUnits=NULL;
 
 uint32_t mExecQ;
 
-queue<request>toexec;
-queue<outdata>tosend;
+data::queue<request*>toexec;
+data::queue<outdata>tosend;
+
+SDL_mutex* mtx_exec2=NULL;
+SDL_mutex* mtx_exec=NULL;
+SDL_mutex* mtx_snd=NULL;
+
+SDL_Thread* theard_nc=NULL;
+SDL_Thread* theard_sd=NULL;
+SDL_Thread* theard_mg=NULL;
 
 namespace headers
 {
@@ -65,6 +73,11 @@ namespace manager
 int rate=0;
 int postto=-1;
 int execto=-1;
+}
+
+void request::free()
+{
+    delete request;
 }
 
 }

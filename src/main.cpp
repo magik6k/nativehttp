@@ -24,6 +24,9 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include "http/init.h"
 #include "http/in.h"
+#include "http/manager.h"
+#include "data/queue.h"
+#include <signal.h>
 
 page_mapper pmap;
 mimec *mime=NULL;
@@ -46,6 +49,8 @@ int main(int argc, char *argv[])
         }
     }
     cout << "pre-init\n";
+    signal(SIGSEGV,http::manager::sig);
+    signal(SIGABRT,http::manager::sig);
     cfg = new Ccfg("/etc/nativehttp/config.cfg");
     charset = cfg->get_var("charset");
     default_mime = cfg->get_var("default_content_type");
@@ -56,8 +61,9 @@ int main(int argc, char *argv[])
     mime = new mimec;
     log("INIT","Mapping server directory, loading native pages");
     pmap.page_mapper_init(cfg->get_var("files_location"));
-
+    if(dmnz)deamonize();
     log("INIT","Starting HTTP system");
+
 
     http::sdlinit();
     http::datainit();
@@ -66,7 +72,7 @@ int main(int argc, char *argv[])
     http::startsystem();
 
     log("INIT","Ready");
-    if(dmnz)deamonize();
+
 
     http::reciver();
 

@@ -33,14 +33,13 @@ namespace http
 void unlockclient(int i)
 {
     http::ulock[i]=false;
-    SDLNet_TCP_AddSocket(http::CSet,http::connected[i]);
+    //SDLNet_TCP_AddSocket(http::CSet,http::connected[i]);
 }
 
 void kickclient(int i)
 {
     http::ulock[i]=false;
-    SDLNet_TCP_Close(http::connected[i]);
-    http::connected[i]=NULL;
+    http::disconnect(i);
 }
 
 int reciver()
@@ -49,7 +48,7 @@ int reciver()
     while(1)
     {
         cr=SDLNet_CheckSockets(http::CSet,0);
-        if(cr!=0&&cr!=-1)
+        if(cr>0)
         {
             for(int i=0; i<http::maxConnections&&cr>0; i++)
             {
@@ -58,22 +57,27 @@ int reciver()
                     if(((SDLNet_GenericSocket)(http::connected[i]))->ready!=0)
                     {
                         cr--;
-                        http::request trq;
-                        trq.request.resize(HTTP_MAX_USER_HEADER_SIZE+1);
-                        ra=SDLNet_TCP_Recv(http::connected[i],(void*)trq.request.c_str(),HTTP_MAX_USER_HEADER_SIZE);
+                        http::request* trq=new http::request();
+                        trq->request = new char[(HTTP_MAX_USER_HEADER_SIZE+1)];
+                        ra=SDLNet_TCP_Recv(http::connected[i],(void*)trq->request,HTTP_MAX_USER_HEADER_SIZE);
                         if(ra>0)
                         {
-                            ((char*)trq.request.c_str())[ra]=0;
-                            trq.request.resize(ra);
-                            SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
+                            ((char*)trq->request)[ra]=0;
+                            //trq.request.resize(ra);
+                            //SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
                             http::ulock[i]=true;
-                            trq.sender=http::connected[i];
-                            trq.taken=false;
-                            trq.uid=i;
+                            trq->sender=http::connected[i];
+                            trq->taken=-1;
+                            trq->uid=i;
+                            SDL_mutexP(http::mtx_exec);
                             http::toexec.push(trq);
+                            //delete[] trq.request;
+                            SDL_mutexV(http::mtx_exec);
                         }
                         else
                         {
+                            delete[] trq->request;
+                            delete trq;
                             http::disconnect(i);
                         }
                     }
@@ -82,7 +86,7 @@ int reciver()
         }
         else
         {
-            SDL_Delay(1);
+            SDL_Delay(5);
         }
 
     }

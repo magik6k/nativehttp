@@ -49,7 +49,7 @@ extern "C" void attach_uri(string uri,bool top)
 
 extern "C" string version()
 {
-    return "nativehttp DEV";
+    return "NativeHTTP Alpha 1";
 }
 
 extern "C" sstat *get_stats()
@@ -59,10 +59,10 @@ extern "C" sstat *get_stats()
 
 extern "C" void log(string lname, string value)
 {
-    cout << "["<<lname.c_str()<<"]"<<value.c_str()<<endl;
+    if(!deamonized)cout << "["<<lname.c_str()<<"]"<<value.c_str()<<endl;
 }
 
 extern "C" void logid(int id, string lname, string value)
 {
-    cout << "["<<lname.c_str()<<"]("<<id<<")"<<value.c_str()<<endl;
+    if(!deamonized)cout << "["<<lname.c_str()<<"]("<<id<<")"<<value.c_str()<<endl;
 }
