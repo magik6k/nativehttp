@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "protocol.h"
+#include "http/data.h"
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
@@ -86,11 +87,13 @@ void page_mapper::refresh(string d)
         bool loaded=false;
         bool toref=false;
         time_t fatt=0;
+        int pgi=-1;
 
         for(unsigned int j=0;j<base.size();j++)
         {
-            if(base[i].file==files[i])
+            if(base[j].file==files[i])
             {
+                pgi=j;
                 loaded=true;
                 struct stat tst;
                 int rst = stat(files[i].c_str(), &tst);
@@ -108,7 +111,49 @@ void page_mapper::refresh(string d)
         }
         if(loaded&&toref)
         {
-            log("pagemap.cpp:refresh","file changed: "+files[i]);
+            if(is_dotso(files[i],files[i].size()))
+            {
+                SDL_mutexP(http::mtx_exec);
+                SDL_mutexP(http::mtx_exec2);
+
+                dlclose(((nativepage*)base[pgi].data)->handle);
+                ((nativepage*)base[pgi].data)->handle = dlopen(files[i].c_str(), RTLD_NOW|RTLD_LOCAL);
+                if(!((nativepage*)base[pgi].data)->handle)
+                {
+                    log("ERROR@pagemap.cpp","can't open shared file: "+files[i]);
+                }
+                else
+                {
+                    ((nativepage*)base[pgi].data)->onload = (Tonload) dlsym(((nativepage*)base[pgi].data)->handle,"onload");
+                    ((nativepage*)base[pgi].data)->page = (Tpage) dlsym(((nativepage*)base[pgi].data)->handle,"page");
+                    if(!((nativepage*)base[pgi].data)->onload||!((nativepage*)base[pgi].data)->page)
+                    {
+                        log("ERROR@pagemap.cpp","loading native symbols failed: "+files[i]);
+                        dlclose(((nativepage*)base[pgi].data)->handle);
+                    }
+                    else
+                    {
+                        int initstate = (*((nativepage*)base[pgi].data)->onload)();
+                        if(initstate!=1)
+                        {
+                            logid(initstate,"WARNING@pagemap.cpp","invalid init state: "+files[i]);
+                            dlclose(((nativepage*)base[pgi].data)->handle);
+                        }
+                        else
+                        {
+                            base[pgi].timestamp=fatt;
+                            log("RELOAD@pagemap.cpp","succes[1]: "+files[i]);
+                        }
+                    }
+
+                }
+
+
+
+                SDL_mutexV(http::mtx_exec);
+                SDL_mutexV(http::mtx_exec2);
+
+            }
         }
     }
 }
