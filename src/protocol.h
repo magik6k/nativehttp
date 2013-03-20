@@ -73,6 +73,7 @@ class page_mapper
 private:
     vector<string>files;
     deque<urimp>uris;
+    int acp;
 public:
     void adduri(string u,bool top);
     vector<page>base;

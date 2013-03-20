@@ -111,7 +111,130 @@ void page_mapper::refresh(string d)
         }
         if(loaded&&toref)
         {
-            if(is_dotso(files[i],files[i].size()))
+            if(is_dotnhp(files[i],files[i].size()))
+            {
+                log("executor.cpp","nhp rld");
+                SDL_mutexP(http::mtx_exec);
+                SDL_mutexP(http::mtx_exec2);
+
+                struct stat st2;
+dch:
+                if(stat("/tmp/nativehttp",&st2)==0)
+                {
+                    if(S_ISDIR(st2.st_mode))
+                    {
+                        FILE* tmf=fopen("/tmp/nativehttp/tmp.cpp","w");
+                        if(tmf!=NULL)
+                        {
+                            FILE* nhpf=fopen(files[i].c_str(),"r");
+                            if(nhpf!=NULL)
+                            {
+                                fseek(nhpf,0,SEEK_END);
+                                int size = ftell(nhpf);
+                                rewind(nhpf);
+                                string com;
+                                com.resize(size);
+                                size=fread((char*)com.c_str(),1,size,nhpf);
+                                fclose(nhpf);
+                                string out=parse_nhp(com);
+
+                                fwrite(out.c_str(),1,out.size(),tmf);
+                                fclose(tmf);
+
+                                superstring pgnam(files[i]);
+                                pgnam.change(".nhp","nhp");
+                                pgnam.pos=pgnam.str.size()-1;
+                                string pname=pgnam.back_to("/");
+                                srand(rand());
+                                ostringstream tos;
+                                tos << rand();
+                                pname+=tos.str();
+
+                                string command=cfg->get_var("cppcmp")+" -shared -fPIC "+cfg->get_var("flags")+" -o /tmp/nativehttp/nhpage_"+pname+".so /tmp/nativehttp/tmp.cpp";
+
+                                bool shw=(cfg->get_int("cmpout")==1);
+
+                                if(shw)
+                                {
+                                    log("Compile ",files[i]);
+                                    cout << command.c_str()<<endl;
+                                }
+
+                                FILE *cmp=NULL;
+                                if(!(cmp = popen(command.c_str(), "r")))
+                                {
+                                    cerr<<"CAN'T OPEN "<<cfg->get_var("cppcmp").c_str()<<endl;
+                                }
+
+                                char b[256];
+                                while(fgets(b, 256, cmp)!=NULL)
+                                {
+                                    if(shw)
+                                    {
+                                        cout<<b;
+                                    }
+                                }
+                                pclose(cmp);
+
+                                if(shw)log("REFRESH@pagemap.cpp","/tmp/nativehttp/nhpage_"+pname+".so");
+
+                                ((nativepage*)base[pgi].data)->handle = dlopen(("/tmp/nativehttp/nhpage_"+pname+".so").c_str(), RTLD_NOW|RTLD_LOCAL);
+                                if(!((nativepage*)base[pgi].data)->handle)
+                                {
+                                    log("ERROR@pagemap.cpp","can't open shared file: "+files[i]);
+                                }
+                                else
+                                {
+                                    ((nativepage*)base[pgi].data)->onload = (Tonload) dlsym(((nativepage*)base[pgi].data)->handle,"onload");
+                                    ((nativepage*)base[pgi].data)->page = (Tpage) dlsym(((nativepage*)base[pgi].data)->handle,"page");
+                                    if(!((nativepage*)base[pgi].data)->onload||!((nativepage*)base[pgi].data)->page)
+                                    {
+                                        log("ERROR@pagemap.cpp","loading native symbols failed: "+files[i]);
+                                        dlclose(((nativepage*)base[pgi].data)->handle);
+                                    }
+                                    else
+                                    {
+                                        acp=pgi;
+                                        int initstate = (*((nativepage*)base[pgi].data)->onload)();
+                                        if(initstate!=1)
+                                        {
+                                            logid(initstate,"WARNING@pagemap.cpp","invalid init state: "+files[i]);
+                                            dlclose(((nativepage*)base[pgi].data)->handle);
+                                        }
+                                        else
+                                        {
+                                            base[pgi].timestamp=fatt;
+                                            log("RELOAD@pagemap.cpp","succes[2]: "+files[i]);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                log("ERROR@pagemap.cpp","can't open: "+files[i]);
+                                fclose(tmf);
+                            }
+                        }
+                        else
+                        {
+                            log("ERROR@pagemap.cpp","can't create /tmp/nativehttp/tmp.cpp");
+                        }
+                    }
+                    else
+                    {
+                        log("ERROR@pagemap.cpp","/tmp/nativehttp IS NOT A DIRECTORY");
+                    }
+                }
+                else
+                {
+                    mkdir("/tmp/nativehttp", 0755);
+                    goto dch;
+                }
+
+                SDL_mutexV(http::mtx_exec);
+                SDL_mutexV(http::mtx_exec2);
+            }
+            else if(is_dotso(files[i],files[i].size()))
             {
                 SDL_mutexP(http::mtx_exec);
                 SDL_mutexP(http::mtx_exec2);
@@ -133,6 +256,7 @@ void page_mapper::refresh(string d)
                     }
                     else
                     {
+                        acp=pgi;
                         int initstate = (*((nativepage*)base[pgi].data)->onload)();
                         if(initstate!=1)
                         {
@@ -236,6 +360,7 @@ void page_mapper::page_mapper_init(string d)
                 }
                 else
                 {
+                    acp=base.size();
                     int initstate = (*ntm->onload)();
                     if(initstate!=1)
                     {
@@ -321,7 +446,7 @@ drch:
                             }
                             pclose(cmp);
 
-                            page tmp;
+
                             nativepage* ntm = new nativepage;
                             if(shw)cout << "file "<<"/tmp/nativehttp/nhpage_"+pname+".so"<<endl;
                             ntm->handle = dlopen(("/tmp/nativehttp/nhpage_"+pname+".so").c_str(), RTLD_NOW|RTLD_LOCAL);
@@ -343,6 +468,7 @@ drch:
                                 }
                                 else
                                 {
+                                    acp=base.size();
                                     int initstate = (*ntm->onload)();
                                     if(initstate!=1)
                                     {
@@ -389,7 +515,9 @@ drch:
         else
         {
             tmp.type=page_file;
-            tmp.data=(void*)files[i].c_str();
+            tmp.data=new char[files.size()+1];
+            memcpy(tmp.data,files[i].c_str(),files[i].size());
+            ((char*)tmp.data)[files[i].size()]='\0';
             base.push_back(tmp);
             superstring pgac(files[i]);
             string furi=pgac.from(d);
@@ -441,7 +569,6 @@ page page_mapper::by_uri(string u)
             }
         }
     }
-
     return t;
 }
 
