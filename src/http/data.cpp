@@ -73,6 +73,8 @@ namespace manager
 int rate=0;
 int postto=-1;
 int execto=-1;
+bool apr;
+string fileloc;
 }
 
 void request::free()

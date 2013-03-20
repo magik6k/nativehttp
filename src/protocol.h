@@ -58,6 +58,8 @@ struct page
 {
     int type;
     void *data;
+    string file;
+    time_t timestamp;
 };
 
 struct urimp
@@ -75,6 +77,7 @@ public:
     void adduri(string u,bool top);
     vector<page>base;
     void page_mapper_init(string d);
+    void refresh(string d);
     page by_uri(string u);
 
 };

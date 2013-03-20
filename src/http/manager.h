@@ -31,6 +31,7 @@ void sig(int sig);
 void timeouts();
 void wait();
 int manager(void* unused);
+void fsrefresh();
 }
 }
 

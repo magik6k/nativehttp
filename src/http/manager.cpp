@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 
 #include "../nativehttp.h"
+#include "../protocol.h"
 #include "manager.h"
 #include "data.h"
 #include "executor.h"
@@ -93,10 +94,17 @@ int manager(void* unused)
     while(1)
     {
         http::manager::timeouts();
+        http::manager::fsrefresh();
         http::manager::wait();
     }
     return 1;
 }
+
+void fsrefresh()
+{
+    if(http::manager::apr)pmap.refresh(http::manager::fileloc);
+}
+
 void timeouts()
 {
     for(int i=0; i<http::Nexec; i++)

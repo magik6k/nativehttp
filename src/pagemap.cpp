@@ -32,6 +32,88 @@ freely, subject to the following restrictions:
 #define is_dotso(_pn,_sl) (_pn[_sl-3]=='.'&&_pn[_sl-2]=='s'&&_pn[_sl-1]=='o')
 #define is_dotnhp(_pn,_sl) (_pn[_sl-4]=='.'&&_pn[_sl-3]=='n'&&_pn[_sl-2]=='h'&&_pn[_sl-1]=='p')
 
+
+void page_mapper::refresh(string d)
+{
+    files.clear();
+    deque<string>todo;
+    todo.push_front(d);
+
+    while(todo.size()>0)
+    {
+        DIR *dp;
+        if((dp  = opendir(todo.back().c_str())) == NULL)
+        {
+            cout <<"error: "<< errno << ", for directory " << todo.back().c_str() << endl;
+        }
+        else
+        {
+            struct dirent *de;
+            while ((de = readdir(dp)) != NULL)
+            {
+                struct stat fi;
+                if (lstat( (todo.back()+string(de->d_name)).c_str(), &fi)<0)
+                {
+                    cout << "error(pm.statact) \n";
+                }
+                else
+                {
+                    if(S_ISDIR(fi.st_mode))
+                    {
+                        if(de->d_name[0]!='.')
+                        {
+                            todo.push_front((todo.back()+string(de->d_name)+'/').c_str());
+                        }
+                    }
+                    else
+                    {
+                        if(string(de->d_name)[string(de->d_name).size()-1]!='~')
+                        {
+                            files.push_back((todo.back()+string(de->d_name)).c_str());
+                        }
+
+                    }
+                }
+                //cout << (string(de->d_name)) << endl;
+            }
+            closedir(dp);
+        }
+        todo.pop_back();
+    }
+
+    for(unsigned int i=0;i<files.size();i++)
+    {
+        bool loaded=false;
+        bool toref=false;
+        time_t fatt=0;
+
+        for(unsigned int j=0;j<base.size();j++)
+        {
+            if(base[i].file==files[i])
+            {
+                loaded=true;
+                struct stat tst;
+                int rst = stat(files[i].c_str(), &tst);
+                if(rst != 0)
+                {
+                    log("pagemap.cpp:refresh","stat error");
+                    continue;
+                }
+                fatt=tst.st_mtime;
+                if(base[j].timestamp!=tst.st_mtime)
+                {
+                    toref=true;
+                }
+            }
+        }
+        if(loaded&&toref)
+        {
+            log("pagemap.cpp:refresh","file changed: "+files[i]);
+        }
+    }
+}
+
+
 void page_mapper::page_mapper_init(string d)
 {
     deque<string>todo;
@@ -78,6 +160,15 @@ void page_mapper::page_mapper_init(string d)
     for(unsigned int i=0; i<files.size(); i++)
     {
         page tmp;
+        struct stat tst;
+        int rst = stat(files[i].c_str(), &tst);
+        if(rst != 0)
+        {
+            log("pagemap.cpp:init","stat error");
+            continue;
+        }
+        tmp.timestamp=tst.st_mtime;
+        tmp.file=files[i];
         if(is_dotso(files[i],files[i].size()))
         {
             tmp.type=page_native;
