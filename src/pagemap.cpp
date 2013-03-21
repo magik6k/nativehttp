@@ -113,7 +113,6 @@ void page_mapper::refresh(string d)
         {
             if(is_dotnhp(files[i],files[i].size()))
             {
-                log("executor.cpp","nhp rld");
                 SDL_mutexP(http::mtx_exec);
                 SDL_mutexP(http::mtx_exec2);
 
@@ -185,6 +184,9 @@ dch:
                                 }
                                 else
                                 {
+
+
+
                                     ((nativepage*)base[pgi].data)->onload = (Tonload) dlsym(((nativepage*)base[pgi].data)->handle,"onload");
                                     ((nativepage*)base[pgi].data)->page = (Tpage) dlsym(((nativepage*)base[pgi].data)->handle,"page");
                                     if(!((nativepage*)base[pgi].data)->onload||!((nativepage*)base[pgi].data)->page)
@@ -194,6 +196,16 @@ dch:
                                     }
                                     else
                                     {
+
+                                        for(int j=0;j<uris.size();j++)
+                                        {
+                                            if(uris[i].sid==pgi)
+                                            {
+                                                delete[] uris[i].u;
+                                                uris.erase(uris.begin()+i);
+                                            }
+                                        }
+
                                         acp=pgi;
                                         int initstate = (*((nativepage*)base[pgi].data)->onload)();
                                         if(initstate!=1)
@@ -203,6 +215,15 @@ dch:
                                         }
                                         else
                                         {
+                                            superstring pgac(files[i]);
+                                            string furi='/'+pgac.from(d);
+                                            char* tfu=new char[furi.size()+1];
+                                            memcpy(tfu,furi.c_str(),furi.size());
+                                            tfu[furi.size()]='\0';
+                                            urimp tmu={tfu,pgi};
+                                            uris.push_back(tmu);
+
+                                            base[pgi].type=page_native;
                                             base[pgi].timestamp=fatt;
                                             log("RELOAD@pagemap.cpp","succes[2]: "+files[i]);
                                         }
@@ -247,6 +268,16 @@ dch:
                 }
                 else
                 {
+
+                    for(int j=0;j<uris.size();j++)
+                    {
+                        if(uris[i].sid==pgi)
+                        {
+                            delete[] uris[i].u;
+                            uris.erase(uris.begin()+i);
+                        }
+                    }
+
                     ((nativepage*)base[pgi].data)->onload = (Tonload) dlsym(((nativepage*)base[pgi].data)->handle,"onload");
                     ((nativepage*)base[pgi].data)->page = (Tpage) dlsym(((nativepage*)base[pgi].data)->handle,"page");
                     if(!((nativepage*)base[pgi].data)->onload||!((nativepage*)base[pgi].data)->page)
@@ -265,6 +296,16 @@ dch:
                         }
                         else
                         {
+                            superstring pgac(files[i]);
+                            string furi='/'+pgac.from(d);
+                            char* tfu=new char[furi.size()+1];
+                            memcpy(tfu,furi.c_str(),furi.size());
+                            tfu[furi.size()]='\0';
+                            urimp tmu={tfu,pgi};
+
+                            uris.push_back(tmu);
+
+                            base[pgi].type=page_native;
                             base[pgi].timestamp=fatt;
                             log("RELOAD@pagemap.cpp","succes[1]: "+files[i]);
                         }
@@ -337,7 +378,10 @@ void page_mapper::page_mapper_init(string d)
             continue;
         }
         tmp.timestamp=tst.st_mtime;
-        tmp.file=files[i];
+        tmp.file=new char[files[i].size()+1];
+        memcpy(tmp.file,files[i].c_str(),files[i].size());
+        tmp.file[files[i].size()]='\0';
+
         if(is_dotso(files[i],files[i].size()))
         {
             tmp.type=page_native;
@@ -373,8 +417,12 @@ void page_mapper::page_mapper_init(string d)
                         tmp.data = ntm;
                         base.push_back(tmp);
                         superstring pgac(files[i]);
-                        string furi=pgac.from(d);
-                        urimp tmu = {'/'+furi,int(base.size())-1};
+                        string furi='/'+pgac.from(d);
+                        char* tfu=new char[furi.size()+1];
+                        memcpy(tfu,furi.c_str(),furi.size());
+                        tfu[furi.size()]='\0';
+
+                        urimp tmu={tfu,int(base.size())-1};
                         uris.push_back(tmu);
                     }
                 }
@@ -482,8 +530,12 @@ drch:
                                         tmp.data=ntm;
                                         base.push_back(tmp);
                                         superstring pgac(files[i]);
-                                        string furi=pgac.from(d);
-                                        urimp tmu= {'/'+furi,int(base.size())-1};
+                                        string furi='/'+pgac.from(d);
+                                        char* tfu=new char[furi.size()+1];
+                                        memcpy(tfu,furi.c_str(),furi.size());
+                                        tfu[furi.size()]='\0';
+
+                                        urimp tmu={tfu,int(base.size())-1};
                                         uris.push_back(tmu);
                                     }
                                 }
@@ -520,8 +572,13 @@ drch:
             ((char*)tmp.data)[files[i].size()]='\0';
             base.push_back(tmp);
             superstring pgac(files[i]);
-            string furi=pgac.from(d);
-            urimp tmu = {'/'+furi,int(base.size())-1};
+
+            string furi='/'+pgac.from(d);
+            char* tfu=new char[furi.size()+1];
+            memcpy(tfu,furi.c_str(),furi.size());
+            tfu[furi.size()]='\0';
+
+            urimp tmu={tfu,int(base.size())-1};
             uris.push_back(tmu);
         }
     }
@@ -529,7 +586,11 @@ drch:
 
 void page_mapper::adduri(string u,bool top)
 {
-    urimp tu= {u,int(base.size())};
+    char* cu=new char[u.size()+1];
+    memcpy(cu,u.c_str(),u.size());
+    cu[u.size()]='\0';
+
+    urimp tu= {cu,acp};
     if(top)
     {
         uris.push_front(tu);
@@ -540,11 +601,11 @@ void page_mapper::adduri(string u,bool top)
     }
 }
 
-page page_mapper::by_uri(string u)
+page page_mapper::by_uri(const char* u)
 {
     vector<int>dn(uris.size(),0);
     page t= {-1,NULL};
-    for(unsigned int i=0; i<u.size(); i++)
+    for(unsigned int i=0; i<strlen(u); i++)
     {
         for(unsigned int j=0; j<dn.size(); j++)
         {
@@ -552,11 +613,11 @@ page page_mapper::by_uri(string u)
             {
                 if(uris[j].u[dn[j]]==u[i]||uris[j].u[dn[j]]=='*')
                 {
-                    if(uris[j].u.size()==unsigned(dn[j])+1&&u.size()==unsigned(dn[j])+1)
+                    if(strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(u)==strlen(uris[j].u))
                     {
                         return base[uris[j].sid];
                     }
-                    else if(uris[j].u.size()==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
+                    else if(strlen(uris[j].u)==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
                     {
                         t=base[uris[j].sid];
                     }

@@ -80,6 +80,8 @@ void sig(int sig)
                 SDL_KillThread(http::execUnits[i].etheard);
                 http::execUnits[i].state=-1;
                 http::execUnits[i].in=0;
+                SDL_mutexV(http::mtx_exec2);
+                SDL_mutexV(http::mtx_exec);
                 http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
 
             }
@@ -130,6 +132,7 @@ void timeouts()
             case 2:
                 if(time(0)-http::execUnits[i].in>http::manager::postto&&execto!=-1)
                 {
+
                     logid(i,"manager.cpp","PAGE EXECUTION TIMEOUT");
                     if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
                     if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;

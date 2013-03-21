@@ -58,13 +58,13 @@ struct page
 {
     int type;
     void *data;
-    string file;
+    char* file;
     time_t timestamp;
 };
 
 struct urimp
 {
-    string u;
+    char* u;
     int sid;
 };
 
@@ -74,12 +74,13 @@ private:
     vector<string>files;
     deque<urimp>uris;
     int acp;
+    unsigned int adui;
 public:
     void adduri(string u,bool top);
     vector<page>base;
     void page_mapper_init(string d);
     void refresh(string d);
-    page by_uri(string u);
+    page by_uri(const char* u);
 
 };
 
