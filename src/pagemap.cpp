@@ -197,7 +197,7 @@ dch:
                                     else
                                     {
 
-                                        for(int j=0;j<uris.size();j++)
+                                        for(unsigned int j=0;j<uris.size();j++)
                                         {
                                             if(uris[i].sid==pgi)
                                             {
@@ -269,7 +269,7 @@ dch:
                 else
                 {
 
-                    for(int j=0;j<uris.size();j++)
+                    for(unsigned int j=0;j<uris.size();j++)
                     {
                         if(uris[i].sid==pgi)
                         {
@@ -318,6 +318,48 @@ dch:
                 SDL_mutexV(http::mtx_exec);
                 SDL_mutexV(http::mtx_exec2);
 
+            }
+        }
+        else if(!loaded)
+        {
+            if(is_dotso(files[i],files[i].size()))
+            {
+
+            }
+            else if(is_dotnhp(files[i],files[i].size()))
+            {
+
+            }
+            else
+            {
+                page tmp;
+                struct stat tst;
+                int rst = stat(files[i].c_str(), &tst);
+                if(rst != 0)
+                {
+                    log("pagemap.cpp:init","stat error");
+                    continue;
+                }
+                tmp.timestamp=tst.st_mtime;
+                tmp.file=new char[files[i].size()+1];
+                memcpy(tmp.file,files[i].c_str(),files[i].size());
+                tmp.file[files[i].size()]='\0';
+
+                tmp.type=page_file;
+                tmp.data=new char[files.size()+1];
+                memcpy(tmp.data,files[i].c_str(),files[i].size());
+                ((char*)tmp.data)[files[i].size()]='\0';
+                base.push_back(tmp);
+                superstring pgac(files[i]);
+
+                string furi='/'+pgac.from(d);
+                char* tfu=new char[furi.size()+1];
+                memcpy(tfu,furi.c_str(),furi.size());
+                tfu[furi.size()]='\0';
+
+                urimp tmu={tfu,int(base.size())-1};
+                uris.push_back(tmu);
+                log("RUNLOAD@pagemap.cpp","succes");
             }
         }
     }
