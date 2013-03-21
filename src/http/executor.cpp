@@ -178,6 +178,8 @@ int executor(void* eid)
         delete[] process->request;
         process->request=NULL;
 
+        rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
+
         pagedata result;
         exc->fd1=rd.cookie;
         exc->fd2=rd.get;
