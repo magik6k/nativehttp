@@ -62,6 +62,8 @@ void datainit()
     http::manager::rate=cfg->get_int("managerrate");
     http::manager::postto=cfg->get_int("posttimeout");
     http::manager::execto=cfg->get_int("exectimeout");
+    http::manager::apr=cfg->get_int("autopagerefresh");
+    http::manager::fileloc=cfg->get_var("files_location");
 
     http::error::e400=http::error::load_error(cfg->get_var("error400"),"400 Bad Request");
     http::error::e403=http::error::load_error(cfg->get_var("error403"),"403 Forbidden");

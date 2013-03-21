@@ -75,7 +75,6 @@ extern SDLNet_SocketSet CSet;
 extern TCPsocket server;
 extern bool* ulock;
 
-
 extern int Nexec;
 extern Sexecutor* execUnits;
 
@@ -114,6 +113,8 @@ namespace manager
 extern int rate;
 extern int postto;
 extern int execto;
+extern bool apr;
+extern string fileloc;
 }
 
 }

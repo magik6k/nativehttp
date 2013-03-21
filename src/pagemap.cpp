@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "protocol.h"
+#include "http/data.h"
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
@@ -31,6 +32,297 @@ freely, subject to the following restrictions:
 #include <sstream>
 #define is_dotso(_pn,_sl) (_pn[_sl-3]=='.'&&_pn[_sl-2]=='s'&&_pn[_sl-1]=='o')
 #define is_dotnhp(_pn,_sl) (_pn[_sl-4]=='.'&&_pn[_sl-3]=='n'&&_pn[_sl-2]=='h'&&_pn[_sl-1]=='p')
+
+
+void page_mapper::refresh(string d)
+{
+    files.clear();
+    deque<string>todo;
+    todo.push_front(d);
+
+    while(todo.size()>0)
+    {
+        DIR *dp;
+        if((dp  = opendir(todo.back().c_str())) == NULL)
+        {
+            cout <<"error: "<< errno << ", for directory " << todo.back().c_str() << endl;
+        }
+        else
+        {
+            struct dirent *de;
+            while ((de = readdir(dp)) != NULL)
+            {
+                struct stat fi;
+                if (lstat( (todo.back()+string(de->d_name)).c_str(), &fi)<0)
+                {
+                    cout << "error(pm.statact) \n";
+                }
+                else
+                {
+                    if(S_ISDIR(fi.st_mode))
+                    {
+                        if(de->d_name[0]!='.')
+                        {
+                            todo.push_front((todo.back()+string(de->d_name)+'/').c_str());
+                        }
+                    }
+                    else
+                    {
+                        if(string(de->d_name)[string(de->d_name).size()-1]!='~')
+                        {
+                            files.push_back((todo.back()+string(de->d_name)).c_str());
+                        }
+
+                    }
+                }
+                //cout << (string(de->d_name)) << endl;
+            }
+            closedir(dp);
+        }
+        todo.pop_back();
+    }
+
+    for(unsigned int i=0;i<files.size();i++)
+    {
+        bool loaded=false;
+        bool toref=false;
+        time_t fatt=0;
+        int pgi=-1;
+
+        for(unsigned int j=0;j<base.size();j++)
+        {
+            if(base[j].file==files[i])
+            {
+                pgi=j;
+                loaded=true;
+                struct stat tst;
+                int rst = stat(files[i].c_str(), &tst);
+                if(rst != 0)
+                {
+                    log("pagemap.cpp:refresh","stat error");
+                    continue;
+                }
+                fatt=tst.st_mtime;
+                if(base[j].timestamp!=tst.st_mtime)
+                {
+                    toref=true;
+                }
+            }
+        }
+        if(loaded&&toref)
+        {
+            if(is_dotnhp(files[i],files[i].size()))
+            {
+                SDL_mutexP(http::mtx_exec);
+                SDL_mutexP(http::mtx_exec2);
+
+                struct stat st2;
+dch:
+                if(stat("/tmp/nativehttp",&st2)==0)
+                {
+                    if(S_ISDIR(st2.st_mode))
+                    {
+                        FILE* tmf=fopen("/tmp/nativehttp/tmp.cpp","w");
+                        if(tmf!=NULL)
+                        {
+                            FILE* nhpf=fopen(files[i].c_str(),"r");
+                            if(nhpf!=NULL)
+                            {
+                                fseek(nhpf,0,SEEK_END);
+                                int size = ftell(nhpf);
+                                rewind(nhpf);
+                                string com;
+                                com.resize(size);
+                                size=fread((char*)com.c_str(),1,size,nhpf);
+                                fclose(nhpf);
+                                string out=parse_nhp(com);
+
+                                fwrite(out.c_str(),1,out.size(),tmf);
+                                fclose(tmf);
+
+                                superstring pgnam(files[i]);
+                                pgnam.change(".nhp","nhp");
+                                pgnam.pos=pgnam.str.size()-1;
+                                string pname=pgnam.back_to("/");
+                                srand(rand());
+                                ostringstream tos;
+                                tos << rand();
+                                pname+=tos.str();
+
+                                string command=cfg->get_var("cppcmp")+" -shared -fPIC "+cfg->get_var("flags")+" -o /tmp/nativehttp/nhpage_"+pname+".so /tmp/nativehttp/tmp.cpp";
+
+                                bool shw=(cfg->get_int("cmpout")==1);
+
+                                if(shw)
+                                {
+                                    log("Compile ",files[i]);
+                                    cout << command.c_str()<<endl;
+                                }
+
+                                FILE *cmp=NULL;
+                                if(!(cmp = popen(command.c_str(), "r")))
+                                {
+                                    cerr<<"CAN'T OPEN "<<cfg->get_var("cppcmp").c_str()<<endl;
+                                }
+
+                                char b[256];
+                                while(fgets(b, 256, cmp)!=NULL)
+                                {
+                                    if(shw)
+                                    {
+                                        cout<<b;
+                                    }
+                                }
+                                pclose(cmp);
+
+                                if(shw)log("REFRESH@pagemap.cpp","/tmp/nativehttp/nhpage_"+pname+".so");
+
+                                ((nativepage*)base[pgi].data)->handle = dlopen(("/tmp/nativehttp/nhpage_"+pname+".so").c_str(), RTLD_NOW|RTLD_LOCAL);
+                                if(!((nativepage*)base[pgi].data)->handle)
+                                {
+                                    log("ERROR@pagemap.cpp","can't open shared file: "+files[i]);
+                                }
+                                else
+                                {
+
+
+
+                                    ((nativepage*)base[pgi].data)->onload = (Tonload) dlsym(((nativepage*)base[pgi].data)->handle,"onload");
+                                    ((nativepage*)base[pgi].data)->page = (Tpage) dlsym(((nativepage*)base[pgi].data)->handle,"page");
+                                    if(!((nativepage*)base[pgi].data)->onload||!((nativepage*)base[pgi].data)->page)
+                                    {
+                                        log("ERROR@pagemap.cpp","loading native symbols failed: "+files[i]);
+                                        dlclose(((nativepage*)base[pgi].data)->handle);
+                                    }
+                                    else
+                                    {
+
+                                        for(int j=0;j<uris.size();j++)
+                                        {
+                                            if(uris[i].sid==pgi)
+                                            {
+                                                delete[] uris[i].u;
+                                                uris.erase(uris.begin()+i);
+                                            }
+                                        }
+
+                                        acp=pgi;
+                                        int initstate = (*((nativepage*)base[pgi].data)->onload)();
+                                        if(initstate!=1)
+                                        {
+                                            logid(initstate,"WARNING@pagemap.cpp","invalid init state: "+files[i]);
+                                            dlclose(((nativepage*)base[pgi].data)->handle);
+                                        }
+                                        else
+                                        {
+                                            superstring pgac(files[i]);
+                                            string furi='/'+pgac.from(d);
+                                            char* tfu=new char[furi.size()+1];
+                                            memcpy(tfu,furi.c_str(),furi.size());
+                                            tfu[furi.size()]='\0';
+                                            urimp tmu={tfu,pgi};
+                                            uris.push_back(tmu);
+
+                                            base[pgi].type=page_native;
+                                            base[pgi].timestamp=fatt;
+                                            log("RELOAD@pagemap.cpp","succes[2]: "+files[i]);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                log("ERROR@pagemap.cpp","can't open: "+files[i]);
+                                fclose(tmf);
+                            }
+                        }
+                        else
+                        {
+                            log("ERROR@pagemap.cpp","can't create /tmp/nativehttp/tmp.cpp");
+                        }
+                    }
+                    else
+                    {
+                        log("ERROR@pagemap.cpp","/tmp/nativehttp IS NOT A DIRECTORY");
+                    }
+                }
+                else
+                {
+                    mkdir("/tmp/nativehttp", 0755);
+                    goto dch;
+                }
+
+                SDL_mutexV(http::mtx_exec);
+                SDL_mutexV(http::mtx_exec2);
+            }
+            else if(is_dotso(files[i],files[i].size()))
+            {
+                SDL_mutexP(http::mtx_exec);
+                SDL_mutexP(http::mtx_exec2);
+
+                dlclose(((nativepage*)base[pgi].data)->handle);
+                ((nativepage*)base[pgi].data)->handle = dlopen(files[i].c_str(), RTLD_NOW|RTLD_LOCAL);
+                if(!((nativepage*)base[pgi].data)->handle)
+                {
+                    log("ERROR@pagemap.cpp","can't open shared file: "+files[i]);
+                }
+                else
+                {
+
+                    for(int j=0;j<uris.size();j++)
+                    {
+                        if(uris[i].sid==pgi)
+                        {
+                            delete[] uris[i].u;
+                            uris.erase(uris.begin()+i);
+                        }
+                    }
+
+                    ((nativepage*)base[pgi].data)->onload = (Tonload) dlsym(((nativepage*)base[pgi].data)->handle,"onload");
+                    ((nativepage*)base[pgi].data)->page = (Tpage) dlsym(((nativepage*)base[pgi].data)->handle,"page");
+                    if(!((nativepage*)base[pgi].data)->onload||!((nativepage*)base[pgi].data)->page)
+                    {
+                        log("ERROR@pagemap.cpp","loading native symbols failed: "+files[i]);
+                        dlclose(((nativepage*)base[pgi].data)->handle);
+                    }
+                    else
+                    {
+                        acp=pgi;
+                        int initstate = (*((nativepage*)base[pgi].data)->onload)();
+                        if(initstate!=1)
+                        {
+                            logid(initstate,"WARNING@pagemap.cpp","invalid init state: "+files[i]);
+                            dlclose(((nativepage*)base[pgi].data)->handle);
+                        }
+                        else
+                        {
+                            superstring pgac(files[i]);
+                            string furi='/'+pgac.from(d);
+                            char* tfu=new char[furi.size()+1];
+                            memcpy(tfu,furi.c_str(),furi.size());
+                            tfu[furi.size()]='\0';
+                            urimp tmu={tfu,pgi};
+
+                            uris.push_back(tmu);
+
+                            base[pgi].type=page_native;
+                            base[pgi].timestamp=fatt;
+                            log("RELOAD@pagemap.cpp","succes[1]: "+files[i]);
+                        }
+                    }
+
+                }
+
+
+
+                SDL_mutexV(http::mtx_exec);
+                SDL_mutexV(http::mtx_exec2);
+
+            }
+        }
+    }
+}
+
 
 void page_mapper::page_mapper_init(string d)
 {
@@ -78,6 +370,18 @@ void page_mapper::page_mapper_init(string d)
     for(unsigned int i=0; i<files.size(); i++)
     {
         page tmp;
+        struct stat tst;
+        int rst = stat(files[i].c_str(), &tst);
+        if(rst != 0)
+        {
+            log("pagemap.cpp:init","stat error");
+            continue;
+        }
+        tmp.timestamp=tst.st_mtime;
+        tmp.file=new char[files[i].size()+1];
+        memcpy(tmp.file,files[i].c_str(),files[i].size());
+        tmp.file[files[i].size()]='\0';
+
         if(is_dotso(files[i],files[i].size()))
         {
             tmp.type=page_native;
@@ -100,6 +404,7 @@ void page_mapper::page_mapper_init(string d)
                 }
                 else
                 {
+                    acp=base.size();
                     int initstate = (*ntm->onload)();
                     if(initstate!=1)
                     {
@@ -112,8 +417,12 @@ void page_mapper::page_mapper_init(string d)
                         tmp.data = ntm;
                         base.push_back(tmp);
                         superstring pgac(files[i]);
-                        string furi=pgac.from(d);
-                        urimp tmu = {'/'+furi,int(base.size())-1};
+                        string furi='/'+pgac.from(d);
+                        char* tfu=new char[furi.size()+1];
+                        memcpy(tfu,furi.c_str(),furi.size());
+                        tfu[furi.size()]='\0';
+
+                        urimp tmu={tfu,int(base.size())-1};
                         uris.push_back(tmu);
                     }
                 }
@@ -185,7 +494,7 @@ drch:
                             }
                             pclose(cmp);
 
-                            page tmp;
+
                             nativepage* ntm = new nativepage;
                             if(shw)cout << "file "<<"/tmp/nativehttp/nhpage_"+pname+".so"<<endl;
                             ntm->handle = dlopen(("/tmp/nativehttp/nhpage_"+pname+".so").c_str(), RTLD_NOW|RTLD_LOCAL);
@@ -207,6 +516,7 @@ drch:
                                 }
                                 else
                                 {
+                                    acp=base.size();
                                     int initstate = (*ntm->onload)();
                                     if(initstate!=1)
                                     {
@@ -220,8 +530,12 @@ drch:
                                         tmp.data=ntm;
                                         base.push_back(tmp);
                                         superstring pgac(files[i]);
-                                        string furi=pgac.from(d);
-                                        urimp tmu= {'/'+furi,int(base.size())-1};
+                                        string furi='/'+pgac.from(d);
+                                        char* tfu=new char[furi.size()+1];
+                                        memcpy(tfu,furi.c_str(),furi.size());
+                                        tfu[furi.size()]='\0';
+
+                                        urimp tmu={tfu,int(base.size())-1};
                                         uris.push_back(tmu);
                                     }
                                 }
@@ -253,11 +567,18 @@ drch:
         else
         {
             tmp.type=page_file;
-            tmp.data=(void*)files[i].c_str();
+            tmp.data=new char[files.size()+1];
+            memcpy(tmp.data,files[i].c_str(),files[i].size());
+            ((char*)tmp.data)[files[i].size()]='\0';
             base.push_back(tmp);
             superstring pgac(files[i]);
-            string furi=pgac.from(d);
-            urimp tmu = {'/'+furi,int(base.size())-1};
+
+            string furi='/'+pgac.from(d);
+            char* tfu=new char[furi.size()+1];
+            memcpy(tfu,furi.c_str(),furi.size());
+            tfu[furi.size()]='\0';
+
+            urimp tmu={tfu,int(base.size())-1};
             uris.push_back(tmu);
         }
     }
@@ -265,7 +586,11 @@ drch:
 
 void page_mapper::adduri(string u,bool top)
 {
-    urimp tu= {u,int(base.size())};
+    char* cu=new char[u.size()+1];
+    memcpy(cu,u.c_str(),u.size());
+    cu[u.size()]='\0';
+
+    urimp tu= {cu,acp};
     if(top)
     {
         uris.push_front(tu);
@@ -276,11 +601,11 @@ void page_mapper::adduri(string u,bool top)
     }
 }
 
-page page_mapper::by_uri(string u)
+page page_mapper::by_uri(const char* u)
 {
     vector<int>dn(uris.size(),0);
     page t= {-1,NULL};
-    for(unsigned int i=0; i<u.size(); i++)
+    for(unsigned int i=0; i<strlen(u); i++)
     {
         for(unsigned int j=0; j<dn.size(); j++)
         {
@@ -288,11 +613,11 @@ page page_mapper::by_uri(string u)
             {
                 if(uris[j].u[dn[j]]==u[i]||uris[j].u[dn[j]]=='*')
                 {
-                    if(uris[j].u.size()==unsigned(dn[j])+1&&u.size()==unsigned(dn[j])+1)
+                    if(strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(u)==strlen(uris[j].u))
                     {
                         return base[uris[j].sid];
                     }
-                    else if(uris[j].u.size()==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
+                    else if(strlen(uris[j].u)==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
                     {
                         t=base[uris[j].sid];
                     }
@@ -305,7 +630,6 @@ page page_mapper::by_uri(string u)
             }
         }
     }
-
     return t;
 }
 

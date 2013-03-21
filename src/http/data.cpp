@@ -53,7 +53,7 @@ SDL_Thread* theard_mg=NULL;
 
 namespace headers
 {
-string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.0\r\n";
+string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";
 string alive="Connection: keep-alive\r\nKeep-Alive: timeout=";
 string alivetimeout;
 }
@@ -73,6 +73,8 @@ namespace manager
 int rate=0;
 int postto=-1;
 int execto=-1;
+bool apr;
+string fileloc;
 }
 
 void request::free()

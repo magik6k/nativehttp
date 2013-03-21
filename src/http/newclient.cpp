@@ -33,7 +33,7 @@ void disconnect(int i)
         SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
         TCPsocket td=http::connected[i];
         http::connected[i]=NULL;//safer to put null here, just to be sure, that it's not used until deleting it
-        SDLNet_TCP_Close(http::connected[i]);
+        SDLNet_TCP_Close(td);
     }
 }
 int findfreeslot()

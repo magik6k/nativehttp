@@ -312,13 +312,12 @@ void post(rdata& rd, http::request* process, http::rproc::lrqd& ld)
 
 bool ex(pagedata& pd,rdata* rd)
 {
-    page pid = pmap.by_uri(rd->uri);
+    page pid = pmap.by_uri(rd->uri.c_str());
 
     switch(pid.type)
     {
     case page_native:
     {
-
         rd->ctype="text/html;charset="+charset;
         rd->response="200 OK";
 
