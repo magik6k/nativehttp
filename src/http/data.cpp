@@ -60,12 +60,12 @@ string alivetimeout;
 
 namespace error
 {
-pagedata e400;
-pagedata e403;
-pagedata e404;
-pagedata e500;
-pagedata e501;
-pagedata e505;
+nativehttp::data::pagedata e400;
+nativehttp::data::pagedata e403;
+nativehttp::data::pagedata e404;
+nativehttp::data::pagedata e500;
+nativehttp::data::pagedata e501;
+nativehttp::data::pagedata e505;
 }
 
 namespace manager

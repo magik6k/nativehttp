@@ -35,7 +35,7 @@ namespace manager
 
 void sig(int sig)
 {
-    logid(sig,"manager.cpp","SIG");
+    nativehttp::server::logid(sig,"manager.cpp","SIG");
     if(sig==11)
     {
         /*
@@ -66,7 +66,7 @@ void sig(int sig)
         }
         if(SDL_GetThreadID(http::theard_sd)==SDL_ThreadID())
         {
-            log("WARNING","Sender theard crashed, rescuing");
+            nativehttp::server::log("WARNING","Sender theard crashed, rescuing");
             SDL_mutexV(http::mtx_snd);//may be needed
             SDL_KillThread(http::theard_sd);
             http::theard_sd=SDL_CreateThread(http::sender::sender,NULL);
@@ -76,7 +76,7 @@ void sig(int sig)
         {
             if(SDL_GetThreadID(http::execUnits[i].etheard)==SDL_ThreadID())
             {
-                logid(i,"WARNING","Execution theard crashed, rescuing");
+                nativehttp::server::logid(i,"WARNING","Execution theard crashed, rescuing");
                 SDL_KillThread(http::execUnits[i].etheard);
                 http::execUnits[i].state=-1;
                 http::execUnits[i].in=0;
@@ -119,8 +119,8 @@ void timeouts()
             case 3:
                 if(time(0)-http::execUnits[i].in>http::manager::postto&&postto!=-1)
                 {
-                    if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
-                    if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;
+                    if(http::execUnits[i].fd1)delete (nativehttp::data::postgetdata*)http::execUnits[i].fd1;
+                    if(http::execUnits[i].fd2)delete (nativehttp::data::postgetdata*)http::execUnits[i].fd2;
                     SDL_KillThread(http::execUnits[i].etheard);
                     http::execUnits[i].in=0;
                     http::execUnits[i].state=-1;
@@ -133,9 +133,9 @@ void timeouts()
                 if(time(0)-http::execUnits[i].in>http::manager::postto&&execto!=-1)
                 {
 
-                    logid(i,"manager.cpp","PAGE EXECUTION TIMEOUT");
-                    if(http::execUnits[i].fd1)delete (postgetdata*)http::execUnits[i].fd1;
-                    if(http::execUnits[i].fd2)delete (postgetdata*)http::execUnits[i].fd2;
+                    nativehttp::server::logid(i,"manager.cpp","PAGE EXECUTION TIMEOUT");
+                    if(http::execUnits[i].fd1)delete (nativehttp::data::postgetdata*)http::execUnits[i].fd1;
+                    if(http::execUnits[i].fd2)delete (nativehttp::data::postgetdata*)http::execUnits[i].fd2;
                     SDL_KillThread(http::execUnits[i].etheard);
                     http::execUnits[i].in=0;
                     http::execUnits[i].state=-1;

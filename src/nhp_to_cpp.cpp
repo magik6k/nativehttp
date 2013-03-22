@@ -37,7 +37,7 @@ string parse_nhp(string nhp)
     string page="return 1;\n}\npagedata page(rdata* request)\n{\nstring result;\n";
     string end="return pagedata(result);\n}\n}\n";
     string thtm="";
-    superstring data(nhp);
+    nativehttp::data::superstring data(nhp);
     nhps scope=nhps_html;
     bool iq=false;
     while(data.pos<data.str.size())
@@ -138,7 +138,7 @@ string parse_nhp(string nhp)
             }
             if(nap&&!thtm.empty())
             {
-                superstring htenc(thtm);
+                nativehttp::data::superstring htenc(thtm);
                 thtm.clear();
                 htenc.change("\\","\\\\");
                 htenc.pos=0;
@@ -173,7 +173,7 @@ string parse_nhp(string nhp)
     }
     if(!thtm.empty())
     {
-        superstring htenc(thtm);
+        nativehttp::data::superstring htenc(thtm);
         thtm.clear();
         htenc.change("\\","\\\\");
         htenc.pos=0;

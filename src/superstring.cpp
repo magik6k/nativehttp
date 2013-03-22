@@ -23,39 +23,39 @@ freely, subject to the following restrictions:
 #include "superstring.h"
 #include <stdio.h>
 
-token::token(string st, int i)
+nativehttp::data::token::token(string st, int i)
 {
     s=st;
     id=i;
 }
 
-void superstring::set(string s)
+void nativehttp::data::superstring::set(string s)
 {
     str=s;
 }
 
-superstring::superstring()
+nativehttp::data::superstring::superstring()
 {
     pos=0;
 }
 
-superstring::superstring(string s)
+nativehttp::data::superstring::superstring(string s)
 {
     this->set(s);
     pos=0;
 }
 
-void superstring::operator()(string s)
+void nativehttp::data::superstring::operator()(string s)
 {
     this->set(s);
 }
 
-void superstring::add_token(token t)
+void nativehttp::data::superstring::add_token(token t)
 {
     tokens.push_back(t);
 }
 
-token superstring::tok()
+nativehttp::data::token nativehttp::data::superstring::tok()
 {
     vector<unsigned int>d(tokens.size(),0);
 
@@ -82,7 +82,7 @@ token superstring::tok()
     return tokens[0];
 }
 
-token superstring::tok(string& opt)
+nativehttp::data::token nativehttp::data::superstring::tok(string& opt)
 {
     vector<unsigned int>d(tokens.size(),0);
 
@@ -110,7 +110,7 @@ token superstring::tok(string& opt)
     return tokens[0];
 }
 
-string superstring::to(string fend)
+string nativehttp::data::superstring::to(string fend)
 {
     rae=false;
     unsigned int c=0;
@@ -143,7 +143,7 @@ string superstring::to(string fend)
     return rt;
 }
 
-string superstring::from(string start)
+string nativehttp::data::superstring::from(string start)
 {
     unsigned int c=0;
     string rt;
@@ -174,7 +174,7 @@ string superstring::from(string start)
     return rt;
 }
 
-int superstring::count(char c)
+int nativehttp::data::superstring::count(char c)
 {
     int rt=0;
     for(; pos<str.size(); pos++)
@@ -187,7 +187,7 @@ int superstring::count(char c)
     return rt;
 }
 
-string superstring::back_to(string fend)
+string nativehttp::data::superstring::back_to(string fend)
 {
     string nfe;
     for(int i=fend.size()-1; i>=0; i--)
@@ -233,7 +233,7 @@ string superstring::back_to(string fend)
     return ert;
 }
 
-void superstring::change(string from, string to)
+void nativehttp::data::superstring::change(string from, string to)
 {
     string out;
     while(pos<str.size())
@@ -251,7 +251,7 @@ void superstring::change(string from, string to)
     str=out;
 }
 
-string superstring::file(string fn)
+string nativehttp::data::superstring::file(string fn)
 {
     FILE* f=fopen(fn.c_str(),"r");
     if(f)
@@ -268,22 +268,22 @@ string superstring::file(string fn)
     return "";
 }
 
-void superstring::set_file(string fn)
+void nativehttp::data::superstring::set_file(string fn)
 {
     str=this->file(fn);
 }
 
-void superstring::append_file(string fn)
+void nativehttp::data::superstring::append_file(string fn)
 {
     str+=this->file(fn);
 }
 
-void superstring::clear_tokens()
+void nativehttp::data::superstring::clear_tokens()
 {
     tokens.clear();
 }
 
-int superstring::check(string sch)
+int nativehttp::data::superstring::check(string sch)
 {
 
     unsigned int left=sch.size();

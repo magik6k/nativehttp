@@ -60,7 +60,7 @@ public:
     }
 };
 
-nbase::nbase(string file)
+nativehttp::base::nbase::nbase(string file)
 {
     bfn=file;
     FILE *bf=fopen(file.c_str(),"rb");
@@ -107,7 +107,7 @@ nbase::nbase(string file)
     }
 }
 
-int nbase::istable(string name)
+int nativehttp::base::nbase::istable(string name)
 {
     for(unsigned int i=0; i<data.size(); i++)
     {
@@ -119,14 +119,14 @@ int nbase::istable(string name)
     return NB_ERROR;
 }
 
-int nbase::createtable(string name, string* columns, int cnum)
+int nativehttp::base::nbase::createtable(string name, string* columns, int cnum)
 {
-    nbtable *tmtable=new nbtable(name,columns,cnum);
+    nativehttp::base::nbtable *tmtable=new nbtable(name,columns,cnum);
     data.push_back(tmtable);
     return NB_SUCCES;
 }
 
-int nbase::insert(string tabname, string* rowdata)
+int nativehttp::base::nbase::insert(string tabname, string* rowdata)
 {
     for(unsigned int i=0; i<data.size(); i++)
     {
@@ -138,9 +138,9 @@ int nbase::insert(string tabname, string* rowdata)
     return NB_ERROR;
 }
 
-nbresult nbase::operator()(string table)
+nativehttp::base::nbresult nativehttp::base::nbase::operator()(string table)
 {
-    nbresult rt;
+    nativehttp::base::nbresult rt;
     for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==table)
@@ -155,9 +155,9 @@ nbresult nbase::operator()(string table)
     return rt;
 }
 
-nbresult nbase::operator()(string table, nbfilter flt, void* fltdata)
+nativehttp::base::nbresult nativehttp::base::nbase::operator()(string table, nativehttp::base::nbfilter flt, void* fltdata)
 {
-    nbresult rt;
+    nativehttp::base::nbresult rt;
     for(unsigned int i=0; i<data.size(); i++)
     {
         if(data[i]->name==table)
@@ -175,7 +175,7 @@ nbresult nbase::operator()(string table, nbfilter flt, void* fltdata)
     return rt;
 }
 
-int nbase::del(string tabname, nbfilter flt, void* fltdata)
+int nativehttp::base::nbase::del(string tabname, nativehttp::base::nbfilter flt, void* fltdata)
 {
     int o=-1;
     for(unsigned int i=0; i<data.size(); i++)
@@ -213,11 +213,11 @@ int nbase::del(string tabname, nbfilter flt, void* fltdata)
 struct nbblt
 {
     string f;
-    nbase* p;
+    nativehttp::base::nbase* p;
 };
 vector<nbblt>nbopls;
 
-extern "C" nbase* nbase_open(string file)
+extern "C" nativehttp::base::nbase* nbase_open(string file)
 {
     for(unsigned int i=0; i<nbopls.size(); i++)
     {
@@ -226,7 +226,7 @@ extern "C" nbase* nbase_open(string file)
             return nbopls[i].p;
         }
     }
-    nbblt ttm= {file,new nbase(file)};
+    nbblt ttm= {file,new nativehttp::base::nbase(file)};
     if(ttm.p)
     {
         nbopls.push_back(ttm);
@@ -234,7 +234,7 @@ extern "C" nbase* nbase_open(string file)
     return ttm.p;
 }
 
-nbtable::nbtable(string n, string* cl, int cnb)
+nativehttp::base::nbtable::nbtable(string n, string* cl, int cnb)
 {
     name=n;
     cn=cnb;
@@ -242,7 +242,7 @@ nbtable::nbtable(string n, string* cl, int cnb)
     for(int i=0; i<cnb; i++)cols[i]=cl[i];
 }
 
-nbtable::~nbtable()
+nativehttp::base::nbtable::~nbtable()
 {
     if(cols)
     {
@@ -250,9 +250,9 @@ nbtable::~nbtable()
     }
 }
 
-int nbtable::ins(string* in)
+int nativehttp::base::nbtable::ins(string* in)
 {
-    nbrow* trow=new nbrow;
+    nbrow* trow=new nativehttp::base::nbrow;
     trow->data=new string[cn];
     for(int i=0; i<cn; i++)
     {
@@ -263,7 +263,7 @@ int nbtable::ins(string* in)
     return NB_SUCCES;
 }
 
-int nbase::save()
+int nativehttp::base::nbase::save()
 {
     FILE *bf=fopen(bfn.c_str(),"wb");
     if(!bf)return NB_ERROR;
@@ -300,7 +300,7 @@ int nbase::save()
 ///nbtable class end
 ///nbrow class
 
-nbrow::~nbrow()
+nativehttp::base::nbrow::~nbrow()
 {
     if(data)
     {
@@ -311,17 +311,17 @@ nbrow::~nbrow()
 ///nbrow class end
 ///nbresult class
 
-string* nbresult::operator[](int rowid)
+string* nativehttp::base::nbresult::operator[](int rowid)
 {
     return res[rowid];
 }
 
-int nbresult::count()
+int nativehttp::base::nbresult::count()
 {
     return res.size();
 }
 
-int nbresult::filter(nbfilter flt, void* fltdata)
+int nativehttp::base::nbresult::filter(nbfilter flt, void* fltdata)
 {
     int o=0;
     vector<string*>nvec;

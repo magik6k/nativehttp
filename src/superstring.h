@@ -28,6 +28,12 @@ freely, subject to the following restrictions:
 
 using namespace std;
 
+namespace nativehttp
+{
+
+namespace data
+{
+
 struct token
 {
     int id;
@@ -75,5 +81,8 @@ public:
 
 };
 
+
+}//data
+}//nativehttp
 
 #endif // SUPERSTRING_H_INCLUDED

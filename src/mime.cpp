@@ -219,10 +219,10 @@ string default_mime;
 
 mimec::mimec()
 {
-    superstring ts(smime_types_charset);
+    nativehttp::data::superstring ts(smime_types_charset);
     ts.change("%s",charset);
 
-    superstring mp(ts.str+smime_types);
+    nativehttp::data::superstring mp(ts.str+smime_types);
     int n=mp.count('\n');
     mp.pos=0;
     for(int i=0; i<n; i++)
@@ -237,7 +237,7 @@ mimec::mimec()
 
 string mimec::get_ctype(string fn)
 {
-    superstring fnm(fn);
+    nativehttp::data::superstring fnm(fn);
     fnm.pos=fn.size()-1;
     string fext=fnm.back_to(".");
     string tm=mimes[fext];

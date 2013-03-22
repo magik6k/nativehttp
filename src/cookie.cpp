@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 
-cookiedata::cookiedata(string strcookie)
+nativehttp::data::cookiedata::cookiedata(string strcookie)
 {
     superstring cke(strcookie);
     while(cke.pos<cke.str.size())
@@ -34,7 +34,7 @@ cookiedata::cookiedata(string strcookie)
     }
 }
 
-string cookiedata::get(string name)
+string nativehttp::data::cookiedata::get(string name)
 {
     for(unsigned int i=0; i<data.size(); i++)
     {
@@ -46,17 +46,17 @@ string cookiedata::get(string name)
     return "";
 }
 
-void cookiedata::set(string name, string value)
+void nativehttp::data::cookiedata::set(string name, string value)
 {
     sets+="Set-Cookie: "+name+"="+value+"\r\n";
 }
 
-void cookiedata::set(string name, string value, string attributes)
+void nativehttp::data::cookiedata::set(string name, string value, string attributes)
 {
     sets+="Set-Cookie: "+name+"="+value+"; "+attributes+"\r\n";
 }
 
-string cookiedata::gethead()
+string nativehttp::data::cookiedata::gethead()
 {
     return sets;
 }

@@ -100,12 +100,12 @@ extern string alivetimeout;
 
 namespace error
 {
-extern pagedata e400;
-extern pagedata e403;
-extern pagedata e404;
-extern pagedata e500;
-extern pagedata e501;
-extern pagedata e505;
+extern nativehttp::data::pagedata e400;
+extern nativehttp::data::pagedata e403;
+extern nativehttp::data::pagedata e404;
+extern nativehttp::data::pagedata e500;
+extern nativehttp::data::pagedata e501;
+extern nativehttp::data::pagedata e505;
 }
 
 namespace manager

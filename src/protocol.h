@@ -42,16 +42,22 @@ string its(int n);
 #define page_native 0
 #define page_file 1
 
-
+namespace nativehttp
+{
+namespace data
+{
 typedef int (*Tonload)();
-typedef pagedata (*Tpage)(rdata*);
+typedef pagedata(*Tpage)(rdata*);
+}
+}
+
 
 struct nativepage
 {
     void* handle;
 
-    Tonload onload;
-    Tpage page;
+    nativehttp::data::Tonload onload;
+    nativehttp::data::Tpage page;
 };
 
 struct page
@@ -85,7 +91,7 @@ public:
 };
 
 
-pagedata exec(string uri,rdata* rd);
+nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 
 class mimec
 {
@@ -101,10 +107,9 @@ public:
 extern page_mapper pmap;
 extern string charset;
 extern mimec *mime;
-extern Ccfg *cfg;
+extern nativehttp::data::Ccfg *cfg;
 extern int postmax;
 extern string default_mime;
-extern sstat gstats;
 extern bool deamonized;
 
 #endif // PROTOCOL_H_INCLUDED
