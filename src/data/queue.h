@@ -133,7 +133,6 @@ template<class T>size_t queue<T>::size()
 template<class T>int queue<T>::empty()
 {
     return (elems==0);
-    cout << elems << (elems==0)<<endl;
 }
 }
 

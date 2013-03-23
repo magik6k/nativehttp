@@ -33,9 +33,9 @@ freely, subject to the following restrictions:
 #define is_dotso(_pn,_sl) (_pn[_sl-3]=='.'&&_pn[_sl-2]=='s'&&_pn[_sl-1]=='o')
 #define is_dotnhp(_pn,_sl) (_pn[_sl-4]=='.'&&_pn[_sl-3]=='n'&&_pn[_sl-2]=='h'&&_pn[_sl-1]=='p')
 
-page_mapper::page_mapper()
+void page_mapper::preinit()
 {
-    base=new vector<page>;
+    base=new data::vector<page>(cfg->get_int("pagebase_max"));
 }
 
 void page_mapper::refresh(string d)
@@ -613,7 +613,7 @@ drch:
         else
         {
             tmp.type=page_file;
-            tmp.data=new char[files.size()+1];
+            tmp.data=new char[files[i].size()+1];
             memcpy(tmp.data,files[i].c_str(),files[i].size());
             ((char*)tmp.data)[files[i].size()]='\0';
             base->push_back(tmp);

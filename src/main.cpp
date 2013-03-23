@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
     }
     mime = new mimec;
     nativehttp::server::log("INIT","Mapping server directory, loading native pages");
+    pmap.preinit();
     pmap.page_mapper_init(cfg->get_var("files_location"));
     if(dmnz)deamonize();
     nativehttp::server::log("INIT","Starting HTTP system");
