@@ -86,14 +86,14 @@ void page_mapper::refresh(string d)
         todo.pop_back();
     }
 
-    for(unsigned int i=0;i<files.size();i++)
+    for(unsigned int i=0; i<files.size(); i++)
     {
         bool loaded=false;
         bool toref=false;
         time_t fatt=0;
         int pgi=-1;
 
-        for(unsigned int j=0;j<base->size();j++)
+        for(unsigned int j=0; j<base->size(); j++)
         {
             if((*base)[j].file==files[i])
             {
@@ -201,7 +201,7 @@ dch:
                                     else
                                     {
 
-                                        for(unsigned int j=0;j<uris.size();j++)
+                                        for(unsigned int j=0; j<uris.size(); j++)
                                         {
                                             if(uris[i].sid==pgi)
                                             {
@@ -224,7 +224,7 @@ dch:
                                             char* tfu=new char[furi.size()+1];
                                             memcpy(tfu,furi.c_str(),furi.size());
                                             tfu[furi.size()]='\0';
-                                            urimp tmu={tfu,pgi};
+                                            urimp tmu= {tfu,pgi};
                                             uris.push_back(tmu);
 
                                             (*base)[pgi].type=page_native;
@@ -273,7 +273,7 @@ dch:
                 else
                 {
 
-                    for(unsigned int j=0;j<uris.size();j++)
+                    for(unsigned int j=0; j<uris.size(); j++)
                     {
                         if(uris[i].sid==pgi)
                         {
@@ -305,7 +305,7 @@ dch:
                             char* tfu=new char[furi.size()+1];
                             memcpy(tfu,furi.c_str(),furi.size());
                             tfu[furi.size()]='\0';
-                            urimp tmu={tfu,pgi};
+                            urimp tmu= {tfu,pgi};
 
                             uris.push_back(tmu);
 
@@ -361,7 +361,7 @@ dch:
                 memcpy(tfu,furi.c_str(),furi.size());
                 tfu[furi.size()]='\0';
 
-                urimp tmu={tfu,int((*base).size())-1};
+                urimp tmu= {tfu,int((*base).size())-1};
                 uris.push_back(tmu);
                 nativehttp::server::log("RUNLOAD@pagemap.cpp","succes");
             }
@@ -468,7 +468,7 @@ void page_mapper::page_mapper_init(string d)
                         memcpy(tfu,furi.c_str(),furi.size());
                         tfu[furi.size()]='\0';
 
-                        urimp tmu={tfu,int(base->size())-1};
+                        urimp tmu= {tfu,int(base->size())-1};
                         uris.push_back(tmu);
                     }
                 }
@@ -497,8 +497,6 @@ drch:
                             size=fread((char*)com.c_str(),1,size,nhpf);
                             fclose(nhpf);
                             string out=parse_nhp(com);
-
-                            //cout<<"compiled: \n"<<out.c_str()<<endl;
 
                             fwrite(out.c_str(),1,out.size(),tmf);
                             fclose(tmf);
@@ -581,7 +579,7 @@ drch:
                                         memcpy(tfu,furi.c_str(),furi.size());
                                         tfu[furi.size()]='\0';
 
-                                        urimp tmu={tfu,int(base->size())-1};
+                                        urimp tmu= {tfu,int(base->size())-1};
                                         uris.push_back(tmu);
                                     }
                                 }
@@ -624,7 +622,7 @@ drch:
             memcpy(tfu,furi.c_str(),furi.size());
             tfu[furi.size()]='\0';
 
-            urimp tmu={tfu,int(base->size())-1};
+            urimp tmu= {tfu,int(base->size())-1};
             uris.push_back(tmu);
         }
     }
