@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <deque>
 #include <map>
+#include <list>
 #include "superstring.h"
 #include "nativehttp.h"
 
@@ -82,8 +83,9 @@ private:
     int acp;
     unsigned int adui;
 public:
+    page_mapper();
     void adduri(string u,bool top);
-    vector<page>base;
+    vector<page>* base;
     void page_mapper_init(string d);
     void refresh(string d);
     page by_uri(const char* u);
