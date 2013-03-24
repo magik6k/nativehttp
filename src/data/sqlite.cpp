@@ -58,7 +58,7 @@ nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(char* q)
 			if(result == SQLITE_ROW)
 			{
 			    char** row=new char*[cols];
-				for(int col = 0; col < cols; col++)
+				for(unsigned int col = 0; col < cols; col++)
 				{
 					char* s = (char*)sqlite3_column_text(statement, col);
 					row[col] = new char[strlen(s)+1];
@@ -90,6 +90,16 @@ nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(char* q)
 
 }
 
+void nativehttp::base::SQLite::transaction_start()
+{
+    sqlite3_exec(db, "BEGIN TRANSACTION", NULL, NULL, &emsg);
+}
+
+void nativehttp::base::SQLite::transaction_done()
+{
+    sqlite3_exec(db, "END TRANSACTION", NULL, NULL, &emsg);
+}
+
 void nativehttp::base::SQLiteResult::__set(unsigned int c,unsigned int r, char*** d)
 {
     cols=c;
@@ -97,3 +107,22 @@ void nativehttp::base::SQLiteResult::__set(unsigned int c,unsigned int r, char**
     dt=d;
 }
 
+void nativehttp::base::SQLiteResult::free()
+{
+    for(unsigned int i=0;i<rows;i++)
+    {
+        for(unsigned int j=0;j<cols;j++)
+        {
+            delete[] dt[i][j];
+        }
+        delete[] dt[i];
+    }
+    if(dt)delete[] dt;
+    dt=NULL;
+}
+
+char** nativehttp::base::SQLiteResult::operator[](int i)
+{
+    if(dt)return dt[i];
+    return NULL;
+}
