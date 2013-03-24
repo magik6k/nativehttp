@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include <vector>
 #include <deque>
 #include <stdio.h>
+#include <sqlite3.h>
 using namespace std;
 
 namespace nativehttp
@@ -227,6 +228,42 @@ public:
 };
 
 extern "C" nbase* nbase_open(string file);
+
+class SQLiteResult
+{
+    private:
+    unsigned int cols;
+    unsigned int rows;
+    char** data;
+    public:
+
+    void __set(unsigned int c,unsigned int r, char** d);
+
+    void free();
+
+    char** operator[](int);
+
+};
+
+class SQLite
+{
+    private:
+
+    sqlite3 * db;
+    char * emsg = 0;
+
+    public:
+
+    const char* getLastError();
+    void open(const char* file,bool fast);
+    int exec(char* q);
+
+    void transaction_start();
+    void transaction_done();
+
+};
+
+
 
 }//base namespace
 
