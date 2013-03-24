@@ -79,6 +79,15 @@ template<class T>int vector<T>::empty()
     return (elems==0);
 }
 
+template<class T>void vector<T>::destroy()
+{
+    for(int i=0;i<elems;i++)
+    {
+        delete eptr[i];
+    }
+    delete[] eptr;
+}
+
 }
 
 #endif // VECTOR_H_INCLUDED

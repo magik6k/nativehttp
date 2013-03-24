@@ -21,6 +21,8 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../nativehttp.h"
+#include "queue.h"
+#include <string.h>
 
 
 void nativehttp::base::SQLite::open(const char* file,bool fast)
@@ -36,5 +38,62 @@ void nativehttp::base::SQLite::open(const char* file,bool fast)
 const char* nativehttp::base::SQLite::getLastError()
 {
     return emsg;
+}
+
+nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(char* q)
+{
+    sqlite3_stmt *statement;
+    unsigned int cols = 0;
+    data::queue<char**> dat;
+
+
+	if(sqlite3_prepare_v2(db, q, -1, &statement, 0) == SQLITE_OK)
+	{
+		cols = sqlite3_column_count(statement);
+		int result = 0;
+		while(true)
+		{
+			result = sqlite3_step(statement);
+
+			if(result == SQLITE_ROW)
+			{
+			    char** row=new char*[cols];
+				for(int col = 0; col < cols; col++)
+				{
+					char* s = (char*)sqlite3_column_text(statement, col);
+					row[col] = new char[strlen(s)+1];
+					strcpy(row[col],s);
+				}
+				dat.push(row);
+				delete[] row;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		sqlite3_finalize(statement);
+	}
+
+	char*** rtd=new char**[dat.size()];
+    unsigned int ds=dat.size();
+    for(unsigned int i=0;i<ds;i++)
+    {
+        rtd[i]=dat.front();
+        dat.pop();
+    }
+
+    nativehttp::base::SQLiteResult rt;
+    rt.__set(cols,ds,rtd);
+    return rt;
+
+}
+
+void nativehttp::base::SQLiteResult::__set(unsigned int c,unsigned int r, char*** d)
+{
+    cols=c;
+    rows=r;
+    dt=d;
 }
 

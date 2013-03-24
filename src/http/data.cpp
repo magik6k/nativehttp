@@ -40,8 +40,8 @@ Sexecutor* execUnits=NULL;
 
 uint32_t mExecQ;
 
-data::queue<request*>toexec;
-data::queue<outdata>tosend;
+nativehttp::data::queue<request*>toexec;
+nativehttp::data::queue<outdata>tosend;
 
 SDL_mutex* mtx_exec2=NULL;
 SDL_mutex* mtx_exec=NULL;

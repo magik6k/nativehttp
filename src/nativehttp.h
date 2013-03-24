@@ -234,10 +234,10 @@ class SQLiteResult
     private:
     unsigned int cols;
     unsigned int rows;
-    char** data;
+    char*** dt;
     public:
 
-    void __set(unsigned int c,unsigned int r, char** d);
+    void __set(unsigned int c,unsigned int r, char*** d);
 
     void free();
 
@@ -256,7 +256,7 @@ class SQLite
 
     const char* getLastError();
     void open(const char* file,bool fast);
-    int exec(char* q);
+    SQLiteResult exec(char* q);
 
     void transaction_start();
     void transaction_done();
