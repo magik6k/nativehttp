@@ -24,7 +24,8 @@ freely, subject to the following restrictions:
 #define QUEUE_H_INCLUDED
 
 #include <stdio.h>
-
+namespace nativehttp
+{
 namespace data
 {
 template<class T>struct qelm
@@ -133,7 +134,7 @@ template<class T>size_t queue<T>::size()
 template<class T>int queue<T>::empty()
 {
     return (elems==0);
-    cout << elems << (elems==0)<<endl;
+}
 }
 }
 

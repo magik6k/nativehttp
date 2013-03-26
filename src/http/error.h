@@ -27,7 +27,7 @@ namespace http
 {
 namespace error
 {
-pagedata load_error(string file, string head);
+nativehttp::data::pagedata load_error(string file, string head);
 }
 }
 

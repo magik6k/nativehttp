@@ -27,9 +27,9 @@ namespace http
 {
 namespace error
 {
-pagedata load_error(string file, string head)
+nativehttp::data::pagedata load_error(string file, string head)
 {
-    pagedata rt;
+    nativehttp::data::pagedata rt;
     string epc="HTTP/1.1 "+head+"\r\n"+http::headers::standard+"Content-Length: ";
     FILE* f=fopen(file.c_str(),"r");
     if(f)
@@ -51,7 +51,7 @@ pagedata load_error(string file, string head)
     }
     else
     {
-        log("ERROR","oppening error file failed.. "+file);
+        nativehttp::server::log("ERROR","oppening error file failed.. "+file);
     }
     return rt;
 }

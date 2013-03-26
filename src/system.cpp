@@ -29,7 +29,7 @@ bool deamonized=false;
 
 void deamonize()
 {
-    log("system.cpp","demonizing");
+    nativehttp::server::log("system.cpp","demonizing");
     pid_t pid, sid;
     pid=fork();
     if (pid<0)

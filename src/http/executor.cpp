@@ -36,7 +36,7 @@ int executor(void* eid)
 {
     http::Sexecutor* exc=(http::Sexecutor*)eid;
     exc->state=-1;
-    rdata rd;
+    nativehttp::rdata rd;
     http::rproc::lrqd ld;
     int ts=0;
     while(true)
@@ -70,7 +70,7 @@ int executor(void* eid)
         }
         if(http::toexec.front()->taken!=exc->id)//it's just impossible, but...
         {
-            log("IMPOSSIBLE ERROR","This error is impossible to occur, if you see this, god will left you..");
+            nativehttp::server::log("IMPOSSIBLE ERROR","This error is impossible to occur, if you see this, god will left you..");
             SDL_mutexV(http::mtx_exec);
             SDL_Delay(1);
             continue;
@@ -116,7 +116,7 @@ int executor(void* eid)
 
         if(!rd.cookie)
         {
-            rd.cookie=new cookiedata("");
+            rd.cookie=new nativehttp::data::cookiedata("");
         }
 
         if(ld.clen>0&&process->method==2)
@@ -178,7 +178,9 @@ int executor(void* eid)
         delete[] process->request;
         process->request=NULL;
 
-        pagedata result;
+        rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
+
+        nativehttp::data::pagedata result;
         exc->fd1=rd.cookie;
         exc->fd2=rd.get;
         exc->in=2;
@@ -238,23 +240,23 @@ int executor(void* eid)
 namespace rproc
 {
 
-void header(http::request* process,rdata& rd, http::rproc::lrqd& ld)
+void header(http::request* process,nativehttp::rdata& rd, http::rproc::lrqd& ld)
 {
-    superstring hss(process->request);
+    nativehttp::data::superstring hss(process->request);
     hss.to("\r\n");
     hss.str=hss.to("\r\n\r\n");
     hss.pos=0;
 
-    hss.add_token(token("\r\n\r\n",0));
-    hss.add_token(token("Host: ",1));
-    hss.add_token(token("User-Agent: ",2));
-    hss.add_token(token("Referer: ",3));
-    hss.add_token(token("Cookie: ",4));
-    hss.add_token(token("Content-Length: ",5));
+    hss.add_token(nativehttp::data::token("\r\n\r\n",0));
+    hss.add_token(nativehttp::data::token("Host: ",1));
+    hss.add_token(nativehttp::data::token("User-Agent: ",2));
+    hss.add_token(nativehttp::data::token("Referer: ",3));
+    hss.add_token(nativehttp::data::token("Cookie: ",4));
+    hss.add_token(nativehttp::data::token("Content-Length: ",5));
 
     while(hss.pos<hss.str.size())
     {
-        token pt=hss.tok();
+        nativehttp::data::token pt=hss.tok();
         if(pt.id==0)break;
         switch(pt.id)
         {
@@ -268,7 +270,7 @@ void header(http::request* process,rdata& rd, http::rproc::lrqd& ld)
             rd.referer=hss.to("\r\n");
             break;
         case 4:
-            rd.cookie=new cookiedata(hss.to("\r\n"));
+            rd.cookie=new nativehttp::data::cookiedata(hss.to("\r\n"));
             break;
         case 5:
             ld.clen=strtol(hss.to("\r\n").c_str(), NULL, 10);
@@ -279,9 +281,9 @@ void header(http::request* process,rdata& rd, http::rproc::lrqd& ld)
 
 }
 
-void post(rdata& rd, http::request* process, http::rproc::lrqd& ld)
+void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld)
 {
-    superstring ars(process->request);
+    nativehttp::data::superstring ars(process->request);
     ars.str=ars.from("\r\n\r\n");
     if(ars.str.size()<ld.clen)
     {
@@ -307,10 +309,10 @@ void post(rdata& rd, http::request* process, http::rproc::lrqd& ld)
             delete[] tv;
         }
     }
-    rd.post=new postgetdata(ars.str);
+    rd.post=new nativehttp::data::postgetdata(ars.str);
 }
 
-bool ex(pagedata& pd,rdata* rd)
+bool ex(nativehttp::data::pagedata& pd,nativehttp::rdata* rd)
 {
     page pid = pmap.by_uri(rd->uri.c_str());
 
@@ -323,7 +325,7 @@ bool ex(pagedata& pd,rdata* rd)
 
         nativepage *npp = (nativepage*)pid.data;
         SDL_mutexP(http::mtx_exec2);
-        pagedata ts=npp->page(rd);//<<<execution of page
+        nativehttp::data::pagedata ts=npp->page(rd);//<<<execution of page
         SDL_mutexV(http::mtx_exec2);
         string snd = "HTTP/1.1 "+rd->response+"\r\n"+http::headers::standard;
         snd+=http::headers::alive+http::headers::alivetimeout;
@@ -385,30 +387,30 @@ bool ex(pagedata& pd,rdata* rd)
 
 }
 
-void line0(http::request* process,rdata& rd, http::rproc::lrqd& ld)
+void line0(http::request* process,nativehttp::rdata& rd, http::rproc::lrqd& ld)
 {
-    superstring rss(superstring(process->request).to("\r\n"));
-    rss.add_token(token(" ",0));
-    rss.add_token(token("GET",1));
-    rss.add_token(token("HEAD",3));
-    rss.add_token(token("POST",2));
-    rss.add_token(token("DELETE",3));
-    rss.add_token(token("TRACE",3));
-    rss.add_token(token("CONNECT",3));
-    rss.add_token(token("OPTIONS",3));
+    nativehttp::data::superstring rss(nativehttp::data::superstring(process->request).to("\r\n"));
+    rss.add_token(nativehttp::data::token(" ",0));
+    rss.add_token(nativehttp::data::token("GET",1));
+    rss.add_token(nativehttp::data::token("HEAD",3));
+    rss.add_token(nativehttp::data::token("POST",2));
+    rss.add_token(nativehttp::data::token("DELETE",3));
+    rss.add_token(nativehttp::data::token("TRACE",3));
+    rss.add_token(nativehttp::data::token("CONNECT",3));
+    rss.add_token(nativehttp::data::token("OPTIONS",3));
 
     process->method=rss.tok().id;
 
     rss.clear_tokens();
     rss.pos++;
-    superstring rawuri(rss.to(" "));
+    nativehttp::data::superstring rawuri(rss.to(" "));
     process->http11=rss.check("HTTP/1.1");
 
     rd.uri=rawuri.to("?");
     string gu=rawuri.to("#");
     if(!gu.empty())
     {
-        rd.get=new postgetdata(gu);
+        rd.get=new nativehttp::data::postgetdata(gu);
     }
 }
 

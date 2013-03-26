@@ -10,6 +10,7 @@ LIBS += -rdynamic
 LIBS += -ldl
 LIBS += -lSDL
 LIBS += -lSDL_net
+LIBS += -lsqlite3
 
 NHD = ./src
 NHTD = ./testsrc
@@ -26,6 +27,7 @@ NHS = \
 	$(NHD)/postget.cpp \
 	$(NHD)/superstring.cpp \
 	$(NHD)/system.cpp \
+	$(NHD)/data/sqlite.cpp \
 	$(NHD)/http/data.cpp \
 	$(NHD)/http/error.cpp \
 	$(NHD)/http/executor.cpp \

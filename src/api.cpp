@@ -23,46 +23,41 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include "protocol.h"
 #include <string.h>
-pagedata::pagedata(string s)
+nativehttp::data::pagedata::pagedata(string s)
 {
     data=new char[s.size()];
     size=s.size();
     memcpy(data,s.c_str(),size);
 }
-void pagedata::operator()(string s)
+void nativehttp::data::pagedata::operator()(string s)
 {
     if(data)delete[]data;
     data=new char[s.size()];
     size=s.size();
     memcpy(data,s.c_str(),size);
 }
-pagedata::pagedata()
+nativehttp::data::pagedata::pagedata()
 {
     data=NULL;
     size=0;
 }
 
-extern "C" void attach_uri(string uri,bool top)
+extern "C" void nativehttp::init::attach_uri(string uri,bool top)
 {
     pmap.adduri(uri,top);
 }
 
-extern "C" string version()
+extern "C" string nativehttp::server::version()
 {
-    return "NativeHTTP Alpha 1";
+    return "NativeHTTP Alpha 2";
 }
 
-extern "C" sstat *get_stats()
-{
-    return 0;
-}
-
-extern "C" void log(string lname, string value)
+extern "C" void nativehttp::server::log(string lname, string value)
 {
     if(!deamonized)cout << "["<<lname.c_str()<<"]"<<value.c_str()<<endl;
 }
 
-extern "C" void logid(int id, string lname, string value)
+extern "C" void nativehttp::server::logid(int id, string lname, string value)
 {
     if(!deamonized)cout << "["<<lname.c_str()<<"]("<<id<<")"<<value.c_str()<<endl;
 }

@@ -22,9 +22,9 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 
-postgetdata::postgetdata(string dstr)
+nativehttp::data::postgetdata::postgetdata(string dstr)
 {
-    superstring cke(dstr);
+    nativehttp::data::superstring cke(dstr);
     while(cke.pos<cke.str.size())
     {
         cfil ctm;
@@ -34,7 +34,7 @@ postgetdata::postgetdata(string dstr)
     }
 }
 
-string postgetdata::get(string name)
+string nativehttp::data::postgetdata::get(string name)
 {
     for(unsigned int i=0; i<data.size(); i++)
     {
@@ -46,10 +46,10 @@ string postgetdata::get(string name)
     return "";
 }
 
-extern "C" string decode_poststring(string str)
+extern "C" string nativehttp::utils::decode_poststring(string str)
 {
     string o;
-    superstring s(str);
+    nativehttp::data::superstring s(str);
     s.change("+"," ");
     s.pos=0;
     while(s.pos<s.str.size())

@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include <string.h>
 
-void Ccfg::parse_file(const char* f)
+void nativehttp::data::Ccfg::parse_file(const char* f)
 {
 
     FILE* fil=fopen(f,"rt");
@@ -112,7 +112,7 @@ void Ccfg::parse_file(const char* f)
 }
 
 
-string Ccfg::get_var(string name)
+string nativehttp::data::Ccfg::get_var(string name)
 {
 
     unsigned int i=0;
@@ -130,7 +130,7 @@ string Ccfg::get_var(string name)
 
 }
 
-int Ccfg::get_int(string name)
+int nativehttp::data::Ccfg::get_int(string name)
 {
     string s=this->get_var(name);
     int tmp=0;

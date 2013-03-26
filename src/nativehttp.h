@@ -26,12 +26,17 @@ freely, subject to the following restrictions:
 #include <vector>
 #include <deque>
 #include <stdio.h>
+#include <sqlite3.h>
 using namespace std;
+
+namespace nativehttp
+{
+
+namespace data
+{
 
 #ifndef SUPERSTRING_H_INCLUDED
 #define SUPERSTRING_H_INCLUDED
-
-using namespace std;
 
 struct token
 {
@@ -151,18 +156,13 @@ public:
     string get(string name);
 };
 
-struct sstat
-{
-    int hits;
-    int* hourly;
-    int loghours;
-};
+}//data namespace
 
 struct rdata
 {
-    cookiedata* cookie;
-    postgetdata* get;
-    postgetdata* post;
+    nativehttp::data::cookiedata* cookie;
+    nativehttp::data::postgetdata* get;
+    nativehttp::data::postgetdata* post;
     string response;
     string userAgent;
     string referer;
@@ -176,9 +176,11 @@ struct rdata
 
 #define NB_ERROR 0
 #define NB_SUCCES 1
+
+namespace base
+{
+
 typedef bool (*nbfilter)(string*,void*);
-
-
 
 class nbrow
 {
@@ -227,15 +229,63 @@ public:
 
 extern "C" nbase* nbase_open(string file);
 
-///init ONLY functions(use in onload funcion)
+class SQLiteResult
+{
+    private:
+    unsigned int cols;
+    unsigned int rows;
+    char*** dt;
+    public:
+
+    void __set(unsigned int c,unsigned int r, char*** d);
+
+    void free();
+
+    char** operator[](int);
+
+};
+
+class SQLite
+{
+    private:
+
+    sqlite3 * db;
+    char * emsg = 0;
+
+    public:
+
+    const char* getLastError();
+    void open(const char* file,bool fast);
+    SQLiteResult exec(char* q);
+
+    void transaction_start();
+    void transaction_done();
+
+};
+
+extern "C" SQLite* sqlite_open(string file, bool fast);
+
+
+
+}//base namespace
+
+namespace init
+{
 extern "C" void attach_uri(string uri,bool top);
-///end of init functions
+}
 
+namespace server
+{
 extern "C" string version();
-extern "C" string decode_poststring(string str);
-extern "C" sstat *get_stats();
-
 extern "C" void log(string lname, string value);
 extern "C" void logid(int id, string lname, string value);
+}
+
+namespace utils
+{
+extern "C" string decode_poststring(string str);
+}
+
+}//nativehttp namespace
 
 #endif // NATIVEHTTP_H_INCLUDED

@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 
 page_mapper pmap;
 mimec *mime=NULL;
-Ccfg *cfg;
+nativehttp::data::Ccfg *cfg;
 string charset;
 
 using namespace std;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     cout << "pre-init\n";
     signal(SIGSEGV,http::manager::sig);
     signal(SIGABRT,http::manager::sig);
-    cfg = new Ccfg("/etc/nativehttp/config.cfg");
+    cfg = new nativehttp::data::Ccfg("/etc/nativehttp/config.cfg");
     charset = cfg->get_var("charset");
     default_mime = cfg->get_var("default_content_type");
     if(cfg->get_int("instantso"))
@@ -59,10 +59,11 @@ int main(int argc, char *argv[])
         setbuf(stdout, NULL);
     }
     mime = new mimec;
-    log("INIT","Mapping server directory, loading native pages");
+    nativehttp::server::log("INIT","Mapping server directory, loading native pages");
+    pmap.preinit();
     pmap.page_mapper_init(cfg->get_var("files_location"));
     if(dmnz)deamonize();
-    log("INIT","Starting HTTP system");
+    nativehttp::server::log("INIT","Starting HTTP system");
 
 
     http::sdlinit();
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
     http::netstart();
     http::startsystem();
 
-    log("INIT","Ready");
+    nativehttp::server::log("INIT","Ready");
 
 
     http::reciver();

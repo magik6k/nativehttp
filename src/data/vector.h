@@ -20,43 +20,74 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#include "nativehttp.h"
+#ifndef VECTOR_H_INCLUDED
+#define VECTOR_H_INCLUDED
 
-nativehttp::data::cookiedata::cookiedata(string strcookie)
+
+namespace data
 {
-    superstring cke(strcookie);
-    while(cke.pos<cke.str.size())
+
+template<class T>class vector
+{
+private:
+
+    size_t elems;
+    size_t msize;
+    T** eptr;
+
+public:
+
+    vector(size_t maxsize);
+
+    void push_back(T tp);
+    T& operator[](size_t id);
+
+    size_t size();
+    int empty();
+
+    void destroy();
+
+};
+
+template<class T>vector<T>::vector(size_t maxsize)
+{
+    eptr=new T*[maxsize];
+    elems=0;
+}
+
+template<class T>void vector<T>::push_back(T tp)
+{
+    eptr[elems]=new T;
+    *(eptr[elems])=tp;
+    elems++;
+}
+
+template<class T>T& vector<T>::operator[](size_t id)
+{
+    return *(eptr[id]);
+}
+
+
+template<class T>size_t vector<T>::size()
+{
+    return elems;
+}
+
+
+template<class T>int vector<T>::empty()
+{
+    return (elems==0);
+}
+
+template<class T>void vector<T>::destroy()
+{
+    for(int i=0;i<elems;i++)
     {
-        cfil ctm;
-        ctm.name=cke.to("=");
-        ctm.value=cke.to("; ");
-        data.push_back(ctm);
+        delete eptr[i];
     }
+    delete[] eptr;
 }
 
-string nativehttp::data::cookiedata::get(string name)
-{
-    for(unsigned int i=0; i<data.size(); i++)
-    {
-        if(data[i].name==name)
-        {
-            return data[i].value;
-        }
-    }
-    return "";
 }
 
-void nativehttp::data::cookiedata::set(string name, string value)
-{
-    sets+="Set-Cookie: "+name+"="+value+"\r\n";
-}
-
-void nativehttp::data::cookiedata::set(string name, string value, string attributes)
-{
-    sets+="Set-Cookie: "+name+"="+value+"; "+attributes+"\r\n";
-}
-
-string nativehttp::data::cookiedata::gethead()
-{
-    return sets;
-}
+#endif // VECTOR_H_INCLUDED

@@ -80,8 +80,8 @@ extern Sexecutor* execUnits;
 
 extern uint32_t mExecQ;
 
-extern data::queue<request*>toexec;
-extern data::queue<outdata>tosend;
+extern nativehttp::data::queue<request*>toexec;
+extern nativehttp::data::queue<outdata>tosend;
 
 extern SDL_mutex* mtx_exec2;
 extern SDL_mutex* mtx_exec;
@@ -100,12 +100,12 @@ extern string alivetimeout;
 
 namespace error
 {
-extern pagedata e400;
-extern pagedata e403;
-extern pagedata e404;
-extern pagedata e500;
-extern pagedata e501;
-extern pagedata e505;
+extern nativehttp::data::pagedata e400;
+extern nativehttp::data::pagedata e403;
+extern nativehttp::data::pagedata e404;
+extern nativehttp::data::pagedata e500;
+extern nativehttp::data::pagedata e501;
+extern nativehttp::data::pagedata e505;
 }
 
 namespace manager
