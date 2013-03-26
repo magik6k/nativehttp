@@ -241,6 +241,7 @@ class SQLiteResult
     nativehttp::base::SQLite* from;
     public:
 
+    SQLiteResult();
     void __set(unsigned int c,unsigned int r, char*** d, nativehttp::base::SQLite* clr);
 
     void free();

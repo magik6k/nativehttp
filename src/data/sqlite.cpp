@@ -61,11 +61,17 @@ nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(const char* q)
 				for(unsigned int col = 0; col < cols; col++)
 				{
 					char* s = (char*)sqlite3_column_text(statement, col);
-					row[col] = new char[strlen(s)+1];
-					strcpy(row[col],s);
+					if(s)
+					{
+					    row[col] = new char[strlen(s)+1];
+                        strcpy(row[col],s);
+					}
+					else
+					{
+					    row[col]=NULL;
+					}
 				}
 				dat.push(row);
-				delete[] row;
 			}
 			else
 			{
@@ -90,6 +96,14 @@ nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(const char* q)
 
 }
 
+nativehttp::base::SQLiteResult::SQLiteResult()
+{
+    dt=NULL;
+    cols=0;
+    rows=0;
+    from=NULL;
+}
+
 void nativehttp::base::SQLite::transaction_start()
 {
     sqlite3_exec(db, "BEGIN TRANSACTION", NULL, NULL, &emsg);
@@ -110,13 +124,15 @@ void nativehttp::base::SQLiteResult::__set(unsigned int c, unsigned int r, char*
 
 void nativehttp::base::SQLiteResult::free()
 {
-    for(unsigned int i=0;i<rows;i++)
+    for(unsigned int i=0;i<rows&&dt;i++)
     {
-        for(unsigned int j=0;j<cols;j++)
+        for(unsigned int j=0;j<cols&&dt[i];j++)
         {
-            delete[] dt[i][j];
+            if(dt[i][j])delete[] dt[i][j];
+            dt[i][j]=NULL;
         }
-        delete[] dt[i];
+        if(dt[i])delete[] dt[i];
+        dt[i]=NULL;
     }
     if(dt)delete[] dt;
     dt=NULL;
