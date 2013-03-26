@@ -126,3 +126,30 @@ char** nativehttp::base::SQLiteResult::operator[](int i)
     if(dt)return dt[i];
     return NULL;
 }
+
+struct slblt
+{
+    string f;
+    nativehttp::base::SQLite* p;
+};
+vector<slblt>slopls;
+
+extern "C" nativehttp::base::SQLite* sqlite_open(string file, bool fast)
+{
+    for(unsigned int i=0; i<slopls.size(); i++)
+    {
+        if(slopls[i].f==file)
+        {
+            return slopls[i].p;
+        }
+    }
+    slblt ttm= {file,new nativehttp::base::SQLite};
+    ttm.p->open(file.c_str(),fast);
+    if(ttm.p)
+    {
+        slopls.push_back(ttm);
+    }
+    return ttm.p;
+}
+
+

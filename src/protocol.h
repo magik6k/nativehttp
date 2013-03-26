@@ -78,7 +78,7 @@ struct urimp
 class page_mapper
 {
 private:
-    vector<string>files;
+    vector<char*>files;
     deque<urimp>uris;
     int acp;
     unsigned int adui;

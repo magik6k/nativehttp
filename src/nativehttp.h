@@ -263,6 +263,8 @@ class SQLite
 
 };
 
+extern "C" SQLite* sqlite_open(string file, bool fast);
+
 
 
 }//base namespace

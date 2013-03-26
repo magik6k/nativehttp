@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "protocol.h"
 #include "http/data.h"
+#include "data/queue.h"
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
@@ -40,16 +41,17 @@ void page_mapper::preinit()
 
 void page_mapper::refresh(string d)
 {
+    for(unsigned int i=0;i<files.size();i++){delete[] files[i];files[i]=NULL;}
     files.clear();
-    deque<string>todo;
-    todo.push_front(d);
+    nativehttp::data::queue<string>todo;
+    todo.push(d);
 
     while(todo.size()>0)
     {
         DIR *dp;
-        if((dp  = opendir(todo.back().c_str())) == NULL)
+        if((dp  = opendir(todo.front().c_str())) == NULL)
         {
-            cout <<"error: "<< errno << ", for directory " << todo.back().c_str() << endl;
+            cout <<"error: "<< errno << ", for directory " << todo.front().c_str() << endl;
         }
         else
         {
@@ -57,7 +59,7 @@ void page_mapper::refresh(string d)
             while ((de = readdir(dp)) != NULL)
             {
                 struct stat fi;
-                if (lstat( (todo.back()+string(de->d_name)).c_str(), &fi)<0)
+                if (lstat( (todo.front()+string(de->d_name)).c_str(), &fi)<0)
                 {
                     cout << "error(pm.statact) \n";
                 }
@@ -67,14 +69,25 @@ void page_mapper::refresh(string d)
                     {
                         if(de->d_name[0]!='.')
                         {
-                            todo.push_front((todo.back()+string(de->d_name)+'/').c_str());
+                            todo.push((todo.front()+string(de->d_name)+'/').c_str());
                         }
                     }
                     else
                     {
                         if(string(de->d_name)[string(de->d_name).size()-1]!='~')
                         {
-                            files.push_back((todo.back()+string(de->d_name)).c_str());
+                            string ts=(todo.front()+string(de->d_name));
+                            char* b=new char[ts.size()+1];
+                            if(b)
+                            {
+                                strcpy(b,ts.c_str());
+                                b[ts.size()]='\0';
+                                files.push_back(b);
+                            }
+                            else
+                            {
+                                nativehttp::server::log("pagemap.cpp","mapper error[0]");
+                            }
                         }
 
                     }
@@ -83,7 +96,7 @@ void page_mapper::refresh(string d)
             }
             closedir(dp);
         }
-        todo.pop_back();
+        todo.pop();
     }
 
     for(unsigned int i=0; i<files.size(); i++)
@@ -95,12 +108,12 @@ void page_mapper::refresh(string d)
 
         for(unsigned int j=0; j<base->size(); j++)
         {
-            if((*base)[j].file==files[i])
+            if(strcmp((*base)[j].file,files[i])==0)
             {
                 pgi=j;
                 loaded=true;
                 struct stat tst;
-                int rst = stat(files[i].c_str(), &tst);
+                int rst = stat(files[i], &tst);
                 if(rst != 0)
                 {
                     nativehttp::server::log("pagemap.cpp:refresh","stat error");
@@ -115,7 +128,7 @@ void page_mapper::refresh(string d)
         }
         if(loaded&&toref)
         {
-            if(is_dotnhp(files[i],files[i].size()))
+            if(is_dotnhp(files[i],strlen(files[i])))
             {
                 SDL_mutexP(http::mtx_exec);
                 SDL_mutexP(http::mtx_exec2);
@@ -129,7 +142,7 @@ dch:
                         FILE* tmf=fopen("/tmp/nativehttp/tmp.cpp","w");
                         if(tmf!=NULL)
                         {
-                            FILE* nhpf=fopen(files[i].c_str(),"r");
+                            FILE* nhpf=fopen(files[i],"r");
                             if(nhpf!=NULL)
                             {
                                 fseek(nhpf,0,SEEK_END);
@@ -179,12 +192,12 @@ dch:
                                 }
                                 pclose(cmp);
 
-                                if(shw)nativehttp::server::log("REFRESH@pagemap.cpp","/tmp/nativehttp/nhpage_"+pname+".so");
+                                if(shw)nativehttp::server::log("REFRESH:NHP@pagemap.cpp","/tmp/nativehttp/nhpage_"+pname+".so");
 
                                 ((nativepage*)(*base)[pgi].data)->handle = dlopen(("/tmp/nativehttp/nhpage_"+pname+".so").c_str(), RTLD_NOW|RTLD_LOCAL);
                                 if(!((nativepage*)(*base)[pgi].data)->handle)
                                 {
-                                    nativehttp::server::log("ERROR@pagemap.cpp","can't open shared file: "+files[i]);
+                                    nativehttp::server::log("ERROR@pagemap.cpp",string("can't open shared file: ")+files[i]);
                                 }
                                 else
                                 {
@@ -195,7 +208,7 @@ dch:
                                     ((nativepage*)(*base)[pgi].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pgi].data)->handle,"page");
                                     if(!((nativepage*)(*base)[pgi].data)->onload||!((nativepage*)(*base)[pgi].data)->page)
                                     {
-                                        nativehttp::server::log("ERROR@pagemap.cpp","loading native symbols failed: "+files[i]);
+                                        nativehttp::server::log("ERROR@pagemap.cpp",string("loading native symbols failed: ")+files[i]);
                                         dlclose(((nativepage*)(*base)[pgi].data)->handle);
                                     }
                                     else
@@ -214,7 +227,7 @@ dch:
                                         int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
                                         if(initstate!=1)
                                         {
-                                            nativehttp::server::logid(initstate,"WARNING@pagemap.cpp","invalid init state: "+files[i]);
+                                            nativehttp::server::logid(initstate,"WARNING@pagemap.cpp",string("invalid init state: ")+files[i]);
                                             dlclose(((nativepage*)(*base)[pgi].data)->handle);
                                         }
                                         else
@@ -229,14 +242,14 @@ dch:
 
                                             (*base)[pgi].type=page_native;
                                             (*base)[pgi].timestamp=fatt;
-                                            nativehttp::server::log("RELOAD@pagemap.cpp","succes[2]: "+files[i]);
+                                            nativehttp::server::log("RELOAD:NHP@pagemap.cpp",string("succes[2]: ")+files[i]);
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                nativehttp::server::log("ERROR@pagemap.cpp","can't open: "+files[i]);
+                                nativehttp::server::log("ERROR@pagemap.cpp",string("can't open: ")+files[i]);
                                 fclose(tmf);
                             }
                         }
@@ -259,16 +272,16 @@ dch:
                 SDL_mutexV(http::mtx_exec);
                 SDL_mutexV(http::mtx_exec2);
             }
-            else if(is_dotso(files[i],files[i].size()))
+            else if(is_dotso(files[i],strlen(files[i])))
             {
                 SDL_mutexP(http::mtx_exec);
                 SDL_mutexP(http::mtx_exec2);
 
                 dlclose(((nativepage*)(*base)[pgi].data)->handle);
-                ((nativepage*)(*base)[pgi].data)->handle = dlopen(files[i].c_str(), RTLD_NOW|RTLD_LOCAL);
+                ((nativepage*)(*base)[pgi].data)->handle = dlopen(files[i], RTLD_NOW|RTLD_LOCAL);
                 if(!((nativepage*)(*base)[pgi].data)->handle)
                 {
-                    nativehttp::server::log("ERROR@pagemap.cpp","can't open shared file: "+files[i]);
+                    nativehttp::server::log("ERROR@pagemap.cpp",string("can't open shared file: ")+files[i]);
                 }
                 else
                 {
@@ -286,7 +299,7 @@ dch:
                     ((nativepage*)(*base)[pgi].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pgi].data)->handle,"page");
                     if(!((nativepage*)(*base)[pgi].data)->onload||!((nativepage*)(*base)[pgi].data)->page)
                     {
-                        nativehttp::server::log("ERROR@pagemap.cpp","loading native symbols failed: "+files[i]);
+                        nativehttp::server::log("ERROR@pagemap.cpp",string("loading native symbols failed: ")+files[i]);
                         dlclose(((nativepage*)(*base)[pgi].data)->handle);
                     }
                     else
@@ -295,7 +308,7 @@ dch:
                         int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
                         if(initstate!=1)
                         {
-                            nativehttp::server::logid(initstate,"WARNING@pagemap.cpp","invalid init state: "+files[i]);
+                            nativehttp::server::logid(initstate,"WARNING@pagemap.cpp",string("invalid init state: ")+files[i]);
                             dlclose(((nativepage*)(*base)[pgi].data)->handle);
                         }
                         else
@@ -311,7 +324,7 @@ dch:
 
                             (*base)[pgi].type=page_native;
                             (*base)[pgi].timestamp=fatt;
-                            nativehttp::server::log("RELOAD@pagemap.cpp","succes[1]: "+files[i]);
+                            nativehttp::server::log("RELOAD:SO@pagemap.cpp",string("succes[1]: ")+files[i]);
                         }
                     }
 
@@ -326,11 +339,12 @@ dch:
         }
         else if(!loaded)
         {
-            if(is_dotso(files[i],files[i].size()))
+            cout << "F:"<<files[i]<<endl;
+            if(is_dotso(files[i],strlen(files[i])))
             {
 
             }
-            else if(is_dotnhp(files[i],files[i].size()))
+            else if(is_dotnhp(files[i],strlen(files[i])))
             {
 
             }
@@ -338,21 +352,21 @@ dch:
             {
                 page tmp;
                 struct stat tst;
-                int rst = stat(files[i].c_str(), &tst);
+                int rst = stat(files[i], &tst);
                 if(rst != 0)
                 {
                     nativehttp::server::log("pagemap.cpp:init","stat error");
                     continue;
                 }
                 tmp.timestamp=tst.st_mtime;
-                tmp.file=new char[files[i].size()+1];
-                memcpy(tmp.file,files[i].c_str(),files[i].size());
-                tmp.file[files[i].size()]='\0';
+                tmp.file=new char[strlen(files[i])+1];
+                memcpy(tmp.file,files[i],strlen(files[i]));
+                tmp.file[strlen(files[i])]='\0';
 
                 tmp.type=page_file;
-                tmp.data=new char[files.size()+1];
-                memcpy(tmp.data,files[i].c_str(),files[i].size());
-                ((char*)tmp.data)[files[i].size()]='\0';
+                tmp.data=new char[strlen(files[i])+1];
+                memcpy(tmp.data,files[i],strlen(files[i]));
+                ((char*)tmp.data)[strlen(files[i])]='\0';
                 (*base).push_back(tmp);
                 nativehttp::data::superstring pgac(files[i]);
 
@@ -363,7 +377,7 @@ dch:
 
                 urimp tmu= {tfu,int((*base).size())-1};
                 uris.push_back(tmu);
-                nativehttp::server::log("RUNLOAD@pagemap.cpp","succes");
+                nativehttp::server::log("RUNLOAD:FILE@pagemap.cpp","succes");
             }
         }
     }
@@ -372,15 +386,15 @@ dch:
 
 void page_mapper::page_mapper_init(string d)
 {
-    deque<string>todo;
-    todo.push_front(d);
+    nativehttp::data::queue<string>todo;
+    todo.push(d);
 
     while(todo.size()>0)
     {
         DIR *dp;
-        if((dp  = opendir(todo.back().c_str())) == NULL)
+        if((dp  = opendir(todo.front().c_str())) == NULL)
         {
-            cout <<"error: "<< errno << ", for directory " << todo.back().c_str() << endl;
+            cout <<"error: "<< errno << ", for directory " << todo.front().c_str() << endl;
         }
         else
         {
@@ -388,7 +402,7 @@ void page_mapper::page_mapper_init(string d)
             while ((de = readdir(dp)) != NULL)
             {
                 struct stat fi;
-                if (lstat( (todo.back()+string(de->d_name)).c_str(), &fi)<0)
+                if (lstat( (todo.front()+string(de->d_name)).c_str(), &fi)<0)
                 {
                     cout << "error(pm.statact) \n";
                 }
@@ -398,44 +412,58 @@ void page_mapper::page_mapper_init(string d)
                     {
                         if(de->d_name[0]!='.')
                         {
-                            todo.push_front((todo.back()+string(de->d_name)+'/').c_str());
+                            todo.push((todo.front()+string(de->d_name)+'/').c_str());
                         }
                     }
                     else
                     {
                         if(string(de->d_name)[string(de->d_name).size()-1]!='~')
-                            files.push_back((todo.back()+string(de->d_name)).c_str());
+                        {
+                            string ts=(todo.front()+string(de->d_name));
+                            char* b=new char[ts.size()+1];
+                            if(b)
+                            {
+                                strcpy(b,ts.c_str());
+                                b[ts.size()]='\0';
+                                files.push_back(b);
+                            }
+                            else
+                            {
+                                nativehttp::server::log("pagemap.cpp","mapper error[0]");
+                            }
+                        }
+
                     }
                 }
                 //cout << (string(de->d_name)) << endl;
             }
             closedir(dp);
         }
-        todo.pop_back();
+        todo.pop();
     }
     for(unsigned int i=0; i<files.size(); i++)
     {
         page tmp;
         struct stat tst;
-        int rst = stat(files[i].c_str(), &tst);
+        int rst = stat(files[i], &tst);
         if(rst != 0)
         {
             nativehttp::server::log("pagemap.cpp:init","stat error");
             continue;
         }
         tmp.timestamp=tst.st_mtime;
-        tmp.file=new char[files[i].size()+1];
-        memcpy(tmp.file,files[i].c_str(),files[i].size());
-        tmp.file[files[i].size()]='\0';
+        tmp.file=new char[strlen(files[i])+1];
+        memcpy(tmp.file,files[i],strlen(files[i]));
+        tmp.file[strlen(files[i])]='\0';
 
-        if(is_dotso(files[i],files[i].size()))
+        if(is_dotso(files[i],strlen(files[i])))
         {
             tmp.type=page_native;
             nativepage* ntm = new nativepage;
-            ntm->handle = dlopen(files[i].c_str(), RTLD_NOW|RTLD_LOCAL);
+            ntm->handle = dlopen(files[i], RTLD_NOW|RTLD_LOCAL);
             if(!ntm->handle)
             {
-                cout << "can't open shared file: "<<files[i].c_str()<<": "<<dlerror()<<endl;
+                cout << "can't open shared file: "<<files[i]<<": "<<dlerror()<<endl;
                 delete ntm;
             }
             else
@@ -444,7 +472,7 @@ void page_mapper::page_mapper_init(string d)
                 ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle,"page");
                 if(!ntm->onload||!ntm->page)
                 {
-                    cout << "error loading native symbols: "<<files[i].c_str()<<endl;
+                    cout << "error loading native symbols: "<<files[i]<<endl;
                     dlclose(ntm->handle);
                     delete ntm;
                 }
@@ -454,7 +482,7 @@ void page_mapper::page_mapper_init(string d)
                     int initstate = (*ntm->onload)();
                     if(initstate!=1)
                     {
-                        cout << "invalid init state("<<initstate<<"): "<<files[i].c_str()<<endl;
+                        cout << "invalid init state("<<initstate<<"): "<<files[i]<<endl;
                         dlclose(ntm->handle);
                         delete ntm;
                     }
@@ -474,7 +502,7 @@ void page_mapper::page_mapper_init(string d)
                 }
             }
         }
-        else if(is_dotnhp(files[i],files[i].size()))
+        else if(is_dotnhp(files[i],strlen(files[i])))
         {
 
             struct stat st;
@@ -486,7 +514,7 @@ drch:
                     FILE* tmf=fopen("/tmp/nativehttp/tmp.cpp","w");
                     if(tmf!=NULL)
                     {
-                        FILE* nhpf=fopen(files[i].c_str(),"r");
+                        FILE* nhpf=fopen(files[i],"r");
                         if(nhpf!=NULL)
                         {
                             fseek(nhpf,0,SEEK_END);
@@ -520,7 +548,7 @@ drch:
                             }
                             if(shw)
                             {
-                                cout << "Compile "<<files[i].c_str()<<":"<<endl;
+                                cout << "Compile "<<files[i]<<":"<<endl;
                                 cout << command.c_str()<<endl;
                             }
                             FILE *cmp=NULL;
@@ -564,7 +592,7 @@ drch:
                                     int initstate = (*ntm->onload)();
                                     if(initstate!=1)
                                     {
-                                        cout << "invalid init state("<<initstate<<"): "<<files[i].c_str()<<endl;
+                                        cout << "invalid init state("<<initstate<<"): "<<files[i]<<endl;
                                         dlclose(ntm->handle);
                                         delete ntm;
                                     }
@@ -587,7 +615,7 @@ drch:
                         }
                         else
                         {
-                            cout << "can't open "<<files[i].c_str()<<endl;
+                            cout << "can't open "<<files[i]<<endl;
                             fclose(tmf);
                         }
 
@@ -611,9 +639,9 @@ drch:
         else
         {
             tmp.type=page_file;
-            tmp.data=new char[files[i].size()+1];
-            memcpy(tmp.data,files[i].c_str(),files[i].size());
-            ((char*)tmp.data)[files[i].size()]='\0';
+            tmp.data=new char[strlen(files[i])+1];
+            memcpy(tmp.data,files[i],strlen(files[i]));
+            ((char*)tmp.data)[strlen(files[i])]='\0';
             base->push_back(tmp);
             nativehttp::data::superstring pgac(files[i]);
 
