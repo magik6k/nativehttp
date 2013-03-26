@@ -85,7 +85,7 @@ nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(const char* q)
     }
 
     nativehttp::base::SQLiteResult rt;
-    rt.__set(cols,ds,rtd);
+    rt.__set(cols,ds,rtd,this);
     return rt;
 
 }
@@ -100,11 +100,12 @@ void nativehttp::base::SQLite::transaction_done()
     sqlite3_exec(db, "END TRANSACTION", NULL, NULL, &emsg);
 }
 
-void nativehttp::base::SQLiteResult::__set(unsigned int c, unsigned int r, char*** d)
+void nativehttp::base::SQLiteResult::__set(unsigned int c, unsigned int r, char*** d, nativehttp::base::SQLite* clr)
 {
     cols=c;
     rows=r;
     dt=d;
+    from=clr;
 }
 
 void nativehttp::base::SQLiteResult::free()
@@ -125,6 +126,26 @@ char** nativehttp::base::SQLiteResult::operator[](int i)
 {
     if(dt)return dt[i];
     return NULL;
+}
+
+unsigned int nativehttp::base::SQLiteResult::numRows()
+{
+    return rows;
+}
+
+bool nativehttp::base::SQLite::isTable(const char* name)
+{
+    bool rt=false;
+    string qry="SELECT name FROM sqlite_master WHERE type='table' AND name='";
+    qry+=name;
+    qry+="';";
+
+    nativehttp::base::SQLiteResult tr=this->exec(qry.c_str());
+
+    rt=(tr.numRows()>0);
+    tr.free();
+
+    return rt;
 }
 
 void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,...)

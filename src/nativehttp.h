@@ -230,18 +230,22 @@ public:
 
 extern "C" nbase* nbase_open(string file);
 
+typedef class SQLite SQLite;
+
 class SQLiteResult
 {
     private:
     unsigned int cols;
     unsigned int rows;
     char*** dt;
+    nativehttp::base::SQLite* from;
     public:
 
-    void __set(unsigned int c,unsigned int r, char*** d);
+    void __set(unsigned int c,unsigned int r, char*** d, nativehttp::base::SQLite* clr);
 
     void free();
 
+    unsigned int numRows();
     char** operator[](int);
 
 };
@@ -281,6 +285,8 @@ class SQLite
 
     void create_table(const char* name, unsigned int cols,...);
     void create_table(const char* name, unsigned int cols, SQLiteCol* cl);
+
+    bool isTable(const char* name);
 
 };
 
