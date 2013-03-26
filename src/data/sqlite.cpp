@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #include "../nativehttp.h"
 #include "queue.h"
 #include <string.h>
-
+#include <cstdarg>
 
 void nativehttp::base::SQLite::open(const char* file,bool fast)
 {
@@ -40,7 +40,7 @@ const char* nativehttp::base::SQLite::getLastError()
     return emsg;
 }
 
-nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(char* q)
+nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(const char* q)
 {
     sqlite3_stmt *statement;
     unsigned int cols = 0;
@@ -100,7 +100,7 @@ void nativehttp::base::SQLite::transaction_done()
     sqlite3_exec(db, "END TRANSACTION", NULL, NULL, &emsg);
 }
 
-void nativehttp::base::SQLiteResult::__set(unsigned int c,unsigned int r, char*** d)
+void nativehttp::base::SQLiteResult::__set(unsigned int c, unsigned int r, char*** d)
 {
     cols=c;
     rows=r;
@@ -125,6 +125,51 @@ char** nativehttp::base::SQLiteResult::operator[](int i)
 {
     if(dt)return dt[i];
     return NULL;
+}
+
+void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,...)
+{
+    va_list cll;
+    va_start(cll, cols);
+    string req="CREATE TABLE IF NOT EXISTS '";
+    req+=name;
+    req+="' (";
+    for(unsigned int i=0;i<cols;i++)
+    {
+        nativehttp::base::SQLiteCol tc=va_arg(cll, nativehttp::base::SQLiteCol);
+        req+="'";
+        req+=tc.name;
+        req+="' ";
+
+        switch(tc.type)
+        {
+            case nativehttp::base::SLC_NULL: req+="NULL";break;
+            case nativehttp::base::SLC_INTEGER: req+="INTEGER";break;
+            case nativehttp::base::SLC_REAL: req+="REAL";break;
+            case nativehttp::base::SLC_TEXT: req+="TEXT";break;
+            case nativehttp::base::SLC_BLOB: req+="BLOB";break;
+            default: return;
+        }
+
+        if(i+1<cols)req+=", ";
+    }
+    req+=");";
+    va_end (cll);
+
+    this->exec(req.c_str()).free();
+
+}
+
+nativehttp::base::SQLiteCol::SQLiteCol()
+{
+    name=NULL;
+    type=nativehttp::base::SLC_NULL;
+}
+
+nativehttp::base::SQLiteCol::SQLiteCol(const char* n,SQLite_ctype t)
+{
+    name=n;
+    type=t;
 }
 
 struct slblt

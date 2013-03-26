@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include <deque>
 #include <stdio.h>
 #include <sqlite3.h>
+
 using namespace std;
 
 namespace nativehttp
@@ -245,6 +246,23 @@ class SQLiteResult
 
 };
 
+enum SQLite_ctype
+{
+    SLC_NULL,
+    SLC_INTEGER,
+    SLC_REAL,
+    SLC_TEXT,
+    SLC_BLOB
+};
+
+struct SQLiteCol
+{
+    SQLiteCol();
+    SQLiteCol(const char* n,SQLite_ctype t);
+    const char* name;
+    SQLite_ctype type;
+};
+
 class SQLite
 {
     private:
@@ -256,10 +274,13 @@ class SQLite
 
     const char* getLastError();
     void open(const char* file,bool fast);
-    SQLiteResult exec(char* q);
+    SQLiteResult exec(const char* q);
 
     void transaction_start();
     void transaction_done();
+
+    void create_table(const char* name, unsigned int cols,...);
+    void create_table(unsigned int cols, SQLiteCol* cl);
 
 };
 
