@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include <deque>
 #include <stdio.h>
 #include <sqlite3.h>
+
 using namespace std;
 
 namespace nativehttp
@@ -229,20 +230,42 @@ public:
 
 extern "C" nbase* nbase_open(string file);
 
+typedef class SQLite SQLite;
+
 class SQLiteResult
 {
     private:
     unsigned int cols;
     unsigned int rows;
     char*** dt;
+    nativehttp::base::SQLite* from;
     public:
 
-    void __set(unsigned int c,unsigned int r, char*** d);
+    SQLiteResult();
+    void __set(unsigned int c,unsigned int r, char*** d, nativehttp::base::SQLite* clr);
 
     void free();
 
+    unsigned int numRows();
     char** operator[](int);
 
+};
+
+enum SQLite_ctype
+{
+    SLC_NULL,
+    SLC_INTEGER,
+    SLC_REAL,
+    SLC_TEXT,
+    SLC_BLOB
+};
+
+struct SQLiteCol
+{
+    SQLiteCol();
+    SQLiteCol(const char* n,SQLite_ctype t);
+    const char* name;
+    SQLite_ctype type;
 };
 
 class SQLite
@@ -256,10 +279,15 @@ class SQLite
 
     const char* getLastError();
     void open(const char* file,bool fast);
-    SQLiteResult exec(char* q);
+    SQLiteResult exec(const char* q);
 
     void transaction_start();
     void transaction_done();
+
+    void create_table(const char* name, unsigned int cols,...);
+    void create_table(const char* name, unsigned int cols, SQLiteCol* cl);
+
+    bool isTable(const char* name);
 
 };
 
