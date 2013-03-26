@@ -280,7 +280,7 @@ class SQLite
     void transaction_done();
 
     void create_table(const char* name, unsigned int cols,...);
-    void create_table(unsigned int cols, SQLiteCol* cl);
+    void create_table(const char* name, unsigned int cols, SQLiteCol* cl);
 
 };
 

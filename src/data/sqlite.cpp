@@ -160,6 +160,35 @@ void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,
 
 }
 
+void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols, SQLiteCol* cl)
+{
+    string req="CREATE TABLE IF NOT EXISTS '";
+    req+=name;
+    req+="' (";
+    for(unsigned int i=0;i<cols;i++)
+    {
+        nativehttp::base::SQLiteCol tc=cl[i];
+        req+="'";
+        req+=tc.name;
+        req+="' ";
+
+        switch(tc.type)
+        {
+            case nativehttp::base::SLC_NULL: req+="NULL";break;
+            case nativehttp::base::SLC_INTEGER: req+="INTEGER";break;
+            case nativehttp::base::SLC_REAL: req+="REAL";break;
+            case nativehttp::base::SLC_TEXT: req+="TEXT";break;
+            case nativehttp::base::SLC_BLOB: req+="BLOB";break;
+            default: return;
+        }
+
+        if(i+1<cols)req+=", ";
+    }
+    req+=");";
+
+    this->exec(req.c_str()).free();
+}
+
 nativehttp::base::SQLiteCol::SQLiteCol()
 {
     name=NULL;
