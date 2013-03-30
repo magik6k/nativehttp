@@ -40,7 +40,8 @@ NHS = \
 	$(NHD)/pagemap/init.cpp \
 	$(NHD)/pagemap/dirmap.cpp \
 	$(NHD)/pagemap/loaders/so.cpp \
-	$(NHD)/pagemap/loaders/nhp.cpp 
+	$(NHD)/pagemap/loaders/nhp.cpp \
+	$(NHD)/pagemap/loaders/file.cpp
 
 NHTS = \
 	$(NHTD)/main.cpp \

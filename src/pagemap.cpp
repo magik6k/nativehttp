@@ -539,53 +539,6 @@ drch:
     }
 }
 
-void page_mapper::adduri(string u,bool top)
-{
-    char* cu=new char[u.size()+1];
-    memcpy(cu,u.c_str(),u.size());
-    cu[u.size()]='\0';
 
-    urimp tu= {cu,acp};
-    if(top)
-    {
-        uris.push_front(tu);
-    }
-    else
-    {
-        uris.push_back(tu);
-    }
-}
-
-page page_mapper::by_uri(const char* u)
-{
-    vector<int>dn(uris.size(),0);
-    page t= {-1,NULL};
-    for(unsigned int i=0; i<strlen(u); i++)
-    {
-        for(unsigned int j=0; j<dn.size(); j++)
-        {
-            if(dn[j]!=-1)
-            {
-                if(uris[j].u[dn[j]]==u[i]||uris[j].u[dn[j]]=='*')
-                {
-                    if(strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(u)==strlen(uris[j].u))
-                    {
-                        return (*base)[uris[j].sid];
-                    }
-                    else if(strlen(uris[j].u)==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
-                    {
-                        t=(*base)[uris[j].sid];
-                    }
-                    dn[j]++;
-                }
-                else
-                {
-                    dn[j]=-1;
-                }
-            }
-        }
-    }
-    return t;
-}
 
 

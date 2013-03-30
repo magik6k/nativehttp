@@ -21,29 +21,23 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "pagemap.h"
+#include "../pagemap.h"
 #include <string.h>
 
-void page_mapper::page_mapper_init(string d)
+void page_mapper::load_file(page& tmp, const char* f, string dir)
 {
-    mapdir(d);
-    for(unsigned int i=0; i<files.size(); i++)
-    {
-        page tmp=bscpageset(files[i]);
-        if(tmp.type==-1)continue;
+    tmp.type=page_file;
+    tmp.data=new char[strlen(f)+1];
+    memcpy(tmp.data,f,strlen(f));
+    ((char*)tmp.data)[strlen(f)]='\0';
+    base->push_back(tmp);
+    nativehttp::data::superstring pgac(f);
 
-        if(is_dotso(files[i],strlen(files[i])))
-        {
-            load_so(tmp,files[i],d,NULL);
-        }
-        else if(is_dotnhp(files[i],strlen(files[i])))
-        {
-            load_nhp(tmp,files[i],d);
-        }
-        else
-        {
-            load_file(tmp,files[i],d);
-        }
-    }
+    string furi='/'+pgac.from(dir);
+    char* tfu=new char[furi.size()+1];
+    memcpy(tfu,furi.c_str(),furi.size());
+    tfu[furi.size()]='\0';
+
+    urimp tmu = {tfu,int(base->size())-1};
+    uris.push_back(tmu);
 }
-
