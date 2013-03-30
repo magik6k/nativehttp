@@ -32,6 +32,30 @@ freely, subject to the following restrictions:
 #include <sys/param.h>
 #include <dlfcn.h>
 
+#define is_dotso(_pn,_sl) (_pn[_sl-3]=='.'&&_pn[_sl-2]=='s'&&_pn[_sl-1]=='o')
+#define is_dotnhp(_pn,_sl) (_pn[_sl-4]=='.'&&_pn[_sl-3]=='n'&&_pn[_sl-2]=='h'&&_pn[_sl-1]=='p')
+
+#define page_none -1
+#define page_native 0
+#define page_file 1
+
+namespace nativehttp
+{
+namespace data
+{
+typedef int (*Tonload)();
+typedef pagedata(*Tpage)(rdata*);
+}
+}
+
+struct nativepage
+{
+    void* handle;
+
+    nativehttp::data::Tonload onload;
+    nativehttp::data::Tpage page;
+};
+
 struct page
 {
     int type;
@@ -53,7 +77,12 @@ private:
     deque<urimp>uris;
     int acp;
     unsigned int adui;
+
     void mapdir(string d);
+    page bscpageset(char* f);
+
+    void load_so(page& tmp, const char* f, string dir);
+
 public:
     void preinit();
     void adduri(string u,bool top);

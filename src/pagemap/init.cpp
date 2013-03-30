@@ -24,27 +24,26 @@ freely, subject to the following restrictions:
 #include "pagemap.h"
 #include <string.h>
 
-void page_mapper::preinit()
+void page_mapper::page_mapper_init(string d)
 {
-    base=new data::vector<page>(cfg->get_int("pagebase_max"));
-}
-
-page page_mapper::bscpageset(char* f)
-{
-    page tmp;
-    tmp.type=0;
-    struct stat tst;
-    int rst = stat(f, &tst);
-    if(rst != 0)
+    mapdir(d);
+    for(unsigned int i=0; i<files.size(); i++)
     {
-        nativehttp::server::log("pagemap.cpp:init","stat error");
-        tmp.type=-1;
-        return tmp;
+        page tmp=bscpageset(files[i]);
+        if(tmp.type==-1)continue;
+
+        if(is_dotso(files[i],strlen(files[i])))
+        {
+            load_so(tmp,files[i],d);
+        }
+        else if(is_dotnhp(files[i],strlen(files[i])))
+        {
+
+        }
+        else
+        {
+
+        }
     }
-    tmp.timestamp=tst.st_mtime;
-    tmp.file=new char[strlen(f)+1];
-    memcpy(tmp.file,f,strlen(f));
-    tmp.file[strlen(f)]='\0';
-    return tmp;
 }
 

@@ -40,28 +40,6 @@ string parse_nhp(string nhp);
 void deamonize();
 string its(int n);
 
-#define page_none -1
-#define page_native 0
-#define page_file 1
-
-namespace nativehttp
-{
-namespace data
-{
-typedef int (*Tonload)();
-typedef pagedata(*Tpage)(rdata*);
-}
-}
-
-
-struct nativepage
-{
-    void* handle;
-
-    nativehttp::data::Tonload onload;
-    nativehttp::data::Tpage page;
-};
-
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 
 class mimec

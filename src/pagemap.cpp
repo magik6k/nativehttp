@@ -381,75 +381,10 @@ dch:
 
 void page_mapper::page_mapper_init(string d)
 {
-    nativehttp::data::queue<string>todo;
-    todo.push(d);
 
-    while(todo.size()>0)
-    {
-        DIR *dp;
-        if((dp  = opendir(todo.front().c_str())) == NULL)
-        {
-            cout <<"error: "<< errno << ", for directory " << todo.front().c_str() << endl;
-        }
-        else
-        {
-            struct dirent *de;
-            while ((de = readdir(dp)) != NULL)
-            {
-                struct stat fi;
-                if (lstat( (todo.front()+string(de->d_name)).c_str(), &fi)<0)
-                {
-                    cout << "error(pm.statact) \n";
-                }
-                else
-                {
-                    if(S_ISDIR(fi.st_mode))
-                    {
-                        if(de->d_name[0]!='.')
-                        {
-                            todo.push((todo.front()+string(de->d_name)+'/').c_str());
-                        }
-                    }
-                    else
-                    {
-                        if(string(de->d_name)[string(de->d_name).size()-1]!='~')
-                        {
-                            string ts=(todo.front()+string(de->d_name));
-                            char* b=new char[ts.size()+1];
-                            if(b)
-                            {
-                                strcpy(b,ts.c_str());
-                                b[ts.size()]='\0';
-                                files.push_back(b);
-                            }
-                            else
-                            {
-                                nativehttp::server::log("pagemap.cpp","mapper error[0]");
-                            }
-                        }
-
-                    }
-                }
-                //cout << (string(de->d_name)) << endl;
-            }
-            closedir(dp);
-        }
-        todo.pop();
-    }
     for(unsigned int i=0; i<files.size(); i++)
     {
-        page tmp;
-        struct stat tst;
-        int rst = stat(files[i], &tst);
-        if(rst != 0)
-        {
-            nativehttp::server::log("pagemap.cpp:init","stat error");
-            continue;
-        }
-        tmp.timestamp=tst.st_mtime;
-        tmp.file=new char[strlen(files[i])+1];
-        memcpy(tmp.file,files[i],strlen(files[i]));
-        tmp.file[strlen(files[i])]='\0';
+
 
         if(is_dotso(files[i],strlen(files[i])))
         {
