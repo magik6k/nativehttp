@@ -23,10 +23,10 @@ freely, subject to the following restrictions:
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
-#include "../nativehttp.h"
-#include "../protocol.h"
+#include "nativehttp.h"
+#include "protocol.h"
 #include <SDL/SDL_net.h>
-#include "../data/queue.h"
+#include "data/queue.h"
 using namespace std;
 
 #define HTTP_MAX_USER_HEADER_SIZE 8194 //orginal 2^13+2

@@ -21,4 +21,29 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "nativehttp.h"
+#include "pagemap.h"
+#include <string.h>
+
+void page_mapper::page_mapper_init(string d)
+{
+    mapdir(d);
+    for(unsigned int i=0; i<files.size(); i++)
+    {
+        page tmp=bscpageset(files[i]);
+        if(tmp.type==-1)continue;
+
+        if(is_dotso(files[i],strlen(files[i])))
+        {
+            load_so(tmp,files[i],d,NULL);
+        }
+        else if(is_dotnhp(files[i],strlen(files[i])))
+        {
+            load_nhp(tmp,files[i],d);
+        }
+        else
+        {
+            load_file(tmp,files[i],d);
+        }
+    }
+}
+

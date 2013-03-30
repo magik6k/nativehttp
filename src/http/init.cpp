@@ -21,7 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "../nativehttp.h"
+#include "nativehttp.h"
 #include "init.h"
 #include "data.h"
 #include "executor.h"

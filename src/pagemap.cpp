@@ -34,11 +34,6 @@ freely, subject to the following restrictions:
 #define is_dotso(_pn,_sl) (_pn[_sl-3]=='.'&&_pn[_sl-2]=='s'&&_pn[_sl-1]=='o')
 #define is_dotnhp(_pn,_sl) (_pn[_sl-4]=='.'&&_pn[_sl-3]=='n'&&_pn[_sl-2]=='h'&&_pn[_sl-1]=='p')
 
-void page_mapper::preinit()
-{
-    base=new data::vector<page>(cfg->get_int("pagebase_max"));
-}
-
 void page_mapper::refresh(string d)
 {
     for(unsigned int i=0;i<files.size();i++){delete[] files[i];files[i]=NULL;}
@@ -367,7 +362,7 @@ dch:
                 tmp.data=new char[strlen(files[i])+1];
                 memcpy(tmp.data,files[i],strlen(files[i]));
                 ((char*)tmp.data)[strlen(files[i])]='\0';
-                (*base).push_back(tmp);
+                base->push_back(tmp);
                 nativehttp::data::superstring pgac(files[i]);
 
                 string furi='/'+pgac.from(d);
@@ -386,122 +381,10 @@ dch:
 
 void page_mapper::page_mapper_init(string d)
 {
-    nativehttp::data::queue<string>todo;
-    todo.push(d);
 
-    while(todo.size()>0)
-    {
-        DIR *dp;
-        if((dp  = opendir(todo.front().c_str())) == NULL)
-        {
-            cout <<"error: "<< errno << ", for directory " << todo.front().c_str() << endl;
-        }
-        else
-        {
-            struct dirent *de;
-            while ((de = readdir(dp)) != NULL)
-            {
-                struct stat fi;
-                if (lstat( (todo.front()+string(de->d_name)).c_str(), &fi)<0)
-                {
-                    cout << "error(pm.statact) \n";
-                }
-                else
-                {
-                    if(S_ISDIR(fi.st_mode))
-                    {
-                        if(de->d_name[0]!='.')
-                        {
-                            todo.push((todo.front()+string(de->d_name)+'/').c_str());
-                        }
-                    }
-                    else
-                    {
-                        if(string(de->d_name)[string(de->d_name).size()-1]!='~')
-                        {
-                            string ts=(todo.front()+string(de->d_name));
-                            char* b=new char[ts.size()+1];
-                            if(b)
-                            {
-                                strcpy(b,ts.c_str());
-                                b[ts.size()]='\0';
-                                files.push_back(b);
-                            }
-                            else
-                            {
-                                nativehttp::server::log("pagemap.cpp","mapper error[0]");
-                            }
-                        }
-
-                    }
-                }
-                //cout << (string(de->d_name)) << endl;
-            }
-            closedir(dp);
-        }
-        todo.pop();
-    }
     for(unsigned int i=0; i<files.size(); i++)
     {
-        page tmp;
-        struct stat tst;
-        int rst = stat(files[i], &tst);
-        if(rst != 0)
-        {
-            nativehttp::server::log("pagemap.cpp:init","stat error");
-            continue;
-        }
-        tmp.timestamp=tst.st_mtime;
-        tmp.file=new char[strlen(files[i])+1];
-        memcpy(tmp.file,files[i],strlen(files[i]));
-        tmp.file[strlen(files[i])]='\0';
 
-        if(is_dotso(files[i],strlen(files[i])))
-        {
-            tmp.type=page_native;
-            nativepage* ntm = new nativepage;
-            ntm->handle = dlopen(files[i], RTLD_NOW|RTLD_LOCAL);
-            if(!ntm->handle)
-            {
-                cout << "can't open shared file: "<<files[i]<<": "<<dlerror()<<endl;
-                delete ntm;
-            }
-            else
-            {
-                ntm->onload = (nativehttp::data::Tonload) dlsym(ntm->handle,"onload");
-                ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle,"page");
-                if(!ntm->onload||!ntm->page)
-                {
-                    cout << "error loading native symbols: "<<files[i]<<endl;
-                    dlclose(ntm->handle);
-                    delete ntm;
-                }
-                else
-                {
-                    acp=base->size();
-                    int initstate = (*ntm->onload)();
-                    if(initstate!=1)
-                    {
-                        cout << "invalid init state("<<initstate<<"): "<<files[i]<<endl;
-                        dlclose(ntm->handle);
-                        delete ntm;
-                    }
-                    else
-                    {
-                        tmp.data = ntm;
-                        base->push_back(tmp);
-                        nativehttp::data::superstring pgac(files[i]);
-                        string furi='/'+pgac.from(d);
-                        char* tfu=new char[furi.size()+1];
-                        memcpy(tfu,furi.c_str(),furi.size());
-                        tfu[furi.size()]='\0';
-
-                        urimp tmu= {tfu,int(base->size())-1};
-                        uris.push_back(tmu);
-                    }
-                }
-            }
-        }
         else if(is_dotnhp(files[i],strlen(files[i])))
         {
 
@@ -656,53 +539,6 @@ drch:
     }
 }
 
-void page_mapper::adduri(string u,bool top)
-{
-    char* cu=new char[u.size()+1];
-    memcpy(cu,u.c_str(),u.size());
-    cu[u.size()]='\0';
 
-    urimp tu= {cu,acp};
-    if(top)
-    {
-        uris.push_front(tu);
-    }
-    else
-    {
-        uris.push_back(tu);
-    }
-}
-
-page page_mapper::by_uri(const char* u)
-{
-    vector<int>dn(uris.size(),0);
-    page t= {-1,NULL};
-    for(unsigned int i=0; i<strlen(u); i++)
-    {
-        for(unsigned int j=0; j<dn.size(); j++)
-        {
-            if(dn[j]!=-1)
-            {
-                if(uris[j].u[dn[j]]==u[i]||uris[j].u[dn[j]]=='*')
-                {
-                    if(strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(u)==strlen(uris[j].u))
-                    {
-                        return (*base)[uris[j].sid];
-                    }
-                    else if(strlen(uris[j].u)==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
-                    {
-                        t=(*base)[uris[j].sid];
-                    }
-                    dn[j]++;
-                }
-                else
-                {
-                    dn[j]=-1;
-                }
-            }
-        }
-    }
-    return t;
-}
 
 

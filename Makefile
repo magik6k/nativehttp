@@ -4,7 +4,7 @@
 
 OUT = ./bin/nativehttp
 TOUT = ./bin/httptest
-FLAGS = -std=c++0x -O3 -w
+FLAGS = -std=c++0x -O3 -w -Iinclude -Isrc
 
 LIBS += -rdynamic
 LIBS += -ldl
@@ -23,7 +23,6 @@ NHS = \
 	$(NHD)/mime.cpp \
 	$(NHD)/nbase.cpp \
 	$(NHD)/nhp_to_cpp.cpp \
-	$(NHD)/pagemap.cpp \
 	$(NHD)/postget.cpp \
 	$(NHD)/superstring.cpp \
 	$(NHD)/system.cpp \
@@ -36,7 +35,16 @@ NHS = \
 	$(NHD)/http/init.cpp \
 	$(NHD)/http/manager.cpp \
 	$(NHD)/http/newclient.cpp \
-	$(NHD)/http/sender.cpp 
+	$(NHD)/http/sender.cpp \
+	$(NHD)/pagemap/pagemap.cpp \
+	$(NHD)/pagemap/init.cpp \
+	$(NHD)/pagemap/reload.cpp \
+	$(NHD)/pagemap/dirmap.cpp \
+	$(NHD)/pagemap/loaders/so.cpp \
+	$(NHD)/pagemap/loaders/nhp.cpp \
+	$(NHD)/pagemap/loaders/file.cpp \
+	$(NHD)/pagemap/reloaders/so.cpp \
+	$(NHD)/pagemap/reloaders/nhp.cpp 
 
 NHTS = \
 	$(NHTD)/main.cpp \

@@ -21,4 +21,18 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "nativehttp.h"
+#include "../pagemap.h"
+#include "http/data.h"
+#include <iostream>
+#include <string.h>
+
+void page_mapper::reload_nhp(int pgi, time_t fatt, string dir, const char* f)
+{
+    FILE* nhpf=NULL;
+    FILE* tmf=NULL;
+
+    if(nhp_prepare_env(f,nhpf,tmf))
+    {
+        reload_so(pgi,fatt,dir,nhp_compile(f,nhpf,tmf).c_str());
+    }
+}

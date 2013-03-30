@@ -32,66 +32,11 @@ freely, subject to the following restrictions:
 #include "data/vector.h"
 #include "superstring.h"
 #include "nativehttp.h"
+#include "pagemap/pagemap.h"
 
 using namespace std;
 
-string parse_nhp(string nhp);
 void deamonize();
-string its(int n);
-
-#define page_none -1
-#define page_native 0
-#define page_file 1
-
-namespace nativehttp
-{
-namespace data
-{
-typedef int (*Tonload)();
-typedef pagedata(*Tpage)(rdata*);
-}
-}
-
-
-struct nativepage
-{
-    void* handle;
-
-    nativehttp::data::Tonload onload;
-    nativehttp::data::Tpage page;
-};
-
-struct page
-{
-    int type;
-    void *data;
-    char* file;
-    time_t timestamp;
-};
-
-struct urimp
-{
-    char* u;
-    int sid;
-};
-
-class page_mapper
-{
-private:
-    vector<char*>files;
-    deque<urimp>uris;
-    int acp;
-    unsigned int adui;
-public:
-    void preinit();
-    void adduri(string u,bool top);
-    data::vector<page>* base;
-    void page_mapper_init(string d);
-    void refresh(string d);
-    page by_uri(const char* u);
-
-};
-
 
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 

@@ -22,8 +22,8 @@ freely, subject to the following restrictions:
 */
 
 
-#include "../nativehttp.h"
-#include "../protocol.h"
+#include "nativehttp.h"
+#include "protocol.h"
 #include "executor.h"
 #include "data.h"
 #include "in.h"
