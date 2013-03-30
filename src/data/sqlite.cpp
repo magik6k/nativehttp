@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 
 void nativehttp::base::SQLite::open(const char* file,bool fast)
 {
+    emsg=NULL;
     sqlite3_open(file, &db);
     if(fast)
     {
