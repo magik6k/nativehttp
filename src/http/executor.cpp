@@ -75,6 +75,7 @@ int executor(void* eid)
             SDL_Delay(1);
             continue;
         }
+
         http::toexec.pop();
         SDL_mutexV(http::mtx_exec);
 
@@ -207,6 +208,7 @@ int executor(void* eid)
             process=NULL;
             continue;
         }
+
         exc->state=-1;
         exc->in=0;
 
@@ -225,9 +227,7 @@ int executor(void* eid)
 
         if(result.data)
         {
-            SDL_mutexP(http::mtx_snd);
             http::sender::send(process->uid,result.size,result.data,true);
-            SDL_mutexV(http::mtx_snd);
         }
 
         http::unlockclient(process->uid);

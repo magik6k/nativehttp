@@ -35,19 +35,25 @@ int sender(void* unused)
     int ts=0;
     while(1)
     {
-
         if(http::tosend.empty())
         {
             SDL_Delay(1);
             continue;
         }
+
         SDL_mutexP(http::mtx_snd);
+
         outdata proc=http::tosend.front(ts);
-        if(ts==1)continue;
+        if(ts==1)
+        {
+            SDL_mutexV(http::mtx_snd);
+            continue;
+        }
         http::tosend.pop();
         SDL_mutexV(http::mtx_snd);
 
         if(http::connected[proc.uid])SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+
 
         if(proc.fas)
         {
@@ -59,7 +65,9 @@ int sender(void* unused)
 void send(int uid, unsigned long datasize, char* data, bool free)
 {
     outdata t= {uid,datasize,data,free};
+    SDL_mutexP(http::mtx_snd);
     http::tosend.push(t);
+    SDL_mutexV(http::mtx_snd);
 }
 void sendNow(int uid, unsigned long datasize, char* data, bool free)
 {

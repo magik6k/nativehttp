@@ -64,12 +64,16 @@ void sig(int sig)
         {
             cout << "ACT module crash\n";
         }
-        if(SDL_GetThreadID(http::theard_sd)==SDL_ThreadID())
+        for(int i=0; i<http::Nsend; i++)
         {
-            nativehttp::server::log("WARNING","Sender theard crashed, rescuing");
-            SDL_mutexV(http::mtx_snd);//may be needed
-            SDL_KillThread(http::theard_sd);
-            http::theard_sd=SDL_CreateThread(http::sender::sender,NULL);
+            if(SDL_GetThreadID(http::theard_sd[i])==SDL_ThreadID())
+            {
+                nativehttp::server::log("WARNING","Sender theard crashed, rescuing");
+                SDL_mutexV(http::mtx_snd);//may be needed
+                SDL_Thread* kth=http::theard_sd[i];
+                http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
+                SDL_KillThread(kth);
+            }
         }
 
         for(int i=0; i<http::Nexec; i++)
@@ -77,12 +81,13 @@ void sig(int sig)
             if(SDL_GetThreadID(http::execUnits[i].etheard)==SDL_ThreadID())
             {
                 nativehttp::server::logid(i,"WARNING","Execution theard crashed, rescuing");
-                SDL_KillThread(http::execUnits[i].etheard);
                 http::execUnits[i].state=-1;
                 http::execUnits[i].in=0;
                 SDL_mutexV(http::mtx_exec2);
                 SDL_mutexV(http::mtx_exec);
+                SDL_Thread* kth=http::execUnits[i].etheard;
                 http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
+                SDL_KillThread(kth);
 
             }
         }

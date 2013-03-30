@@ -36,6 +36,7 @@ TCPsocket server=NULL;
 bool* ulock=NULL;
 
 int Nexec;
+int Nsend;
 Sexecutor* execUnits=NULL;
 
 uint32_t mExecQ;
@@ -48,7 +49,7 @@ SDL_mutex* mtx_exec=NULL;
 SDL_mutex* mtx_snd=NULL;
 
 SDL_Thread* theard_nc=NULL;
-SDL_Thread* theard_sd=NULL;
+SDL_Thread** theard_sd=NULL;
 SDL_Thread* theard_mg=NULL;
 
 namespace headers
