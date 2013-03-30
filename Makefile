@@ -43,7 +43,8 @@ NHS = \
 	$(NHD)/pagemap/loaders/so.cpp \
 	$(NHD)/pagemap/loaders/nhp.cpp \
 	$(NHD)/pagemap/loaders/file.cpp \
-	$(NHD)/pagemap/reloaders/so.cpp 
+	$(NHD)/pagemap/reloaders/so.cpp \
+	$(NHD)/pagemap/reloaders/nhp.cpp 
 
 NHTS = \
 	$(NHTD)/main.cpp \

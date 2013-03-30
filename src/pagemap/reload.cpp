@@ -63,9 +63,25 @@ void page_mapper::refresh(string d)
             }
             else if(is_dotnhp(files[i],strlen(files[i])))
             {
+                reload_nhp(pgi,fatt,d,files[i]);
+            }
+        }
+        else if(!loaded)
+        {
+            if(is_dotso(files[i],strlen(files[i])))
+            {
 
             }
+            else if(is_dotnhp(files[i],strlen(files[i])))
+            {
 
+            }
+            else
+            {
+                page tmp=bscpageset(files[i]);
+                if(tmp.type==-1)continue;
+                load_file(tmp,files[i],d);
+            }
         }
     }
 }

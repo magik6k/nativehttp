@@ -43,7 +43,7 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char* f)
     ((nativepage*)(*base)[pgi].data)->handle = dlopen(f, RTLD_NOW|RTLD_LOCAL);
     if(!((nativepage*)(*base)[pgi].data)->handle)
     {
-        nativehttp::server::log("ERROR@pagemap.cpp",string("can't open shared file: ")+f);
+        nativehttp::server::log("ERROR@reloaders/so.cpp",string("can't open shared file: ")+f);
     }
     else
     {
@@ -51,7 +51,7 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char* f)
         ((nativepage*)(*base)[pgi].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pgi].data)->handle,"page");
         if(!((nativepage*)(*base)[pgi].data)->onload||!((nativepage*)(*base)[pgi].data)->page)
         {
-            nativehttp::server::log("ERROR@pagemap.cpp",string("loading native symbols failed: ")+f);
+            nativehttp::server::log("ERROR@reloaders/so.cpp",string("loading native symbols failed: ")+f);
             dlclose(((nativepage*)(*base)[pgi].data)->handle);
         }
         else
@@ -60,12 +60,12 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char* f)
             int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
             if(initstate!=1)
             {
-                nativehttp::server::logid(initstate,"WARNING@pagemap.cpp",string("invalid init state: ")+f);
+                nativehttp::server::logid(initstate,"WARNING@reloaders/so.cpp",string("invalid init state: ")+f);
                 dlclose(((nativepage*)(*base)[pgi].data)->handle);
             }
             else
             {
-                nativehttp::data::superstring pgac(f);
+                nativehttp::data::superstring pgac((*base)[pgi].file);
                 string furi='/'+pgac.from(dir);
                 char* tfu=new char[furi.size()+1];
                 memcpy(tfu,furi.c_str(),furi.size());
@@ -76,7 +76,6 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char* f)
 
                 (*base)[pgi].type=page_native;
                 (*base)[pgi].timestamp=fatt;
-                nativehttp::server::log("RELOAD:SO@pagemap.cpp",string("succes[1]: ")+f);
             }
         }
 

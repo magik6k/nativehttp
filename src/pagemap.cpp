@@ -362,7 +362,7 @@ dch:
                 tmp.data=new char[strlen(files[i])+1];
                 memcpy(tmp.data,files[i],strlen(files[i]));
                 ((char*)tmp.data)[strlen(files[i])]='\0';
-                (*base).push_back(tmp);
+                base->push_back(tmp);
                 nativehttp::data::superstring pgac(files[i]);
 
                 string furi='/'+pgac.from(d);
