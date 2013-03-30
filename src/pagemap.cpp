@@ -34,11 +34,6 @@ freely, subject to the following restrictions:
 #define is_dotso(_pn,_sl) (_pn[_sl-3]=='.'&&_pn[_sl-2]=='s'&&_pn[_sl-1]=='o')
 #define is_dotnhp(_pn,_sl) (_pn[_sl-4]=='.'&&_pn[_sl-3]=='n'&&_pn[_sl-2]=='h'&&_pn[_sl-1]=='p')
 
-void page_mapper::preinit()
-{
-    base=new data::vector<page>(cfg->get_int("pagebase_max"));
-}
-
 void page_mapper::refresh(string d)
 {
     for(unsigned int i=0;i<files.size();i++){delete[] files[i];files[i]=NULL;}
