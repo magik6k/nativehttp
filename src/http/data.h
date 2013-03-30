@@ -76,6 +76,7 @@ extern TCPsocket server;
 extern bool* ulock;
 
 extern int Nexec;
+extern int Nsend;
 extern Sexecutor* execUnits;
 
 extern uint32_t mExecQ;
@@ -88,7 +89,7 @@ extern SDL_mutex* mtx_exec;
 extern SDL_mutex* mtx_snd;
 
 extern SDL_Thread* theard_nc;
-extern SDL_Thread* theard_sd;
+extern SDL_Thread** theard_sd;
 extern SDL_Thread* theard_mg;
 
 namespace headers

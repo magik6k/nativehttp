@@ -51,9 +51,11 @@ void datainit()
     }
     http::CSet=SDLNet_AllocSocketSet(http::maxConnections);
     http::Nexec=cfg->get_int("exec_theards");
+    http::Nsend=cfg->get_int("send_theards");
     http::execUnits=new http::Sexecutor[http::Nexec];
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
+    http::theard_sd=new SDL_Thread*[http::Nsend];
 
     http::mtx_exec2=SDL_CreateMutex();
     http::mtx_exec=SDL_CreateMutex();
@@ -96,7 +98,7 @@ void netstart()
 void startsystem()
 {
     http::theard_nc=SDL_CreateThread(http::newclient,NULL);
-    http::theard_sd=SDL_CreateThread(http::sender::sender,NULL);
+    for(int i=0;i<http::Nsend;i++)http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
     http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
 }
 
