@@ -21,8 +21,8 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "../nativehttp.h"
-#include "../protocol.h"
+#include "nativehttp.h"
+#include "protocol.h"
 #include "sender.h"
 #include "data.h"
 

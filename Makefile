@@ -4,7 +4,7 @@
 
 OUT = ./bin/nativehttp
 TOUT = ./bin/httptest
-FLAGS = -std=c++0x -O3 -w
+FLAGS = -std=c++0x -O3 -w -Iinclude -Isrc
 
 LIBS += -rdynamic
 LIBS += -ldl

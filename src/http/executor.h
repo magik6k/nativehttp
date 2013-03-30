@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef EXECUTOR_H_INCLUDED
 #define EXECUTOR_H_INCLUDED
 #include <SDL/SDL.h>
-#include "../nativehttp.h"
+#include "nativehttp.h"
 #include "data.h"
 
 namespace http
