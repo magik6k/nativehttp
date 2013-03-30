@@ -81,7 +81,12 @@ private:
     void mapdir(string d);
     page bscpageset(char* f);
 
-    void load_so(page& tmp, const char* f, string dir);
+    void load_so(page& tmp, const char* f, string dir, const char* nhp);
+    void load_nhp(page& tmp, const char* f, string dir);
+
+    bool nhp_prepare_env(const char* f, FILE*& nhpf, FILE*& tmf);
+    string nhp_compile(const char* f,FILE*& nhpf, FILE*& tmf);
+
 
 public:
     void preinit();
@@ -92,6 +97,9 @@ public:
     page by_uri(const char* u);
 
 };
+
+string parse_nhp(string nhp);
+string its(int n);
 
 extern nativehttp::data::Ccfg *cfg;
 

@@ -23,8 +23,9 @@ freely, subject to the following restrictions:
 
 #include "../pagemap.h"
 #include <iostream>
+#include <string.h>
 
-void page_mapper::load_so(page& tmp, const char* f, string dir)
+void page_mapper::load_so(page& tmp, const char* f, string dir, const char* nhp)
 {
     tmp.type=page_native;
     nativepage* ntm = new nativepage;
@@ -58,14 +59,29 @@ void page_mapper::load_so(page& tmp, const char* f, string dir)
             {
                 tmp.data = ntm;
                 base->push_back(tmp);
-                nativehttp::data::superstring pgac(f);
-                string furi='/'+pgac.from(dir);
-                char* tfu=new char[furi.size()+1];
-                memcpy(tfu,furi.c_str(),furi.size());
-                tfu[furi.size()]='\0';
 
-                urimp tmu= {tfu,int(base->size())-1};
-                uris.push_back(tmu);
+                if(!nhp)
+                {
+                    nativehttp::data::superstring pgac(f);
+                    string furi='/'+pgac.from(dir);
+                    char* tfu=new char[furi.size()+1];
+                    memcpy(tfu,furi.c_str(),furi.size());
+                    tfu[furi.size()]='\0';
+
+                    urimp tmu = {tfu,int(base->size())-1};
+                    uris.push_back(tmu);
+                }
+                else
+                {
+                    nativehttp::data::superstring pgac(nhp);
+                    string furi='/'+pgac.from(dir);
+                    char* tfu=new char[furi.size()+1];
+                    memcpy(tfu,furi.c_str(),furi.size());
+                    tfu[furi.size()]='\0';
+
+                    urimp tmu = {tfu,int(base->size())-1};
+                    uris.push_back(tmu);
+                }
             }
         }
     }

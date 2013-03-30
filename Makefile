@@ -39,7 +39,8 @@ NHS = \
 	$(NHD)/pagemap/pagemap.cpp \
 	$(NHD)/pagemap/init.cpp \
 	$(NHD)/pagemap/dirmap.cpp \
-	$(NHD)/pagemap/loaders/so.cpp 
+	$(NHD)/pagemap/loaders/so.cpp \
+	$(NHD)/pagemap/loaders/nhp.cpp 
 
 NHTS = \
 	$(NHTD)/main.cpp \

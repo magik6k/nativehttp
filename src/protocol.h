@@ -36,9 +36,7 @@ freely, subject to the following restrictions:
 
 using namespace std;
 
-string parse_nhp(string nhp);
 void deamonize();
-string its(int n);
 
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 

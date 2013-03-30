@@ -34,11 +34,11 @@ void page_mapper::page_mapper_init(string d)
 
         if(is_dotso(files[i],strlen(files[i])))
         {
-            load_so(tmp,files[i],d);
+            load_so(tmp,files[i],d,NULL);
         }
         else if(is_dotnhp(files[i],strlen(files[i])))
         {
-
+            load_nhp(tmp,files[i],d);
         }
         else
         {

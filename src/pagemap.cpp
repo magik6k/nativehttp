@@ -385,53 +385,6 @@ void page_mapper::page_mapper_init(string d)
     for(unsigned int i=0; i<files.size(); i++)
     {
 
-
-        if(is_dotso(files[i],strlen(files[i])))
-        {
-            tmp.type=page_native;
-            nativepage* ntm = new nativepage;
-            ntm->handle = dlopen(files[i], RTLD_NOW|RTLD_LOCAL);
-            if(!ntm->handle)
-            {
-                cout << "can't open shared file: "<<files[i]<<": "<<dlerror()<<endl;
-                delete ntm;
-            }
-            else
-            {
-                ntm->onload = (nativehttp::data::Tonload) dlsym(ntm->handle,"onload");
-                ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle,"page");
-                if(!ntm->onload||!ntm->page)
-                {
-                    cout << "error loading native symbols: "<<files[i]<<endl;
-                    dlclose(ntm->handle);
-                    delete ntm;
-                }
-                else
-                {
-                    acp=base->size();
-                    int initstate = (*ntm->onload)();
-                    if(initstate!=1)
-                    {
-                        cout << "invalid init state("<<initstate<<"): "<<files[i]<<endl;
-                        dlclose(ntm->handle);
-                        delete ntm;
-                    }
-                    else
-                    {
-                        tmp.data = ntm;
-                        base->push_back(tmp);
-                        nativehttp::data::superstring pgac(files[i]);
-                        string furi='/'+pgac.from(d);
-                        char* tfu=new char[furi.size()+1];
-                        memcpy(tfu,furi.c_str(),furi.size());
-                        tfu[furi.size()]='\0';
-
-                        urimp tmu= {tfu,int(base->size())-1};
-                        uris.push_back(tmu);
-                    }
-                }
-            }
-        }
         else if(is_dotnhp(files[i],strlen(files[i])))
         {
 
