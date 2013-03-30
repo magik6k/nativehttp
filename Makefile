@@ -38,10 +38,12 @@ NHS = \
 	$(NHD)/http/sender.cpp \
 	$(NHD)/pagemap/pagemap.cpp \
 	$(NHD)/pagemap/init.cpp \
+	$(NHD)/pagemap/reload.cpp \
 	$(NHD)/pagemap/dirmap.cpp \
 	$(NHD)/pagemap/loaders/so.cpp \
 	$(NHD)/pagemap/loaders/nhp.cpp \
-	$(NHD)/pagemap/loaders/file.cpp
+	$(NHD)/pagemap/loaders/file.cpp \
+	$(NHD)/pagemap/reloaders/so.cpp 
 
 NHTS = \
 	$(NHTD)/main.cpp \

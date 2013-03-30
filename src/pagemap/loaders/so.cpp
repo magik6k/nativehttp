@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 
 #include "../pagemap.h"
+#include "http/data.h"
 #include <iostream>
 #include <string.h>
 
@@ -86,4 +87,5 @@ void page_mapper::load_so(page& tmp, const char* f, string dir, const char* nhp)
         }
     }
 }
+
 

@@ -85,6 +85,8 @@ private:
     void load_nhp(page& tmp, const char* f, string dir);
     void load_file(page& tmp, const char* f, string dir);
 
+    void reload_so(int pgi, time_t fatt, string dir, const char* f);
+
     bool nhp_prepare_env(const char* f, FILE*& nhpf, FILE*& tmf);
     string nhp_compile(const char* f,FILE*& nhpf, FILE*& tmf);
 
