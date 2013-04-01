@@ -36,6 +36,7 @@ NHS = \
 	$(NHD)/http/manager.cpp \
 	$(NHD)/http/newclient.cpp \
 	$(NHD)/http/sender.cpp \
+	$(NHD)/http/stat.cpp \
 	$(NHD)/pagemap/pagemap.cpp \
 	$(NHD)/pagemap/init.cpp \
 	$(NHD)/pagemap/reload.cpp \
