@@ -23,6 +23,26 @@ freely, subject to the following restrictions:
 #ifndef STAT_H_INCLUDED
 #define STAT_H_INCLUDED
 
+namespace http
+{
+    namespace statdata
+    {
+        extern bool toggle;
+        extern bool transfer;
+        extern bool hitlog;
 
+        extern long hourlylen;
+
+        extern long hits;
+        extern long connections;
+
+        extern long ulbytes;
+        extern long dlbytes;
+
+        extern long get;
+        extern long post;
+
+    }
+}
 
 #endif // STAT_H_INCLUDED

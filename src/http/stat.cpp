@@ -25,5 +25,23 @@ freely, subject to the following restrictions:
 
 namespace http
 {
+    namespace statdata
+    {
+        bool toggle;
+        bool transfer;
+        bool hitlog;
+
+        long hourlylen;
+
+        long hits;
+        long connections;
+
+        long ulbytes;
+        long dlbytes;
+
+        long get;
+        long post;
+
+    }
 
 }

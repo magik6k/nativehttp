@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include "sender.h"
 #include "error.h"
 #include "manager.h"
+#include "stat.h"
 
 namespace http
 {
@@ -94,6 +95,20 @@ void netstart()
         printf("INIT: %s\n", SDLNet_GetError());
         exit(1);
     }
+}
+void initstat()
+{
+    http::statdata::toggle=cfg->get_int("statson");
+    http::statdata::transfer=cfg->get_int("transfer_stats");
+    http::statdata::hitlog=cfg->get_int("hits_stats");
+    http::statdata::hourlylen=cfg->get_int("hourly_length");
+
+    http::statdata::hits=0;
+    http::statdata::connections=0;
+    http::statdata::dlbytes=0;
+    http::statdata::ulbytes=0;
+    http::statdata::get=0;
+    http::statdata::post=0;
 }
 void startsystem()
 {
