@@ -322,4 +322,6 @@ extern "C" string decode_poststring(string str);
 
 }//nativehttp namespace
 
+namespace nh = nativehttp;
+
 #endif // NATIVEHTTP_H_INCLUDED
