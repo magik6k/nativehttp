@@ -30,7 +30,6 @@ freely, subject to the following restrictions:
 #include <deque>
 #include <map>
 #include "data/vector.h"
-#include "superstring.h"
 #include "nativehttp.h"
 #include "pagemap/pagemap.h"
 

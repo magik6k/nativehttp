@@ -52,6 +52,8 @@ private:
 
     vector<token>tokens;
     bool rae;
+    bool lck;
+    unsigned int lpos;
 
 public:
 
@@ -83,6 +85,10 @@ public:
     void append_file(string fn);
 
     int check(string sch);
+
+    void lock();
+    void lock(unsigned int lp);
+    void unlock();
 
 
 };
@@ -273,7 +279,7 @@ class SQLite
     private:
 
     sqlite3 * db;
-    char * emsg;
+    char * emsg = 0;
 
     public:
 

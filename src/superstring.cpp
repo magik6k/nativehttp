@@ -20,8 +20,10 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#include "superstring.h"
+#include "nativehttp.h"
 #include <stdio.h>
+
+#define SSLOCK if(lck)pos=lpos
 
 nativehttp::data::token::token(string st, int i)
 {
@@ -74,11 +76,13 @@ nativehttp::data::token nativehttp::data::superstring::tok()
             if(d[i]>=tokens[i].s.size())
             {
                 pos++;
+                SSLOCK;
                 return tokens[i];
             }
         }
         pos++;
     }
+    SSLOCK;
     return tokens[0];
 }
 
@@ -102,11 +106,13 @@ nativehttp::data::token nativehttp::data::superstring::tok(string& opt)
             if(d[i]>=tokens[i].s.size())
             {
                 pos++;
+                SSLOCK;
                 return tokens[i];
             }
         }
         pos++;
     }
+    SSLOCK;
     return tokens[0];
 }
 
@@ -136,10 +142,12 @@ string nativehttp::data::superstring::to(string fend)
         pos++;
         if(c>=fend.size())
         {
+            SSLOCK;
             return rt;
         }
     }
     rae=true;
+    SSLOCK;
     return rt;
 }
 
@@ -171,6 +179,7 @@ string nativehttp::data::superstring::from(string start)
         rt+=str[pos];
         pos++;
     }
+    SSLOCK;
     return rt;
 }
 
@@ -184,6 +193,7 @@ int nativehttp::data::superstring::count(char c)
             rt++;
         }
     }
+    SSLOCK;
     return rt;
 }
 
@@ -222,6 +232,7 @@ string nativehttp::data::superstring::back_to(string fend)
             {
                 ert+=rt[i];
             }
+            SSLOCK;
             return ert;
         }
     }
@@ -230,6 +241,7 @@ string nativehttp::data::superstring::back_to(string fend)
     {
         ert+=rt[i];
     }
+    SSLOCK;
     return ert;
 }
 
@@ -238,7 +250,10 @@ void nativehttp::data::superstring::change(string from, string to)
     string out;
     while(pos<str.size())
     {
+        bool ls=lck;
+        if(lck){lck=!lck;}
         string ctg=this->to(from);
+        lck=ls;
         if(!ctg.empty())
         {
             out+=ctg;
@@ -249,6 +264,7 @@ void nativehttp::data::superstring::change(string from, string to)
         }
     }
     str=out;
+    SSLOCK;
 }
 
 string nativehttp::data::superstring::file(string fn)
@@ -308,3 +324,22 @@ int nativehttp::data::superstring::check(string sch)
     }
     return 0;
 }
+
+void nativehttp::data::superstring::lock()
+{
+    lck=true;
+    lpos=pos;
+}
+
+void nativehttp::data::superstring::lock(unsigned int lp)
+{
+    lck=true;
+    lpos=lp;
+}
+
+void nativehttp::data::superstring::unlock()
+{
+    lck=false;
+    lpos=0;
+}
+
