@@ -83,7 +83,7 @@ install_files:
 install: all directories install_files
 
 install_stat: all
-	cp ./bin/nativestat /var/www/nativestat.so
+	cp ./bin/nativestat.so /var/www/nativestat.so
 
 remove:
 	rm -rf /etc/nativehttp
