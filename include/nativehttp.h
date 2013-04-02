@@ -299,8 +299,6 @@ public:
 
 extern "C" SQLite* sqlite_open(string file, bool fast);
 
-
-
 }//base namespace
 
 namespace init
@@ -313,6 +311,21 @@ namespace server
 extern "C" string version();
 extern "C" void log(string lname, string value);
 extern "C" void logid(int id, string lname, string value);
+namespace stat
+{
+extern "C" bool stats();
+extern "C" bool transfer_stats();
+extern "C" bool hit_stats();
+extern "C" bool method_stats();
+
+extern "C" unsigned long hits();
+extern "C" unsigned long connections();
+extern "C" unsigned long uploaded();
+extern "C" unsigned long downloaded();
+
+extern "C" unsigned long get_requests();
+extern "C" unsigned long post_requests();
+}
 }
 
 namespace utils

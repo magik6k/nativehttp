@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "stat.h"
+#include "nativehttp.h"
 
 
 namespace http
@@ -71,8 +72,57 @@ void onget()
 }
 void onhit()
 {
-    if(toggle)
+    if(toggle&&hitlog)
         hits++;
+}
+}
+}
+
+namespace nativehttp
+{
+namespace stat
+{
+extern "C" bool stats()
+{
+    return http::statdata::toggle;
+}
+extern "C" bool transfer_stats()
+{
+    return http::statdata::transfer;
+}
+extern "C" bool hit_stats()
+{
+    return http::statdata::hitlog;
+}
+extern "C" bool method_stats()
+{
+    return http::statdata::method;
+}
+
+extern "C" unsigned long hits()
+{
+    return http::statdata::hits;
+}
+extern "C" unsigned long connections()
+{
+    return http::statdata::connections;
+}
+extern "C" unsigned long uploaded()
+{
+    return http::statdata::ulbytes;
+}
+extern "C" unsigned long downloaded()
+{
+    return http::statdata::dlbytes;
+}
+
+extern "C" unsigned long get_requests()
+{
+    return http::statdata::get;
+}
+extern "C" unsigned long post_requests()
+{
+    return http::statdata::post;
 }
 }
 }
