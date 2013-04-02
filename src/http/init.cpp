@@ -100,7 +100,7 @@ void initstat()
 {
     http::statdata::toggle=cfg->get_int("statson");
     http::statdata::transfer=cfg->get_int("transfer_stats");
-    http::statdata::hitlog=cfg->get_int("hits_stats");
+    http::statdata::hitlog=cfg->get_int("hits_stat");
     http::statdata::hourlylen=cfg->get_int("hourly_length");
     http::statdata::method=cfg->get_int("method_stats");
 

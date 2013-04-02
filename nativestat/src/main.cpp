@@ -21,15 +21,74 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
+#include "assets.h"
+#include "dtg.h"
 
 extern "C"
 {
     int onload()
     {
+        nh::data::superstring htmss(html_top);
+        htmss.lock();
+        htmss.change("[[srvVer]]",nh::server::version());
+        htmss.change("[[style]]",page_style);
+        page_style.clear();
+        html_top=htmss.str;
         return 1;
     }
     nativehttp::data::pagedata page(nativehttp::rdata* request)
     {
-        return nativehttp::data::pagedata("NativeStat devel");
+        nh::data::superstring page(html_top);
+        nh::data::superstring content(basic_content);
+
+        page.lock();
+        content.lock();
+
+        content.change("[[state]]",(nh::server::stat::stats()?html_on:html_off));
+
+        if(nh::server::stat::stats())
+        {
+            content.remove("[[toggle]");
+            content.remove("[toggle]]");
+            content.change("[[transferlogging]]",(nh::server::stat::transfer_stats()?html_on:html_off));
+            content.change("[[hitlogging]]",(nh::server::stat::hit_stats()?html_on:html_off));
+            content.change("[[methodlogging]]",(nh::server::stat::method_stats()?html_on:html_off));
+
+            if(nh::server::stat::transfer_stats())
+            {
+                content.change("[[transfer_usage]]","<br/><b>Transfer used:</b> "+
+                               mkdtd(nh::server::stat::uploaded(),nh::server::stat::downloaded(),
+                                     "UL: "+content.from_int(nh::server::stat::uploaded()/1024)+" kb",
+                                     "DL: "+content.from_int(nh::server::stat::downloaded()/1024)+" kb",
+                                     "11aa11","aa1111")+"<br/>");
+            }
+            else content.remove("[[transfer_usage]]");
+
+            content.change("[[general_usage]]","<br/><b>Recived Connections: </b> <code>"+content.from_int(nh::server::stat::connections())+"</code>");
+            if(nh::server::stat::hit_stats())
+            {
+                content.change("[[hits]]","<br/><b>Requests: </b> <code>"+content.from_int(nh::server::stat::hits())+"</code><br/><br/>");
+            }
+            else content.remove("[[hits]]");
+
+            if(nh::server::stat::method_stats())
+            {
+                content.change("[[methods]]","<br/><b>Request types:</b> "+
+                               mkdtd(nh::server::stat::get_requests(),nh::server::stat::post_requests(),
+                                     "GET: "+content.from_int(nh::server::stat::get_requests()),
+                                     "POST: "+content.from_int(nh::server::stat::post_requests()),
+                                     "11aa11","aa1111")+"<br/>");
+            }
+            else content.remove("[[methods]]");
+
+        }
+        else
+        {
+            content.remove("[[toggle]","[toggle]]");
+        }
+
+        page.change("[[content]]",content.str);
+        return nativehttp::data::pagedata(page.str);
     }
 }
+

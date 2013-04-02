@@ -252,15 +252,14 @@ string nativehttp::data::superstring::back_to(string fend)
 void nativehttp::data::superstring::change(string from, string to)
 {
     string out;
+    bool ls=lck;
+    if(lck)
+    {
+        lck=false;
+    }
     while(pos<str.size())
     {
-        bool ls=lck;
-        if(lck)
-        {
-            lck=!lck;
-        }
         string ctg=this->to(from);
-        lck=ls;
         if(!ctg.empty())
         {
             out+=ctg;
@@ -270,6 +269,51 @@ void nativehttp::data::superstring::change(string from, string to)
             }
         }
     }
+    lck=ls;
+    str=out;
+    SSLOCK;
+}
+
+void nativehttp::data::superstring::remove(string from, string to)
+{
+    string out;
+    bool ls=lck;
+    if(lck)
+    {
+        lck=false;
+    }
+    while(pos<str.size())
+    {
+
+        string ctg=this->to(from);
+        if(!ctg.empty())
+        {
+            out+=ctg;
+            if(!rae)
+            {
+                this->to(to);
+            }
+        }
+    }
+    lck=ls;
+    str=out;
+    SSLOCK;
+}
+
+void nativehttp::data::superstring::remove(string s)
+{
+    string out;
+    bool ls=lck;
+    if(lck)
+    {
+        lck=false;
+    }
+    while(pos<str.size())
+    {
+        string ctg=this->to(s);
+        out+=ctg;
+    }
+    lck=ls;
     str=out;
     SSLOCK;
 }
@@ -348,5 +392,39 @@ void nativehttp::data::superstring::unlock()
 {
     lck=false;
     lpos=0;
+}
+
+
+string nativehttp::data::superstring::from_int(int in)
+{
+    string tmp, ret;
+    if(in < 0)
+    {
+        ret = "-";
+        in = -in;
+    }
+    do
+    {
+        tmp += in % 10 + 48;
+        in -= in % 10;
+    }
+    while(in /= 10);
+    for(int i = tmp.size()-1; i >= 0; i--)
+        ret += tmp[i];
+    return ret;
+}
+int nativehttp::data::superstring::from_string(string in)
+{
+    int tmp = 0;
+    unsigned int i = 0;
+    bool m = false;
+    if(in[0] == '-')
+    {
+        m = true;
+        i++;
+    }
+    for(; i < in.size(); i++)
+        tmp = 10 * tmp + in[i] - 48;
+    return m ? -tmp : tmp;
 }
 

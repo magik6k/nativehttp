@@ -36,9 +36,6 @@ namespace nativehttp
 namespace data
 {
 
-#ifndef SUPERSTRING_H_INCLUDED
-#define SUPERSTRING_H_INCLUDED
-
 struct token
 {
     int id;
@@ -77,12 +74,10 @@ public:
     string from(string start);
 
     void change(string from, string to);
+    void remove(string from, string to);
+    void remove(string s);
 
     int count(char c);
-
-    string file(string fn);
-    void set_file(string fn);
-    void append_file(string fn);
 
     int check(string sch);
 
@@ -90,10 +85,14 @@ public:
     void lock(unsigned int lp);
     void unlock();
 
+    string file(string fn);
+    void set_file(string fn);
+    void append_file(string fn);
+
+    string from_int(int in);
+    int from_string(string in);
 
 };
-
-#endif
 
 struct cfgfil
 {
