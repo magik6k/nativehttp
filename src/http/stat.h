@@ -30,17 +30,26 @@ namespace http
         extern bool toggle;
         extern bool transfer;
         extern bool hitlog;
+        extern bool method;
 
-        extern long hourlylen;
+        extern unsigned long hourlylen;
 
-        extern long hits;
-        extern long connections;
+        extern unsigned long hits;
+        extern unsigned long connections;
 
-        extern long ulbytes;
-        extern long dlbytes;
+        extern unsigned long ulbytes;
+        extern unsigned long dlbytes;
 
-        extern long get;
-        extern long post;
+        extern unsigned long get;
+        extern unsigned long post;
+
+        void onrecv(unsigned long dlen);
+        void onsend(unsigned long ulen);
+        void onconnect();
+        void onhit();
+
+        void onpost();
+        void onget();
 
     }
 }
