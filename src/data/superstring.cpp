@@ -39,12 +39,16 @@ void nativehttp::data::superstring::set(string s)
 nativehttp::data::superstring::superstring()
 {
     pos=0;
+    lck=false;
+    lpos=0;
 }
 
 nativehttp::data::superstring::superstring(string s)
 {
     this->set(s);
     pos=0;
+    lck=false;
+    lpos=0;
 }
 
 void nativehttp::data::superstring::operator()(string s)

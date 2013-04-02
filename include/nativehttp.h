@@ -279,7 +279,7 @@ class SQLite
 private:
 
     sqlite3 * db;
-    char * emsg = 0;
+    char * emsg;
 
 public:
 

@@ -4,7 +4,8 @@
 
 OUT = ./bin/nativehttp
 TOUT = ./bin/httptest
-FLAGS = -std=c++0x -O3 -w -Iinclude -Isrc
+STATOUT = ./bin/nativestat.so
+FLAGS = -std=c++11 -O3 -w -Iinclude -Isrc
 
 LIBS += -rdynamic
 LIBS += -ldl
@@ -14,6 +15,7 @@ LIBS += -lsqlite3
 
 NHD = ./src
 NHTD = ./testsrc
+STATD = ./nativestat/src
 
 NHS = \
 	$(NHD)/core/api.cpp \
@@ -48,15 +50,20 @@ NHS = \
 	$(NHD)/pagemap/reloaders/nhp.cpp 
 
 NHTS = \
-	$(NHTD)/main.cpp \
+	$(NHTD)/main.cpp
+STATS = \
+	$(STATD)/main.cpp
 
 NHO = $(NHS:%.cpp=%.o)
 
 NHTO = $(NHTS:%.cpp=%.o)
 
-all: nativehttp btest
+STATO = $(STATS:%.cpp=%.o)
+
+all: nativehttp btest nativestat
 	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
 	$(CXX) $(FLAGS) $(NHTO) $(LIBS) -o $(TOUT)
+	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
 
 directories:
 	mkdir /etc/nativehttp
@@ -71,20 +78,26 @@ install_files:
 	cp ./include/* /usr/include/nativehttp
 
 
-install: directories install_files	
+install: all directories install_files
+
+install_stat: all
+	cp ./bin/nativestat /var/www/nativestat.so
 
 remove:
-	rm -r /etc/nativehttp
-	rm -r /usr/include/nativehttp
-	rm /usr/bin/nativehttp
+	rm -rf /etc/nativehttp
+	rm -rf /usr/include/nativehttp
+	rm -f /usr/bin/nativehttp
+	rm -f /var/www/nativestat.so
 
 nativehttp: $(NHO)
 
 btest: $(NHTO)
 
+nativestat: $(STATO)
+
 %.o: %.cpp
 	$(CXX) $(FLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(NHO) $(OUT) $(NHTO) $(TOUT)
+	rm -f $(NHO) $(OUT) $(NHTO) $(TOUT) $(STATO)
 
