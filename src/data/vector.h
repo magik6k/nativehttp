@@ -81,7 +81,7 @@ template<class T>int vector<T>::empty()
 
 template<class T>void vector<T>::destroy()
 {
-    for(int i=0;i<elems;i++)
+    for(int i=0; i<elems; i++)
     {
         delete eptr[i];
     }

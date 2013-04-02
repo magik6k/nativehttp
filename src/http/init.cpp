@@ -114,7 +114,7 @@ void initstat()
 void startsystem()
 {
     http::theard_nc=SDL_CreateThread(http::newclient,NULL);
-    for(int i=0;i<http::Nsend;i++)http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
+    for(int i=0; i<http::Nsend; i++)http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
     http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
 }
 

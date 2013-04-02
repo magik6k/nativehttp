@@ -240,12 +240,12 @@ typedef class SQLite SQLite;
 
 class SQLiteResult
 {
-    private:
+private:
     unsigned int cols;
     unsigned int rows;
     char*** dt;
     nativehttp::base::SQLite* from;
-    public:
+public:
 
     SQLiteResult();
     void __set(unsigned int c,unsigned int r, char*** d, nativehttp::base::SQLite* clr);
@@ -276,12 +276,12 @@ struct SQLiteCol
 
 class SQLite
 {
-    private:
+private:
 
     sqlite3 * db;
     char * emsg = 0;
 
-    public:
+public:
 
     const char* getLastError();
     void open(const char* file,bool fast);

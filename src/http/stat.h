@@ -25,33 +25,33 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    namespace statdata
-    {
-        extern bool toggle;
-        extern bool transfer;
-        extern bool hitlog;
-        extern bool method;
+namespace statdata
+{
+extern bool toggle;
+extern bool transfer;
+extern bool hitlog;
+extern bool method;
 
-        extern unsigned long hourlylen;
+extern unsigned long hourlylen;
 
-        extern unsigned long hits;
-        extern unsigned long connections;
+extern unsigned long hits;
+extern unsigned long connections;
 
-        extern unsigned long ulbytes;
-        extern unsigned long dlbytes;
+extern unsigned long ulbytes;
+extern unsigned long dlbytes;
 
-        extern unsigned long get;
-        extern unsigned long post;
+extern unsigned long get;
+extern unsigned long post;
 
-        void onrecv(unsigned long dlen);
-        void onsend(unsigned long ulen);
-        void onconnect();
-        void onhit();
+void onrecv(unsigned long dlen);
+void onsend(unsigned long ulen);
+void onconnect();
+void onhit();
 
-        void onpost();
-        void onget();
+void onpost();
+void onget();
 
-    }
+}
 }
 
 #endif // STAT_H_INCLUDED

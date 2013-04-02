@@ -251,7 +251,10 @@ void nativehttp::data::superstring::change(string from, string to)
     while(pos<str.size())
     {
         bool ls=lck;
-        if(lck){lck=!lck;}
+        if(lck)
+        {
+            lck=!lck;
+        }
         string ctg=this->to(from);
         lck=ls;
         if(!ctg.empty())

@@ -25,54 +25,54 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-    namespace statdata
-    {
-        bool toggle;
-        bool transfer;
-        bool hitlog;
-        bool method;
+namespace statdata
+{
+bool toggle;
+bool transfer;
+bool hitlog;
+bool method;
 
-        unsigned long hourlylen;
+unsigned long hourlylen;
 
-        unsigned long hits;
-        unsigned long connections;
+unsigned long hits;
+unsigned long connections;
 
-        unsigned long ulbytes;
-        unsigned long dlbytes;
+unsigned long ulbytes;
+unsigned long dlbytes;
 
-        unsigned long get;
-        unsigned long post;
+unsigned long get;
+unsigned long post;
 
-        void onrecv(unsigned long dlen)
-        {
-            if(toggle&&transfer)
-                dlbytes+=dlen;
-        }
-        void onsend(unsigned long ulen)
-        {
-            if(toggle&&transfer)
-                ulbytes+=ulen;
-        }
-        void onconnect()
-        {
-            if(toggle)
-                connections++;
-        }
+void onrecv(unsigned long dlen)
+{
+    if(toggle&&transfer)
+        dlbytes+=dlen;
+}
+void onsend(unsigned long ulen)
+{
+    if(toggle&&transfer)
+        ulbytes+=ulen;
+}
+void onconnect()
+{
+    if(toggle)
+        connections++;
+}
 
-        void onpost()
-        {
-            if(toggle&&method)
-                post++;
-        }
-        void onget()
-        {
-            if(toggle&&method)
-                get++;
-        }
-        void onhit()
-        {
-            if(toggle)
-                hits++;
-        }
-    }
+void onpost()
+{
+    if(toggle&&method)
+        post++;
+}
+void onget()
+{
+    if(toggle&&method)
+        get++;
+}
+void onhit()
+{
+    if(toggle)
+        hits++;
+}
+}
 }

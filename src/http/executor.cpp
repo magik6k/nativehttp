@@ -92,12 +92,12 @@ int executor(void* eid)
 
         switch(process->method)
         {
-            case 1:
-                http::statdata::onget();
-                break;
-            case 2:
-                http::statdata::onpost();
-                break;
+        case 1:
+            http::statdata::onget();
+            break;
+        case 2:
+            http::statdata::onpost();
+            break;
         }
 
         if(process->method==0)
