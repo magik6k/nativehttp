@@ -16,16 +16,16 @@ NHD = ./src
 NHTD = ./testsrc
 
 NHS = \
-	$(NHD)/api.cpp \
-	$(NHD)/cfg.cpp \
-	$(NHD)/cookie.cpp \
-	$(NHD)/main.cpp \
-	$(NHD)/mime.cpp \
-	$(NHD)/nbase.cpp \
-	$(NHD)/nhp_to_cpp.cpp \
-	$(NHD)/postget.cpp \
-	$(NHD)/superstring.cpp \
-	$(NHD)/system.cpp \
+	$(NHD)/core/api.cpp \
+	$(NHD)/core/main.cpp \
+	$(NHD)/core/nhp_to_cpp.cpp \
+	$(NHD)/core/system.cpp \
+	$(NHD)/data/cfg.cpp \
+	$(NHD)/data/cookie.cpp \
+	$(NHD)/data/mime.cpp \
+	$(NHD)/data/nbase.cpp \
+	$(NHD)/data/postget.cpp \
+	$(NHD)/data/superstring.cpp \
 	$(NHD)/data/sqlite.cpp \
 	$(NHD)/http/data.cpp \
 	$(NHD)/http/error.cpp \
