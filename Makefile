@@ -52,6 +52,8 @@ NHS = \
 NHTS = \
 	$(NHTD)/main.cpp
 STATS = \
+	$(STATD)/assets.cpp \
+	$(STATD)/dtg.cpp \
 	$(STATD)/main.cpp
 
 NHO = $(NHS:%.cpp=%.o)
