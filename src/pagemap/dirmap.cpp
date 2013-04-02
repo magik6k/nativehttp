@@ -27,7 +27,11 @@ freely, subject to the following restrictions:
 
 void page_mapper::mapdir(string d)
 {
-    for(unsigned int i=0;i<files.size();i++){delete[] files[i];files[i]=NULL;}
+    for(unsigned int i=0; i<files.size(); i++)
+    {
+        delete[] files[i];
+        files[i]=NULL;
+    }
     files.clear();
     nativehttp::data::queue<string>todo;
     todo.push(d);

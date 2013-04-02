@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include "sender.h"
 #include "error.h"
 #include "manager.h"
+#include "stat.h"
 
 namespace http
 {
@@ -95,10 +96,25 @@ void netstart()
         exit(1);
     }
 }
+void initstat()
+{
+    http::statdata::toggle=cfg->get_int("statson");
+    http::statdata::transfer=cfg->get_int("transfer_stats");
+    http::statdata::hitlog=cfg->get_int("hits_stat");
+    http::statdata::hourlylen=cfg->get_int("hourly_length");
+    http::statdata::method=cfg->get_int("method_stats");
+
+    http::statdata::hits=0;
+    http::statdata::connections=0;
+    http::statdata::dlbytes=0;
+    http::statdata::ulbytes=0;
+    http::statdata::get=0;
+    http::statdata::post=0;
+}
 void startsystem()
 {
     http::theard_nc=SDL_CreateThread(http::newclient,NULL);
-    for(int i=0;i<http::Nsend;i++)http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
+    for(int i=0; i<http::Nsend; i++)http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
     http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
 }
 

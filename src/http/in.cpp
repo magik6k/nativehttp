@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "in.h"
 #include "data.h"
 #include "newclient.h"
+#include "stat.h"
 
 namespace http
 {
@@ -62,6 +63,7 @@ int reciver()
                         ra=SDLNet_TCP_Recv(http::connected[i],(void*)trq->request,HTTP_MAX_USER_HEADER_SIZE);
                         if(ra>0)
                         {
+                            http::statdata::onrecv(ra);
                             ((char*)trq->request)[ra]=0;
                             //trq.request.resize(ra);
                             //SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);

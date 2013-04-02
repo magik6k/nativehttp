@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include "sender.h"
 #include "data.h"
+#include "stat.h"
 
 namespace http
 {
@@ -52,7 +53,11 @@ int sender(void* unused)
         http::tosend.pop();
         SDL_mutexV(http::mtx_snd);
 
-        if(http::connected[proc.uid])SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+        if(http::connected[proc.uid])
+        {
+            SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+            http::statdata::onsend(proc.size);
+        }
 
 
         if(proc.fas)

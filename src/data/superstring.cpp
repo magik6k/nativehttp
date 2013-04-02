@@ -20,8 +20,10 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#include "superstring.h"
+#include "nativehttp.h"
 #include <stdio.h>
+
+#define SSLOCK if(lck)pos=lpos
 
 nativehttp::data::token::token(string st, int i)
 {
@@ -37,12 +39,16 @@ void nativehttp::data::superstring::set(string s)
 nativehttp::data::superstring::superstring()
 {
     pos=0;
+    lck=false;
+    lpos=0;
 }
 
 nativehttp::data::superstring::superstring(string s)
 {
     this->set(s);
     pos=0;
+    lck=false;
+    lpos=0;
 }
 
 void nativehttp::data::superstring::operator()(string s)
@@ -74,11 +80,13 @@ nativehttp::data::token nativehttp::data::superstring::tok()
             if(d[i]>=tokens[i].s.size())
             {
                 pos++;
+                SSLOCK;
                 return tokens[i];
             }
         }
         pos++;
     }
+    SSLOCK;
     return tokens[0];
 }
 
@@ -102,11 +110,13 @@ nativehttp::data::token nativehttp::data::superstring::tok(string& opt)
             if(d[i]>=tokens[i].s.size())
             {
                 pos++;
+                SSLOCK;
                 return tokens[i];
             }
         }
         pos++;
     }
+    SSLOCK;
     return tokens[0];
 }
 
@@ -136,10 +146,12 @@ string nativehttp::data::superstring::to(string fend)
         pos++;
         if(c>=fend.size())
         {
+            SSLOCK;
             return rt;
         }
     }
     rae=true;
+    SSLOCK;
     return rt;
 }
 
@@ -171,6 +183,7 @@ string nativehttp::data::superstring::from(string start)
         rt+=str[pos];
         pos++;
     }
+    SSLOCK;
     return rt;
 }
 
@@ -184,6 +197,7 @@ int nativehttp::data::superstring::count(char c)
             rt++;
         }
     }
+    SSLOCK;
     return rt;
 }
 
@@ -222,6 +236,7 @@ string nativehttp::data::superstring::back_to(string fend)
             {
                 ert+=rt[i];
             }
+            SSLOCK;
             return ert;
         }
     }
@@ -230,12 +245,18 @@ string nativehttp::data::superstring::back_to(string fend)
     {
         ert+=rt[i];
     }
+    SSLOCK;
     return ert;
 }
 
 void nativehttp::data::superstring::change(string from, string to)
 {
     string out;
+    bool ls=lck;
+    if(lck)
+    {
+        lck=false;
+    }
     while(pos<str.size())
     {
         string ctg=this->to(from);
@@ -248,7 +269,53 @@ void nativehttp::data::superstring::change(string from, string to)
             }
         }
     }
+    lck=ls;
     str=out;
+    SSLOCK;
+}
+
+void nativehttp::data::superstring::remove(string from, string to)
+{
+    string out;
+    bool ls=lck;
+    if(lck)
+    {
+        lck=false;
+    }
+    while(pos<str.size())
+    {
+
+        string ctg=this->to(from);
+        if(!ctg.empty())
+        {
+            out+=ctg;
+            if(!rae)
+            {
+                this->to(to);
+            }
+        }
+    }
+    lck=ls;
+    str=out;
+    SSLOCK;
+}
+
+void nativehttp::data::superstring::remove(string s)
+{
+    string out;
+    bool ls=lck;
+    if(lck)
+    {
+        lck=false;
+    }
+    while(pos<str.size())
+    {
+        string ctg=this->to(s);
+        out+=ctg;
+    }
+    lck=ls;
+    str=out;
+    SSLOCK;
 }
 
 string nativehttp::data::superstring::file(string fn)
@@ -308,3 +375,56 @@ int nativehttp::data::superstring::check(string sch)
     }
     return 0;
 }
+
+void nativehttp::data::superstring::lock()
+{
+    lck=true;
+    lpos=pos;
+}
+
+void nativehttp::data::superstring::lock(unsigned int lp)
+{
+    lck=true;
+    lpos=lp;
+}
+
+void nativehttp::data::superstring::unlock()
+{
+    lck=false;
+    lpos=0;
+}
+
+
+string nativehttp::data::superstring::from_int(int in)
+{
+    string tmp, ret;
+    if(in < 0)
+    {
+        ret = "-";
+        in = -in;
+    }
+    do
+    {
+        tmp += in % 10 + 48;
+        in -= in % 10;
+    }
+    while(in /= 10);
+    for(int i = tmp.size()-1; i >= 0; i--)
+        ret += tmp[i];
+    return ret;
+}
+int nativehttp::data::superstring::from_string(string in)
+{
+    int tmp = 0;
+    unsigned int i = 0;
+    bool m = false;
+    if(in[0] == '-')
+    {
+        m = true;
+        i++;
+    }
+    for(; i < in.size(); i++)
+        tmp = 10 * tmp + in[i] - 48;
+    return m ? -tmp : tmp;
+}
+

@@ -36,9 +36,6 @@ namespace nativehttp
 namespace data
 {
 
-#ifndef SUPERSTRING_H_INCLUDED
-#define SUPERSTRING_H_INCLUDED
-
 struct token
 {
     int id;
@@ -52,6 +49,8 @@ private:
 
     vector<token>tokens;
     bool rae;
+    bool lck;
+    unsigned int lpos;
 
 public:
 
@@ -75,19 +74,25 @@ public:
     string from(string start);
 
     void change(string from, string to);
+    void remove(string from, string to);
+    void remove(string s);
 
     int count(char c);
+
+    int check(string sch);
+
+    void lock();
+    void lock(unsigned int lp);
+    void unlock();
 
     string file(string fn);
     void set_file(string fn);
     void append_file(string fn);
 
-    int check(string sch);
-
+    string from_int(int in);
+    int from_string(string in);
 
 };
-
-#endif
 
 struct cfgfil
 {
@@ -234,12 +239,12 @@ typedef class SQLite SQLite;
 
 class SQLiteResult
 {
-    private:
+private:
     unsigned int cols;
     unsigned int rows;
     char*** dt;
     nativehttp::base::SQLite* from;
-    public:
+public:
 
     SQLiteResult();
     void __set(unsigned int c,unsigned int r, char*** d, nativehttp::base::SQLite* clr);
@@ -270,12 +275,12 @@ struct SQLiteCol
 
 class SQLite
 {
-    private:
+private:
 
     sqlite3 * db;
     char * emsg;
 
-    public:
+public:
 
     const char* getLastError();
     void open(const char* file,bool fast);
@@ -293,8 +298,6 @@ class SQLite
 
 extern "C" SQLite* sqlite_open(string file, bool fast);
 
-
-
 }//base namespace
 
 namespace init
@@ -307,6 +310,21 @@ namespace server
 extern "C" string version();
 extern "C" void log(string lname, string value);
 extern "C" void logid(int id, string lname, string value);
+namespace stat
+{
+extern "C" bool stats();
+extern "C" bool transfer_stats();
+extern "C" bool hit_stats();
+extern "C" bool method_stats();
+
+extern "C" unsigned long hits();
+extern "C" unsigned long connections();
+extern "C" unsigned long uploaded();
+extern "C" unsigned long downloaded();
+
+extern "C" unsigned long get_requests();
+extern "C" unsigned long post_requests();
+}
 }
 
 namespace utils
@@ -315,5 +333,7 @@ extern "C" string decode_poststring(string str);
 }
 
 }//nativehttp namespace
+
+namespace nh = nativehttp;
 
 #endif // NATIVEHTTP_H_INCLUDED

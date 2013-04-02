@@ -48,44 +48,44 @@ nativehttp::base::SQLiteResult nativehttp::base::SQLite::exec(const char* q)
     data::queue<char**> dat;
 
 
-	if(sqlite3_prepare_v2(db, q, -1, &statement, 0) == SQLITE_OK)
-	{
-		cols = sqlite3_column_count(statement);
-		int result = 0;
-		while(true)
-		{
-			result = sqlite3_step(statement);
+    if(sqlite3_prepare_v2(db, q, -1, &statement, 0) == SQLITE_OK)
+    {
+        cols = sqlite3_column_count(statement);
+        int result = 0;
+        while(true)
+        {
+            result = sqlite3_step(statement);
 
-			if(result == SQLITE_ROW)
-			{
-			    char** row=new char*[cols];
-				for(unsigned int col = 0; col < cols; col++)
-				{
-					char* s = (char*)sqlite3_column_text(statement, col);
-					if(s)
-					{
-					    row[col] = new char[strlen(s)+1];
+            if(result == SQLITE_ROW)
+            {
+                char** row=new char*[cols];
+                for(unsigned int col = 0; col < cols; col++)
+                {
+                    char* s = (char*)sqlite3_column_text(statement, col);
+                    if(s)
+                    {
+                        row[col] = new char[strlen(s)+1];
                         strcpy(row[col],s);
-					}
-					else
-					{
-					    row[col]=NULL;
-					}
-				}
-				dat.push(row);
-			}
-			else
-			{
-				break;
-			}
-		}
+                    }
+                    else
+                    {
+                        row[col]=NULL;
+                    }
+                }
+                dat.push(row);
+            }
+            else
+            {
+                break;
+            }
+        }
 
-		sqlite3_finalize(statement);
-	}
+        sqlite3_finalize(statement);
+    }
 
-	char*** rtd=new char**[dat.size()];
+    char*** rtd=new char**[dat.size()];
     unsigned int ds=dat.size();
-    for(unsigned int i=0;i<ds;i++)
+    for(unsigned int i=0; i<ds; i++)
     {
         rtd[i]=dat.front();
         dat.pop();
@@ -125,9 +125,9 @@ void nativehttp::base::SQLiteResult::__set(unsigned int c, unsigned int r, char*
 
 void nativehttp::base::SQLiteResult::free()
 {
-    for(unsigned int i=0;i<rows&&dt;i++)
+    for(unsigned int i=0; i<rows&&dt; i++)
     {
-        for(unsigned int j=0;j<cols&&dt[i];j++)
+        for(unsigned int j=0; j<cols&&dt[i]; j++)
         {
             if(dt[i][j])delete[] dt[i][j];
             dt[i][j]=NULL;
@@ -172,7 +172,7 @@ void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,
     string req="CREATE TABLE IF NOT EXISTS '";
     req+=name;
     req+="' (";
-    for(unsigned int i=0;i<cols;i++)
+    for(unsigned int i=0; i<cols; i++)
     {
         nativehttp::base::SQLiteCol tc=va_arg(cll, nativehttp::base::SQLiteCol);
         req+="'";
@@ -181,12 +181,23 @@ void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,
 
         switch(tc.type)
         {
-            case nativehttp::base::SLC_NULL: req+="NULL";break;
-            case nativehttp::base::SLC_INTEGER: req+="INTEGER";break;
-            case nativehttp::base::SLC_REAL: req+="REAL";break;
-            case nativehttp::base::SLC_TEXT: req+="TEXT";break;
-            case nativehttp::base::SLC_BLOB: req+="BLOB";break;
-            default: return;
+        case nativehttp::base::SLC_NULL:
+            req+="NULL";
+            break;
+        case nativehttp::base::SLC_INTEGER:
+            req+="INTEGER";
+            break;
+        case nativehttp::base::SLC_REAL:
+            req+="REAL";
+            break;
+        case nativehttp::base::SLC_TEXT:
+            req+="TEXT";
+            break;
+        case nativehttp::base::SLC_BLOB:
+            req+="BLOB";
+            break;
+        default:
+            return;
         }
 
         if(i+1<cols)req+=", ";
@@ -203,7 +214,7 @@ void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,
     string req="CREATE TABLE IF NOT EXISTS '";
     req+=name;
     req+="' (";
-    for(unsigned int i=0;i<cols;i++)
+    for(unsigned int i=0; i<cols; i++)
     {
         nativehttp::base::SQLiteCol tc=cl[i];
         req+="'";
@@ -212,12 +223,23 @@ void nativehttp::base::SQLite::create_table(const char* name, unsigned int cols,
 
         switch(tc.type)
         {
-            case nativehttp::base::SLC_NULL: req+="NULL";break;
-            case nativehttp::base::SLC_INTEGER: req+="INTEGER";break;
-            case nativehttp::base::SLC_REAL: req+="REAL";break;
-            case nativehttp::base::SLC_TEXT: req+="TEXT";break;
-            case nativehttp::base::SLC_BLOB: req+="BLOB";break;
-            default: return;
+        case nativehttp::base::SLC_NULL:
+            req+="NULL";
+            break;
+        case nativehttp::base::SLC_INTEGER:
+            req+="INTEGER";
+            break;
+        case nativehttp::base::SLC_REAL:
+            req+="REAL";
+            break;
+        case nativehttp::base::SLC_TEXT:
+            req+="TEXT";
+            break;
+        case nativehttp::base::SLC_BLOB:
+            req+="BLOB";
+            break;
+        default:
+            return;
         }
 
         if(i+1<cols)req+=", ";

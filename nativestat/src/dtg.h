@@ -20,42 +20,9 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef PROTOCOL_H_INCLUDED
-#define PROTOCOL_H_INCLUDED
+#ifndef DTG_H_INCLUDED
+#define DTG_H_INCLUDED
 
-#include <SDL/SDL_net.h>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <deque>
-#include <map>
-#include "data/vector.h"
-#include "nativehttp.h"
-#include "pagemap/pagemap.h"
+string mkdtd(unsigned long v1, unsigned long v2, string s1, string s2, string col1, string col2);
 
-using namespace std;
-
-void deamonize();
-
-nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
-
-class mimec
-{
-private:
-    map<string,string> mimes;
-public:
-    mimec();
-    string get_ctype(string fn);
-};
-
-
-
-extern page_mapper pmap;
-extern string charset;
-extern mimec *mime;
-extern nativehttp::data::Ccfg *cfg;
-extern int postmax;
-extern string default_mime;
-extern bool deamonized;
-
-#endif // PROTOCOL_H_INCLUDED
+#endif // DTG_H_INCLUDED

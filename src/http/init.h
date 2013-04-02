@@ -29,6 +29,7 @@ void sdlinit();
 void datainit();
 void executorinit();
 void netstart();
+void initstat();
 void startsystem();
 }
 

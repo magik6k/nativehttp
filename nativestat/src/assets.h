@@ -20,69 +20,19 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef SUPERSTRING_H_INCLUDED
-#define SUPERSTRING_H_INCLUDED
-
+#ifndef ASSETS_H_INCLUDED
+#define ASSETS_H_INCLUDED
 #include <string>
-#include <vector>
-
 using namespace std;
 
-namespace nativehttp
-{
+extern string html_top;
+extern string page_style;
 
-namespace data
-{
+extern string ddbase;
 
-struct token
-{
-    int id;
-    string s;
-    token(string st, int i);
-};
+extern string basic_content;
 
-class superstring
-{
-private:
+extern string html_off;
+extern string html_on;
 
-    vector<token>tokens;
-    bool rae;
-
-public:
-
-    unsigned int pos;
-    string str;
-
-    void set(string s);
-
-    superstring();
-    superstring(string s);
-    void operator()(string s);
-
-    void add_token(token t);
-    void clear_tokens();
-    token tok();
-    token tok(string& opt);
-
-    string to(string fend);
-    string back_to(string fend);
-
-    string from(string start);
-
-    void change(string from, string to);
-
-    int count(char c);
-
-    string file(string fn);
-    void set_file(string fn);
-    void append_file(string fn);
-
-    int check(string sch);
-
-};
-
-
-}//data
-}//nativehttp
-
-#endif // SUPERSTRING_H_INCLUDED
+#endif // ASSETS_H_INCLUDED

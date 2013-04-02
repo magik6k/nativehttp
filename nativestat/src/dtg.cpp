@@ -20,42 +20,19 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef PROTOCOL_H_INCLUDED
-#define PROTOCOL_H_INCLUDED
-
-#include <SDL/SDL_net.h>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <deque>
-#include <map>
-#include "data/vector.h"
 #include "nativehttp.h"
-#include "pagemap/pagemap.h"
+#include "assets.h"
+#include "dtg.h"
 
-using namespace std;
-
-void deamonize();
-
-nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
-
-class mimec
+string mkdtd(unsigned long v1, unsigned long v2, string s1, string s2, string col1, string col2)
 {
-private:
-    map<string,string> mimes;
-public:
-    mimec();
-    string get_ctype(string fn);
-};
-
-
-
-extern page_mapper pmap;
-extern string charset;
-extern mimec *mime;
-extern nativehttp::data::Ccfg *cfg;
-extern int postmax;
-extern string default_mime;
-extern bool deamonized;
-
-#endif // PROTOCOL_H_INCLUDED
+    nh::data::superstring rt(ddbase);
+    rt.lock();
+    rt.change("[[c1]]",s1);
+    rt.change("[[c2]]",s2);
+    rt.change("[[csslftu]]","text-align:left; float: left; width: 50%;");
+    rt.change("[[cssrgtu]]","text-align:right; margin-left: 50%; width: 50%;");
+    rt.change("[[csslft]]","height: 16px; text-align:left; float: left; width: "+rt.from_int((v1*100)/(v1+v2))+"%; background-color: #"+col1+";");
+    rt.change("[[cssrgt]]","height: 16px; text-align:right; margin-left:"+rt.from_int((v1*100)/(v1+v2))+"%; width: "+rt.from_int((v2*100)/(v1+v2))+"%; background-color: #"+col2+";");
+    return rt.str;
+}

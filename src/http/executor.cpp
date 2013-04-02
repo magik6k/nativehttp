@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "in.h"
 #include "sender.h"
+#include "stat.h"
 
 namespace http
 {
@@ -79,6 +80,7 @@ int executor(void* eid)
         http::toexec.pop();
         SDL_mutexV(http::mtx_exec);
 
+        http::statdata::onhit();
 
         rd.get=NULL;
         rd.post=NULL;
@@ -87,6 +89,16 @@ int executor(void* eid)
         ld.clen=0;
 
         http::rproc::line0(process,rd,ld);
+
+        switch(process->method)
+        {
+        case 1:
+            http::statdata::onget();
+            break;
+        case 2:
+            http::statdata::onpost();
+            break;
+        }
 
         if(process->method==0)
         {

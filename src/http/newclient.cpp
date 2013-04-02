@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "newclient.h"
 #include "data.h"
+#include "stat.h"
 
 
 namespace http
@@ -61,6 +62,7 @@ int newclient(void* d)
                 http::connected[toslot]=tclient;
                 tclient=NULL;
                 SDLNet_TCP_AddSocket(http::CSet,http::connected[toslot]);
+                http::statdata::onconnect();
             }
             else
             {
