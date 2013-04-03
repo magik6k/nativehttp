@@ -120,7 +120,7 @@ public:
     }
     ~Ccfg()
     {
-        fileds.empty();
+        fileds.clear();
     }
 
 };

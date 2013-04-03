@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "executor.h"
 #include "sender.h"
+#include "stat.h"
 
 namespace http
 {
@@ -102,6 +103,7 @@ int manager(void* unused)
     {
         http::manager::timeouts();
         http::manager::fsrefresh();
+        http::statdata::manage();
         http::manager::wait();
     }
     return 1;

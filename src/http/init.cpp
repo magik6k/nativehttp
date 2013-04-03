@@ -83,6 +83,7 @@ void executorinit()
         http::execUnits[i].in=0;
         http::execUnits[i].id=i;
         http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
+        if(!http::execUnits[i].etheard)nativehttp::server::logid(i,"init.cpp","Executor failed to start");
     }
 }
 void netstart()
@@ -104,6 +105,13 @@ void initstat()
     http::statdata::hourlylen=cfg->get_int("hourly_length");
     http::statdata::method=cfg->get_int("method_stats");
 
+    http::statdata::lastHrlFlp=time(0);
+
+    http::statdata::hrl_hits = new unsigned long[http::statdata::hourlylen];
+    http::statdata::hrl_connections = new unsigned long[http::statdata::hourlylen];
+    http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
+    http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
+
     http::statdata::hits=0;
     http::statdata::connections=0;
     http::statdata::dlbytes=0;
@@ -114,7 +122,11 @@ void initstat()
 void startsystem()
 {
     http::theard_nc=SDL_CreateThread(http::newclient,NULL);
-    for(int i=0; i<http::Nsend; i++)http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
+    for(int i=0; i<http::Nsend; i++)
+    {
+        http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
+        if(!http::theard_sd[i])nativehttp::server::logid(i,"init.cpp","Sender failed to start");
+    }
     http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
 }
 

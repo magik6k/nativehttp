@@ -44,20 +44,55 @@ unsigned long dlbytes;
 unsigned long get;
 unsigned long post;
 
+unsigned long* hrl_hits;
+unsigned long* hrl_connections;
+unsigned long* hrl_ul;
+unsigned long* hrl_dl;
+
+time_t lastHrlFlp;
+
+void manage()
+{
+    if(time(0)-lastHrlFlp>=3600)
+    {
+        lastHrlFlp+=3600;
+        for(unsigned long i=hourlylen-2;hourlylen>=0;i--)
+        {
+            hrl_hits[i+1]=hrl_hits[i];
+            hrl_connections[i+1]=hrl_connections[i];
+            hrl_ul[i+1]=hrl_ul[i];
+            hrl_dl[i+1]=hrl_dl[i];
+        }
+        hrl_hits[0]=0;
+        hrl_connections[0]=0;
+        hrl_ul[0]=0;
+        hrl_dl[0]=0;
+    }
+}
+
 void onrecv(unsigned long dlen)
 {
     if(toggle&&transfer)
+    {
         dlbytes+=dlen;
+        hrl_dl[0]+=dlen;
+    }
 }
 void onsend(unsigned long ulen)
 {
     if(toggle&&transfer)
+    {
         ulbytes+=ulen;
+        hrl_ul[0]+=ulen;
+    }
 }
 void onconnect()
 {
     if(toggle)
+    {
         connections++;
+        hrl_connections[0]++;
+    }
 }
 
 void onpost()
@@ -73,7 +108,10 @@ void onget()
 void onhit()
 {
     if(toggle&&hitlog)
+    {
         hits++;
+        hrl_hits[0]++;
+    }
 }
 }
 }

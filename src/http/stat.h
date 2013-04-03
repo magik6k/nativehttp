@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #ifndef STAT_H_INCLUDED
 #define STAT_H_INCLUDED
+#include <time.h>
 
 namespace http
 {
@@ -42,6 +43,15 @@ extern unsigned long dlbytes;
 
 extern unsigned long get;
 extern unsigned long post;
+
+extern unsigned long* hrl_hits;
+extern unsigned long* hrl_connections;
+extern unsigned long* hrl_ul;
+extern unsigned long* hrl_dl;
+
+extern time_t lastHrlFlp;
+
+void manage();
 
 void onrecv(unsigned long dlen);
 void onsend(unsigned long ulen);
