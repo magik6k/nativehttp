@@ -33,7 +33,7 @@ bool transfer;
 bool hitlog;
 bool method;
 
-unsigned long hourlylen;
+long long hourlylen;
 
 unsigned long hits;
 unsigned long connections;
@@ -53,10 +53,10 @@ time_t lastHrlFlp;
 
 void manage()
 {
-    if(time(0)-lastHrlFlp>=20)
+    if(time(0)-lastHrlFlp>=5)
     {
-        lastHrlFlp+=20;
-        for(unsigned long i=hourlylen-2;hourlylen>=0;i--)
+        lastHrlFlp+=5;
+        for(long long i=hourlylen-2;i>=0;i--)
         {
             hrl_hits[i+1]=hrl_hits[i];
             hrl_connections[i+1]=hrl_connections[i];

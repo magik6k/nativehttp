@@ -33,7 +33,7 @@ extern bool transfer;
 extern bool hitlog;
 extern bool method;
 
-extern unsigned long hourlylen;
+extern long long hourlylen;
 
 extern unsigned long hits;
 extern unsigned long connections;

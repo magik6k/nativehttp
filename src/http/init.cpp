@@ -112,6 +112,14 @@ void initstat()
     http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
     http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
 
+    for(size_t i=0;i<http::statdata::hourlylen;i++)
+    {
+        http::statdata::hrl_hits[i]=0;
+        http::statdata::hrl_connections[i]=0;
+        http::statdata::hrl_dl[i]=0;
+        http::statdata::hrl_ul[i]=0;
+    }
+
     http::statdata::hits=0;
     http::statdata::connections=0;
     http::statdata::dlbytes=0;
