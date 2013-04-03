@@ -53,9 +53,9 @@ time_t lastHrlFlp;
 
 void manage()
 {
-    if(time(0)-lastHrlFlp>=3600)
+    if(time(0)-lastHrlFlp>=20)
     {
-        lastHrlFlp+=3600;
+        lastHrlFlp+=20;
         for(unsigned long i=hourlylen-2;hourlylen>=0;i--)
         {
             hrl_hits[i+1]=hrl_hits[i];
@@ -161,6 +161,44 @@ extern "C" unsigned long get_requests()
 extern "C" unsigned long post_requests()
 {
     return http::statdata::post;
+}
+
+extern "C" unsigned long hourly_length()
+{
+    return http::statdata::hourlylen;
+}
+
+extern "C" unsigned long hour_hits(unsigned long hid)
+{
+    if(hid<http::statdata::hourlylen)
+    {
+        return http::statdata::hrl_hits[hid];
+    }
+    return 0;
+}
+extern "C" unsigned long hour_connections(unsigned long hid)
+{
+    if(hid<http::statdata::hourlylen)
+    {
+        return http::statdata::hrl_connections[hid];
+    }
+    return 0;
+}
+extern "C" unsigned long hour_upload(unsigned long hid)
+{
+    if(hid<http::statdata::hourlylen)
+    {
+        return http::statdata::hrl_ul[hid];
+    }
+    return 0;
+}
+extern "C" unsigned long hour_download(unsigned long hid)
+{
+    if(hid<http::statdata::hourlylen)
+    {
+        return http::statdata::hrl_dl[hid];
+    }
+    return 0;
 }
 }
 }
