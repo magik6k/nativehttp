@@ -56,3 +56,18 @@ void deamonize()
     close(STDERR_FILENO);
 }
 
+size_t getacmem()
+{
+    long long r=0LL;
+    FILE* fp=NULL;
+    if (!(fp=fopen( "/proc/self/statm", "r" )))
+        return size_t(0LL);
+    if (fscanf(fp,"%*s%*s%*s%*s%*s%lld",&r)!=1)
+    {
+        fclose(fp);
+        return size_t(0LL);
+    }
+    fclose(fp);
+    return size_t(r*sysconf(_SC_PAGESIZE));
+}
+

@@ -36,6 +36,7 @@ freely, subject to the following restrictions:
 using namespace std;
 
 void deamonize();
+size_t getacmem();
 
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 

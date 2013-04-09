@@ -30,16 +30,29 @@ freely, subject to the following restrictions:
 #include "error.h"
 #include "manager.h"
 #include "stat.h"
+#ifdef NHDBG
+#include "protocol.h"
+#include <iostream>
+#endif
 
 namespace http
 {
 void sdlinit()
 {
+#ifdef NHDBG
+    double bm=getacmem();
+#endif
     SDL_Init(SDL_INIT_TIMER);
     SDLNet_Init();
+#ifdef NHDBG
+    cout <<"[DBG:init.cpp@http]SDL init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+#endif
 }
 void datainit()
 {
+#ifdef NHDBG
+    double bm=getacmem();
+#endif
     http::maxConnections=cfg->get_int("maxconnections");
     http::maxPost=cfg->get_int("max_post");
 
@@ -74,20 +87,40 @@ void datainit()
     http::error::e501=http::error::load_error(cfg->get_var("error501"),"501 Not Implemented");
     http::error::e505=http::error::load_error(cfg->get_var("error505"),"505 HTTP Version Not Supported");
 
+#ifdef NHDBG
+    cout <<"[DBG:init.cpp@http]Server data mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+#endif
+
 }
 void executorinit()
 {
+#ifdef NHDBG
+    double abm=getacmem();
+#endif
     for(int i=0; i<http::Nexec; i++)
     {
+#ifdef NHDBG
+        double bm=getacmem();
+#endif
         http::execUnits[i].state=-1;
         http::execUnits[i].in=0;
         http::execUnits[i].id=i;
         http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
         if(!http::execUnits[i].etheard)nativehttp::server::logid(i,"init.cpp","Executor failed to start");
+#ifdef NHDBG
+        cout <<"[DBG:init.cpp@http]executor["<<i<<"] mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+#endif
     }
+#ifdef NHDBG
+    SDL_Delay(250);
+    cout <<"[DBG:init.cpp@http]executors mem: "<<(getacmem()-abm)/1024.f<<"kb\n";
+#endif
 }
 void netstart()
 {
+#ifdef NHDBG
+    double bm=getacmem();
+#endif
     IPaddress tmp;
     SDLNet_ResolveHost(&tmp,NULL,cfg->get_int("port"));
     http::server=SDLNet_TCP_Open(&tmp);
@@ -96,9 +129,15 @@ void netstart()
         printf("INIT: %s\n", SDLNet_GetError());
         exit(1);
     }
+#ifdef NHDBG
+    cout <<"[DBG:init.cpp@http]Net init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+#endif
 }
 void initstat()
 {
+#ifdef NHDBG
+    double bm=getacmem();
+#endif
     http::statdata::toggle=cfg->get_int("statson");
     http::statdata::transfer=cfg->get_int("transfer_stats");
     http::statdata::hitlog=cfg->get_int("hits_stat");
@@ -112,7 +151,7 @@ void initstat()
     http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
     http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
 
-    for(size_t i=0;i<http::statdata::hourlylen;i++)
+    for(size_t i=0; i<http::statdata::hourlylen; i++)
     {
         http::statdata::hrl_hits[i]=0;
         http::statdata::hrl_connections[i]=0;
@@ -126,9 +165,15 @@ void initstat()
     http::statdata::ulbytes=0;
     http::statdata::get=0;
     http::statdata::post=0;
+#ifdef NHDBG
+    cout <<"[DBG:init.cpp@http]Stat mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+#endif
 }
 void startsystem()
 {
+#ifdef NHDBG
+    double bm=getacmem();
+#endif
     http::theard_nc=SDL_CreateThread(http::newclient,NULL);
     for(int i=0; i<http::Nsend; i++)
     {
@@ -136,6 +181,11 @@ void startsystem()
         if(!http::theard_sd[i])nativehttp::server::logid(i,"init.cpp","Sender failed to start");
     }
     http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
+#ifdef NHDBG
+    SDL_Delay(250);
+    cout <<"[DBG:init.cpp@http]System init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+    cout <<"[DBG:init.cpp@http]Total init mem: "<<getacmem()/1024.f<<"kb\n";
+#endif
 }
 
 

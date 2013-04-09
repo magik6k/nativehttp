@@ -27,12 +27,21 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "stat.h"
 
+#ifdef NHDBG
+int sda=0;
+#endif
+
 namespace http
 {
 namespace sender
 {
 int sender(void* unused)
 {
+    #ifdef NHDBG
+    sda++;
+    nativehttp::server::logid(sda,"senger.cpp@http","sender up");
+    #endif
+
     int ts=0;
     while(1)
     {
