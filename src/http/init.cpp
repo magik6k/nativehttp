@@ -40,18 +40,18 @@ namespace http
 void sdlinit()
 {
 #ifdef NHDBG
-    double bm=getacmem();
+    size_t bm=getacmem();
 #endif
     SDL_Init(SDL_INIT_TIMER);
     SDLNet_Init();
 #ifdef NHDBG
-    cout <<"[DBG:init.cpp@http]SDL init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+    cout <<"[DBG:init.cpp@http]SDL init mem: "<<((getacmem())-bm)/1024.f<<"kb\n";
 #endif
 }
 void datainit()
 {
 #ifdef NHDBG
-    double bm=getacmem();
+    size_t bm=getrsmem();
 #endif
     http::maxConnections=cfg->get_int("maxconnections");
     http::maxPost=cfg->get_int("max_post");
@@ -69,7 +69,8 @@ void datainit()
     http::execUnits=new http::Sexecutor[http::Nexec];
     http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
-    http::theard_sd=new SDL_Thread*[http::Nsend];
+    http::theard_sd=new pthread_t*[http::Nsend];
+    http::exec_heap_size=cfg->get_int("exec_heap");
 
     http::mtx_exec2=SDL_CreateMutex();
     http::mtx_exec=SDL_CreateMutex();
@@ -88,28 +89,38 @@ void datainit()
     http::error::e505=http::error::load_error(cfg->get_var("error505"),"505 HTTP Version Not Supported");
 
 #ifdef NHDBG
-    cout <<"[DBG:init.cpp@http]Server data mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+    cout <<"[DBG:init.cpp@http]Server data mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
 #endif
 
 }
 void executorinit()
 {
 #ifdef NHDBG
-    double abm=getacmem();
+    size_t abm=getacmem();
 #endif
     for(int i=0; i<http::Nexec; i++)
     {
-#ifdef NHDBG
-        double bm=getacmem();
-#endif
         http::execUnits[i].state=-1;
         http::execUnits[i].in=0;
         http::execUnits[i].id=i;
-        http::execUnits[i].etheard=SDL_CreateThread(http::executor,&(http::execUnits[i]));
-        if(!http::execUnits[i].etheard)nativehttp::server::logid(i,"init.cpp","Executor failed to start");
-#ifdef NHDBG
-        cout <<"[DBG:init.cpp@http]executor["<<i<<"] mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
-#endif
+
+        http::execUnits[i].etheard=new pthread_t;
+
+        pthread_attr_t at;
+        if(pthread_attr_init(&at)!=0)
+        {
+            nativehttp::server::log("init.cpp@http","ERROR: executor attr setup failed");
+        }
+        if(pthread_attr_setstacksize(&at,http::exec_heap_size)!=0)
+        {
+            nativehttp::server::log("init.cpp@http","ERROR: Setting executor heap size failed");
+        }
+
+        pthread_t* tt=new pthread_t;
+        int tms=pthread_create(tt,&at,http::executor,&(http::execUnits[i]));
+
+        http::execUnits[i].etheard=tt;
+        if(tms!=0)nativehttp::server::logid(i,"init.cpp","Executor failed to start");
     }
 #ifdef NHDBG
     SDL_Delay(250);
@@ -118,9 +129,6 @@ void executorinit()
 }
 void netstart()
 {
-#ifdef NHDBG
-    double bm=getacmem();
-#endif
     IPaddress tmp;
     SDLNet_ResolveHost(&tmp,NULL,cfg->get_int("port"));
     http::server=SDLNet_TCP_Open(&tmp);
@@ -129,14 +137,11 @@ void netstart()
         printf("INIT: %s\n", SDLNet_GetError());
         exit(1);
     }
-#ifdef NHDBG
-    cout <<"[DBG:init.cpp@http]Net init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
-#endif
 }
 void initstat()
 {
 #ifdef NHDBG
-    double bm=getacmem();
+    size_t bm=getrsmem();
 #endif
     http::statdata::toggle=cfg->get_int("statson");
     http::statdata::transfer=cfg->get_int("transfer_stats");
@@ -166,7 +171,7 @@ void initstat()
     http::statdata::get=0;
     http::statdata::post=0;
 #ifdef NHDBG
-    cout <<"[DBG:init.cpp@http]Stat mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
+    cout <<"[DBG:init.cpp@http]Stat mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
 #endif
 }
 void startsystem()
@@ -174,13 +179,43 @@ void startsystem()
 #ifdef NHDBG
     double bm=getacmem();
 #endif
-    http::theard_nc=SDL_CreateThread(http::newclient,NULL);
+
+    pthread_attr_t at;
+    if(pthread_attr_init(&at)!=0)
+    {
+        nativehttp::server::log("init.cpp@http","ERROR: attr setup failed");
+    }
+    if(pthread_attr_setstacksize(&at,16*1024)!=0)//16kb is minimal
+    {
+        nativehttp::server::log("init.cpp@http","ERROR: Setting heap size failed");
+    }
+
+    pthread_t* tt=new pthread_t;
+    int tms=pthread_create(tt, &at, http::newclient, NULL);
+
+    http::theard_nc=tt;
+    if(tms!=0)nativehttp::server::log("init.cpp","ANC failed to start");
+
     for(int i=0; i<http::Nsend; i++)
     {
-        http::theard_sd[i]=SDL_CreateThread(http::sender::sender,NULL);
-        if(!http::theard_sd[i])nativehttp::server::logid(i,"init.cpp","Sender failed to start");
+        pthread_t* tmt=new pthread_t;
+        int tmks=pthread_create(tmt, &at, http::sender::sender, NULL);
+
+        http::theard_sd[i]=tmt;
+        if(tmks!=0)nativehttp::server::logid(i,"init.cpp","Sender failed to start");
     }
-    http::theard_mg=SDL_CreateThread(http::manager::manager,NULL);
+
+    if(pthread_attr_setstacksize(&at,128*1024)!=0)
+    {
+        nativehttp::server::log("init.cpp@http","ERROR: Setting manager heap size failed");
+    }
+
+    tt=new pthread_t;
+    tms=pthread_create(tt, &at, http::manager::manager, NULL);
+
+    http::theard_mg=tt;
+    if(tms!=0)nativehttp::server::log("init.cpp","Manager failed to start");
+
 #ifdef NHDBG
     SDL_Delay(250);
     cout <<"[DBG:init.cpp@http]System init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";

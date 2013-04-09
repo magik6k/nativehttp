@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include <SDL/SDL_net.h>
 #include "data/queue.h"
+#include <pthread.h>
 using namespace std;
 
 #define HTTP_MAX_USER_HEADER_SIZE 8194 //orginal 2^13+2
@@ -58,7 +59,7 @@ struct outdata
 
 struct Sexecutor
 {
-    SDL_Thread* etheard;
+    pthread_t* etheard;
     long int state;//time execution/post reciving started OR -1 when waiting or requies stability
     int in;//3 - kick, 2 - exec, 1 - post recv/kicki, 0-nothing
     int id;
@@ -78,6 +79,7 @@ extern bool* ulock;
 extern int Nexec;
 extern int Nsend;
 extern Sexecutor* execUnits;
+extern size_t exec_heap_size;
 
 extern uint32_t mExecQ;
 
@@ -88,9 +90,9 @@ extern SDL_mutex* mtx_exec2;
 extern SDL_mutex* mtx_exec;
 extern SDL_mutex* mtx_snd;
 
-extern SDL_Thread* theard_nc;
-extern SDL_Thread** theard_sd;
-extern SDL_Thread* theard_mg;
+extern pthread_t* theard_nc;
+extern pthread_t** theard_sd;
+extern pthread_t* theard_mg;
 
 namespace headers
 {

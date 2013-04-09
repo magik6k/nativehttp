@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 namespace http
 {
 
-int executor(void* eid)
+void* executor(void* eid)
 {
     http::Sexecutor* exc=(http::Sexecutor*)eid;
     exc->state=-1;
@@ -246,7 +246,7 @@ int executor(void* eid)
         delete process;
         process=NULL;
     }
-    return 1;
+    return NULL;
 }
 
 namespace rproc

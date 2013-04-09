@@ -37,6 +37,7 @@ using namespace std;
 
 void deamonize();
 size_t getacmem();
+size_t getrsmem();
 
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 

@@ -53,9 +53,9 @@ time_t lastHrlFlp;
 
 void manage()
 {
-    if(time(0)-lastHrlFlp>=5)
+    if(time(0)-lastHrlFlp>=3600)
     {
-        lastHrlFlp+=5;
+        lastHrlFlp+=3600;
         for(long long i=hourlylen-2;i>=0;i--)
         {
             hrl_hits[i+1]=hrl_hits[i];

@@ -30,7 +30,7 @@ namespace manager
 void sig(int sig);
 void timeouts();
 void wait();
-int manager(void* unused);
+void* manager(void* unused);
 void fsrefresh();
 }
 }

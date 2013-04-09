@@ -38,6 +38,10 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
+#ifdef NHDBG
+    size_t bim=(getacmem());
+    cout <<"[DBG:main.cpp@core]before-init mem: "<<bim<<"b\n";
+#endif
     bool dmnz=false;
 
     for(int i=1; i<argc; i++)

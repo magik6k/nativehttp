@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <pthread.h>
 
 bool deamonized=false;
 
@@ -63,6 +64,21 @@ size_t getacmem()
     if (!(fp=fopen( "/proc/self/statm", "r" )))
         return size_t(0LL);
     if (fscanf(fp,"%*s%*s%*s%*s%*s%lld",&r)!=1)
+    {
+        fclose(fp);
+        return size_t(0LL);
+    }
+    fclose(fp);
+    return size_t(r*sysconf(_SC_PAGESIZE));
+}
+
+size_t getrsmem()
+{
+    long long r=0LL;
+    FILE* fp=NULL;
+    if (!(fp=fopen( "/proc/self/statm", "r" )))
+        return size_t(0LL);
+    if (fscanf(fp,"%*s%lld",&r)!=1)
     {
         fclose(fp);
         return size_t(0LL);

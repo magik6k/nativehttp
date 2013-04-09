@@ -49,7 +49,7 @@ int findfreeslot()
     return -1;
 }
 
-int newclient(void* d)
+void* newclient(void* d)
 {
     TCPsocket tclient=NULL;
     int toslot=-1;
@@ -74,6 +74,6 @@ int newclient(void* d)
             SDL_Delay(1);
         }
     }
-    return 0;
+    return NULL;
 }
 }

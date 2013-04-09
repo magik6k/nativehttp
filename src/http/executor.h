@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-int executor(void* eid);
+void* executor(void* eid);
 
 namespace rproc
 {

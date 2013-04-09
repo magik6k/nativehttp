@@ -27,21 +27,12 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "stat.h"
 
-#ifdef NHDBG
-int sda=0;
-#endif
-
 namespace http
 {
 namespace sender
 {
-int sender(void* unused)
+void* sender(void* unused)
 {
-    #ifdef NHDBG
-    sda++;
-    nativehttp::server::logid(sda,"senger.cpp@http","sender up");
-    #endif
-
     int ts=0;
     while(1)
     {
@@ -74,7 +65,7 @@ int sender(void* unused)
             delete[] proc.data;
         }
     }
-    return 1;
+    return NULL;
 }
 void send(int uid, unsigned long datasize, char* data, bool free)
 {
