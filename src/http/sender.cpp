@@ -31,7 +31,7 @@ namespace http
 {
 namespace sender
 {
-int sender(void* unused)
+void* sender(void* unused)
 {
     int ts=0;
     while(1)
@@ -55,7 +55,7 @@ int sender(void* unused)
 
         if(http::connected[proc.uid])
         {
-            SDLNet_TCP_Send(http::connected[proc.uid],proc.data,proc.size);
+            nhSend(http::connected[proc.uid],proc.data,proc.size);
             http::statdata::onsend(proc.size);
         }
 
@@ -65,7 +65,7 @@ int sender(void* unused)
             delete[] proc.data;
         }
     }
-    return 1;
+    return NULL;
 }
 void send(int uid, unsigned long datasize, char* data, bool free)
 {
@@ -76,7 +76,7 @@ void send(int uid, unsigned long datasize, char* data, bool free)
 }
 void sendNow(int uid, unsigned long datasize, char* data, bool free)
 {
-    SDLNet_TCP_Send(http::connected[uid],data,datasize);
+    nhSend(http::connected[uid],data,datasize);
     if(free)
     {
         delete[] data;

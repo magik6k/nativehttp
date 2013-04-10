@@ -56,18 +56,85 @@ extern "C"
 
             if(nh::server::stat::transfer_stats())
             {
-                content.change("[[transfer_usage]]","<br/><b>Transfer used:</b> "+
-                               mkdtd(nh::server::stat::uploaded(),nh::server::stat::downloaded(),
-                                     "UL: "+content.from_int(nh::server::stat::uploaded()/1024)+" kb",
-                                     "DL: "+content.from_int(nh::server::stat::downloaded()/1024)+" kb",
-                                     "11aa11","aa1111")+"<br/>");
+                if(nh::server::stat::hourly_length())
+                {
+                    unsigned long mxt=1;
+                    for(unsigned long i=0;i<nh::server::stat::hourly_length();i++)
+                    {
+                        if(mxt<(nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i)))mxt=(nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i));
+                    }
+
+                    string diag = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" style=\"width: 100%; height: 300px;\"><rect width=\"100%\" height=\"100%\" style=\"fill:rgb(200,200,200);\"/>";
+                    long long olt=(nh::server::stat::hour_upload(0)+nh::server::stat::hour_download(0));
+                    long long olu=(nh::server::stat::hour_upload(0));
+                    long long old=(nh::server::stat::hour_download(0));
+                    for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
+                    {
+                        diag+="<line x1=\""+content.from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
+                            "%\" y1=\""+content.from_int(100-((olt*100)/mxt))+\
+                            "%\" x2=\""+content.from_int(((i)*100)/nh::server::stat::hourly_length())+\
+                            "%\" y2=\""+content.from_int(100-(((nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i))*100)/mxt))+\
+                            "%\" style=\"stroke:rgb(220,80,0);stroke-width:1\" />";
+
+                        diag+="<line x1=\""+content.from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
+                            "%\" y1=\""+content.from_int(100-((olu*100)/mxt))+\
+                            "%\" x2=\""+content.from_int(((i)*100)/nh::server::stat::hourly_length())+\
+                            "%\" y2=\""+content.from_int(100-(((nh::server::stat::hour_upload(i))*100)/mxt))+\
+                            "%\" style=\"stroke:rgb(17,187,17);stroke-width:1\" />";
+
+                        diag+="<line x1=\""+content.from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
+                            "%\" y1=\""+content.from_int(100-((old*100)/mxt))+\
+                            "%\" x2=\""+content.from_int(((i)*100)/nh::server::stat::hourly_length())+\
+                            "%\" y2=\""+content.from_int(100-(((nh::server::stat::hour_download(i))*100)/mxt))+\
+                            "%\" style=\"stroke:rgb(187,17,17);stroke-width:1\" />";
+
+                        olt=(nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i));
+                        olu=(nh::server::stat::hour_upload(i));
+                        old=(nh::server::stat::hour_download(i));
+                    }
+                    diag+="</svg>";
+
+                    content.change("[[transfer_usage]]","<br/><b>Transfer used:</b> "+
+                                   mkdtd(nh::server::stat::uploaded()/1024,nh::server::stat::downloaded()/1024,
+                                         "UL: "+content.from_int(nh::server::stat::uploaded()/1024.f)+" kb",
+                                         "DL: "+content.from_int(nh::server::stat::downloaded()/1024.f)+" kb",
+                                         "11aa11","aa1111")+"<br/>Hourly max:"+content.from_int(mxt/1024)+" kb<br/>"+diag+"<br/>");
+                }
+                else
+                {
+                    content.change("[[transfer_usage]]","<br/><b>Transfer used:</b> "+
+                                   mkdtd(nh::server::stat::uploaded(),nh::server::stat::downloaded(),
+                                         "UL: "+content.from_int(nh::server::stat::uploaded()/1024)+" kb",
+                                         "DL: "+content.from_int(nh::server::stat::downloaded()/1024)+" kb",
+                                         "11aa11","aa1111")+"<br/>");
+                }
             }
             else content.remove("[[transfer_usage]]");
 
             content.change("[[general_usage]]","<br/><b>Recived Connections: </b> <code>"+content.from_int(nh::server::stat::connections())+"</code>");
             if(nh::server::stat::hit_stats())
             {
-                content.change("[[hits]]","<br/><b>Requests: </b> <code>"+content.from_int(nh::server::stat::hits())+"</code><br/><br/>");
+                unsigned long mxt=1;
+                for(unsigned long i=0;i<nh::server::stat::hourly_length();i++)
+                {
+                    if(mxt<(nh::server::stat::hour_hits(i)))mxt=(nh::server::stat::hour_hits(i));
+                }
+                string diag = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" style=\"width: 100%; height: 300px;\"><rect width=\"100%\" height=\"100%\" style=\"fill:rgb(200,200,200);\"/>";
+
+                long long olh=(nh::server::stat::hour_hits(0));
+                for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
+                {
+                    diag+="<line x1=\""+content.from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
+                        "%\" y1=\""+content.from_int(100-((olh*100)/mxt))+\
+                        "%\" x2=\""+content.from_int(((i)*100)/nh::server::stat::hourly_length())+\
+                        "%\" y2=\""+content.from_int(100-(((nh::server::stat::hour_hits(i))*100)/mxt))+\
+                        "%\" style=\"stroke:rgb(187,17,17);stroke-width:1\" />";
+                    olh=(nh::server::stat::hour_hits(i));
+                }
+
+                diag+="</svg>";
+
+                content.change("[[hits]]","<br/><b>Requests: </b> <code>"+content.from_int(nh::server::stat::hits())+"</code><br/>"+diag+"<br/>");
             }
             else content.remove("[[hits]]");
 

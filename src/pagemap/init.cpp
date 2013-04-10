@@ -23,6 +23,11 @@ freely, subject to the following restrictions:
 
 #include "pagemap.h"
 #include <string.h>
+#ifdef NHDBG
+#include "protocol.h"
+#include <iostream>
+#endif
+
 
 void page_mapper::page_mapper_init(string d)
 {
@@ -32,13 +37,24 @@ void page_mapper::page_mapper_init(string d)
         page tmp=bscpageset(files[i]);
         if(tmp.type==-1)continue;
 
+#ifdef NHDBG
+        size_t bm=getacmem();
+        size_t rm=getrsmem();
+#endif
+
         if(is_dotso(files[i],strlen(files[i])))
         {
             load_so(tmp,files[i],d,NULL);
+#ifdef NHDBG
+            cout <<"[DBG:init.cpp@pagemap]so init virt mem: "<<(getacmem()-bm)/1024.f<<"kb, res: "<<(getrsmem()-rm)/1024.f<<"kb\n("<<files[i]<<")\n";
+#endif
         }
         else if(is_dotnhp(files[i],strlen(files[i])))
         {
             load_nhp(tmp,files[i],d);
+#ifdef NHDBG
+            cout <<"[DBG:init.cpp@pagemap]nhp init virt mem: "<<(getacmem()-bm)/1024.f<<"kb, res: "<<(getrsmem()-rm)/1024.f<<"kb("<<files[i]<<")\n";
+#endif
         }
         else
         {

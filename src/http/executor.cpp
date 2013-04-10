@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 namespace http
 {
 
-int executor(void* eid)
+void* executor(void* eid)
 {
     http::Sexecutor* exc=(http::Sexecutor*)eid;
     exc->state=-1;
@@ -246,7 +246,7 @@ int executor(void* eid)
         delete process;
         process=NULL;
     }
-    return 1;
+    return NULL;
 }
 
 namespace rproc
@@ -336,9 +336,16 @@ bool ex(nativehttp::data::pagedata& pd,nativehttp::rdata* rd)
         rd->response="200 OK";
 
         nativepage *npp = (nativepage*)pid.data;
+#ifdef NHDBG
+        double bm=getacmem();
+#endif
         SDL_mutexP(http::mtx_exec2);
         nativehttp::data::pagedata ts=npp->page(rd);//<<<execution of page
         SDL_mutexV(http::mtx_exec2);
+#ifdef NHDBG
+        cout <<"[DBG:executor.cpp@http]Page execution allcocated: "<<(getacmem()-bm)/1024.f<<"kb\n";
+        cout <<"[DBG:init.cpp@http]Total mem: "<<getacmem()/1024.f<<"kb\n";
+#endif
         string snd = "HTTP/1.1 "+rd->response+"\r\n"+http::headers::standard;
         snd+=http::headers::alive+http::headers::alivetimeout;
         snd+="Content-Type: "+rd->ctype+"\r\nContent-Length: ";

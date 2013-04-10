@@ -36,6 +36,9 @@ freely, subject to the following restrictions:
 using namespace std;
 
 void deamonize();
+size_t getacmem();
+size_t getrsmem();
+int nhSend(TCPsocket sock, const void *data, int len);
 
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 

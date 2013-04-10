@@ -120,7 +120,7 @@ public:
     }
     ~Ccfg()
     {
-        fileds.empty();
+        fileds.clear();
     }
 
 };
@@ -324,6 +324,14 @@ extern "C" unsigned long downloaded();
 
 extern "C" unsigned long get_requests();
 extern "C" unsigned long post_requests();
+
+extern "C" unsigned long hourly_length();
+
+extern "C" unsigned long hour_hits(unsigned long hid);
+extern "C" unsigned long hour_connections(unsigned long hid);
+extern "C" unsigned long hour_upload(unsigned long hid);
+extern "C" unsigned long hour_download(unsigned long hid);
+
 }
 }
 

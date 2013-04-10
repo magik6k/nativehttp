@@ -20,44 +20,37 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#include "stat.h"
+#include "../stat.h"
 #include "nativehttp.h"
-
 
 namespace http
 {
 namespace statdata
 {
-bool toggle;
-bool transfer;
-bool hitlog;
-bool method;
-
-unsigned long hourlylen;
-
-unsigned long hits;
-unsigned long connections;
-
-unsigned long ulbytes;
-unsigned long dlbytes;
-
-unsigned long get;
-unsigned long post;
 
 void onrecv(unsigned long dlen)
 {
     if(toggle&&transfer)
+    {
         dlbytes+=dlen;
+        hrl_dl[0]+=dlen;
+    }
 }
 void onsend(unsigned long ulen)
 {
     if(toggle&&transfer)
+    {
         ulbytes+=ulen;
+        hrl_ul[0]+=ulen;
+    }
 }
 void onconnect()
 {
     if(toggle)
+    {
         connections++;
+        hrl_connections[0]++;
+    }
 }
 
 void onpost()
@@ -73,56 +66,10 @@ void onget()
 void onhit()
 {
     if(toggle&&hitlog)
+    {
         hits++;
-}
-}
-}
-
-namespace nativehttp
-{
-namespace stat
-{
-extern "C" bool stats()
-{
-    return http::statdata::toggle;
-}
-extern "C" bool transfer_stats()
-{
-    return http::statdata::transfer;
-}
-extern "C" bool hit_stats()
-{
-    return http::statdata::hitlog;
-}
-extern "C" bool method_stats()
-{
-    return http::statdata::method;
-}
-
-extern "C" unsigned long hits()
-{
-    return http::statdata::hits;
-}
-extern "C" unsigned long connections()
-{
-    return http::statdata::connections;
-}
-extern "C" unsigned long uploaded()
-{
-    return http::statdata::ulbytes;
-}
-extern "C" unsigned long downloaded()
-{
-    return http::statdata::dlbytes;
-}
-
-extern "C" unsigned long get_requests()
-{
-    return http::statdata::get;
-}
-extern "C" unsigned long post_requests()
-{
-    return http::statdata::post;
+        hrl_hits[0]++;
+    }
 }
 }
 }

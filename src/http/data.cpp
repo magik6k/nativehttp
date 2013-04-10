@@ -38,6 +38,8 @@ bool* ulock=NULL;
 int Nexec;
 int Nsend;
 Sexecutor* execUnits=NULL;
+size_t exec_heap_size;
+int asyncsnd=0;
 
 uint32_t mExecQ;
 
@@ -48,9 +50,9 @@ SDL_mutex* mtx_exec2=NULL;
 SDL_mutex* mtx_exec=NULL;
 SDL_mutex* mtx_snd=NULL;
 
-SDL_Thread* theard_nc=NULL;
-SDL_Thread** theard_sd=NULL;
-SDL_Thread* theard_mg=NULL;
+pthread_t* theard_nc=NULL;
+pthread_t** theard_sd=NULL;
+pthread_t* theard_mg=NULL;
 
 namespace headers
 {
