@@ -74,7 +74,6 @@ int main(int argc, char *argv[])
     http::datainit();
     http::executorinit();
     http::netstart();
-    http::initstat();
     http::startsystem();
 
     nativehttp::server::log("INIT","Ready");

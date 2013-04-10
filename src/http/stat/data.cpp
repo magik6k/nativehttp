@@ -20,50 +20,55 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef STAT_H_INCLUDED
-#define STAT_H_INCLUDED
-#include <time.h>
+#include "../stat.h"
+#include "nativehttp.h"
 
 namespace http
 {
 namespace statdata
 {
-extern bool toggle;
-extern bool transfer;
-extern bool hitlog;
-extern bool method;
+bool toggle;
+bool transfer;
+bool hitlog;
+bool method;
 
-extern long long hourlylen;
+long long hourlylen;
 
-extern unsigned long hits;
-extern unsigned long connections;
+unsigned long hits;
+unsigned long connections;
 
-extern unsigned long ulbytes;
-extern unsigned long dlbytes;
+unsigned long ulbytes;
+unsigned long dlbytes;
 
-extern unsigned long get;
-extern unsigned long post;
+unsigned long get;
+unsigned long post;
 
-extern unsigned long* hrl_hits;
-extern unsigned long* hrl_connections;
-extern unsigned long* hrl_ul;
-extern unsigned long* hrl_dl;
+unsigned long* hrl_hits;
+unsigned long* hrl_connections;
+unsigned long* hrl_ul;
+unsigned long* hrl_dl;
 
-extern time_t lastHrlFlp;
+time_t lastHrlFlp;
 
-void manage();
-void init();
-
-void onrecv(unsigned long dlen);
-void onsend(unsigned long ulen);
-void onconnect();
-void onhit();
-
-void onpost();
-void onget();
+void manage()
+{
+    if(time(0)-lastHrlFlp>=3600)
+    {
+        lastHrlFlp+=3600;
+        for(long long i=hourlylen-2;i>=0;i--)
+        {
+            hrl_hits[i+1]=hrl_hits[i];
+            hrl_connections[i+1]=hrl_connections[i];
+            hrl_ul[i+1]=hrl_ul[i];
+            hrl_dl[i+1]=hrl_dl[i];
+        }
+        hrl_hits[0]=0;
+        hrl_connections[0]=0;
+        hrl_ul[0]=0;
+        hrl_dl[0]=0;
+    }
+}
 
 }
+
 }
-
-#endif // STAT_H_INCLUDED
-

@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "protocol.h"
+#include "http/data.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -109,7 +110,7 @@ int nhSend(TCPsocket sock, const void *data, int len) ///Based on original SDLNe
 	sent = 0;
 	SDLNet_SetLastError(0);
 	do {
-		len = send(*((SOCKET*)(((char*)sock)+sizeof(int))), (const char *)dp, left, MSG_DONTWAIT);
+		len = send(*((SOCKET*)(((char*)sock)+sizeof(int))), (const char *)dp, left, http::asyncsnd?MSG_DONTWAIT:0);
 		if ( len > 0 ) {
 			sent += len;
 			left -= len;

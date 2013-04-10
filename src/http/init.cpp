@@ -139,44 +139,10 @@ void netstart()
         exit(1);
     }
 }
-void initstat()
-{
-#ifdef NHDBG
-    size_t bm=getrsmem();
-#endif
-    http::statdata::toggle=cfg->get_int("statson");
-    http::statdata::transfer=cfg->get_int("transfer_stats");
-    http::statdata::hitlog=cfg->get_int("hits_stat");
-    http::statdata::hourlylen=cfg->get_int("hourly_length");
-    http::statdata::method=cfg->get_int("method_stats");
-
-    http::statdata::lastHrlFlp=time(0);
-
-    http::statdata::hrl_hits = new unsigned long[http::statdata::hourlylen];
-    http::statdata::hrl_connections = new unsigned long[http::statdata::hourlylen];
-    http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
-    http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
-
-    for(size_t i=0; i<http::statdata::hourlylen; i++)
-    {
-        http::statdata::hrl_hits[i]=0;
-        http::statdata::hrl_connections[i]=0;
-        http::statdata::hrl_dl[i]=0;
-        http::statdata::hrl_ul[i]=0;
-    }
-
-    http::statdata::hits=0;
-    http::statdata::connections=0;
-    http::statdata::dlbytes=0;
-    http::statdata::ulbytes=0;
-    http::statdata::get=0;
-    http::statdata::post=0;
-#ifdef NHDBG
-    cout <<"[DBG:init.cpp@http]Stat mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
-#endif
-}
 void startsystem()
 {
+    http::statdata::init();
+
 #ifdef NHDBG
     double bm=getacmem();
 #endif

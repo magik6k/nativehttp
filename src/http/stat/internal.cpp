@@ -20,50 +20,56 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef STAT_H_INCLUDED
-#define STAT_H_INCLUDED
-#include <time.h>
+#include "../stat.h"
+#include "nativehttp.h"
 
 namespace http
 {
 namespace statdata
 {
-extern bool toggle;
-extern bool transfer;
-extern bool hitlog;
-extern bool method;
 
-extern long long hourlylen;
-
-extern unsigned long hits;
-extern unsigned long connections;
-
-extern unsigned long ulbytes;
-extern unsigned long dlbytes;
-
-extern unsigned long get;
-extern unsigned long post;
-
-extern unsigned long* hrl_hits;
-extern unsigned long* hrl_connections;
-extern unsigned long* hrl_ul;
-extern unsigned long* hrl_dl;
-
-extern time_t lastHrlFlp;
-
-void manage();
-void init();
-
-void onrecv(unsigned long dlen);
-void onsend(unsigned long ulen);
-void onconnect();
-void onhit();
-
-void onpost();
-void onget();
-
+void onrecv(unsigned long dlen)
+{
+    if(toggle&&transfer)
+    {
+        dlbytes+=dlen;
+        hrl_dl[0]+=dlen;
+    }
 }
+void onsend(unsigned long ulen)
+{
+    if(toggle&&transfer)
+    {
+        ulbytes+=ulen;
+        hrl_ul[0]+=ulen;
+    }
+}
+void onconnect()
+{
+    if(toggle)
+    {
+        connections++;
+        hrl_connections[0]++;
+    }
 }
 
-#endif // STAT_H_INCLUDED
-
+void onpost()
+{
+    if(toggle&&method)
+        post++;
+}
+void onget()
+{
+    if(toggle&&method)
+        get++;
+}
+void onhit()
+{
+    if(toggle&&hitlog)
+    {
+        hits++;
+        hrl_hits[0]++;
+    }
+}
+}
+}
