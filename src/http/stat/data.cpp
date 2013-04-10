@@ -27,6 +27,7 @@ namespace http
 {
 namespace statdata
 {
+
 bool toggle;
 bool transfer;
 bool hitlog;
@@ -49,6 +50,12 @@ unsigned long* hrl_ul;
 unsigned long* hrl_dl;
 
 time_t lastHrlFlp;
+time_t lastSave;
+
+time_t save_rate;
+
+uint16_t filever=0x0001;
+string stfn;
 
 void manage()
 {
@@ -66,6 +73,49 @@ void manage()
         hrl_connections[0]=0;
         hrl_ul[0]=0;
         hrl_dl[0]=0;
+    }
+    if(time(0)-lastSave>=save_rate)
+    {
+        lastHrlFlp+=save_rate;
+        http::statdata::save();
+    }
+}
+
+void save()
+{
+    if(!stfn.empty())
+    {
+        FILE *stf=fopen(stfn.c_str(),"w");
+        if(!stf)
+        {
+            stfn.clear();
+            return;
+        }
+        fwrite("NSF",1,3,stf);
+        fwrite(&filever,2,1,stf);
+        fwrite(&hourlylen,sizeof(long long),1,stf);
+
+        fwrite(&get,sizeof(unsigned long),1,stf);
+        fwrite(&post,sizeof(unsigned long),1,stf);
+
+        stunit sd={0,0,0,0};
+        sd.hits=hits;
+        sd.connections=connections;
+        sd.ulbytes=ulbytes;
+        sd.dlbytes=dlbytes;
+
+        fwrite(&sd,sizeof(stunit),1,stf);
+
+        for(int i=0;i<hourlylen;i++)
+        {
+            sd.hits=hrl_hits[i];
+            sd.connections=hrl_connections[i];
+            sd.ulbytes=hrl_ul[i];
+            sd.dlbytes=hrl_dl[i];
+            fwrite(&sd,sizeof(stunit),1,stf);
+        }
+
+        fclose(stf);
     }
 }
 

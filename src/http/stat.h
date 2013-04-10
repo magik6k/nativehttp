@@ -23,6 +23,8 @@ freely, subject to the following restrictions:
 #ifndef STAT_H_INCLUDED
 #define STAT_H_INCLUDED
 #include <time.h>
+#include <string>
+using namespace std;
 
 namespace http
 {
@@ -50,9 +52,24 @@ extern unsigned long* hrl_ul;
 extern unsigned long* hrl_dl;
 
 extern time_t lastHrlFlp;
+extern time_t lastSave;
+
+extern time_t save_rate;
+
+extern string stfn;
+
+struct stunit
+{
+    unsigned long hits;
+    unsigned long connections;
+
+    unsigned long ulbytes;
+    unsigned long dlbytes;
+};
 
 void manage();
 void init();
+void save();
 
 void onrecv(unsigned long dlen);
 void onsend(unsigned long ulen);

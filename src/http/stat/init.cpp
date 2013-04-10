@@ -41,6 +41,9 @@ void init()
     http::statdata::method=cfg->get_int("method_stats");
 
     http::statdata::lastHrlFlp=time(0);
+    http::statdata::lastSave=time(0);
+
+    http::statdata::save_rate=cfg->get_int("stat_save_rate")*60;
 
     http::statdata::hrl_hits = new unsigned long[http::statdata::hourlylen];
     http::statdata::hrl_connections = new unsigned long[http::statdata::hourlylen];
@@ -61,6 +64,19 @@ void init()
     http::statdata::ulbytes=0;
     http::statdata::get=0;
     http::statdata::post=0;
+
+
+
+    if(!cfg->get_var("statfile").empty())
+    {
+        stfn=cfg->get_var("statfile");
+
+        FILE *stf=fopen(cfg->get_var("statfile").c_str(),"r");
+        if(!stf)return;
+
+        fclose(stf);
+    }
+
 #ifdef NHDBG
     cout <<"[DBG:init.cpp@http]Stat mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
 #endif
