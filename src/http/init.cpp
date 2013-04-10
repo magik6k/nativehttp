@@ -71,6 +71,7 @@ void datainit()
     http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
     http::theard_sd=new pthread_t*[http::Nsend];
     http::exec_heap_size=cfg->get_int("exec_heap");
+    http::asyncsnd=cfg->get_int("async_send");
 
     http::mtx_exec2=SDL_CreateMutex();
     http::mtx_exec=SDL_CreateMutex();

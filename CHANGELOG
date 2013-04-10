@@ -1,6 +1,15 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+0204.13:
+-simple stat module
+-code formatting
+
+3003.13
+-new pagemaper
+-bug fixes
+-sqlite
+
 1903.13:
 -bugfixes
 -fixed many memory leaks

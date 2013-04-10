@@ -80,6 +80,7 @@ extern int Nexec;
 extern int Nsend;
 extern Sexecutor* execUnits;
 extern size_t exec_heap_size;
+extern int asyncsnd;
 
 extern uint32_t mExecQ;
 

@@ -39,6 +39,7 @@ int Nexec;
 int Nsend;
 Sexecutor* execUnits=NULL;
 size_t exec_heap_size;
+int asyncsnd=0;
 
 uint32_t mExecQ;
 
