@@ -38,7 +38,11 @@ using namespace std;
 void deamonize();
 size_t getacmem();
 size_t getrsmem();
+#ifdef NHFAST
 int nhSend(TCPsocket sock, const void *data, int len);
+#else
+#define nhSend SDLNet_TCP_Send
+#endif
 
 nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
 

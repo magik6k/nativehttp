@@ -1,6 +1,14 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+1004.13:
+-stats saving/loading
+-memory usage reduced
+-option to compile debug version
+-debug version prints some memory stats
+-option for async sending
+-few small bugs fixed
+
 0204.13:
 -simple stat module
 -code formatting
