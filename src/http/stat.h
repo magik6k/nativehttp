@@ -56,6 +56,7 @@ extern time_t lastSave;
 
 extern time_t save_rate;
 
+extern uint16_t filever;
 extern string stfn;
 
 struct stunit

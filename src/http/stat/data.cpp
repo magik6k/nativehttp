@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "../stat.h"
 #include "nativehttp.h"
+#include <iostream>
 
 namespace http
 {
@@ -106,7 +107,7 @@ void save()
 
         fwrite(&sd,sizeof(stunit),1,stf);
 
-        for(int i=0;i<hourlylen;i++)
+        for(long long i=0;i<hourlylen;i++)
         {
             sd.hits=hrl_hits[i];
             sd.connections=hrl_connections[i];
