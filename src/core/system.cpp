@@ -97,7 +97,7 @@ size_t getrsmem()
     fclose(fp);
     return size_t(r*sysconf(_SC_PAGESIZE));
 }
-
+#ifdef NHFAST
 int nhSend(TCPsocket sock, const void *data, int len) ///Based on original SDLNet_TCP_Send
 {
     const char* dp=(const char*)data;
@@ -120,5 +120,5 @@ int nhSend(TCPsocket sock, const void *data, int len) ///Based on original SDLNe
 
 	return(sent);
 }
-
+#endif
 

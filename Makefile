@@ -5,8 +5,10 @@
 OUT = ./bin/nativehttp
 TOUT = ./bin/httptest
 STATOUT = ./bin/nativestat.so
+
 FLAGS = -std=c++0x -O3 -w -Iinclude -Isrc -march=native
 DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
+FASTFLAGS = -std=c++0x -O3 -w -Iinclude -Isrc -march=native -DNHFAST
 
 LIBS += -rdynamic
 LIBS += -ldl
@@ -62,6 +64,7 @@ STATS = \
 
 NHO = $(NHS:%.cpp=%.o)
 NHOD = $(NHS:%.cpp=%.dbg.o)
+NHOF = $(NHS:%.cpp=%.fst.o)
 
 NHTO = $(NHTS:%.cpp=%.o)
 
@@ -73,7 +76,10 @@ all: nativehttp btest nativestat
 	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
 
 debug: nativehttp_dbg
-	$(CXX) $(FLAGS) $(NHOD) $(LIBS) -o $(OUT)
+	$(CXX) $(DBGFLAGS) $(NHOD) $(LIBS) -o $(OUT)
+
+fast: nativehttp_fst
+	$(CXX) $(FASTFLAGS) $(NHOF) $(LIBS) -o $(OUT)
 
 directories:
 	mkdir -p /etc/nativehttp
@@ -102,9 +108,14 @@ nativehttp: $(NHO)
 
 nativehttp_dbg: $(NHOD)
 
+nativehttp_fst: $(NHOF)
+
 btest: $(NHTO)
 
 nativestat: $(STATO)
+
+%.fst.o: %.cpp
+	$(CXX) $(FASTFLAGS) -c -o $@ $<
 
 %.dbg.o: %.cpp
 	$(CXX) $(DBGFLAGS) -c -o $@ $<
@@ -113,5 +124,5 @@ nativestat: $(STATO)
 	$(CXX) $(FLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(NHO) $(NHOD) $(OUT) $(NHTO) $(TOUT) $(STATO)
+	rm -f $(NHO) $(NHOD) $(NHOF) $(OUT) $(NHTO) $(TOUT) $(STATO)
 
