@@ -32,6 +32,9 @@ NHS = \
 	$(NHD)/data/postget.cpp \
 	$(NHD)/data/superstring.cpp \
 	$(NHD)/data/sqlite.cpp \
+	$(NHD)/data/session/api.cpp \
+	$(NHD)/data/session/manage.cpp \
+	$(NHD)/data/session/storage.cpp \
 	$(NHD)/http/data.cpp \
 	$(NHD)/http/error.cpp \
 	$(NHD)/http/executor.cpp \

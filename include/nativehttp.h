@@ -162,6 +162,18 @@ public:
     string get(string name);
 };
 
+namespace session
+{
+class usrsession
+{
+    private:
+    unsigned int ssid;
+    public:
+    string get();
+    string set();
+};
+}
+
 }//data namespace
 
 struct rdata
