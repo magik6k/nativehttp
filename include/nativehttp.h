@@ -169,8 +169,8 @@ class usrsession
     private:
     unsigned int ssid;
     public:
-    string get();
-    string set();
+    string get(string name);
+    void set(string name, string value);
 };
 }
 

@@ -40,7 +40,7 @@ void init()
     http::statdata::hourlylen=cfg->get_int("hourly_length");
     http::statdata::method=cfg->get_int("method_stats");
 
-    http::statdata::lastHrlFlp=time(0)+30;
+    http::statdata::lastHrlFlp=time(0)+5;
     http::statdata::lastSave=time(0)+30;
 
     http::statdata::save_rate=cfg->get_int("stat_save_rate")*60;

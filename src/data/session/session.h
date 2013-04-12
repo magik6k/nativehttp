@@ -22,6 +22,9 @@ freely, subject to the following restrictions:
 */
 #ifndef SESSION_H_INCLUDED
 #define SESSION_H_INCLUDED
+#include <stdlib.h>
+#include "nativehttp.h"
+using namespace std;
 
 namespace data
 {
@@ -30,7 +33,25 @@ namespace session
 struct session
 {
     unsigned int svid;
+    time_t started;
 };
+
+class sbmain
+{
+    private:
+        nativehttp::data::cfgfil** keys;
+        size_t fileds;
+        size_t getkeyid(string kn);
+        size_t createkey(string kn);
+        size_t getfreekeyid();
+        void alloc_keys();
+    public:
+        sbmain();
+        void setkey(string kn, string kv);
+        string& getkey(string kn);
+};
+
+extern time_t sess_life;
 extern session* storage;
 }
 }
