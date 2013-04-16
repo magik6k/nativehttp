@@ -1,6 +1,11 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+1604.13:
+-Sessions!
+-3 superstring functions can be called w/o object
+-few bugfixes
+
 1004.13:
 -stats saving/loading
 -memory usage reduced
