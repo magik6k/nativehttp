@@ -85,6 +85,7 @@ void* executor(void* eid)
         rd.get=NULL;
         rd.post=NULL;
         rd.cookie=NULL;
+        rd.session=NULL;
 
         ld.clen=0;
 
@@ -192,6 +193,12 @@ void* executor(void* eid)
         process->request=NULL;
 
         rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
+
+        if(rd.cookie&&http::usesessions)
+        {
+            rd.session=new nativehttp::data::session;
+            rd.session->__init(rd.cookie);
+        }
 
         nativehttp::data::pagedata result;
         exc->fd1=rd.cookie;
@@ -338,13 +345,14 @@ bool ex(nativehttp::data::pagedata& pd,nativehttp::rdata* rd)
         nativepage *npp = (nativepage*)pid.data;
 #ifdef NHDBG
         double bm=getacmem();
+        unsigned int pgt=SDL_GetTicks();
 #endif
         SDL_mutexP(http::mtx_exec2);
         nativehttp::data::pagedata ts=npp->page(rd);//<<<execution of page
         SDL_mutexV(http::mtx_exec2);
 #ifdef NHDBG
-        cout <<"[DBG:executor.cpp@http]Page execution allcocated: "<<(getacmem()-bm)/1024.f<<"kb\n";
-        cout <<"[DBG:init.cpp@http]Total mem: "<<getacmem()/1024.f<<"kb\n";
+        unsigned int et=SDL_GetTicks()-pgt;
+        cout <<"[DBG:executor.cpp@http]Page execution allcocated: "<<(getacmem()-bm)/1024.f<<"kb, Total: "<<getacmem()/1024.f<<"kb, time: "<<et<<"ms\n";
 #endif
         string snd = "HTTP/1.1 "+rd->response+"\r\n"+http::headers::standard;
         snd+=http::headers::alive+http::headers::alivetimeout;

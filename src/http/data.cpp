@@ -41,6 +41,12 @@ Sexecutor* execUnits=NULL;
 size_t exec_heap_size;
 int asyncsnd=0;
 
+int usesessions=0;
+string sess_ssid_cnam;
+string sess_sslc_cnam;
+size_t max_sesions=0;
+time_t sess_life=0;
+
 uint32_t mExecQ;
 
 nativehttp::data::queue<request*>toexec;

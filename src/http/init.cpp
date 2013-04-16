@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include "error.h"
 #include "manager.h"
 #include "stat.h"
+#include "data/session/session.h"
 #ifdef NHDBG
 #include "protocol.h"
 #include <iostream>
@@ -88,6 +89,13 @@ void datainit()
     http::error::e404=http::error::load_error(cfg->get_var("error404"),"404 Not Found");
     http::error::e501=http::error::load_error(cfg->get_var("error501"),"501 Not Implemented");
     http::error::e505=http::error::load_error(cfg->get_var("error505"),"505 HTTP Version Not Supported");
+
+    http::usesessions=cfg->get_int("use_sessions");
+    sess_ssid_cnam=cfg->get_var("cookie_ssid_name");
+    sess_sslc_cnam=cfg->get_var("cookie_sslc_name");
+    max_sesions=cfg->get_int("max_sessions");
+    sess_life=cfg->get_int("session_life");
+    sdata::session::storage.prealloc(cfg->get_int("inital_sessions"));
 
 #ifdef NHDBG
     cout <<"[DBG:init.cpp@http]Server data mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";

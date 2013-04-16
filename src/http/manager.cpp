@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "executor.h"
 #include "sender.h"
 #include "stat.h"
+#include "data/session/session.h"
 
 namespace http
 {
@@ -135,6 +136,8 @@ void* manager(void* unused)
         http::manager::fsrefresh();
         http::statdata::manage();
         http::manager::wait();
+        if(http::usesessions)
+            sdata::session::storage.mng();
     }
     return NULL;
 }
