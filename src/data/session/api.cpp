@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "session.h"
+#include "http/data.h"
 
 namespace nativehttp
 {
@@ -37,8 +38,14 @@ namespace data
         {
             unsigned int sslc=rand()%(2<<30);
             ssid=sdata::session::storage.mksess(sslc);
-            cd->set("NH_ssid",nativehttp::data::superstring::from_int(ssid),"path=/");
-            cd->set("NH_sslc",nativehttp::data::superstring::from_int(ssid),"path=/");
+
+            if(!sdata::session::storage.cksess(ssid,sslc))
+            {
+                valid=false;
+                return;
+            }
+            cd->set(http::sess_ssid_cnam,nativehttp::data::superstring::from_int(ssid),"path=/");
+            cd->set(http::sess_sslc_cnam,nativehttp::data::superstring::from_int(ssid),"path=/");
             valid=true;
             return;
         }
@@ -57,8 +64,15 @@ namespace data
             {
                 unsigned int sslc=rand()%(2<<30);
                 ssid=sdata::session::storage.mksess(sslc);
-                cd->set("NH_ssid",nativehttp::data::superstring::from_int(ssid),"path=/");
-                cd->set("NH_sslc",nativehttp::data::superstring::from_int(sslc),"path=/");
+
+                if(!sdata::session::storage.cksess(ssid,sslc))
+                {
+                    valid=false;
+                    return;
+                }
+
+                cd->set(http::sess_ssid_cnam,nativehttp::data::superstring::from_int(ssid),"path=/");
+                cd->set(http::sess_sslc_cnam,nativehttp::data::superstring::from_int(sslc),"path=/");
                 valid=true;
                 return;
             }

@@ -83,6 +83,10 @@ extern size_t exec_heap_size;
 extern int asyncsnd;
 
 extern int usesessions;
+extern string sess_ssid_cnam;
+extern string sess_sslc_cnam;
+extern size_t max_sesions;
+extern time_t sess_life;
 
 extern uint32_t mExecQ;
 

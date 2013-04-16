@@ -59,10 +59,11 @@ class sstg
     session* data;
     size_t scount;
 
-    size_t findfreesess();
+    size_t findfreesess(bool& vld);
     void allocsessions();
     public:
     sstg();
+    void prealloc(size_t amnt);
     bool cksess(size_t id, unsigned int scd);
     size_t mksess(unsigned int scd);
     sbmain& gtsess(size_t id);

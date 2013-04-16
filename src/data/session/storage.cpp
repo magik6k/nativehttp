@@ -21,13 +21,13 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "session.h"
+#include "http/data.h"
 
 namespace data
 {
 namespace session
 {
 sstg storage;
-time_t sess_life;
 
 sstg::sstg()
 {
@@ -64,21 +64,49 @@ void sstg::allocsessions()
     scount=nsize;
 }
 
-size_t sstg::findfreesess()
+void sstg::prealloc(size_t amnt)
 {
+    data=new session[amnt];
+    if(!data)return;
+
+    for(size_t i=0;i<amnt;i++)
+    {
+        data[i].started=0;
+        data[i].svid=0;
+    }
+}
+
+size_t sstg::findfreesess(bool& vld)
+{
+    vld=true;
     for(size_t i=0;i<scount;i++)
     {
         if(data[i].started==0)return i;
     }
+    if(scount+3>http::max_sesions)
+    {
+        vld=false;
+        return 0;
+    }
     this->allocsessions();
-    return this->findfreesess();
+    return this->findfreesess(vld);
 }
 
 size_t sstg::mksess(unsigned int scd)
 {
-    size_t si=this->findfreesess();
-    data[si].svid=scd;
-    data[si].started=time(0);
+    bool v;
+    size_t si=this->findfreesess(v);
+    if(v)
+    {
+        data[si].svid=scd;
+        data[si].started=time(0);
+    }
+    else
+    {
+        data[si].svid=0;
+        data[si].started=0;
+    }
+
     return si;
 }
 
