@@ -33,6 +33,7 @@ NHS = \
 	$(NHD)/data/superstring.cpp \
 	$(NHD)/data/sqlite.cpp \
 	$(NHD)/data/session/api.cpp \
+	$(NHD)/data/session/key.cpp \
 	$(NHD)/data/session/manage.cpp \
 	$(NHD)/data/session/storage.cpp \
 	$(NHD)/http/data.cpp \

@@ -30,12 +30,6 @@ namespace data
 {
 namespace session
 {
-struct session
-{
-    unsigned int svid;
-    time_t started;
-};
-
 class sbmain
 {
     private:
@@ -52,8 +46,34 @@ class sbmain
 };
 
 extern time_t sess_life;
-extern session* storage;
+struct session
+{
+    unsigned int svid;
+    time_t started;
+    sbmain data;
+};
+
+class sstg
+{
+    private:
+    session* data;
+    size_t scount;
+
+    size_t findfreesess();
+    void allocsessions();
+    public:
+    sstg();
+    bool cksess(size_t id, unsigned int scd);
+    size_t mksess(unsigned int scd);
+    sbmain& gtsess(size_t id);
+
+};
+
+extern sstg storage;
+
 }
 }
+
+namespace sdata = data;
 
 #endif

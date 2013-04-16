@@ -85,12 +85,12 @@ public:
     void lock(unsigned int lp);
     void unlock();
 
-    string file(string fn);
+    static string file(string fn);
     void set_file(string fn);
     void append_file(string fn);
 
-    string from_int(int in);
-    int from_string(string in);
+    static string from_int(int in);
+    static int from_string(string in);
 
 };
 
@@ -162,17 +162,16 @@ public:
     string get(string name);
 };
 
-namespace session
-{
-class usrsession
+class session
 {
     private:
     unsigned int ssid;
+    bool valid;
     public:
+    void __init(cookiedata* cd);
     string get(string name);
     void set(string name, string value);
 };
-}
 
 }//data namespace
 

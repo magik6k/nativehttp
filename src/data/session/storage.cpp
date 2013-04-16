@@ -26,79 +26,68 @@ namespace data
 {
 namespace session
 {
-session* storage;
+sstg storage;
 time_t sess_life;
 
-sbmain::sbmain()
+sstg::sstg()
 {
-    keys=NULL;
-    fileds=0;
+    scount=0;
+    data=NULL;
 }
 
-void sbmain::alloc_keys()
+bool sstg::cksess(size_t id, unsigned int scd)
 {
-    size_t newsize=fileds+3;//alloc 3 more keys
-    nativehttp::data::cfgfil** newkeys=new nativehttp::data::cfgfil*[newsize];
+    if(scount<=id)return false;
+    if(data[id].started==0)return false;
+    return data[id].svid==scd;
+}
+
+void sstg::allocsessions()
+{
+    size_t nsize=scount+3;
+    session* tsp=new session[nsize];
+    if(!tsp)return;
     size_t i;
-    for(i=0;i<fileds;i++)
+    for(i=0;i<scount;i++)
     {
-        newkeys[i]=keys[i];
+        tsp[i].started=data[i].started;
+        tsp[i].svid=data[i].svid;
+        tsp[i].data=data[i].data;
     }
-    for(;i<newsize;i++)
+    for(;i<nsize;i++)
     {
-        newkeys[i]=NULL;
+        tsp[i].started=0;
+        tsp[i].svid=0;
     }
-    nativehttp::data::cfgfil** oks=keys;
-    keys=newkeys;
-    if(oks)delete[] oks;
-    fileds=newsize;
+    delete[] data;
+    data=tsp;
+    scount=nsize;
 }
 
-size_t sbmain::getfreekeyid()
+size_t sstg::findfreesess()
 {
-    for(size_t i=0;i<fileds;i++)
+    for(size_t i=0;i<scount;i++)
     {
-        if(!keys[i])
-        {
-            return i;
-        }
+        if(data[i].started==0)return i;
     }
-    this->alloc_keys();
-    return this->getfreekeyid();
+    this->allocsessions();
+    return this->findfreesess();
 }
 
-size_t sbmain::createkey(string kn)
+size_t sstg::mksess(unsigned int scd)
 {
-    size_t kid=getfreekeyid();
-    keys[kid]=new nativehttp::data::cfgfil;
-    keys[kid]->name=kn;
-    return kid;
+    size_t si=this->findfreesess();
+    data[si].svid=scd;
+    data[si].started=time(0);
+    return si;
 }
 
-size_t sbmain::getkeyid(string kn)
+sbmain& sstg::gtsess(size_t id)
 {
-    for(size_t i=0;i<fileds;i++)
-    {
-        if(keys[i])
-        {
-            if(keys[i]->name==kn)
-            {
-                return i;
-            }
-        }
-    }
-    return this->createkey(kn);
+    return data[id].data;
 }
 
-string& sbmain::getkey(string kn)
-{
-    return keys[this->getkeyid(kn)]->cont;
-}
 
-void sbmain::setkey(string kn, string kv)
-{
-    this->getkey(kn)=kv;
-}
 
 }
 }
