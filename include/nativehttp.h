@@ -180,6 +180,7 @@ struct rdata
     nativehttp::data::cookiedata* cookie;
     nativehttp::data::postgetdata* get;
     nativehttp::data::postgetdata* post;
+    nativehttp::data::session* session;
     string response;
     string userAgent;
     string referer;

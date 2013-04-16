@@ -82,6 +82,8 @@ extern Sexecutor* execUnits;
 extern size_t exec_heap_size;
 extern int asyncsnd;
 
+extern int usesessions;
+
 extern uint32_t mExecQ;
 
 extern nativehttp::data::queue<request*>toexec;

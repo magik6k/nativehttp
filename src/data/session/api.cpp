@@ -58,7 +58,7 @@ namespace data
                 unsigned int sslc=rand()%(2<<30);
                 ssid=sdata::session::storage.mksess(sslc);
                 cd->set("NH_ssid",nativehttp::data::superstring::from_int(ssid),"path=/");
-                cd->set("NH_sslc",nativehttp::data::superstring::from_int(ssid),"path=/");
+                cd->set("NH_sslc",nativehttp::data::superstring::from_int(sslc),"path=/");
                 valid=true;
                 return;
             }

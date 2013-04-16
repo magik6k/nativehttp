@@ -85,6 +85,7 @@ void* executor(void* eid)
         rd.get=NULL;
         rd.post=NULL;
         rd.cookie=NULL;
+        rd.session=NULL;
 
         ld.clen=0;
 
@@ -192,6 +193,12 @@ void* executor(void* eid)
         process->request=NULL;
 
         rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
+
+        if(rd.cookie&&http::usesessions)
+        {
+            rd.session=new nativehttp::data::session;
+            rd.session->__init(rd.cookie);
+        }
 
         nativehttp::data::pagedata result;
         exc->fd1=rd.cookie;

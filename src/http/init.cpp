@@ -89,6 +89,8 @@ void datainit()
     http::error::e501=http::error::load_error(cfg->get_var("error501"),"501 Not Implemented");
     http::error::e505=http::error::load_error(cfg->get_var("error505"),"505 HTTP Version Not Supported");
 
+    http::usesessions=cfg->get_int("use_sessions");
+
 #ifdef NHDBG
     cout <<"[DBG:init.cpp@http]Server data mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
 #endif

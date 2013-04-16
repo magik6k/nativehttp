@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 
 #include "session.h"
+#include <iostream>
 
 namespace data
 {
@@ -36,6 +37,7 @@ sbmain::sbmain()
 
 void sbmain::alloc_keys()
 {
+    cout << "ALC\n";
     size_t newsize=fileds+3;//alloc 3 more keys
     nativehttp::data::cfgfil** newkeys=new nativehttp::data::cfgfil*[newsize];
     size_t i;
@@ -71,6 +73,8 @@ size_t sbmain::createkey(string kn)
     size_t kid=getfreekeyid();
     keys[kid]=new nativehttp::data::cfgfil;
     keys[kid]->name=kn;
+    keys[kid]->cont="";
+    cout << "crk("<<(unsigned int)keys[kid]<<"): "<<kid<<endl;
     return kid;
 }
 
@@ -82,6 +86,7 @@ size_t sbmain::getkeyid(string kn)
         {
             if(keys[i]->name==kn)
             {
+                cout << "rtk: "<<i<<endl;
                 return i;
             }
         }
@@ -91,7 +96,9 @@ size_t sbmain::getkeyid(string kn)
 
 string& sbmain::getkey(string kn)
 {
-    return keys[this->getkeyid(kn)]->cont;
+    size_t ki=this->getkeyid(kn);
+    cout << ki<<"\n";
+    return keys[ki]->cont;
 }
 
 void sbmain::setkey(string kn, string kv)
