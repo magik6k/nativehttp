@@ -112,6 +112,7 @@ size_t sstg::mksess(unsigned int scd)
 
 sbmain& sstg::gtsess(size_t id)
 {
+    data[id].started=time(0);
     return data[id].data;
 }
 

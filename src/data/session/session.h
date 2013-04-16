@@ -41,6 +41,7 @@ class sbmain
         void alloc_keys();
     public:
         sbmain();
+        void free();
         void setkey(string kn, string kv);
         string& getkey(string kn);
 };
@@ -67,7 +68,7 @@ class sstg
     bool cksess(size_t id, unsigned int scd);
     size_t mksess(unsigned int scd);
     sbmain& gtsess(size_t id);
-
+    void mng();
 };
 
 extern sstg storage;

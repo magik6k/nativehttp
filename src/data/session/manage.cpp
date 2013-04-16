@@ -21,3 +21,41 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "session.h"
+#include "http/data.h"
+
+void sdata::session::sstg::mng()
+{
+    for(size_t i=0;i<scount;i++)
+    {
+        if(data[i].started)
+        {
+            if(data[i].started+http::sess_life<time(0))
+            {
+                data[i].started=0;
+                data[i].svid=0;
+                data[i].data.free();
+            }
+        }
+    }
+}
+
+void sdata::session::sbmain::free()
+{
+    if(!keys)
+    {
+        fileds=0;
+        return;
+    }
+
+    for(size_t i=0;i<fileds;i++)
+    {
+        if(keys[i])
+        {
+            delete keys[i];
+        }
+    }
+    if(keys)
+        delete[] keys;
+    keys=NULL;
+    fileds=0;
+}
