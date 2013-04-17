@@ -15,6 +15,8 @@ LIBS += -ldl
 LIBS += -lSDL
 LIBS += -lSDL_net
 LIBS += -lsqlite3
+LIBS += -lssl
+LIBS += -lcrypto
 
 NHD = ./src
 NHTD = ./testsrc
@@ -45,6 +47,16 @@ NHS = \
 	$(NHD)/http/manager.cpp \
 	$(NHD)/http/newclient.cpp \
 	$(NHD)/http/sender.cpp \
+	$(NHD)/http/net/bsd/disconnect.cpp \
+	$(NHD)/http/net/bsd/listen.cpp \
+	$(NHD)/http/net/bsd/recive.cpp \
+	$(NHD)/http/net/bsd/send.cpp \
+	$(NHD)/http/net/bsd/start.cpp \
+	$(NHD)/http/net/ssl/disconnect.cpp \
+	$(NHD)/http/net/ssl/listen.cpp \
+	$(NHD)/http/net/ssl/recive.cpp \
+	$(NHD)/http/net/ssl/send.cpp \
+	$(NHD)/http/net/ssl/start.cpp \
 	$(NHD)/http/stat/api.cpp \
 	$(NHD)/http/stat/data.cpp \
 	$(NHD)/http/stat/init.cpp \

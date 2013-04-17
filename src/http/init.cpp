@@ -65,12 +65,17 @@ void datainit()
         http::ulock[i]=false;
     }
     http::CSet=SDLNet_AllocSocketSet(http::maxConnections);
+
+    ///http::ssl::init();
+
     http::Nexec=cfg->get_int("exec_theards");
     http::Nsend=cfg->get_int("send_theards");
+
     http::execUnits=new http::Sexecutor[http::Nexec];
-    http::mExecQ=cfg->get_int("maxexecutionqueue");
-    http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
     http::theard_sd=new pthread_t*[http::Nsend];
+
+    http::headers::alivetimeout=cfg->get_var("normal_keep")+"\r\n";
+    http::mExecQ=cfg->get_int("maxexecutionqueue");
     http::exec_heap_size=cfg->get_int("exec_heap");
     http::asyncsnd=cfg->get_int("async_send");
 
