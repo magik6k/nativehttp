@@ -23,8 +23,30 @@ freely, subject to the following restrictions:
 #ifndef NET_H_INCLUDED
 #define NET_H_INCLUDED
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#include "http/data.h"
+
+#ifndef SOCKET
+#define SOCKET int
+#endif
+#define INVALID_SOCKET	-1
+
 namespace http
 {
+namespace bsd
+{
+void disconnect(int scid);
+void* sender(void* unused);
+void reciver();
+int findfreesock();
+void init();
+void* listener(void* unused);
+}
 namespace ssl
 {
 void init();

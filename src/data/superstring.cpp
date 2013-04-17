@@ -394,7 +394,7 @@ void nativehttp::data::superstring::unlock()
     lpos=0;
 }
 
-
+#include <iostream>
 string nativehttp::data::superstring::from_int(int in)
 {
     string tmp, ret;
@@ -411,6 +411,7 @@ string nativehttp::data::superstring::from_int(int in)
     while(in /= 10);
     for(int i = tmp.size()-1; i >= 0; i--)
         ret += tmp[i];
+    cout << "SSI: "<<in<<", O:"<<ret<<endl;
     return ret;
 }
 int nativehttp::data::superstring::from_string(string in)

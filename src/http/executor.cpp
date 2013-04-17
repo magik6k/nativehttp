@@ -192,7 +192,8 @@ void* executor(void* eid)
         delete[] process->request;
         process->request=NULL;
 
-        rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
+        #warning TODO HERE!
+        ///rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
 
         if(rd.cookie&&http::usesessions)
         {
@@ -311,7 +312,9 @@ void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld)
         unsigned int ar=0;
         while(0<ltrv)
         {
-            int rv=SDLNet_TCP_Recv(process->sender,tv+ar,ltrv);
+            #warning TODO!!
+            int rv=0;
+            //int rv=SDLNet_TCP_Recv(process->sender,tv+ar,ltrv);
             if(rv==-1)
             {
                 delete[] tv;

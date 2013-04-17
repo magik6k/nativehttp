@@ -97,28 +97,5 @@ size_t getrsmem()
     fclose(fp);
     return size_t(r*sysconf(_SC_PAGESIZE));
 }
-#ifdef NHFAST
-int nhSend(TCPsocket sock, const void *data, int len) ///Based on original SDLNet_TCP_Send
-{
-    const char* dp=(const char*)data;
-    int sent, left;
-    if ( *((int*)(((char*)sock)+sizeof(int)+(2*sizeof(IPaddress))+sizeof(SOCKET))) ) {
-		SDLNet_SetError("Server sockets cannot send");
-		return(-1);
-	}
-	left = len;
-	sent = 0;
-	SDLNet_SetLastError(0);
-	do {
-		len = send(*((SOCKET*)(((char*)sock)+sizeof(int))), (const char *)dp, left, http::asyncsnd?MSG_DONTWAIT:0);
-		if ( len > 0 ) {
-			sent += len;
-			left -= len;
-			dp += len;
-		}
-	} while ( (left > 0) && ((len > 0) || (SDLNet_GetLastError() == EINTR)) );
 
-	return(sent);
-}
-#endif
 

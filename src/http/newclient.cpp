@@ -31,10 +31,11 @@ void disconnect(int i)
 {
     if(http::connected[i])
     {
-        SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
-        TCPsocket td=http::connected[i];
+        //SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
+        #warning TODO
+        SOCKET td=http::connected[i];
         http::connected[i]=NULL;//safer to put null here, just to be sure, that it's not used until deleting it
-        SDLNet_TCP_Close(td);
+        //SDLNet_TCP_Close(td);
     }
 }
 int findfreeslot()
@@ -55,6 +56,7 @@ void* newclient(void* d)
     int toslot=-1;
     while(1)
     {
+        /*
         if((tclient=SDLNet_TCP_Accept(server)))
         {
             if((toslot=findfreeslot())!=-1)
@@ -73,6 +75,7 @@ void* newclient(void* d)
         {
             SDL_Delay(1);
         }
+        */
     }
     return NULL;
 }

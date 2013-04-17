@@ -31,15 +31,9 @@ freely, subject to the following restrictions:
 namespace http
 {
 
-void unlockclient(int i)
-{
-    http::ulock[i]=false;
-    //SDLNet_TCP_AddSocket(http::CSet,http::connected[i]);
-}
-
 void kickclient(int i)
 {
-    http::ulock[i]=false;
+    //http::ulock[i]=false;
     http::disconnect(i);
 }
 
@@ -48,27 +42,27 @@ int reciver()
     int cr,ra;
     while(1)
     {
-        cr=SDLNet_CheckSockets(http::CSet,0);
+        //cr=SDLNet_CheckSockets(http::CSet,0);
         if(cr>0)
         {
             for(int i=0; i<http::maxConnections&&cr>0; i++)
             {
-                if(http::connected[i]!=NULL&&!http::ulock[i])
+                if(http::connected[i]!=NULL/*&&!http::ulock[i]*/)
                 {
                     if(((SDLNet_GenericSocket)(http::connected[i]))->ready!=0)
                     {
                         cr--;
                         http::request* trq=new http::request();
                         trq->request = new char[(HTTP_MAX_USER_HEADER_SIZE+1)];
-                        ra=SDLNet_TCP_Recv(http::connected[i],(void*)trq->request,HTTP_MAX_USER_HEADER_SIZE);
+                       // ra=SDLNet_TCP_Recv(http::connected[i],(void*)trq->request,HTTP_MAX_USER_HEADER_SIZE);
                         if(ra>0)
                         {
                             http::statdata::onrecv(ra);
                             ((char*)trq->request)[ra]=0;
                             //trq.request.resize(ra);
                             //SDLNet_TCP_DelSocket(http::CSet,http::connected[i]);
-                            http::ulock[i]=true;
-                            trq->sender=http::connected[i];
+                            //http::ulock[i]=true;
+                            //trq->sender=http::connected[i];
                             trq->taken=-1;
                             trq->uid=i;
                             SDL_mutexP(http::mtx_exec);

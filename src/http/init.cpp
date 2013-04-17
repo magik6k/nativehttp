@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 #include "manager.h"
 #include "stat.h"
 #include "data/session/session.h"
+#include "net/net.h"
 #ifdef NHDBG
 #include "protocol.h"
 #include <iostream>
@@ -44,7 +45,6 @@ void sdlinit()
     size_t bm=getacmem();
 #endif
     SDL_Init(SDL_INIT_TIMER);
-    SDLNet_Init();
 #ifdef NHDBG
     cout <<"[DBG:init.cpp@http]SDL init mem: "<<((getacmem())-bm)/1024.f<<"kb\n";
 #endif
@@ -57,16 +57,13 @@ void datainit()
     http::maxConnections=cfg->get_int("maxconnections");
     http::maxPost=cfg->get_int("max_post");
 
-    http::connected=new TCPsocket[http::maxConnections];
+    http::connected=new SOCKET[http::maxConnections];
     http::ulock=new bool[http::maxConnections];
     for(int i=0; i<http::maxConnections; i++)
     {
-        http::connected[i]=NULL;
+        http::connected[i]=INVALID_SOCKET;
         http::ulock[i]=false;
     }
-    http::CSet=SDLNet_AllocSocketSet(http::maxConnections);
-
-    ///http::ssl::init();
 
     http::Nexec=cfg->get_int("exec_theards");
     http::Nsend=cfg->get_int("send_theards");
@@ -143,14 +140,7 @@ void executorinit()
 }
 void netstart()
 {
-    IPaddress tmp;
-    SDLNet_ResolveHost(&tmp,NULL,cfg->get_int("port"));
-    http::server=SDLNet_TCP_Open(&tmp);
-    if(!http::server)
-    {
-        printf("INIT: %s\n", SDLNet_GetError());
-        exit(1);
-    }
+    http::bsd::init();
 }
 void startsystem()
 {
@@ -171,7 +161,8 @@ void startsystem()
     }
 
     pthread_t* tt=new pthread_t;
-    int tms=pthread_create(tt, &at, http::newclient, NULL);
+
+    int tms=pthread_create(tt, &at, http::bsd::listener, NULL);/// /////////////
 
     http::theard_nc=tt;
     if(tms!=0)nativehttp::server::log("init.cpp","ANC failed to start");
@@ -179,7 +170,7 @@ void startsystem()
     for(int i=0; i<http::Nsend; i++)
     {
         pthread_t* tmt=new pthread_t;
-        int tmks=pthread_create(tmt, &at, http::sender::sender, NULL);
+        int tmks=pthread_create(tmt, &at, http::bsd::sender, NULL);/// /////////////
 
         http::theard_sd[i]=tmt;
         if(tmks!=0)nativehttp::server::logid(i,"init.cpp","Sender failed to start");

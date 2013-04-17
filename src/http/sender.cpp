@@ -27,6 +27,9 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "stat.h"
 
+
+
+
 namespace http
 {
 namespace sender
@@ -55,7 +58,8 @@ void* sender(void* unused)
 
         if(http::connected[proc.uid])
         {
-            nhSend(http::connected[proc.uid],proc.data,proc.size);
+            #warning TODO
+            //nhSend(http::connected[proc.uid],proc.data,proc.size);
             http::statdata::onsend(proc.size);
         }
 
@@ -76,7 +80,8 @@ void send(int uid, unsigned long datasize, char* data, bool free)
 }
 void sendNow(int uid, unsigned long datasize, char* data, bool free)
 {
-    nhSend(http::connected[uid],data,datasize);
+    #warning TODO
+    //nhSend(http::connected[uid],data,datasize);
     if(free)
     {
         delete[] data;

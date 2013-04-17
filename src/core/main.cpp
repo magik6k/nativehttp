@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "http/in.h"
 #include "http/manager.h"
 #include "data/queue.h"
+#include "http/net/net.h"
 #include <signal.h>
 
 page_mapper pmap;
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
     nativehttp::server::log("INIT","Ready");
 
 
-    http::reciver();
+    http::bsd::reciver();
 
     return 0;
 }

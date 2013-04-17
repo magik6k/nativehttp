@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 
 #include "nativehttp.h"
 #include "data.h"
+#include "net/net.h"
 
 namespace http
 {
@@ -30,10 +31,9 @@ namespace http
 int maxConnections=0;
 unsigned int maxPost=0;
 
-TCPsocket* connected=NULL;
-SDLNet_SocketSet CSet=NULL;
-TCPsocket server=NULL;
 bool* ulock=NULL;
+SOCKET* connected=NULL;
+SOCKET server=INVALID_SOCKET;
 
 int Nexec;
 int Nsend;

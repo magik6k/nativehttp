@@ -21,3 +21,18 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../net.h"
+
+namespace http
+{
+namespace bsd
+{
+void disconnect(int scid)
+{
+    if(http::connected[scid]!=-1)
+    {
+        close(http::connected[scid]);
+        http::connected[scid]=-1;
+    }
+}
+}
+}

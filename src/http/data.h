@@ -28,6 +28,13 @@ freely, subject to the following restrictions:
 #include <SDL/SDL_net.h>
 #include "data/queue.h"
 #include <pthread.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#ifndef SOCKET
+#define SOCKET int
+#endif
+
 using namespace std;
 
 #define HTTP_MAX_USER_HEADER_SIZE 8194 //orginal 2^13+2
@@ -37,7 +44,7 @@ namespace http
 
 struct request
 {
-    TCPsocket sender;
+    SOCKET sender;
     const char* request;
     int taken;
     int uid;
@@ -71,10 +78,11 @@ struct Sexecutor
 extern int maxConnections;
 extern unsigned int maxPost;
 
-extern TCPsocket* connected;
-extern SDLNet_SocketSet CSet;
-extern TCPsocket server;
 extern bool* ulock;
+extern SOCKET* connected;
+extern SOCKET server;
+
+extern SDLNet_SocketSet CSet;
 
 extern int Nexec;
 extern int Nsend;
