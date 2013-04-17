@@ -25,8 +25,6 @@ freely, subject to the following restrictions:
 #include "init.h"
 #include "data.h"
 #include "executor.h"
-#include "newclient.h"
-#include "sender.h"
 #include "error.h"
 #include "manager.h"
 #include "stat.h"

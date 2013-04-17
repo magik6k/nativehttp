@@ -26,9 +26,9 @@ freely, subject to the following restrictions:
 #include "manager.h"
 #include "data.h"
 #include "executor.h"
-#include "sender.h"
 #include "stat.h"
 #include "data/session/session.h"
+#include "net/net.h"
 
 namespace http
 {
@@ -81,7 +81,7 @@ void sig(int sig)
                 }
                 pthread_attr_setstacksize(&at,10*1024);//10kb for sender should enough
                 http::theard_sd[i]=new pthread_t;
-                int tmks=pthread_create(http::theard_sd[i], &at, http::sender::sender, NULL);
+                int tmks=pthread_create(http::theard_sd[i], &at, http::bsd::sender, NULL);
                 if(tmks!=0)nativehttp::server::logid(i,"init.cpp","Sender failed to start");
 
                 pthread_cancel(*kth);

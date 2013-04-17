@@ -26,9 +26,8 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include "executor.h"
 #include "data.h"
-#include "in.h"
-#include "sender.h"
 #include "stat.h"
+#include "net/net.h"
 
 namespace http
 {
@@ -104,21 +103,21 @@ void* executor(void* eid)
         if(process->method==0)
         {
 
-            http::sender::send(process->uid,http::error::e400.size,http::error::e400.data,false);
+            http::bsd::send(process->uid,http::error::e400.size,http::error::e400.data,false);
             http::unlockclient(process->uid);
             delete[] process->request;
             continue;
         }
         if(process->method==3)
         {
-            http::sender::send(process->uid,http::error::e501.size,http::error::e501.data,false);
+            http::bsd::send(process->uid,http::error::e501.size,http::error::e501.data,false);
             http::unlockclient(process->uid);
             delete[] process->request;
             continue;
         }
         if(!process->http11)
         {
-            http::sender::send(process->uid,http::error::e505.size,http::error::e505.data,false);
+            http::bsd::send(process->uid,http::error::e505.size,http::error::e505.data,false);
             http::unlockclient(process->uid);
             delete[] process->request;
             delete process;
@@ -153,7 +152,7 @@ void* executor(void* eid)
                 exc->fd2=NULL;
                 exc->state=time(0);
                 exc->in=3;
-                http::sender::sendNow(process->uid,http::error::e403.size,http::error::e403.data,false);
+                http::bsd::sendNow(process->uid,http::error::e403.size,http::error::e403.data,false);
                 exc->state=-1;
                 exc->in=0;
                 http::kickclient(process->uid);
@@ -222,7 +221,7 @@ void* executor(void* eid)
             {
                 delete rd.post;
             }
-            http::sender::send(process->uid,http::error::e404.size,http::error::e404.data,false);
+            http::bsd::send(process->uid,http::error::e404.size,http::error::e404.data,false);
             http::unlockclient(process->uid);
             delete process;
             process=NULL;
@@ -247,7 +246,7 @@ void* executor(void* eid)
 
         if(result.data)
         {
-            http::sender::send(process->uid,result.size,result.data,true);
+            http::bsd::send(process->uid,result.size,result.data,true);
         }
 
         http::unlockclient(process->uid);
@@ -312,10 +311,9 @@ void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld)
         unsigned int ar=0;
         while(0<ltrv)
         {
-            #warning TODO!!
-            int rv=0;
-            //int rv=SDLNet_TCP_Recv(process->sender,tv+ar,ltrv);
-            if(rv==-1)
+            #warning FIXME!
+            int rv=recv(process->sender,tv+ar,ltrv,0);
+            if(rv<=0)
             {
                 delete[] tv;
                 tv=NULL;

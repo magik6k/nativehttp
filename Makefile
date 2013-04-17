@@ -13,10 +13,12 @@ FASTFLAGS = -std=c++0x -O3 -w -Iinclude -Isrc -march=native -DNHFAST
 LIBS += -rdynamic
 LIBS += -ldl
 LIBS += -lSDL
-LIBS += -lSDL_net
 LIBS += -lsqlite3
 LIBS += -lssl
 LIBS += -lcrypto
+
+TESTLIBS += $(LIBS)
+TESTLIBS += -lSDL_net
 
 NHD = ./src
 NHTD = ./testsrc
@@ -42,11 +44,8 @@ NHS = \
 	$(NHD)/http/error.cpp \
 	$(NHD)/http/executor.cpp \
 	$(NHD)/http/filesender.cpp \
-	$(NHD)/http/in.cpp \
 	$(NHD)/http/init.cpp \
 	$(NHD)/http/manager.cpp \
-	$(NHD)/http/newclient.cpp \
-	$(NHD)/http/sender.cpp \
 	$(NHD)/http/net/bsd/disconnect.cpp \
 	$(NHD)/http/net/bsd/listen.cpp \
 	$(NHD)/http/net/bsd/recive.cpp \
@@ -88,7 +87,7 @@ STATO = $(STATS:%.cpp=%.o)
 
 all: nativehttp btest nativestat
 	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
-	$(CXX) $(FLAGS) $(NHTO) $(LIBS) -o $(TOUT)
+	$(CXX) $(FLAGS) $(NHTO) $(TESTLIBS) -o $(TOUT)
 	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
 
 debug: nativehttp_dbg

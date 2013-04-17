@@ -31,6 +31,12 @@ void unlockclient(int i)
     http::ulock[i]=false;
 }
 
+void kickclient(int i)
+{
+    http::ulock[i]=false;
+    close(http::connected[i]);
+}
+
 namespace bsd
 {
 void reciver()
@@ -83,7 +89,7 @@ void reciver()
                 {
                     ((char*)trq->request)[ra]='\0';
                     http::statdata::onrecv(ra);
-                    nh::server::log("recive.cpp","recv");
+
                     trq->taken=-1;
                     trq->uid=i;
                     http::ulock[i]=true;
@@ -95,7 +101,7 @@ void reciver()
                 {
                     delete[] trq->request;
                     delete trq;
-                    nh::server::log("recive.cpp","disconnected?");
+
                     http::bsd::disconnect(i);
                 }
 

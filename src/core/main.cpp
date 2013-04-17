@@ -23,7 +23,6 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include "protocol.h"
 #include "http/init.h"
-#include "http/in.h"
 #include "http/manager.h"
 #include "data/queue.h"
 #include "http/net/net.h"

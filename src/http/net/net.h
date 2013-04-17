@@ -38,6 +38,8 @@ freely, subject to the following restrictions:
 
 namespace http
 {
+void unlockclient(int i);
+void kickclient(int i);
 namespace bsd
 {
 void disconnect(int scid);
@@ -46,6 +48,8 @@ void reciver();
 int findfreesock();
 void init();
 void* listener(void* unused);
+void send(int uid, unsigned long datasize, char* data, bool free);
+void sendNow(int uid, unsigned long datasize, char* data, bool free);
 }
 namespace ssl
 {
