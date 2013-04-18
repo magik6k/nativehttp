@@ -1,6 +1,11 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+1804.13:
+-now running on BSD sockets
+-prepared for SSL integration
+-few little bug fixes
+
 1604.13:
 -Sessions!
 -3 superstring functions can be called w/o object
