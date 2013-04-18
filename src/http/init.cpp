@@ -57,6 +57,7 @@ void datainit()
 
     http::connected=new SOCKET[http::maxConnections];
     http::ulock=new bool[http::maxConnections];
+    http::client_ips=new uint32_t[http::maxConnections];
     for(int i=0; i<http::maxConnections; i++)
     {
         http::connected[i]=INVALID_SOCKET;

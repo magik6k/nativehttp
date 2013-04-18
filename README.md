@@ -7,7 +7,6 @@ More info can be found at http://nativehttp.org
 
 depends on:
 g++
-libsdl-net1.2-dev
 libsqlite3-dev
 [and it's dependences]
 

@@ -65,6 +65,7 @@ void* listener(void* unused)
             continue;
         }
         http::connected[fs]=tmp;
+        http::client_ips[fs]=sock_addr.sin_addr.s_addr;
 
     }
     return NULL;

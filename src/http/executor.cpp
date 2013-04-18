@@ -192,7 +192,7 @@ void* executor(void* eid)
         process->request=NULL;
 
         #warning TODO HERE!
-        ///rd.remoteIP=SDLNet_TCP_GetPeerAddress(http::connected[process->uid])->host;
+        rd.remoteIP=http::client_ips[process->uid];
 
         if(rd.cookie&&http::usesessions)
         {
@@ -311,7 +311,6 @@ void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld)
         unsigned int ar=0;
         while(0<ltrv)
         {
-            #warning FIXME!
             int rv=recv(process->sender,tv+ar,ltrv,0);
             if(rv<=0)
             {
@@ -323,6 +322,7 @@ void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld)
             ltrv-=rv;
             (tv+ar)[0]=0;
         }
+        cout << endl;
         if(tv)
         {
             ars.str+=tv;

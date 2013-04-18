@@ -32,6 +32,7 @@ int maxConnections=0;
 unsigned int maxPost=0;
 
 bool* ulock=NULL;
+uint32_t* client_ips=NULL;
 SOCKET* connected=NULL;
 SOCKET server=INVALID_SOCKET;
 

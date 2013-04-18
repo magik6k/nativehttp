@@ -92,6 +92,7 @@ void reciver()
 
                     trq->taken=-1;
                     trq->uid=i;
+                    trq->sender=http::connected[i];
                     http::ulock[i]=true;
                     SDL_mutexP(http::mtx_exec);
                     http::toexec.push(trq);

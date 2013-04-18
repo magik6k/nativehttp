@@ -33,6 +33,7 @@ void disconnect(int scid)
         close(http::connected[scid]);
         http::connected[scid]=-1;
     }
+    http::client_ips[scid]=0;
 }
 }
 }

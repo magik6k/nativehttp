@@ -394,7 +394,6 @@ void nativehttp::data::superstring::unlock()
     lpos=0;
 }
 
-#include <iostream>
 string nativehttp::data::superstring::from_int(int in)
 {
     string tmp, ret;

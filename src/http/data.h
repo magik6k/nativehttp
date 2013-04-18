@@ -81,6 +81,7 @@ extern unsigned int maxPost;
 extern bool* ulock;
 extern SOCKET* connected;
 extern SOCKET server;
+extern uint32_t* client_ips;
 
 extern SDLNet_SocketSet CSet;
 
