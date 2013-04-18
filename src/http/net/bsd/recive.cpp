@@ -26,17 +26,6 @@ freely, subject to the following restrictions:
 namespace http
 {
 
-void unlockclient(int i)
-{
-    http::ulock[i]=false;
-}
-
-void kickclient(int i)
-{
-    http::ulock[i]=false;
-    close(http::connected[i]);
-}
-
 namespace bsd
 {
 void reciver()

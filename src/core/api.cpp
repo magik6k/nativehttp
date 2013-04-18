@@ -49,7 +49,7 @@ extern "C" void nativehttp::init::attach_uri(string uri,bool top)
 
 extern "C" string nativehttp::server::version()
 {
-    return "NativeHTTP Alpha 5";
+    return "NativeHTTP Alpha 6";
 }
 
 extern "C" void nativehttp::server::log(string lname, string value)

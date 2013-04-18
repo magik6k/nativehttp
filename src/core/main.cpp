@@ -78,8 +78,14 @@ int main(int argc, char *argv[])
 
     nativehttp::server::log("INIT","Ready");
 
-
-    http::bsd::reciver();
+    if(cfg->get_int("use_ssl"))
+    {
+        http::ssl::reciver();
+    }
+    else
+    {
+        http::bsd::reciver();
+    }
 
     return 0;
 }

@@ -25,11 +25,14 @@ freely, subject to the following restrictions:
 
 #include "nativehttp.h"
 #include "protocol.h"
-#include <SDL/SDL_net.h>
 #include "data/queue.h"
+
 #include <pthread.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <openssl/ssl.h>
 
 #ifndef SOCKET
 #define SOCKET int
@@ -82,6 +85,9 @@ extern bool* ulock;
 extern SOCKET* connected;
 extern SOCKET server;
 extern uint32_t* client_ips;
+
+extern bool onssl;
+extern SSL **sslsck;
 
 extern SDLNet_SocketSet CSet;
 

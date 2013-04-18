@@ -103,21 +103,21 @@ void* executor(void* eid)
         if(process->method==0)
         {
 
-            http::bsd::send(process->uid,http::error::e400.size,http::error::e400.data,false);
+            http::send(process->uid,http::error::e400.size,http::error::e400.data,false);
             http::unlockclient(process->uid);
             delete[] process->request;
             continue;
         }
         if(process->method==3)
         {
-            http::bsd::send(process->uid,http::error::e501.size,http::error::e501.data,false);
+            http::send(process->uid,http::error::e501.size,http::error::e501.data,false);
             http::unlockclient(process->uid);
             delete[] process->request;
             continue;
         }
         if(!process->http11)
         {
-            http::bsd::send(process->uid,http::error::e505.size,http::error::e505.data,false);
+            http::send(process->uid,http::error::e505.size,http::error::e505.data,false);
             http::unlockclient(process->uid);
             delete[] process->request;
             delete process;
@@ -191,7 +191,6 @@ void* executor(void* eid)
         delete[] process->request;
         process->request=NULL;
 
-        #warning TODO HERE!
         rd.remoteIP=http::client_ips[process->uid];
 
         if(rd.cookie&&http::usesessions)
@@ -221,7 +220,7 @@ void* executor(void* eid)
             {
                 delete rd.post;
             }
-            http::bsd::send(process->uid,http::error::e404.size,http::error::e404.data,false);
+            http::send(process->uid,http::error::e404.size,http::error::e404.data,false);
             http::unlockclient(process->uid);
             delete process;
             process=NULL;
@@ -246,7 +245,7 @@ void* executor(void* eid)
 
         if(result.data)
         {
-            http::bsd::send(process->uid,result.size,result.data,true);
+            http::send(process->uid,result.size,result.data,true);
         }
 
         http::unlockclient(process->uid);
@@ -311,7 +310,16 @@ void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld)
         unsigned int ar=0;
         while(0<ltrv)
         {
-            int rv=recv(process->sender,tv+ar,ltrv,0);
+            int rv;
+            if(http::onssl)
+            {
+                rv=SSL_read(http::sslsck[process->uid],tv+ar,ltrv);
+            }
+            else
+            {
+                rv=recv(process->sender,tv+ar,ltrv,0);
+            }
+
             if(rv<=0)
             {
                 delete[] tv;

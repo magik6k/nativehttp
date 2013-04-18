@@ -84,13 +84,7 @@ void* sender(void* unused)
     }
     return NULL;
 }
-void send(int uid, unsigned long datasize, char* data, bool free)
-{
-    outdata t= {uid,datasize,data,free};
-    SDL_mutexP(http::mtx_snd);
-    http::tosend.push(t);
-    SDL_mutexV(http::mtx_snd);
-}
+
 void sendNow(int uid, unsigned long datasize, char* data, bool free)
 {
     nhSend(http::connected[uid],data,datasize);

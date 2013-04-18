@@ -36,6 +36,9 @@ uint32_t* client_ips=NULL;
 SOCKET* connected=NULL;
 SOCKET server=INVALID_SOCKET;
 
+SSL **sslsck=NULL;
+bool onssl=false;
+
 int Nexec;
 int Nsend;
 Sexecutor* execUnits=NULL;

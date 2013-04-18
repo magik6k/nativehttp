@@ -46,6 +46,7 @@ NHS = \
 	$(NHD)/http/filesender.cpp \
 	$(NHD)/http/init.cpp \
 	$(NHD)/http/manager.cpp \
+	$(NHD)/http/net/net.cpp \
 	$(NHD)/http/net/bsd/disconnect.cpp \
 	$(NHD)/http/net/bsd/listen.cpp \
 	$(NHD)/http/net/bsd/recive.cpp \

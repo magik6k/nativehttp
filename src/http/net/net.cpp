@@ -20,49 +20,32 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef NET_H_INCLUDED
-#define NET_H_INCLUDED
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-#include <openssl/ssl.h>
-
-#include "http/data.h"
-
-#ifndef SOCKET
-#define SOCKET int
-#endif
-#define INVALID_SOCKET	-1
+#include "net.h"
+#include "http/stat.h"
 
 namespace http
 {
-void unlockclient(int i);
-void kickclient(int i);
-void send(int uid, unsigned long datasize, char* data, bool free);
-namespace bsd
+void send(int uid, unsigned long datasize, char* data, bool free)
 {
-void disconnect(int scid);
-void* sender(void* unused);
-void reciver();
-int findfreesock();
-void init();
-void* listener(void* unused);
-void sendNow(int uid, unsigned long datasize, char* data, bool free);
+    outdata t={uid,datasize,data,free};
+    SDL_mutexP(http::mtx_snd);
+    http::tosend.push(t);
+    SDL_mutexV(http::mtx_snd);
 }
-namespace ssl
+void unlockclient(int i)
 {
-extern SSL_CTX *ctx;
-
-void* sender(void* unused);
-void reciver();
-int findfreesock();
-void* listener(void* unused);
-void init();
-}
+    http::ulock[i]=false;
 }
 
-#endif // NET_H_INCLUDED
+void kickclient(int i)
+{
+    if(http::onssl&&http::sslsck[i])
+    {
+        SSL_shutdown(http::sslsck[i]);
+        SSL_free(http::sslsck[i]);
+    }
+    http::ulock[i]=false;
+    close(http::connected[i]);
+}
+}
+

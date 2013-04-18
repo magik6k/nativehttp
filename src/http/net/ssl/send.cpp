@@ -21,3 +21,66 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../net.h"
+#include "http/stat.h"
+
+namespace http
+{
+namespace ssl
+{
+void* sender(void* unused)
+{
+    int ts=0;
+    while(1)
+    {
+        if(http::tosend.empty())
+        {
+            SDL_Delay(1);
+            continue;
+        }
+
+        SDL_mutexP(http::mtx_snd);
+
+        outdata proc=http::tosend.front(ts);
+        if(ts==1)
+        {
+            SDL_mutexV(http::mtx_snd);
+            continue;
+        }
+        http::tosend.pop();
+        SDL_mutexV(http::mtx_snd);
+
+        if(http::connected[proc.uid])
+        {
+
+            const char* dp=proc.data;
+            int sent, left;
+
+            int len = proc.size;
+            left = proc.size;
+            sent = 0;
+            errno = 0;
+            do
+            {
+                len = SSL_write(http::sslsck[proc.uid], (const char *)dp, left );
+                if ( len > 0 )
+                {
+                    sent += len;
+                    left -= len;
+                    dp += len;
+                }
+            }
+            while ( (left > 0) && ((len > 0) || (errno == EINTR)) );
+
+            http::statdata::onsend(proc.size);
+        }
+
+
+        if(proc.fas)
+        {
+            delete[] proc.data;
+        }
+    }
+    return NULL;
+}
+}
+}
