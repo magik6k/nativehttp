@@ -37,25 +37,58 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
-#ifdef NHDBG
+    #ifdef NHDBG
     size_t bim=(getacmem());
     cout <<"[DBG:main.cpp@core]before-init mem: "<<bim<<"b\n";
-#endif
+    #endif
+    cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
+    cout << "pre-init\n";
     bool dmnz=false;
+    string conf="/etc/nativehttp/config.cfg";
 
     for(int i=1; i<argc; i++)
     {
-        switch(argv[i][1])
+        if(argv[i][0])
         {
-        case 'd':
-            dmnz=true;
+            switch(argv[i][1])
+            {
+            case 'd':
+                dmnz=true;
+                break;
+            case 'c':
+                if(i+1<argc)
+                {
+                    if(argv[i+1][0]!='-')
+                    {
+                        conf=argv[i+1];
+                    }
+                    else
+                    {
+                        cout << "ERROR: "<<"Wrong config file name: "<<argv[i+1]<<"\n";
+                        exit(1);
+                    }
+                }
+                else
+                {
+                    cout << "ERROR: "<<"No config file specified\n";
+                    exit(1);
+                }
+            default:
+                cout << "ERROR: "<<"Unknown option: "<<argv[i]<<endl;;
+                exit(1);
+            }
+        }
+        else
+        {
+            cout << "ERROR: "<<"Invalid option: "<<argv[i]<<endl;
+            exit(1);
         }
     }
-    cout << "pre-init\n";
+
     signal(SIGSEGV,http::manager::sig);
     signal(SIGABRT,http::manager::sig);
-    cfg = new nativehttp::data::Ccfg("/etc/nativehttp/config.cfg");
+
+    cfg = new nativehttp::data::Ccfg(conf);
     charset = cfg->get_var("charset");
     default_mime = cfg->get_var("default_content_type");
     if(cfg->get_int("instantso"))

@@ -1,6 +1,12 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+2304.13:
+-SSL
+-Better memory stats in debug build
+-option for launching with specified configuration file
+-Bugfixes
+
 1804.13:
 -now running on BSD sockets
 -prepared for SSL integration
