@@ -78,6 +78,13 @@ struct Sexecutor
     void* fd2;
 };
 
+#ifdef NHDBG
+
+extern size_t init_memory;
+extern bool extmemstats;
+
+#endif
+
 extern int maxConnections;
 extern unsigned int maxPost;
 

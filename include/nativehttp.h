@@ -59,6 +59,7 @@ public:
 
     void set(string s);
 
+    ~superstring();
     superstring();
     superstring(string s);
     void operator()(string s);

@@ -51,6 +51,9 @@ void datainit()
 {
 #ifdef NHDBG
     size_t bm=getrsmem();
+
+    http::extmemstats=cfg->get_int("extended_native_memory_stats");
+
 #endif
     http::maxConnections=cfg->get_int("maxconnections");
     http::maxPost=cfg->get_int("max_post");
@@ -161,7 +164,7 @@ void startsystem()
     http::statdata::init();
 
 #ifdef NHDBG
-    double bm=getacmem();
+    size_t bm=getacmem();
 #endif
 
     pthread_attr_t at;
@@ -224,8 +227,12 @@ void startsystem()
 
 #ifdef NHDBG
     SDL_Delay(250);
-    cout <<"[DBG:init.cpp@http]System init mem: "<<(getacmem()-bm)/1024.f<<"kb\n";
-    cout <<"[DBG:init.cpp@http]Total init mem: "<<getacmem()/1024.f<<"kb\n";
+    cout <<"[DBG:init.cpp@http]System init mem: "
+        <<(getacmem()-bm)/1024LL<<"kb\n";
+    cout <<"[DBG:init.cpp@http]Total init mem: "
+        <<(getacmem()+getrsmem())/1024LL<<"kb("
+        <<(getacmem()+getrsmem())/1024LL/1024LL<<"mb)\n";
+    http::init_memory=getacmem()+getrsmem();
 #endif
 }
 

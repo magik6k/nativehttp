@@ -87,8 +87,6 @@ void* listener(void* unused)
             continue;
         }
 
-        cout << "GOT IT ON SSL!!!!!\n";
-
         http::connected[fs]=tmp;
         http::client_ips[fs]=sock_addr.sin_addr.s_addr;
 

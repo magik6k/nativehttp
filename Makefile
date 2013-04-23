@@ -69,7 +69,8 @@ NHS = \
 	$(NHD)/pagemap/loaders/nhp.cpp \
 	$(NHD)/pagemap/loaders/file.cpp \
 	$(NHD)/pagemap/reloaders/so.cpp \
-	$(NHD)/pagemap/reloaders/nhp.cpp 
+	$(NHD)/pagemap/reloaders/nhp.cpp \
+	$(NHD)/utils/memory.cpp
 
 NHTS = \
 	$(NHTD)/main.cpp

@@ -28,6 +28,13 @@ freely, subject to the following restrictions:
 namespace http
 {
 
+#ifdef NHDBG
+
+size_t init_memory=0;
+bool extmemstats=false;
+
+#endif
+
 int maxConnections=0;
 unsigned int maxPost=0;
 

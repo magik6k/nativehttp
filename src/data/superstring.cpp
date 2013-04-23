@@ -36,6 +36,11 @@ void nativehttp::data::superstring::set(string s)
     str=s;
 }
 
+nativehttp::data::superstring::~superstring()
+{
+    str.clear();
+}
+
 nativehttp::data::superstring::superstring()
 {
     pos=0;

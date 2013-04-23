@@ -29,6 +29,11 @@ freely, subject to the following restrictions:
 #include "stat.h"
 #include "net/net.h"
 
+#ifdef NHDBG
+#include "utils/memory.h"
+size_t lastexecmem=0;
+#endif
+
 namespace http
 {
 
@@ -353,7 +358,7 @@ bool ex(nativehttp::data::pagedata& pd,nativehttp::rdata* rd)
 
         nativepage *npp = (nativepage*)pid.data;
 #ifdef NHDBG
-        double bm=getacmem();
+        size_t bm=getacmem()+getrsmem();
         unsigned int pgt=SDL_GetTicks();
 #endif
         SDL_mutexP(http::mtx_exec2);
@@ -361,7 +366,40 @@ bool ex(nativehttp::data::pagedata& pd,nativehttp::rdata* rd)
         SDL_mutexV(http::mtx_exec2);
 #ifdef NHDBG
         unsigned int et=SDL_GetTicks()-pgt;
-        cout <<"[DBG:executor.cpp@http]Page execution allcocated: "<<(getacmem()-bm)/1024.f<<"kb, Total: "<<getacmem()/1024.f<<"kb, time: "<<et<<"ms\n";
+        if(!http::extmemstats)
+        {
+            cout <<"[DBG:executor.cpp@http]Page execution allcocated: "
+                <<(getacmem()+getrsmem()-bm)/1024LL<<"kb, time: "<<et<<"ms\n";
+        }
+        else
+        {
+            cout << "-------\n";
+            cout << "Native Page execution stats:\n";
+            cout << "File: "<<pid.file<<endl;
+            cout << "Time of execution: "<<et<<"ms\n";
+
+            cout << "Total Memory: ";
+            utils::memory::printmemsize(getacmem()+getrsmem());
+            cout << endl;
+
+            cout << "Memory allocated by page execution: ";
+            utils::memory::printmemsize(getacmem()+getrsmem()-bm);
+            cout << endl;
+
+            cout << "Memory change since init: ";
+            utils::memory::printmemsize
+                (int64_t(getacmem()+getrsmem())-int64_t(http::init_memory));
+            cout << endl;
+
+            cout << "Memory change since LPE: ";
+            utils::memory::printmemsize
+                (int64_t(getacmem()+getrsmem())-int64_t(lastexecmem));
+            cout << endl;
+
+            cout << "-------\n";
+        }
+
+        lastexecmem=getacmem()+getrsmem();
 #endif
         string snd = "HTTP/1.1 "+rd->response+"\r\n"+http::headers::standard;
         snd+=http::headers::alive+http::headers::alivetimeout;
