@@ -87,13 +87,14 @@ NHTO = $(NHTS:%.cpp=%.o)
 
 STATO = $(STATS:%.cpp=%.o)
 
-prepare:
-	mkdir -p bin
 
 all: prepare nativehttp btest nativestat
 	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
 	$(CXX) $(FLAGS) $(NHTO) $(TESTLIBS) -o $(TOUT)
 	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
+
+prepare:
+	mkdir -p bin
 
 debug: nativehttp_dbg
 	$(CXX) $(DBGFLAGS) $(NHOD) $(LIBS) -o $(OUT)
