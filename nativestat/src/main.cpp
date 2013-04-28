@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 #include "assets.h"
 #include "dtg.h"
 
+#define pass "toor"
+
 extern "C"
 {
     int onload()
@@ -39,6 +41,34 @@ extern "C"
     nativehttp::data::pagedata page(nativehttp::rdata* request)
     {
         nh::data::superstring page(html_top);
+
+        if(!request->session)
+        {
+            page.change("[[content]]","NativeStat needs Session module enabled!<br/>");
+            return nativehttp::data::pagedata(page.str);
+        }
+
+        if(request->session->get("@__NtStS#")!="l")
+        {
+            if(!request->post)
+            {
+                page.change("[[content]]",logform);
+                return nativehttp::data::pagedata(page.str);
+            }
+            else
+            {
+                if(request->post->get("scky")==pass)
+                {
+                    request->session->set("@__NtStS#","l");
+                }
+                else
+                {
+                    page.change("[[content]]",logformbad);
+                    return nativehttp::data::pagedata(page.str);
+                }
+            }
+        }
+
         nh::data::superstring content(basic_content);
 
         page.lock();

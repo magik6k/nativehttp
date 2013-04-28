@@ -52,18 +52,18 @@ void init()
 
     for(size_t i=0; i<http::statdata::hourlylen; i++)
     {
-        http::statdata::hrl_hits[i]=0;
-        http::statdata::hrl_connections[i]=0;
-        http::statdata::hrl_dl[i]=0;
-        http::statdata::hrl_ul[i]=0;
+        http::statdata::hrl_hits[i]=0u;
+        http::statdata::hrl_connections[i]=0u;
+        http::statdata::hrl_dl[i]=0u;
+        http::statdata::hrl_ul[i]=0u;
     }
 
-    http::statdata::hits=0;
-    http::statdata::connections=0;
-    http::statdata::dlbytes=0;
-    http::statdata::ulbytes=0;
-    http::statdata::get=0;
-    http::statdata::post=0;
+    http::statdata::hits=0u;
+    http::statdata::connections=0u;
+    http::statdata::dlbytes=0u;
+    http::statdata::ulbytes=0u;
+    http::statdata::get=0u;
+    http::statdata::post=0u;
 
     if(!cfg->get_var("statfile").empty())
     {

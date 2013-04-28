@@ -6,9 +6,9 @@ OUT = ./bin/nativehttp
 TOUT = ./bin/httptest
 STATOUT = ./bin/nativestat.so
 
-FLAGS = -std=c++0x -O3 -w -Iinclude -Isrc -march=native
+FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native
 DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
-FASTFLAGS = -std=c++0x -O3 -w -Iinclude -Isrc -march=native -DNHFAST
+FASTFLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native -DNHFAST
 
 LIBS += -rdynamic
 LIBS += -ldl
@@ -87,7 +87,10 @@ NHTO = $(NHTS:%.cpp=%.o)
 
 STATO = $(STATS:%.cpp=%.o)
 
-all: nativehttp btest nativestat
+prepare:
+	mkdir -p bin
+
+all: prepare nativehttp btest nativestat
 	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
 	$(CXX) $(FLAGS) $(NHTO) $(TESTLIBS) -o $(TOUT)
 	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
@@ -112,8 +115,22 @@ install_files:
 
 install: directories install_files
 
-install_stat: all
+install_stat:
 	cp ./bin/nativestat.so /var/www/nativestat.so
+
+localdirs:
+	mkdir -p ./local
+	mkdir -p ./local/bin
+	mkdir -p ./local/etc
+	mkdir -p ./local/include
+	mkdir -p ./local/www
+	mkdir -p ./local/www/error
+
+local: localdirs
+	cp ./bin/nativehttp ./local/bin
+	cp ./etc/* ./local/etc
+	cp ./var/error/* ./local/www/error
+	cp ./include/* ./local/include
 
 remove:
 	rm -rf /etc/nativehttp
@@ -142,4 +159,5 @@ nativestat: $(STATO)
 
 clean:
 	rm -f $(NHO) $(NHOD) $(NHOF) $(OUT) $(NHTO) $(TOUT) $(STATO)
+	rm -rf ./local
 

@@ -33,7 +33,7 @@ namespace http
 {
 namespace ssl
 {
-const SSL_METHOD *meth;
+SSL_METHOD *meth;
 SSL_CTX *ctx;
 
 void init()
@@ -43,7 +43,7 @@ void init()
 #endif
     SSL_library_init();
     SSL_load_error_strings();
-    meth = SSLv3_method();
+    meth = (SSL_METHOD*) SSLv3_method();
     ctx = SSL_CTX_new(meth);
     if (!ctx)
     {

@@ -35,4 +35,7 @@ extern string basic_content;
 extern string html_off;
 extern string html_on;
 
+extern string logform;
+extern string logformbad;
+
 #endif // ASSETS_H_INCLUDED

@@ -69,6 +69,21 @@ Server version: [[srvVer]]</div>\
 </html>\
 ";
 
+string logform="\
+<form method='POST' action='#'>\
+Security Password:<br/>\
+<input type='password' name='scky' />\
+<input type='submit' value='enter' />\
+</form>";
+
+string logformbad="\
+<span style='color: red;'>Wrong Password!</span> Retry:<br/>\
+<form method='POST' action='#'>\
+Security Password:<br/>\
+<input type='password' name='scky' />\
+<input type='submit' value='enter' />\
+</form>";
+
 string page_style="body\
 {\
 background-color: #eee;\
