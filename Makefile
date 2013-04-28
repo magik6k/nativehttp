@@ -8,7 +8,6 @@ STATOUT = ./bin/nativestat.so
 
 FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native
 DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
-FASTFLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native -DNHFAST
 
 LIBS += -rdynamic
 LIBS += -ldl
@@ -81,7 +80,6 @@ STATS = \
 
 NHO = $(NHS:%.cpp=%.o)
 NHOD = $(NHS:%.cpp=%.dbg.o)
-NHOF = $(NHS:%.cpp=%.fst.o)
 
 NHTO = $(NHTS:%.cpp=%.o)
 
@@ -99,8 +97,6 @@ prepare:
 debug: nativehttp_dbg
 	$(CXX) $(DBGFLAGS) $(NHOD) $(LIBS) -o $(OUT)
 
-fast: nativehttp_fst
-	$(CXX) $(FASTFLAGS) $(NHOF) $(LIBS) -o $(OUT)
 
 directories:
 	mkdir -p /etc/nativehttp
@@ -109,12 +105,13 @@ directories:
 
 install_files:
 	cp ./bin/nativehttp /usr/bin
-	cp ./etc/* /etc/nativehttp
-	cp ./var/error/* /var/www/error
+	cp ./files/bin/* /usr/bin
+	cp ./files/etc/* /etc/nativehttp
+	cp ./files/var/error/* /var/www/error
 	cp ./include/* /usr/include/nativehttp
 
 
-install: directories install_files
+install: directories perm install_files
 
 install_stat:
 	cp ./bin/nativestat.so /var/www/nativestat.so
@@ -124,19 +121,26 @@ localdirs:
 	mkdir -p ./local/bin
 	mkdir -p ./local/etc
 	mkdir -p ./local/include
-	mkdir -p ./local/www
-	mkdir -p ./local/www/error
+	mkdir -p ./local/var
+	mkdir -p ./local/var/www
+	mkdir -p ./local/var/www/error
 
-local: localdirs
-	cp ./bin/nativehttp ./local/bin
-	cp ./etc/* ./local/etc
-	cp ./var/error/* ./local/www/error
+local: localdirs perm
+	cp ./bin/nativehttp ./local/bin/nativehttp-bin
+	cp ./files/local/bin/* ./local/bin
+	cp ./files/etc/* ./local/etc
+	cp ./files/var/error/* ./local/var/www/error
+	cp ./bin/nativestat.so ./local/var/www/nativestat.so
 	cp ./include/* ./local/include
+
+perm:
+	chmod +x ./files/bin/* ./files/local/bin/*
 
 remove:
 	rm -rf /etc/nativehttp
-	rm -rf /usr/include/nativehttp
+	rm -rf /usr/include/nativeht
 	rm -f /usr/bin/nativehttp
+	rm -f /usr/bin/nativehttp-d
 	rm -f /var/www/nativestat.so
 
 nativehttp: $(NHO)
@@ -159,6 +163,6 @@ nativestat: $(STATO)
 	$(CXX) $(FLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(NHO) $(NHOD) $(NHOF) $(OUT) $(NHTO) $(TOUT) $(STATO)
-	rm -rf ./local
+	rm -f $(NHO) $(NHOD) $(NHOF) $(OUT) $(NHTO) $(TOUT) $(STATO) $(STATOUT) 
+	rm -rfv ./local
 

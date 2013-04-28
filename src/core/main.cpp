@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
     cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
     cout << "pre-init\n";
     bool dmnz=false;
+    bool gr=true;
     string conf="/etc/nativehttp/config.cfg";
 
     for(int i=1; i<argc; i++)
@@ -61,6 +62,8 @@ int main(int argc, char *argv[])
                     if(argv[i+1][0]!='-')
                     {
                         conf=argv[i+1];
+                        cout << "Using non-standard configuration file: "<<conf<<endl;
+                        i++;
                     }
                     else
                     {
@@ -73,6 +76,10 @@ int main(int argc, char *argv[])
                     cout << "ERROR: "<<"No config file specified\n";
                     exit(1);
                 }
+                break;
+            case 'k':
+                gr=false;
+                break;
             default:
                 cout << "ERROR: "<<"Unknown option: "<<argv[i]<<endl;;
                 exit(1);
@@ -84,6 +91,8 @@ int main(int argc, char *argv[])
             exit(1);
         }
     }
+
+    if(gr)goroot();
 
     signal(SIGSEGV,http::manager::sig);
     signal(SIGABRT,http::manager::sig);

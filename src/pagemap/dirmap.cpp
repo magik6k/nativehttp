@@ -41,7 +41,7 @@ void page_mapper::mapdir(string d)
         DIR *dp;
         if((dp  = opendir(todo.front().c_str())) == NULL)
         {
-            cout <<"error: "<< errno << ", for directory " << todo.front().c_str() << endl;
+            cout <<"[dirmap.cpp]error: "<< strerror(errno) << ", for directory " << todo.front().c_str() << endl;
         }
         else
         {
