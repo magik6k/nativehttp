@@ -153,9 +153,6 @@ btest: $(NHTO)
 
 nativestat: $(STATO)
 
-%.fst.o: %.cpp
-	$(CXX) $(FASTFLAGS) -c -o $@ $<
-
 %.dbg.o: %.cpp
 	$(CXX) $(DBGFLAGS) -c -o $@ $<
 

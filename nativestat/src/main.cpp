@@ -24,7 +24,9 @@ freely, subject to the following restrictions:
 #include "assets.h"
 #include "dtg.h"
 
-#define pass "toor"
+#define config "./etc/nativehttp/nstat.cfg"
+
+string pass="root";
 
 extern "C"
 {
@@ -36,6 +38,8 @@ extern "C"
         htmss.change("[[style]]",page_style);
         page_style.clear();
         html_top=htmss.str;
+        nativehttp::data::Ccfg cfg(config);
+        pass=cfg.get_var("pass");
         return 1;
     }
     nativehttp::data::pagedata page(nativehttp::rdata* request)
