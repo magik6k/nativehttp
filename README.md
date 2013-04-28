@@ -8,6 +8,9 @@ More info can be found at http://nativehttp.org
 depends on:
 g++
 libsqlite3-dev
+libsdl1.2-dev
+libssl-dev
+libsdl
 [and it's dependences]
 
 To run this software you must do 'make install'(configuration file need to be placed in specified folder)
