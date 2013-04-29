@@ -1,6 +1,11 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
+2903.13:
+-Makefile bug fixes
+-Bug-fixes
+-Security in NativeStat
+
 2304.13:
 -SSL
 -Better memory stats in debug build

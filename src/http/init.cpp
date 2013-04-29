@@ -214,7 +214,7 @@ void startsystem()
         if(tmks!=0)nativehttp::server::logid(i,"init.cpp","Sender failed to start");
     }
 
-    if(pthread_attr_setstacksize(&at,128*1024)!=0)
+    if(pthread_attr_setstacksize(&at,256*1024)!=0)
     {
         nativehttp::server::log("init.cpp@http","ERROR: Setting manager heap size failed");
     }

@@ -58,6 +58,7 @@ extern time_t save_rate;
 
 extern uint16_t filever;
 extern string stfn;
+extern bool managersafe;
 
 struct stunit
 {
