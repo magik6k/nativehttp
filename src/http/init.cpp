@@ -104,6 +104,8 @@ void datainit()
     sess_life=cfg->get_int("session_life");
     sdata::session::storage.prealloc(cfg->get_int("inital_sessions"));
 
+    if(!cfg->get_var("log").empty())logfile.open(cfg->get_var("log"),std::ofstream::out|std::ofstream::app);
+
 #ifdef NHDBG
     cout <<"[DBG:init.cpp@http]Server data mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
 #endif

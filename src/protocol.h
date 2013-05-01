@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <deque>
 #include <map>
+#include <fstream>
 #include "data/vector.h"
 #include "nativehttp.h"
 #include "pagemap/pagemap.h"
@@ -60,5 +61,6 @@ extern nativehttp::data::Ccfg *cfg;
 extern int postmax;
 extern string default_mime;
 extern bool deamonized;
+extern ofstream logfile;
 
 #endif // PROTOCOL_H_INCLUDED
