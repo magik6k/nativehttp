@@ -41,15 +41,15 @@ size_t getacmem();
 size_t getrsmem();
 void goroot();
 
-nativehttp::data::pagedata exec(string uri,nativehttp::rdata* rd);
+nativehttp::data::pagedata exec(string uri, nativehttp::rdata *rd);
 
 class mimec
 {
 private:
-    map<string,string> mimes;
+	map<string, string> mimes;
 public:
-    mimec();
-    string get_ctype(string fn);
+	mimec();
+	string get_ctype(string fn);
 };
 
 

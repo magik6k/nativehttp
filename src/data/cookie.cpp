@@ -24,39 +24,39 @@ freely, subject to the following restrictions:
 
 nativehttp::data::cookiedata::cookiedata(string strcookie)
 {
-    superstring cke(strcookie);
-    while(cke.pos<cke.str.size())
-    {
-        cfil ctm;
-        ctm.name=cke.to("=");
-        ctm.value=cke.to("; ");
-        data.push_back(ctm);
-    }
+	superstring cke(strcookie);
+	while(cke.pos < cke.str.size())
+	{
+		cfil ctm;
+		ctm.name = cke.to("=");
+		ctm.value = cke.to("; ");
+		data.push_back(ctm);
+	}
 }
 
 string nativehttp::data::cookiedata::get(string name)
 {
-    for(unsigned int i=0; i<data.size(); i++)
-    {
-        if(data[i].name==name)
-        {
-            return data[i].value;
-        }
-    }
-    return "";
+	for(unsigned int i = 0; i < data.size(); i++)
+	{
+		if(data[i].name == name)
+		{
+			return data[i].value;
+		}
+	}
+	return "";
 }
 
 void nativehttp::data::cookiedata::set(string name, string value)
 {
-    sets+="Set-Cookie: "+name+"="+value+"\r\n";
+	sets += "Set-Cookie: " + name + "=" + value + "\r\n";
 }
 
 void nativehttp::data::cookiedata::set(string name, string value, string attributes)
 {
-    sets+="Set-Cookie: "+name+"="+value+"; "+attributes+"\r\n";
+	sets += "Set-Cookie: " + name + "=" + value + "; " + attributes + "\r\n";
 }
 
 string nativehttp::data::cookiedata::gethead()
 {
-    return sets;
+	return sets;
 }

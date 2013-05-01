@@ -30,77 +30,77 @@ namespace http
 
 #ifdef NHDBG
 
-size_t init_memory=0;
-bool extmemstats=false;
+	size_t init_memory = 0;
+	bool extmemstats = false;
 
 #endif
 
-int maxConnections=0;
-unsigned int maxPost=0;
+	int maxConnections = 0;
+	unsigned int maxPost = 0;
 
-bool* ulock=NULL;
-uint32_t* client_ips=NULL;
-SOCKET* connected=NULL;
-SOCKET server=INVALID_SOCKET;
+	bool *ulock = NULL;
+	uint32_t *client_ips = NULL;
+	SOCKET *connected = NULL;
+	SOCKET server = INVALID_SOCKET;
 
-SSL **sslsck=NULL;
-bool onssl=false;
+	SSL **sslsck = NULL;
+	bool onssl = false;
 
-int Nexec;
-int Nsend;
-Sexecutor* execUnits=NULL;
-size_t exec_heap_size;
-int asyncsnd=0;
+	int Nexec;
+	int Nsend;
+	Sexecutor *execUnits = NULL;
+	size_t exec_heap_size;
+	int asyncsnd = 0;
 
-int usesessions=0;
-string sess_ssid_cnam;
-string sess_sslc_cnam;
-size_t max_sesions=0;
-time_t sess_life=0;
+	int usesessions = 0;
+	string sess_ssid_cnam;
+	string sess_sslc_cnam;
+	size_t max_sesions = 0;
+	time_t sess_life = 0;
 
-uint32_t mExecQ;
+	uint32_t mExecQ;
 
-nativehttp::data::queue<request*>toexec;
-nativehttp::data::queue<outdata>tosend;
+	nativehttp::data::queue<request*>toexec;
+	nativehttp::data::queue<outdata>tosend;
 
-SDL_mutex* mtx_exec2=NULL;
-SDL_mutex* mtx_exec=NULL;
-SDL_mutex* mtx_snd=NULL;
+	SDL_mutex *mtx_exec2 = NULL;
+	SDL_mutex *mtx_exec = NULL;
+	SDL_mutex *mtx_snd = NULL;
 
-pthread_t* theard_nc=NULL;
-pthread_t** theard_sd=NULL;
-pthread_t* theard_mg=NULL;
+	pthread_t *theard_nc = NULL;
+	pthread_t **theard_sd = NULL;
+	pthread_t *theard_mg = NULL;
 
-namespace headers
-{
-string standard="Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";
-string alive="Connection: keep-alive\r\nKeep-Alive: timeout=";
-string alivetimeout;
-}
+	namespace headers
+	{
+		string standard = "Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";
+		string alive = "Connection: keep-alive\r\nKeep-Alive: timeout=";
+		string alivetimeout;
+	}
 
-namespace error
-{
-nativehttp::data::pagedata e400;
-nativehttp::data::pagedata e403;
-nativehttp::data::pagedata e404;
-nativehttp::data::pagedata e500;
-nativehttp::data::pagedata e501;
-nativehttp::data::pagedata e505;
-}
+	namespace error
+	{
+		nativehttp::data::pagedata e400;
+		nativehttp::data::pagedata e403;
+		nativehttp::data::pagedata e404;
+		nativehttp::data::pagedata e500;
+		nativehttp::data::pagedata e501;
+		nativehttp::data::pagedata e505;
+	}
 
-namespace manager
-{
-int rate=0;
-int postto=-1;
-int execto=-1;
-bool apr;
-string fileloc;
-}
+	namespace manager
+	{
+		int rate = 0;
+		int postto = -1;
+		int execto = -1;
+		bool apr;
+		string fileloc;
+	}
 
-void request::free()
-{
-    delete request;
-}
+	void request::free()
+	{
+		delete request;
+	}
 
 }
 

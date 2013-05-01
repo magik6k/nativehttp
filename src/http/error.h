@@ -25,10 +25,10 @@ freely, subject to the following restrictions:
 #include "data.h"
 namespace http
 {
-namespace error
-{
-nativehttp::data::pagedata load_error(string file, string head);
-}
+	namespace error
+	{
+		nativehttp::data::pagedata load_error(string file, string head);
+	}
 }
 
 #endif // ERROR_H_INCLUDED

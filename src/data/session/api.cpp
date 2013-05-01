@@ -25,75 +25,75 @@ freely, subject to the following restrictions:
 
 namespace nativehttp
 {
-namespace data
-{
-    void session::__init(cookiedata* cd)
-    {
-        ssid=0;
-        valid=false;
-        if(!cd)return;
-        string stsi=cd->get("NH_ssid");
-        string stsv=cd->get("NH_sslc");
-        if(stsi.empty()||stsv.empty())
-        {
-            unsigned int sslc=rand()%(2<<30);
-            ssid=sdata::session::storage.mksess(sslc);
+	namespace data
+	{
+		void session::__init(cookiedata *cd)
+		{
+			ssid = 0;
+			valid = false;
+			if(!cd)return;
+			string stsi = cd->get("NH_ssid");
+			string stsv = cd->get("NH_sslc");
+			if(stsi.empty() || stsv.empty())
+			{
+				unsigned int sslc = rand() % (2 << 30);
+				ssid = sdata::session::storage.mksess(sslc);
 
-            if(!sdata::session::storage.cksess(ssid,sslc))
-            {
-                valid=false;
-                return;
-            }
-            cd->set(http::sess_ssid_cnam,nativehttp::data::superstring::from_int(ssid),"path=/");
-            cd->set(http::sess_sslc_cnam,nativehttp::data::superstring::from_int(ssid),"path=/");
-            valid=true;
-            return;
-        }
-        else
-        {
-            size_t nsi=nativehttp::data::superstring::from_string(stsi);
-            size_t nsv=nativehttp::data::superstring::from_string(stsv);
+				if(!sdata::session::storage.cksess(ssid, sslc))
+				{
+					valid = false;
+					return;
+				}
+				cd->set(http::sess_ssid_cnam, nativehttp::data::superstring::from_int(ssid), "path=/");
+				cd->set(http::sess_sslc_cnam, nativehttp::data::superstring::from_int(ssid), "path=/");
+				valid = true;
+				return;
+			}
+			else
+			{
+				size_t nsi = nativehttp::data::superstring::from_string(stsi);
+				size_t nsv = nativehttp::data::superstring::from_string(stsv);
 
-            if(sdata::session::storage.cksess(nsi,nsv))
-            {
-                ssid=nsi;
-                valid=true;
-                return;
-            }
-            else
-            {
-                unsigned int sslc=rand()%(2<<30);
-                ssid=sdata::session::storage.mksess(sslc);
+				if(sdata::session::storage.cksess(nsi, nsv))
+				{
+					ssid = nsi;
+					valid = true;
+					return;
+				}
+				else
+				{
+					unsigned int sslc = rand() % (2 << 30);
+					ssid = sdata::session::storage.mksess(sslc);
 
-                if(!sdata::session::storage.cksess(ssid,sslc))
-                {
-                    valid=false;
-                    return;
-                }
+					if(!sdata::session::storage.cksess(ssid, sslc))
+					{
+						valid = false;
+						return;
+					}
 
-                cd->set(http::sess_ssid_cnam,nativehttp::data::superstring::from_int(ssid),"path=/");
-                cd->set(http::sess_sslc_cnam,nativehttp::data::superstring::from_int(sslc),"path=/");
-                valid=true;
-                return;
-            }
-        }
-    }
+					cd->set(http::sess_ssid_cnam, nativehttp::data::superstring::from_int(ssid), "path=/");
+					cd->set(http::sess_sslc_cnam, nativehttp::data::superstring::from_int(sslc), "path=/");
+					valid = true;
+					return;
+				}
+			}
+		}
 
-    string session::get(string name)
-    {
-        if(valid)
-        {
-            return sdata::session::storage.gtsess(ssid).getkey(name);
-        }
-        return "";
-    }
+		string session::get(string name)
+		{
+			if(valid)
+			{
+				return sdata::session::storage.gtsess(ssid).getkey(name);
+			}
+			return "";
+		}
 
-    void session::set(string name, string value)
-    {
-        if(valid)
-        {
-            sdata::session::storage.gtsess(ssid).setkey(name,value);
-        }
-    }
-}
+		void session::set(string name, string value)
+		{
+			if(valid)
+			{
+				sdata::session::storage.gtsess(ssid).setkey(name, value);
+			}
+		}
+	}
 }

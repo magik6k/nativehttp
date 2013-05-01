@@ -27,65 +27,65 @@ freely, subject to the following restrictions:
 
 void page_mapper::mapdir(string d)
 {
-    for(unsigned int i=0; i<files.size(); i++)
-    {
-        delete[] files[i];
-        files[i]=NULL;
-    }
-    files.clear();
-    nativehttp::data::queue<string>todo;
-    todo.push(d);
+	for(unsigned int i = 0; i < files.size(); i++)
+	{
+		delete[] files[i];
+		files[i] = NULL;
+	}
+	files.clear();
+	nativehttp::data::queue<string>todo;
+	todo.push(d);
 
-    while(todo.size()>0)
-    {
-        DIR *dp;
-        if((dp  = opendir(todo.front().c_str())) == NULL)
-        {
-            cout <<"[dirmap.cpp]error: "<< strerror(errno) << ", for directory " << todo.front().c_str() << endl;
-        }
-        else
-        {
-            struct dirent *de;
-            while ((de = readdir(dp)) != NULL)
-            {
-                struct stat fi;
-                if (lstat( (todo.front()+string(de->d_name)).c_str(), &fi)<0)
-                {
-                    cout << "error(pm.statact) \n";
-                }
-                else
-                {
-                    if(S_ISDIR(fi.st_mode))
-                    {
-                        if(de->d_name[0]!='.')
-                        {
-                            todo.push((todo.front()+string(de->d_name)+'/').c_str());
-                        }
-                    }
-                    else
-                    {
-                        if(string(de->d_name)[string(de->d_name).size()-1]!='~')
-                        {
-                            string ts=(todo.front()+string(de->d_name));
-                            char* b=new char[ts.size()+1];
-                            if(b)
-                            {
-                                strcpy(b,ts.c_str());
-                                b[ts.size()]='\0';
-                                files.push_back(b);
-                            }
-                            else
-                            {
-                                nativehttp::server::log("pagemap.cpp","mapper error[0]");
-                            }
-                        }
+	while(todo.size() > 0)
+	{
+		DIR *dp;
+		if((dp  = opendir(todo.front().c_str())) == NULL)
+		{
+			cout << "[dirmap.cpp]error: " << strerror(errno) << ", for directory " << todo.front().c_str() << endl;
+		}
+		else
+		{
+			struct dirent *de;
+			while((de = readdir(dp)) != NULL)
+			{
+				struct stat fi;
+				if(lstat((todo.front() + string(de->d_name)).c_str(), &fi) < 0)
+				{
+					cout << "error(pm.statact) \n";
+				}
+				else
+				{
+					if(S_ISDIR(fi.st_mode))
+					{
+						if(de->d_name[0] != '.')
+						{
+							todo.push((todo.front() + string(de->d_name) + '/').c_str());
+						}
+					}
+					else
+					{
+						if(string(de->d_name)[string(de->d_name).size()-1] != '~')
+						{
+							string ts = (todo.front() + string(de->d_name));
+							char *b = new char[ts.size()+1];
+							if(b)
+							{
+								strcpy(b, ts.c_str());
+								b[ts.size()] = '\0';
+								files.push_back(b);
+							}
+							else
+							{
+								nativehttp::server::log("pagemap.cpp", "mapper error[0]");
+							}
+						}
 
-                    }
-                }
-                //cout << (string(de->d_name)) << endl;
-            }
-            closedir(dp);
-        }
-        todo.pop();
-    }
+					}
+				}
+				//cout << (string(de->d_name)) << endl;
+			}
+			closedir(dp);
+		}
+		todo.pop();
+	}
 }

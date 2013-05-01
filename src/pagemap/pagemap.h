@@ -41,64 +41,64 @@ freely, subject to the following restrictions:
 
 namespace nativehttp
 {
-namespace data
-{
-typedef int (*Tonload)();
-typedef pagedata(*Tpage)(rdata*);
-}
+	namespace data
+	{
+		typedef int (*Tonload)();
+		typedef pagedata(*Tpage)(rdata*);
+	}
 }
 
 struct nativepage
 {
-    void* handle;
+	void *handle;
 
-    nativehttp::data::Tonload onload;
-    nativehttp::data::Tpage page;
+	nativehttp::data::Tonload onload;
+	nativehttp::data::Tpage page;
 };
 
 struct page
 {
-    int type;
-    void *data;
-    char* file;
-    time_t timestamp;
+	int type;
+	void *data;
+	char *file;
+	time_t timestamp;
 };
 
 struct urimp
 {
-    char* u;
-    int sid;
+	char *u;
+	int sid;
 };
 
 class page_mapper
 {
 private:
-    vector<char*>files;
-    deque<urimp>uris;
-    int acp;
-    unsigned int adui;
+	vector<char*>files;
+	deque<urimp>uris;
+	int acp;
+	unsigned int adui;
 
-    void mapdir(string d);
-    page bscpageset(char* f);
+	void mapdir(string d);
+	page bscpageset(char *f);
 
-    void load_so(page& tmp, const char* f, string dir, const char* nhp);
-    void load_nhp(page& tmp, const char* f, string dir);
-    void load_file(page& tmp, const char* f, string dir);
+	void load_so(page &tmp, const char *f, string dir, const char *nhp);
+	void load_nhp(page &tmp, const char *f, string dir);
+	void load_file(page &tmp, const char *f, string dir);
 
-    void reload_so(int pgi, time_t fatt, string dir, const char* f);
-    void reload_nhp(int pgi, time_t fatt, string dir, const char* f);
+	void reload_so(int pgi, time_t fatt, string dir, const char *f);
+	void reload_nhp(int pgi, time_t fatt, string dir, const char *f);
 
-    bool nhp_prepare_env(const char* f, FILE*& nhpf, FILE*& tmf);
-    string nhp_compile(const char* f,FILE*& nhpf, FILE*& tmf);
+	bool nhp_prepare_env(const char *f, FILE*& nhpf, FILE*& tmf);
+	string nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf);
 
 
 public:
-    void preinit();
-    void adduri(string u,bool top);
-    data::vector<page>* base;
-    void page_mapper_init(string d);
-    void refresh(string d);
-    page by_uri(const char* u);
+	void preinit();
+	void adduri(string u, bool top);
+	data::vector<page>* base;
+	void page_mapper_init(string d);
+	void refresh(string d);
+	page by_uri(const char *u);
 
 };
 

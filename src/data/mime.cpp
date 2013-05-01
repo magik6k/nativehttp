@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include <stdio.h>
 
-string smime_types="a=application/octet-stream\n\
+string smime_types = "a=application/octet-stream\n\
 aab=application/x-authorware-bin\n\
 aam=application/x-authorware-map\n\
 aas=application/x-authorware-seg\n\
@@ -211,7 +211,7 @@ xwd=image/x-xwindowdump\n\
 xyz=chemical/x-xyz\n\
 zip=application/zip\n";
 
-string smime_types_charset="txt=text/plain; charset=%s\n\
+string smime_types_charset = "txt=text/plain; charset=%s\n\
 htm=text/html; charset=%s\n\
 html=text/html; charset=%s\n";
 
@@ -219,35 +219,35 @@ string default_mime;
 
 mimec::mimec()
 {
-    nativehttp::data::superstring ts(smime_types_charset);
-    ts.change("%s",charset);
+	nativehttp::data::superstring ts(smime_types_charset);
+	ts.change("%s", charset);
 
-    nativehttp::data::superstring mp(ts.str+smime_types);
-    int n=mp.count('\n');
-    mp.pos=0;
-    for(int i=0; i<n; i++)
-    {
-        string tnam=mp.to("=");
-        string tmi=mp.to("\n");
-        mimes[tnam]=tmi;
-    }
+	nativehttp::data::superstring mp(ts.str + smime_types);
+	int n = mp.count('\n');
+	mp.pos = 0;
+	for(int i = 0; i < n; i++)
+	{
+		string tnam = mp.to("=");
+		string tmi = mp.to("\n");
+		mimes[tnam] = tmi;
+	}
 
 }
 
 
 string mimec::get_ctype(string fn)
 {
-    nativehttp::data::superstring fnm(fn);
-    fnm.pos=fn.size()-1;
-    string fext=fnm.back_to(".");
-    string tm=mimes[fext];
-    if(!tm.empty())
-    {
-        string rt = "Content-Type: ";
-        rt += tm;
-        return rt;
-    }
+	nativehttp::data::superstring fnm(fn);
+	fnm.pos = fn.size() - 1;
+	string fext = fnm.back_to(".");
+	string tm = mimes[fext];
+	if(!tm.empty())
+	{
+		string rt = "Content-Type: ";
+		rt += tm;
+		return rt;
+	}
 
-    return default_mime;
+	return default_mime;
 }
 

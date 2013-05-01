@@ -24,47 +24,47 @@ freely, subject to the following restrictions:
 
 nativehttp::data::postgetdata::postgetdata(string dstr)
 {
-    nativehttp::data::superstring cke(dstr);
-    while(cke.pos<cke.str.size())
-    {
-        cfil ctm;
-        ctm.name=cke.to("=");
-        ctm.value=cke.to("&");
-        data.push_back(ctm);
-    }
+	nativehttp::data::superstring cke(dstr);
+	while(cke.pos < cke.str.size())
+	{
+		cfil ctm;
+		ctm.name = cke.to("=");
+		ctm.value = cke.to("&");
+		data.push_back(ctm);
+	}
 }
 
 string nativehttp::data::postgetdata::get(string name)
 {
-    for(unsigned int i=0; i<data.size(); i++)
-    {
-        if(data[i].name==name)
-        {
-            return data[i].value;
-        }
-    }
-    return "";
+	for(unsigned int i = 0; i < data.size(); i++)
+	{
+		if(data[i].name == name)
+		{
+			return data[i].value;
+		}
+	}
+	return "";
 }
 
 extern "C" string nativehttp::utils::decode_poststring(string str)
 {
-    string o;
-    nativehttp::data::superstring s(str);
-    s.change("+"," ");
-    s.pos=0;
-    while(s.pos<s.str.size())
-    {
-        o+=s.to("%");
-        s.pos+=2;
-        if(s.pos<=s.str.size())
-        {
-            char t[3]= {0,0,0};
-            t[0]=s.str[s.pos-2];
-            t[1]=s.str[s.pos-1];
-            unsigned int op=0;
-            sscanf(t,"%x",&op);
-            o+=(char)op;
-        }
-    }
-    return o;
+	string o;
+	nativehttp::data::superstring s(str);
+	s.change("+", " ");
+	s.pos = 0;
+	while(s.pos < s.str.size())
+	{
+		o += s.to("%");
+		s.pos += 2;
+		if(s.pos <= s.str.size())
+		{
+			char t[3] = {0, 0, 0};
+			t[0] = s.str[s.pos-2];
+			t[1] = s.str[s.pos-1];
+			unsigned int op = 0;
+			sscanf(t, "%x", &op);
+			o += (char)op;
+		}
+	}
+	return o;
 }

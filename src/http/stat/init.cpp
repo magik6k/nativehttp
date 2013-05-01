@@ -26,111 +26,111 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-namespace statdata
-{
+	namespace statdata
+	{
 
-void init()
-{
+		void init()
+		{
 #ifdef NHDBG
-    size_t bm=getrsmem();
+			size_t bm = getrsmem();
 #endif
-    http::statdata::toggle=cfg->get_int("statson");
-    http::statdata::transfer=cfg->get_int("transfer_stats");
-    http::statdata::hitlog=cfg->get_int("hits_stat");
-    http::statdata::hourlylen=cfg->get_int("hourly_length");
-    http::statdata::method=cfg->get_int("method_stats");
+			http::statdata::toggle = cfg->get_int("statson");
+			http::statdata::transfer = cfg->get_int("transfer_stats");
+			http::statdata::hitlog = cfg->get_int("hits_stat");
+			http::statdata::hourlylen = cfg->get_int("hourly_length");
+			http::statdata::method = cfg->get_int("method_stats");
 
-    http::statdata::lastHrlFlp=time(0)+5;
-    http::statdata::lastSave=time(0)+30;
+			http::statdata::lastHrlFlp = time(0) + 5;
+			http::statdata::lastSave = time(0) + 30;
 
-    http::statdata::save_rate=cfg->get_int("stat_save_rate")*60;
+			http::statdata::save_rate = cfg->get_int("stat_save_rate") * 60;
 
-    http::statdata::hrl_hits = new unsigned long[http::statdata::hourlylen];
-    http::statdata::hrl_connections = new unsigned long[http::statdata::hourlylen];
-    http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
-    http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
+			http::statdata::hrl_hits = new unsigned long[http::statdata::hourlylen];
+			http::statdata::hrl_connections = new unsigned long[http::statdata::hourlylen];
+			http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
+			http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
 
-    for(size_t i=0; i<http::statdata::hourlylen; i++)
-    {
-        http::statdata::hrl_hits[i]=0u;
-        http::statdata::hrl_connections[i]=0u;
-        http::statdata::hrl_dl[i]=0u;
-        http::statdata::hrl_ul[i]=0u;
-    }
+			for(size_t i = 0; i < http::statdata::hourlylen; i++)
+			{
+				http::statdata::hrl_hits[i] = 0u;
+				http::statdata::hrl_connections[i] = 0u;
+				http::statdata::hrl_dl[i] = 0u;
+				http::statdata::hrl_ul[i] = 0u;
+			}
 
-    http::statdata::hits=0u;
-    http::statdata::connections=0u;
-    http::statdata::dlbytes=0u;
-    http::statdata::ulbytes=0u;
-    http::statdata::get=0u;
-    http::statdata::post=0u;
+			http::statdata::hits = 0u;
+			http::statdata::connections = 0u;
+			http::statdata::dlbytes = 0u;
+			http::statdata::ulbytes = 0u;
+			http::statdata::get = 0u;
+			http::statdata::post = 0u;
 
-    if(!cfg->get_var("statfile").empty())
-    {
-        stfn=cfg->get_var("statfile");
+			if(!cfg->get_var("statfile").empty())
+			{
+				stfn = cfg->get_var("statfile");
 
-        FILE *stf=fopen(cfg->get_var("statfile").c_str(),"r");
-        if(!stf)return;
+				FILE *stf = fopen(cfg->get_var("statfile").c_str(), "r");
+				if(!stf)return;
 
-        char ftc[3];
-        fread(ftc,1,3,stf);
-        if((ftc[0]!='N')||(ftc[1]!='S')||(ftc[2]!='F'))
-        {
-            fclose(stf);
-            return;
-        }
-        uint16_t tfv=0x0000;
-        fread(&tfv,2,1,stf);
-        if(tfv!=filever)
-        {
-            fclose(stf);
-            return;
-        }
+				char ftc[3];
+				fread(ftc, 1, 3, stf);
+				if((ftc[0] != 'N') || (ftc[1] != 'S') || (ftc[2] != 'F'))
+				{
+					fclose(stf);
+					return;
+				}
+				uint16_t tfv = 0x0000;
+				fread(&tfv, 2, 1, stf);
+				if(tfv != filever)
+				{
+					fclose(stf);
+					return;
+				}
 
-        long long thl=0;
-        fread(&thl,sizeof(long long),1,stf);
-        if(thl>hourlylen)thl=hourlylen;
+				long long thl = 0;
+				fread(&thl, sizeof(long long), 1, stf);
+				if(thl > hourlylen)thl = hourlylen;
 
-        fread(&get,sizeof(unsigned long),1,stf);
-        fread(&post,sizeof(unsigned long),1,stf);
+				fread(&get, sizeof(unsigned long), 1, stf);
+				fread(&post, sizeof(unsigned long), 1, stf);
 
-        stunit sd={0,0,0,0};
+				stunit sd = {0, 0, 0, 0};
 
-        fread(&sd,sizeof(stunit),1,stf);
+				fread(&sd, sizeof(stunit), 1, stf);
 
-        hits=sd.hits;
-        connections=sd.connections;
-        ulbytes=sd.ulbytes;
-        dlbytes=sd.dlbytes;
+				hits = sd.hits;
+				connections = sd.connections;
+				ulbytes = sd.ulbytes;
+				dlbytes = sd.dlbytes;
 
-        for(long long i=0;i<thl;i++)
-        {
-            fread(&sd,sizeof(stunit),1,stf);
-            hrl_hits[i]=sd.hits;
-            hrl_connections[i]=sd.connections;
-            hrl_ul[i]=sd.ulbytes;
-            hrl_dl[i]=sd.dlbytes;
-        }
+				for(long long i = 0; i < thl; i++)
+				{
+					fread(&sd, sizeof(stunit), 1, stf);
+					hrl_hits[i] = sd.hits;
+					hrl_connections[i] = sd.connections;
+					hrl_ul[i] = sd.ulbytes;
+					hrl_dl[i] = sd.dlbytes;
+				}
 
-        for(long long i=hourlylen-2;i>=0;i--)
-        {
-            hrl_hits[i+1]=hrl_hits[i];
-            hrl_connections[i+1]=hrl_connections[i];
-            hrl_ul[i+1]=hrl_ul[i];
-            hrl_dl[i+1]=hrl_dl[i];
-        }
-        hrl_hits[0]=0;
-        hrl_connections[0]=0;
-        hrl_ul[0]=0;
-        hrl_dl[0]=0;
+				for(long long i = hourlylen - 2; i >= 0; i--)
+				{
+					hrl_hits[i+1] = hrl_hits[i];
+					hrl_connections[i+1] = hrl_connections[i];
+					hrl_ul[i+1] = hrl_ul[i];
+					hrl_dl[i+1] = hrl_dl[i];
+				}
+				hrl_hits[0] = 0;
+				hrl_connections[0] = 0;
+				hrl_ul[0] = 0;
+				hrl_dl[0] = 0;
 
-        fclose(stf);
-    }
+				fclose(stf);
+			}
 
 #ifdef NHDBG
-    cout <<"[DBG:init.cpp@http]Stat mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
+			cout << "[DBG:init.cpp@http]Stat mem: " << (getrsmem() - bm) / 1024.f << "kb\n";
 #endif
-}
+		}
 
-}
+	}
 }

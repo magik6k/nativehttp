@@ -27,18 +27,18 @@ using namespace std;
 
 namespace utils
 {
-namespace memory
-{
+	namespace memory
+	{
 #ifdef NHDBG
-void printmemsize(int64_t mem)
-{
-    cout << "[ " << int64_t(mem)/1024LL/1024LL/1024LL << "GiB ][ "
-        << int64_t(mem)/1024LL/1024LL << "MiB ][ "
-        << int64_t(mem)/1024LL << "KiB ][ "
-        << int64_t(mem) << "B ]";
-}
+		void printmemsize(int64_t mem)
+		{
+			cout << "[ " << int64_t(mem) / 1024LL / 1024LL / 1024LL << "GiB ][ "
+			     << int64_t(mem) / 1024LL / 1024LL << "MiB ][ "
+			     << int64_t(mem) / 1024LL << "KiB ][ "
+			     << int64_t(mem) << "B ]";
+		}
 #endif
-}
+	}
 
 }
 

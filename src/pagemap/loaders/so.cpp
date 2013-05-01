@@ -26,66 +26,66 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <string.h>
 
-void page_mapper::load_so(page& tmp, const char* f, string dir, const char* nhp)
+void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 {
-    tmp.type=page_native;
-    nativepage* ntm = new nativepage;
-    ntm->handle = dlopen(f, RTLD_NOW|RTLD_LOCAL);
-    if(!ntm->handle)
-    {
-        cout << "can't open shared file: "<<f<<": "<<dlerror()<<endl;
-        delete ntm;
-    }
-    else
-    {
-        ntm->onload = (nativehttp::data::Tonload) dlsym(ntm->handle,"onload");
-        ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle,"page");
-        if(!ntm->onload||!ntm->page)
-        {
-            cout << "error loading native symbols: "<<f<<endl;
-            dlclose(ntm->handle);
-            delete ntm;
-        }
-        else
-        {
-            acp=base->size();
-            int initstate = (*ntm->onload)();
-            if(initstate!=1)
-            {
-                cout << "invalid init state("<<initstate<<"): "<<f<<endl;
-                dlclose(ntm->handle);
-                delete ntm;
-            }
-            else
-            {
-                tmp.data = ntm;
-                base->push_back(tmp);
+	tmp.type = page_native;
+	nativepage *ntm = new nativepage;
+	ntm->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
+	if(!ntm->handle)
+	{
+		cout << "can't open shared file: " << f << ": " << dlerror() << endl;
+		delete ntm;
+	}
+	else
+	{
+		ntm->onload = (nativehttp::data::Tonload) dlsym(ntm->handle, "onload");
+		ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle, "page");
+		if(!ntm->onload || !ntm->page)
+		{
+			cout << "error loading native symbols: " << f << endl;
+			dlclose(ntm->handle);
+			delete ntm;
+		}
+		else
+		{
+			acp = base->size();
+			int initstate = (*ntm->onload)();
+			if(initstate != 1)
+			{
+				cout << "invalid init state(" << initstate << "): " << f << endl;
+				dlclose(ntm->handle);
+				delete ntm;
+			}
+			else
+			{
+				tmp.data = ntm;
+				base->push_back(tmp);
 
-                if(!nhp)
-                {
-                    nativehttp::data::superstring pgac(f);
-                    string furi='/'+pgac.from(dir);
-                    char* tfu=new char[furi.size()+1];
-                    memcpy(tfu,furi.c_str(),furi.size());
-                    tfu[furi.size()]='\0';
+				if(!nhp)
+				{
+					nativehttp::data::superstring pgac(f);
+					string furi = '/' + pgac.from(dir);
+					char *tfu = new char[furi.size()+1];
+					memcpy(tfu, furi.c_str(), furi.size());
+					tfu[furi.size()] = '\0';
 
-                    urimp tmu = {tfu,int(base->size())-1};
-                    uris.push_back(tmu);
-                }
-                else
-                {
-                    nativehttp::data::superstring pgac(nhp);
-                    string furi='/'+pgac.from(dir);
-                    char* tfu=new char[furi.size()+1];
-                    memcpy(tfu,furi.c_str(),furi.size());
-                    tfu[furi.size()]='\0';
+					urimp tmu = {tfu, int(base->size()) - 1};
+					uris.push_back(tmu);
+				}
+				else
+				{
+					nativehttp::data::superstring pgac(nhp);
+					string furi = '/' + pgac.from(dir);
+					char *tfu = new char[furi.size()+1];
+					memcpy(tfu, furi.c_str(), furi.size());
+					tfu[furi.size()] = '\0';
 
-                    urimp tmu = {tfu,int(base->size())-1};
-                    uris.push_back(tmu);
-                }
-            }
-        }
-    }
+					urimp tmu = {tfu, int(base->size()) - 1};
+					uris.push_back(tmu);
+				}
+			}
+		}
+	}
 }
 
 

@@ -25,27 +25,27 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-void send(int uid, unsigned long datasize, char* data, bool free)
-{
-    outdata t={uid,datasize,data,free};
-    SDL_mutexP(http::mtx_snd);
-    http::tosend.push(t);
-    SDL_mutexV(http::mtx_snd);
-}
-void unlockclient(int i)
-{
-    http::ulock[i]=false;
-}
+	void send(int uid, unsigned long datasize, char *data, bool free)
+	{
+		outdata t = {uid, datasize, data, free};
+		SDL_mutexP(http::mtx_snd);
+		http::tosend.push(t);
+		SDL_mutexV(http::mtx_snd);
+	}
+	void unlockclient(int i)
+	{
+		http::ulock[i] = false;
+	}
 
-void kickclient(int i)
-{
-    if(http::onssl&&http::sslsck[i])
-    {
-        SSL_shutdown(http::sslsck[i]);
-        SSL_free(http::sslsck[i]);
-    }
-    http::ulock[i]=false;
-    close(http::connected[i]);
-}
+	void kickclient(int i)
+	{
+		if(http::onssl && http::sslsck[i])
+		{
+			SSL_shutdown(http::sslsck[i]);
+			SSL_free(http::sslsck[i]);
+		}
+		http::ulock[i] = false;
+		close(http::connected[i]);
+	}
 }
 

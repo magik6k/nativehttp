@@ -33,73 +33,73 @@ freely, subject to the following restrictions:
 #define SOCKET	int
 extern "C"
 {
-extern DECLSPEC void SDLCALL SDLNet_SetLastError(int err);
-extern DECLSPEC int SDLCALL SDLNet_GetLastError(void);
+	extern DECLSPEC void SDLCALL SDLNet_SetLastError(int err);
+	extern DECLSPEC int SDLCALL SDLNet_GetLastError(void);
 }
 
-bool deamonized=false;
+bool deamonized = false;
 
 void deamonize()
 {
-    nativehttp::server::log("system.cpp","demonizing");
-    pid_t pid, sid;
-    pid=fork();
-    if (pid<0)
-    {
-        exit(EXIT_FAILURE);
-    }
-    if (pid>0)
-    {
-        exit(EXIT_SUCCESS);
-    }
-    umask(0);
-    sid = setsid();
-    if (sid<0)
-    {
-        exit(EXIT_FAILURE);
-    }
-    deamonized=true;
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
+	nativehttp::server::log("system.cpp", "demonizing");
+	pid_t pid, sid;
+	pid = fork();
+	if(pid < 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	if(pid > 0)
+	{
+		exit(EXIT_SUCCESS);
+	}
+	umask(0);
+	sid = setsid();
+	if(sid < 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	deamonized = true;
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
 }
 
 void goroot()
 {
-    if ((chdir("/"))<0)
-    {
-        exit(EXIT_FAILURE);
-    }
+	if((chdir("/")) < 0)
+	{
+		exit(EXIT_FAILURE);
+	}
 }
 
 size_t getacmem()
 {
-    long long r=0LL;
-    FILE* fp=NULL;
-    if (!(fp=fopen( "/proc/self/statm", "r" )))
-        return size_t(0LL);
-    if (fscanf(fp,"%*s%*s%*s%*s%*s%lld",&r)!=1)
-    {
-        fclose(fp);
-        return size_t(0LL);
-    }
-    fclose(fp);
-    return size_t(r*sysconf(_SC_PAGESIZE));
+	long long r = 0LL;
+	FILE *fp = NULL;
+	if(!(fp = fopen("/proc/self/statm", "r")))
+		return size_t(0LL);
+	if(fscanf(fp, "%*s%*s%*s%*s%*s%lld", &r) != 1)
+	{
+		fclose(fp);
+		return size_t(0LL);
+	}
+	fclose(fp);
+	return size_t(r * sysconf(_SC_PAGESIZE));
 }
 
 size_t getrsmem()
 {
-    long long r=0LL;
-    FILE* fp=NULL;
-    if (!(fp=fopen( "/proc/self/statm", "r" )))
-        return size_t(0LL);
-    if (fscanf(fp,"%*s%lld",&r)!=1)
-    {
-        fclose(fp);
-        return size_t(0LL);
-    }
-    fclose(fp);
-    return size_t(r*sysconf(_SC_PAGESIZE));
+	long long r = 0LL;
+	FILE *fp = NULL;
+	if(!(fp = fopen("/proc/self/statm", "r")))
+		return size_t(0LL);
+	if(fscanf(fp, "%*s%lld", &r) != 1)
+	{
+		fclose(fp);
+		return size_t(0LL);
+	}
+	fclose(fp);
+	return size_t(r * sysconf(_SC_PAGESIZE));
 }
 
 

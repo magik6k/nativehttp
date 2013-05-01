@@ -26,62 +26,62 @@ freely, subject to the following restrictions:
 
 void page_mapper::refresh(string d)
 {
-    mapdir(d);
+	mapdir(d);
 
-    for(unsigned int i=0; i<files.size(); i++)
-    {
-        bool loaded=false;
-        bool toref=false;
-        time_t fatt=0;
-        int pgi=-1;
+	for(unsigned int i = 0; i < files.size(); i++)
+	{
+		bool loaded = false;
+		bool toref = false;
+		time_t fatt = 0;
+		int pgi = -1;
 
-        for(unsigned int j=0; j<base->size(); j++)
-        {
-            if(strcmp((*base)[j].file,files[i])==0)
-            {
-                pgi=j;
-                loaded=true;
-                struct stat tst;
-                int rst = stat(files[i], &tst);
-                if(rst != 0)
-                {
-                    nativehttp::server::log("pagemap.cpp:refresh","stat error");
-                    continue;
-                }
-                fatt=tst.st_mtime;
-                if((*base)[j].timestamp!=tst.st_mtime)
-                {
-                    toref=true;
-                }
-            }
-        }
-        if(loaded&&toref)
-        {
-            if(is_dotso(files[i],strlen(files[i])))
-            {
-                reload_so(pgi,fatt,d,files[i]);
-            }
-            else if(is_dotnhp(files[i],strlen(files[i])))
-            {
-                reload_nhp(pgi,fatt,d,files[i]);
-            }
-        }
-        else if(!loaded)
-        {
-            if(is_dotso(files[i],strlen(files[i])))
-            {
+		for(unsigned int j = 0; j < base->size(); j++)
+		{
+			if(strcmp((*base)[j].file, files[i]) == 0)
+			{
+				pgi = j;
+				loaded = true;
+				struct stat tst;
+				int rst = stat(files[i], &tst);
+				if(rst != 0)
+				{
+					nativehttp::server::log("pagemap.cpp:refresh", "stat error");
+					continue;
+				}
+				fatt = tst.st_mtime;
+				if((*base)[j].timestamp != tst.st_mtime)
+				{
+					toref = true;
+				}
+			}
+		}
+		if(loaded && toref)
+		{
+			if(is_dotso(files[i], strlen(files[i])))
+			{
+				reload_so(pgi, fatt, d, files[i]);
+			}
+			else if(is_dotnhp(files[i], strlen(files[i])))
+			{
+				reload_nhp(pgi, fatt, d, files[i]);
+			}
+		}
+		else if(!loaded)
+		{
+			if(is_dotso(files[i], strlen(files[i])))
+			{
 
-            }
-            else if(is_dotnhp(files[i],strlen(files[i])))
-            {
+			}
+			else if(is_dotnhp(files[i], strlen(files[i])))
+			{
 
-            }
-            else
-            {
-                page tmp=bscpageset(files[i]);
-                if(tmp.type==-1)continue;
-                load_file(tmp,files[i],d);
-            }
-        }
-    }
+			}
+			else
+			{
+				page tmp = bscpageset(files[i]);
+				if(tmp.type == -1)continue;
+				load_file(tmp, files[i], d);
+			}
+		}
+	}
 }

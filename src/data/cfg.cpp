@@ -23,90 +23,90 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include <string.h>
 
-void nativehttp::data::Ccfg::parse_file(const char* f)
+void nativehttp::data::Ccfg::parse_file(const char *f)
 {
 
-    FILE* fil=fopen(f,"rt");
+	FILE *fil = fopen(f, "rt");
 
-    if(fil==NULL)
-    {
-        return;
-    }
+	if(fil == NULL)
+	{
+		return;
+	}
 
-    cfgfil tmp;
+	cfgfil tmp;
 
-    char c;
-    bool comment=false;
-    bool acmt=false;
-    bool sside=false;
-
-
-    do
-    {
-
-        c = fgetc (fil);
-
-        if(c!=EOF)
-        {
-            if(c=='/')
-            {
-                if(acmt)
-                {
-                    acmt=false;
-                    comment=true;
-                }
-                else
-                {
-                    acmt=true;
-                }
-            }
-            else
-            {
-                if(!comment)acmt=false;
-            }
-            if(c=='\n'&&comment)
-            {
-                comment=false;
-            }
-            if(!comment||!acmt)
-            {
-                if(!sside)
-                {
-                    if(c=='=')
-                    {
-                        sside=true;
-                    }
-                    else if(c=='\n')
-                    {
-                        tmp.name="";
-                    }
-                    else
-                    {
-                        tmp.name+=c;
-                    }
-                }
-                else
-                {
-                    if(c=='\n')
-                    {
-                        fileds.push_back(tmp);
-                        tmp.name="";
-                        tmp.cont="";
-                        sside=false;
-                    }
-                    else if(c!='\r')
-                    {
-                        tmp.cont+=c;
-                    }
-                }
-            }
-        }
+	char c;
+	bool comment = false;
+	bool acmt = false;
+	bool sside = false;
 
 
-    }
-    while (c != EOF);
+	do
+	{
 
-    fclose(fil);
+		c = fgetc(fil);
+
+		if(c != EOF)
+		{
+			if(c == '/')
+			{
+				if(acmt)
+				{
+					acmt = false;
+					comment = true;
+				}
+				else
+				{
+					acmt = true;
+				}
+			}
+			else
+			{
+				if(!comment)acmt = false;
+			}
+			if(c == '\n' && comment)
+			{
+				comment = false;
+			}
+			if(!comment || !acmt)
+			{
+				if(!sside)
+				{
+					if(c == '=')
+					{
+						sside = true;
+					}
+					else if(c == '\n')
+					{
+						tmp.name = "";
+					}
+					else
+					{
+						tmp.name += c;
+					}
+				}
+				else
+				{
+					if(c == '\n')
+					{
+						fileds.push_back(tmp);
+						tmp.name = "";
+						tmp.cont = "";
+						sside = false;
+					}
+					else if(c != '\r')
+					{
+						tmp.cont += c;
+					}
+				}
+			}
+		}
+
+
+	}
+	while(c != EOF);
+
+	fclose(fil);
 
 
 }
@@ -115,35 +115,35 @@ void nativehttp::data::Ccfg::parse_file(const char* f)
 string nativehttp::data::Ccfg::get_var(string name)
 {
 
-    unsigned int i=0;
+	unsigned int i = 0;
 
-    while(i!=fileds.size())
-    {
-        if(fileds[i].name==name)
-        {
-            return fileds[i].cont;
-        }
-        i++;
-    }
+	while(i != fileds.size())
+	{
+		if(fileds[i].name == name)
+		{
+			return fileds[i].cont;
+		}
+		i++;
+	}
 
-    return "";
+	return "";
 
 }
 
 int nativehttp::data::Ccfg::get_int(string name)
 {
-    string s=this->get_var(name);
-    int tmp=0;
-    unsigned int i=0;
-    bool m=false;
-    if(s[0]=='-')
-    {
-        m=true;
-        i++;
-    }
-    for(; i<s.size(); i++)
-        tmp=10*tmp+s[i]-48;
-    return m?-tmp:tmp;
+	string s = this->get_var(name);
+	int tmp = 0;
+	unsigned int i = 0;
+	bool m = false;
+	if(s[0] == '-')
+	{
+		m = true;
+		i++;
+	}
+	for(; i < s.size(); i++)
+		tmp = 10 * tmp + s[i] - 48;
+	return m ? -tmp : tmp;
 }
 
 

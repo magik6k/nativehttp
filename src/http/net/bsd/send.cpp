@@ -25,73 +25,76 @@ freely, subject to the following restrictions:
 
 int nhSend(SOCKET sock, const void *data, int len)
 {
-    const char* dp=(const char*)data;
-    int sent, left;
+	const char *dp = (const char*)data;
+	int sent, left;
 
 	left = len;
 	sent = 0;
 	errno = 0;
-	do {
-		len = send(sock, (const char *)dp, left, http::asyncsnd?MSG_DONTWAIT:0);
-		if ( len > 0 ) {
+	do
+	{
+		len = send(sock, (const char *)dp, left, http::asyncsnd ? MSG_DONTWAIT : 0);
+		if(len > 0)
+		{
 			sent += len;
 			left -= len;
 			dp += len;
 		}
-	} while ( (left > 0) && ((len > 0) || (errno == EINTR)) );
+	}
+	while((left > 0) && ((len > 0) || (errno == EINTR)));
 
 	return(sent);
 }
 
 namespace http
 {
-namespace bsd
-{
-void* sender(void* unused)
-{
-    int ts=0;
-    while(1)
-    {
-        if(http::tosend.empty())
-        {
-            SDL_Delay(1);
-            continue;
-        }
+	namespace bsd
+	{
+		void *sender(void *unused)
+		{
+			int ts = 0;
+			while(1)
+			{
+				if(http::tosend.empty())
+				{
+					SDL_Delay(1);
+					continue;
+				}
 
-        SDL_mutexP(http::mtx_snd);
+				SDL_mutexP(http::mtx_snd);
 
-        outdata proc=http::tosend.front(ts);
-        if(ts==1)
-        {
-            SDL_mutexV(http::mtx_snd);
-            continue;
-        }
-        http::tosend.pop();
-        SDL_mutexV(http::mtx_snd);
+				outdata proc = http::tosend.front(ts);
+				if(ts == 1)
+				{
+					SDL_mutexV(http::mtx_snd);
+					continue;
+				}
+				http::tosend.pop();
+				SDL_mutexV(http::mtx_snd);
 
-        if(http::connected[proc.uid])
-        {
+				if(http::connected[proc.uid])
+				{
 
-            nhSend(http::connected[proc.uid],proc.data,proc.size);
-            http::statdata::onsend(proc.size);
-        }
+					nhSend(http::connected[proc.uid], proc.data, proc.size);
+					http::statdata::onsend(proc.size);
+				}
 
 
-        if(proc.fas)
-        {
-            delete[] proc.data;
-        }
-    }
-    return NULL;
-}
+				if(proc.fas)
+				{
+					delete[] proc.data;
+				}
+			}
+			return NULL;
+		}
 
-void sendNow(int uid, unsigned long datasize, char* data, bool free)
-{
-    nhSend(http::connected[uid],data,datasize);
-    if(free)
-    {
-        delete[] data;
-    }
-}
-}
+		void sendNow(int uid, unsigned long datasize, char *data, bool free)
+		{
+			nhSend(http::connected[uid], data, datasize);
+			if(free)
+			{
+				delete[] data;
+			}
+		}
+	}
 }

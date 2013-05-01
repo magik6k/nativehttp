@@ -24,51 +24,51 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-namespace bsd
-{
+	namespace bsd
+	{
 
-int findfreesock()
-{
-    for(int i=0;i<http::maxConnections;i++)
-    {
-        if(http::connected[i]==-1)return i;
-    }
-    return -1;
-}
+		int findfreesock()
+		{
+			for(int i = 0; i < http::maxConnections; i++)
+			{
+				if(http::connected[i] == -1)return i;
+			}
+			return -1;
+		}
 
-void* listener(void* unused)
-{
-    while(1)
-    {
-        struct sockaddr_in sock_addr;
-        socklen_t sock_alen;
-        SOCKET tmp;
+		void *listener(void *unused)
+		{
+			while(1)
+			{
+				struct sockaddr_in sock_addr;
+				socklen_t sock_alen;
+				SOCKET tmp;
 
-        sock_alen = sizeof(sock_addr);
+				sock_alen = sizeof(sock_addr);
 
-        tmp=accept(http::server,(struct sockaddr*)&sock_addr,&sock_alen);
+				tmp = accept(http::server, (struct sockaddr*)&sock_addr, &sock_alen);
 
-        if (tmp==-1)
-        {
-            SDL_Delay(1);
-            continue;
-        }
+				if(tmp == -1)
+				{
+					SDL_Delay(1);
+					continue;
+				}
 
-        int flags = fcntl(tmp, F_GETFL, 0);
-        fcntl(tmp, F_SETFL, flags & ~O_NONBLOCK);
+				int flags = fcntl(tmp, F_GETFL, 0);
+				fcntl(tmp, F_SETFL, flags & ~O_NONBLOCK);
 
-        int fs=http::bsd::findfreesock();
-        if(fs==-1)
-        {
-            close(tmp);
-            SDL_Delay(10);
-            continue;
-        }
-        http::connected[fs]=tmp;
-        http::client_ips[fs]=sock_addr.sin_addr.s_addr;
+				int fs = http::bsd::findfreesock();
+				if(fs == -1)
+				{
+					close(tmp);
+					SDL_Delay(10);
+					continue;
+				}
+				http::connected[fs] = tmp;
+				http::client_ips[fs] = sock_addr.sin_addr.s_addr;
 
-    }
-    return NULL;
-}
-}
+			}
+			return NULL;
+		}
+	}
 }

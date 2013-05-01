@@ -26,74 +26,74 @@ freely, subject to the following restrictions:
 
 void page_mapper::preinit()
 {
-    base=new data::vector<page>(cfg->get_int("pagebase_max"));
+	base = new data::vector<page>(cfg->get_int("pagebase_max"));
 }
 
-page page_mapper::bscpageset(char* f)
+page page_mapper::bscpageset(char *f)
 {
-    page tmp;
-    tmp.type=0;
-    struct stat tst;
-    int rst = stat(f, &tst);
-    if(rst != 0)
-    {
-        nativehttp::server::log("pagemap.cpp:init","stat error");
-        tmp.type=-1;
-        return tmp;
-    }
-    tmp.timestamp=tst.st_mtime;
-    tmp.file=new char[strlen(f)+1];
-    memcpy(tmp.file,f,strlen(f));
-    tmp.file[strlen(f)]='\0';
-    return tmp;
+	page tmp;
+	tmp.type = 0;
+	struct stat tst;
+	int rst = stat(f, &tst);
+	if(rst != 0)
+	{
+		nativehttp::server::log("pagemap.cpp:init", "stat error");
+		tmp.type = -1;
+		return tmp;
+	}
+	tmp.timestamp = tst.st_mtime;
+	tmp.file = new char[strlen(f)+1];
+	memcpy(tmp.file, f, strlen(f));
+	tmp.file[strlen(f)] = '\0';
+	return tmp;
 }
 
-page page_mapper::by_uri(const char* u)
+page page_mapper::by_uri(const char *u)
 {
-    vector<int>dn(uris.size(),0);
-    page t= {-1,NULL};
-    for(unsigned int i=0; i<strlen(u); i++)
-    {
-        for(unsigned int j=0; j<dn.size(); j++)
-        {
-            if(dn[j]!=-1)
-            {
-                if(uris[j].u[dn[j]]==u[i]||uris[j].u[dn[j]]=='*')
-                {
-                    if(strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(uris[j].u)==unsigned(dn[j])+1&&strlen(u)==strlen(uris[j].u))
-                    {
-                        return (*base)[uris[j].sid];
-                    }
-                    else if(strlen(uris[j].u)==unsigned(dn[j])+1&&uris[j].u[dn[j]]=='*')
-                    {
-                        t=(*base)[uris[j].sid];
-                    }
-                    dn[j]++;
-                }
-                else
-                {
-                    dn[j]=-1;
-                }
-            }
-        }
-    }
-    return t;
+	vector<int>dn(uris.size(), 0);
+	page t = { -1, NULL};
+	for(unsigned int i = 0; i < strlen(u); i++)
+	{
+		for(unsigned int j = 0; j < dn.size(); j++)
+		{
+			if(dn[j] != -1)
+			{
+				if(uris[j].u[dn[j]] == u[i] || uris[j].u[dn[j]] == '*')
+				{
+					if(strlen(uris[j].u) == unsigned(dn[j]) + 1 && strlen(uris[j].u) == unsigned(dn[j]) + 1 && strlen(u) == strlen(uris[j].u))
+					{
+						return (*base)[uris[j].sid];
+					}
+					else if(strlen(uris[j].u) == unsigned(dn[j]) + 1 && uris[j].u[dn[j]] == '*')
+					{
+						t = (*base)[uris[j].sid];
+					}
+					dn[j]++;
+				}
+				else
+				{
+					dn[j] = -1;
+				}
+			}
+		}
+	}
+	return t;
 }
 
-void page_mapper::adduri(string u,bool top)
+void page_mapper::adduri(string u, bool top)
 {
-    char* cu=new char[u.size()+1];
-    memcpy(cu,u.c_str(),u.size());
-    cu[u.size()]='\0';
+	char *cu = new char[u.size()+1];
+	memcpy(cu, u.c_str(), u.size());
+	cu[u.size()] = '\0';
 
-    urimp tu= {cu,acp};
-    if(top)
-    {
-        uris.push_front(tu);
-    }
-    else
-    {
-        uris.push_back(tu);
-    }
+	urimp tu = {cu, acp};
+	if(top)
+	{
+		uris.push_front(tu);
+	}
+	else
+	{
+		uris.push_back(tu);
+	}
 }
 

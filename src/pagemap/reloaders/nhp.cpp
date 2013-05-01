@@ -26,13 +26,13 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <string.h>
 
-void page_mapper::reload_nhp(int pgi, time_t fatt, string dir, const char* f)
+void page_mapper::reload_nhp(int pgi, time_t fatt, string dir, const char *f)
 {
-    FILE* nhpf=NULL;
-    FILE* tmf=NULL;
+	FILE *nhpf = NULL;
+	FILE *tmf = NULL;
 
-    if(nhp_prepare_env(f,nhpf,tmf))
-    {
-        reload_so(pgi,fatt,dir,nhp_compile(f,nhpf,tmf).c_str());
-    }
+	if(nhp_prepare_env(f, nhpf, tmf))
+	{
+		reload_so(pgi, fatt, dir, nhp_compile(f, nhpf, tmf).c_str());
+	}
 }

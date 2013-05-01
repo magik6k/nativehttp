@@ -26,43 +26,43 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-namespace bsd
-{
-void init()
-{
-    struct sockaddr_in sock_addr;
-    http::server=socket(AF_INET, SOCK_STREAM, 0);
+	namespace bsd
+	{
+		void init()
+		{
+			struct sockaddr_in sock_addr;
+			http::server = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(http::server==INVALID_SOCKET)
-    {
-		nativehttp::server::log("start.cpp@bsd","Couldn't create socket");
-		return;
+			if(http::server == INVALID_SOCKET)
+			{
+				nativehttp::server::log("start.cpp@bsd", "Couldn't create socket");
+				return;
+			}
+
+			memset(&sock_addr, 0, sizeof(sock_addr));
+
+			sock_addr.sin_family = AF_INET;
+			sock_addr.sin_addr.s_addr = INADDR_ANY;
+			sock_addr.sin_port = htons(cfg->get_int("port"));
+
+			{
+				int y = 1;
+				setsockopt(http::server, SOL_SOCKET, SO_REUSEADDR, (char*)&y, sizeof(y));
+			}
+
+			if(bind(http::server, (struct sockaddr*)&sock_addr, sizeof(sock_addr)) == -1)
+			{
+				nativehttp::server::log("start.cpp@bsd", "Couldn't bind to local port");
+				return;
+			}
+
+			if(listen(http::server, cfg->get_int("max_waiting_connectons")) == -1)
+			{
+				nativehttp::server::log("start.cpp@bsd", "Couldn't listen to local port");
+				return;
+			}
+
+			fcntl(http::server, F_SETFL, O_NONBLOCK);
+		}
 	}
-
-	memset(&sock_addr, 0, sizeof(sock_addr));
-
-    sock_addr.sin_family = AF_INET;
-    sock_addr.sin_addr.s_addr = INADDR_ANY;
-    sock_addr.sin_port = htons(cfg->get_int("port"));
-
-    {
-        int y = 1;
-        setsockopt(http::server, SOL_SOCKET, SO_REUSEADDR, (char*)&y, sizeof(y));
-    }
-
-    if (bind(http::server,(struct sockaddr*)&sock_addr,sizeof(sock_addr))==-1)
-    {
-        nativehttp::server::log("start.cpp@bsd","Couldn't bind to local port");
-        return;
-    }
-
-    if (listen(http::server, cfg->get_int("max_waiting_connectons"))==-1)
-    {
-        nativehttp::server::log("start.cpp@bsd","Couldn't listen to local port");
-        return;
-    }
-
-    fcntl(http::server, F_SETFL, O_NONBLOCK);
-}
-}
 }

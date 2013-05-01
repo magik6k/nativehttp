@@ -40,29 +40,29 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-void unlockclient(int i);
-void kickclient(int i);
-void send(int uid, unsigned long datasize, char* data, bool free);
-namespace bsd
-{
-void disconnect(int scid);
-void* sender(void* unused);
-void reciver();
-int findfreesock();
-void init();
-void* listener(void* unused);
-void sendNow(int uid, unsigned long datasize, char* data, bool free);
-}
-namespace ssl
-{
-extern SSL_CTX *ctx;
+	void unlockclient(int i);
+	void kickclient(int i);
+	void send(int uid, unsigned long datasize, char *data, bool free);
+	namespace bsd
+	{
+		void disconnect(int scid);
+		void *sender(void *unused);
+		void reciver();
+		int findfreesock();
+		void init();
+		void *listener(void *unused);
+		void sendNow(int uid, unsigned long datasize, char *data, bool free);
+	}
+	namespace ssl
+	{
+		extern SSL_CTX *ctx;
 
-void* sender(void* unused);
-void reciver();
-int findfreesock();
-void* listener(void* unused);
-void init();
-}
+		void *sender(void *unused);
+		void reciver();
+		int findfreesock();
+		void *listener(void *unused);
+		void init();
+	}
 }
 
 #endif // NET_H_INCLUDED

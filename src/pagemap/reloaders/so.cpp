@@ -26,61 +26,61 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <string.h>
 
-void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char* f)
+void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 {
-    SDL_mutexP(http::mtx_exec);
-    SDL_mutexP(http::mtx_exec2);
+	SDL_mutexP(http::mtx_exec);
+	SDL_mutexP(http::mtx_exec2);
 
-    dlclose(((nativepage*)(*base)[pgi].data)->handle);
-    for(unsigned int i=0; i<uris.size(); i++)
-    {
-        if(uris[i].sid==pgi)
-        {
-            delete[] uris[i].u;
-            uris.erase(uris.begin()+i);
-        }
-    }
-    ((nativepage*)(*base)[pgi].data)->handle = dlopen(f, RTLD_NOW|RTLD_LOCAL);
-    if(!((nativepage*)(*base)[pgi].data)->handle)
-    {
-        nativehttp::server::log("ERROR@reloaders/so.cpp",string("can't open shared file: ")+f);
-    }
-    else
-    {
-        ((nativepage*)(*base)[pgi].data)->onload = (nativehttp::data::Tonload) dlsym(((nativepage*)(*base)[pgi].data)->handle,"onload");
-        ((nativepage*)(*base)[pgi].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pgi].data)->handle,"page");
-        if(!((nativepage*)(*base)[pgi].data)->onload||!((nativepage*)(*base)[pgi].data)->page)
-        {
-            nativehttp::server::log("ERROR@reloaders/so.cpp",string("loading native symbols failed: ")+f);
-            dlclose(((nativepage*)(*base)[pgi].data)->handle);
-        }
-        else
-        {
-            acp=pgi;
-            int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
-            if(initstate!=1)
-            {
-                nativehttp::server::logid(initstate,"WARNING@reloaders/so.cpp",string("invalid init state: ")+f);
-                dlclose(((nativepage*)(*base)[pgi].data)->handle);
-            }
-            else
-            {
-                nativehttp::data::superstring pgac((*base)[pgi].file);
-                string furi='/'+pgac.from(dir);
-                char* tfu=new char[furi.size()+1];
-                memcpy(tfu,furi.c_str(),furi.size());
-                tfu[furi.size()]='\0';
-                urimp tmu= {tfu,pgi};
+	dlclose(((nativepage*)(*base)[pgi].data)->handle);
+	for(unsigned int i = 0; i < uris.size(); i++)
+	{
+		if(uris[i].sid == pgi)
+		{
+			delete[] uris[i].u;
+			uris.erase(uris.begin() + i);
+		}
+	}
+	((nativepage*)(*base)[pgi].data)->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
+	if(!((nativepage*)(*base)[pgi].data)->handle)
+	{
+		nativehttp::server::log("ERROR@reloaders/so.cpp", string("can't open shared file: ") + f);
+	}
+	else
+	{
+		((nativepage*)(*base)[pgi].data)->onload = (nativehttp::data::Tonload) dlsym(((nativepage*)(*base)[pgi].data)->handle, "onload");
+		((nativepage*)(*base)[pgi].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pgi].data)->handle, "page");
+		if(!((nativepage*)(*base)[pgi].data)->onload || !((nativepage*)(*base)[pgi].data)->page)
+		{
+			nativehttp::server::log("ERROR@reloaders/so.cpp", string("loading native symbols failed: ") + f);
+			dlclose(((nativepage*)(*base)[pgi].data)->handle);
+		}
+		else
+		{
+			acp = pgi;
+			int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
+			if(initstate != 1)
+			{
+				nativehttp::server::logid(initstate, "WARNING@reloaders/so.cpp", string("invalid init state: ") + f);
+				dlclose(((nativepage*)(*base)[pgi].data)->handle);
+			}
+			else
+			{
+				nativehttp::data::superstring pgac((*base)[pgi].file);
+				string furi = '/' + pgac.from(dir);
+				char *tfu = new char[furi.size()+1];
+				memcpy(tfu, furi.c_str(), furi.size());
+				tfu[furi.size()] = '\0';
+				urimp tmu = {tfu, pgi};
 
-                uris.push_back(tmu);
+				uris.push_back(tmu);
 
-                (*base)[pgi].type=page_native;
-                (*base)[pgi].timestamp=fatt;
-            }
-        }
+				(*base)[pgi].type = page_native;
+				(*base)[pgi].timestamp = fatt;
+			}
+		}
 
-    }
+	}
 
-    SDL_mutexV(http::mtx_exec);
-    SDL_mutexV(http::mtx_exec2);
+	SDL_mutexV(http::mtx_exec);
+	SDL_mutexV(http::mtx_exec2);
 }

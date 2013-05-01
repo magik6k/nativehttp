@@ -28,45 +28,45 @@ ofstream logfile;
 
 namespace nativehttp
 {
-data::pagedata::pagedata(string s)
-{
-    data=new char[s.size()];
-    size=s.size();
-    memcpy(data,s.c_str(),size);
-}
-void data::pagedata::operator()(string s)
-{
-    if(data)delete[]data;
-    data=new char[s.size()];
-    size=s.size();
-    memcpy(data,s.c_str(),size);
-}
-data::pagedata::pagedata()
-{
-    data=NULL;
-    size=0;
-}
+	data::pagedata::pagedata(string s)
+	{
+		data = new char[s.size()];
+		size = s.size();
+		memcpy(data, s.c_str(), size);
+	}
+	void data::pagedata::operator()(string s)
+	{
+		if(data)delete[]data;
+		data = new char[s.size()];
+		size = s.size();
+		memcpy(data, s.c_str(), size);
+	}
+	data::pagedata::pagedata()
+	{
+		data = NULL;
+		size = 0;
+	}
 
-extern "C" void init::attach_uri(string uri,bool top)
-{
-    pmap.adduri(uri,top);
-}
+	extern "C" void init::attach_uri(string uri, bool top)
+	{
+		pmap.adduri(uri, top);
+	}
 
-extern "C" string server::version()
-{
-    return "NativeHTTP Alpha 6";
-}
+	extern "C" string server::version()
+	{
+		return "NativeHTTP Alpha 6";
+	}
 
-extern "C" void server::log(string lname, string value)
-{
-    if(!deamonized)cout << "["<<lname.c_str()<<"]"<<value.c_str()<<endl;
-    if(logfile.is_open())logfile << "["<<lname.c_str()<<"]"<<value.c_str()<<endl;
-}
+	extern "C" void server::log(string lname, string value)
+	{
+		if(!deamonized)cout << "[" << lname.c_str() << "]" << value.c_str() << endl;
+		if(logfile.is_open())logfile << "[" << lname.c_str() << "]" << value.c_str() << endl;
+	}
 
-extern "C" void server::logid(int id, string lname, string value)
-{
-    if(!deamonized)cout << "["<<lname.c_str()<<"]("<<id<<")"<<value.c_str()<<endl;
-    if(logfile.is_open())logfile << "["<<lname.c_str()<<"]("<<id<<")"<<value.c_str()<<endl;
-}
+	extern "C" void server::logid(int id, string lname, string value)
+	{
+		if(!deamonized)cout << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
+		if(logfile.is_open())logfile << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
+	}
 
 }

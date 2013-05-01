@@ -31,47 +31,47 @@ freely, subject to the following restrictions:
 #endif
 namespace http
 {
-namespace ssl
-{
-SSL_METHOD *meth;
-SSL_CTX *ctx;
+	namespace ssl
+	{
+		SSL_METHOD *meth;
+		SSL_CTX *ctx;
 
-void init()
-{
+		void init()
+		{
 #ifdef NHDBG
-    size_t bm=getrsmem();
+			size_t bm = getrsmem();
 #endif
-    SSL_library_init();
-    SSL_load_error_strings();
-    meth = (SSL_METHOD*) SSLv3_method();
-    ctx = SSL_CTX_new(meth);
-    if (!ctx)
-    {
-        nativehttp::server::log("ssl.cpp","CTX init failed");
-        ERR_print_errors_fp(stderr);
-        exit(1);
-    }
-    if (SSL_CTX_use_certificate_file(ctx, cfg->get_var("ssl_crt_file").c_str(), SSL_FILETYPE_PEM) <= 0)
-    {
-        nativehttp::server::log("ssl.cpp","certificate loading failed");
-        ERR_print_errors_fp(stderr);
-        exit(1);
-    }
-    if (SSL_CTX_use_PrivateKey_file(ctx, cfg->get_var("ssl_key_file").c_str(), SSL_FILETYPE_PEM) <= 0)
-    {
-        nativehttp::server::log("ssl.cpp","key loading failed");
-        ERR_print_errors_fp(stderr);
-        exit(1);
-    }
-    if (!SSL_CTX_check_private_key(ctx))
-    {
-        nativehttp::server::log("ssl.cpp","key does not match certificate");
-        exit(1);
-    }
+			SSL_library_init();
+			SSL_load_error_strings();
+			meth = (SSL_METHOD*) SSLv3_method();
+			ctx = SSL_CTX_new(meth);
+			if(!ctx)
+			{
+				nativehttp::server::log("ssl.cpp", "CTX init failed");
+				ERR_print_errors_fp(stderr);
+				exit(1);
+			}
+			if(SSL_CTX_use_certificate_file(ctx, cfg->get_var("ssl_crt_file").c_str(), SSL_FILETYPE_PEM) <= 0)
+			{
+				nativehttp::server::log("ssl.cpp", "certificate loading failed");
+				ERR_print_errors_fp(stderr);
+				exit(1);
+			}
+			if(SSL_CTX_use_PrivateKey_file(ctx, cfg->get_var("ssl_key_file").c_str(), SSL_FILETYPE_PEM) <= 0)
+			{
+				nativehttp::server::log("ssl.cpp", "key loading failed");
+				ERR_print_errors_fp(stderr);
+				exit(1);
+			}
+			if(!SSL_CTX_check_private_key(ctx))
+			{
+				nativehttp::server::log("ssl.cpp", "key does not match certificate");
+				exit(1);
+			}
 #ifdef NHDBG
-    cout <<"[DBG:ssl.cpp@http]SSL data mem: "<<(getrsmem()-bm)/1024.f<<"kb\n";
+			cout << "[DBG:ssl.cpp@http]SSL data mem: " << (getrsmem() - bm) / 1024.f << "kb\n";
 #endif
-}
+		}
 
-}
+	}
 }

@@ -25,14 +25,14 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-namespace manager
-{
-void sig(int sig);
-void timeouts();
-void wait();
-void* manager(void* unused);
-void fsrefresh();
-}
+	namespace manager
+	{
+		void sig(int sig);
+		void timeouts();
+		void wait();
+		void *manager(void *unused);
+		void fsrefresh();
+	}
 }
 
 #endif // MANAGER_H_INCLUDED

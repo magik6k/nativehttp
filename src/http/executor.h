@@ -28,21 +28,21 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-void* executor(void* eid);
+	void *executor(void *eid);
 
-namespace rproc
-{
+	namespace rproc
+	{
 
-struct lrqd
-{
-    unsigned int clen;
-};
+		struct lrqd
+		{
+			unsigned int clen;
+		};
 
-void post(nativehttp::rdata& rd, http::request* process, http::rproc::lrqd& ld);
-bool ex(nativehttp::data::pagedata& pd,nativehttp::rdata* rd);
-void line0(http::request* process,nativehttp::rdata& rd, http::rproc::lrqd& ld);
-void header(http::request* process,nativehttp::rdata& rd, http::rproc::lrqd& ld);
-}
+		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld);
+		bool ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd);
+		void line0(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld);
+		void header(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld);
+	}
 }
 
 #endif // EXECUTOR_H_INCLUDED

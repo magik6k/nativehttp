@@ -27,66 +27,66 @@ freely, subject to the following restrictions:
 namespace data
 {
 
-template<class T>class vector
-{
-private:
+	template<class T>class vector
+	{
+	private:
 
-    size_t elems;
-    size_t msize;
-    T** eptr;
+		size_t elems;
+		size_t msize;
+		T **eptr;
 
-public:
+	public:
 
-    vector(size_t maxsize);
+		vector(size_t maxsize);
 
-    void push_back(T tp);
-    T& operator[](size_t id);
+		void push_back(T tp);
+		T &operator[](size_t id);
 
-    size_t size();
-    int empty();
+		size_t size();
+		int empty();
 
-    void destroy();
+		void destroy();
 
-};
+	};
 
-template<class T>vector<T>::vector(size_t maxsize)
-{
-    eptr=new T*[maxsize];
-    elems=0;
-}
+	template<class T>vector<T>::vector(size_t maxsize)
+	{
+		eptr = new T*[maxsize];
+		elems = 0;
+	}
 
-template<class T>void vector<T>::push_back(T tp)
-{
-    eptr[elems]=new T;
-    *(eptr[elems])=tp;
-    elems++;
-}
+	template<class T>void vector<T>::push_back(T tp)
+	{
+		eptr[elems] = new T;
+		*(eptr[elems]) = tp;
+		elems++;
+	}
 
-template<class T>T& vector<T>::operator[](size_t id)
-{
-    return *(eptr[id]);
-}
-
-
-template<class T>size_t vector<T>::size()
-{
-    return elems;
-}
+	template<class T>T &vector<T>::operator[](size_t id)
+	{
+		return *(eptr[id]);
+	}
 
 
-template<class T>int vector<T>::empty()
-{
-    return (elems==0);
-}
+	template<class T>size_t vector<T>::size()
+	{
+		return elems;
+	}
 
-template<class T>void vector<T>::destroy()
-{
-    for(int i=0; i<elems; i++)
-    {
-        delete eptr[i];
-    }
-    delete[] eptr;
-}
+
+	template<class T>int vector<T>::empty()
+	{
+		return (elems == 0);
+	}
+
+	template<class T>void vector<T>::destroy()
+	{
+		for(int i = 0; i < elems; i++)
+		{
+			delete eptr[i];
+		}
+		delete[] eptr;
+	}
 
 }
 

@@ -25,87 +25,87 @@ freely, subject to the following restrictions:
 
 namespace nativehttp
 {
-namespace stat
-{
-extern "C" bool stats()
-{
-    return http::statdata::toggle;
-}
-extern "C" bool transfer_stats()
-{
-    return http::statdata::transfer;
-}
-extern "C" bool hit_stats()
-{
-    return http::statdata::hitlog;
-}
-extern "C" bool method_stats()
-{
-    return http::statdata::method;
-}
+	namespace stat
+	{
+		extern "C" bool stats()
+		{
+			return http::statdata::toggle;
+		}
+		extern "C" bool transfer_stats()
+		{
+			return http::statdata::transfer;
+		}
+		extern "C" bool hit_stats()
+		{
+			return http::statdata::hitlog;
+		}
+		extern "C" bool method_stats()
+		{
+			return http::statdata::method;
+		}
 
-extern "C" unsigned long hits()
-{
-    return http::statdata::hits;
-}
-extern "C" unsigned long connections()
-{
-    return http::statdata::connections;
-}
-extern "C" unsigned long uploaded()
-{
-    return http::statdata::ulbytes;
-}
-extern "C" unsigned long downloaded()
-{
-    return http::statdata::dlbytes;
-}
+		extern "C" unsigned long hits()
+		{
+			return http::statdata::hits;
+		}
+		extern "C" unsigned long connections()
+		{
+			return http::statdata::connections;
+		}
+		extern "C" unsigned long uploaded()
+		{
+			return http::statdata::ulbytes;
+		}
+		extern "C" unsigned long downloaded()
+		{
+			return http::statdata::dlbytes;
+		}
 
-extern "C" unsigned long get_requests()
-{
-    return http::statdata::get;
-}
-extern "C" unsigned long post_requests()
-{
-    return http::statdata::post;
-}
+		extern "C" unsigned long get_requests()
+		{
+			return http::statdata::get;
+		}
+		extern "C" unsigned long post_requests()
+		{
+			return http::statdata::post;
+		}
 
-extern "C" unsigned long hourly_length()
-{
-    return http::statdata::hourlylen;
-}
+		extern "C" unsigned long hourly_length()
+		{
+			return http::statdata::hourlylen;
+		}
 
-extern "C" unsigned long hour_hits(unsigned long hid)
-{
-    if(hid<http::statdata::hourlylen)
-    {
-        return http::statdata::hrl_hits[hid];
-    }
-    return 0;
-}
-extern "C" unsigned long hour_connections(unsigned long hid)
-{
-    if(hid<http::statdata::hourlylen)
-    {
-        return http::statdata::hrl_connections[hid];
-    }
-    return 0;
-}
-extern "C" unsigned long hour_upload(unsigned long hid)
-{
-    if(hid<http::statdata::hourlylen)
-    {
-        return http::statdata::hrl_ul[hid];
-    }
-    return 0;
-}
-extern "C" unsigned long hour_download(unsigned long hid)
-{
-    if(hid<http::statdata::hourlylen)
-    {
-        return http::statdata::hrl_dl[hid];
-    }
-    return 0;
-}
-}
+		extern "C" unsigned long hour_hits(unsigned long hid)
+		{
+			if(hid < http::statdata::hourlylen)
+			{
+				return http::statdata::hrl_hits[hid];
+			}
+			return 0;
+		}
+		extern "C" unsigned long hour_connections(unsigned long hid)
+		{
+			if(hid < http::statdata::hourlylen)
+			{
+				return http::statdata::hrl_connections[hid];
+			}
+			return 0;
+		}
+		extern "C" unsigned long hour_upload(unsigned long hid)
+		{
+			if(hid < http::statdata::hourlylen)
+			{
+				return http::statdata::hrl_ul[hid];
+			}
+			return 0;
+		}
+		extern "C" unsigned long hour_download(unsigned long hid)
+		{
+			if(hid < http::statdata::hourlylen)
+			{
+				return http::statdata::hrl_dl[hid];
+			}
+			return 0;
+		}
+	}
 }

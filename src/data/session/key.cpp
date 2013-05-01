@@ -26,81 +26,81 @@ freely, subject to the following restrictions:
 
 namespace data
 {
-namespace session
-{
+	namespace session
+	{
 
-sbmain::sbmain()
-{
-    keys=NULL;
-    fileds=0;
-}
+		sbmain::sbmain()
+		{
+			keys = NULL;
+			fileds = 0;
+		}
 
-void sbmain::alloc_keys()
-{
-    size_t newsize=fileds+3;//alloc 3 more keys
-    nativehttp::data::cfgfil** newkeys=new nativehttp::data::cfgfil*[newsize];
-    size_t i;
-    for(i=0;i<fileds;i++)
-    {
-        newkeys[i]=keys[i];
-    }
-    for(;i<newsize;i++)
-    {
-        newkeys[i]=NULL;
-    }
-    nativehttp::data::cfgfil** oks=keys;
-    keys=newkeys;
-    if(oks)delete[] oks;
-    fileds=newsize;
-}
+		void sbmain::alloc_keys()
+		{
+			size_t newsize = fileds + 3; //alloc 3 more keys
+			nativehttp::data::cfgfil **newkeys = new nativehttp::data::cfgfil*[newsize];
+			size_t i;
+			for(i = 0; i < fileds; i++)
+			{
+				newkeys[i] = keys[i];
+			}
+			for(; i < newsize; i++)
+			{
+				newkeys[i] = NULL;
+			}
+			nativehttp::data::cfgfil **oks = keys;
+			keys = newkeys;
+			if(oks)delete[] oks;
+			fileds = newsize;
+		}
 
-size_t sbmain::getfreekeyid()
-{
-    for(size_t i=0;i<fileds;i++)
-    {
-        if(!keys[i])
-        {
-            return i;
-        }
-    }
-    this->alloc_keys();
-    return this->getfreekeyid();
-}
+		size_t sbmain::getfreekeyid()
+		{
+			for(size_t i = 0; i < fileds; i++)
+			{
+				if(!keys[i])
+				{
+					return i;
+				}
+			}
+			this->alloc_keys();
+			return this->getfreekeyid();
+		}
 
-size_t sbmain::createkey(string kn)
-{
-    size_t kid=getfreekeyid();
-    keys[kid]=new nativehttp::data::cfgfil;
-    keys[kid]->name=kn;
-    keys[kid]->cont="";
-    return kid;
-}
+		size_t sbmain::createkey(string kn)
+		{
+			size_t kid = getfreekeyid();
+			keys[kid] = new nativehttp::data::cfgfil;
+			keys[kid]->name = kn;
+			keys[kid]->cont = "";
+			return kid;
+		}
 
-size_t sbmain::getkeyid(string kn)
-{
-    for(size_t i=0;i<fileds;i++)
-    {
-        if(keys[i])
-        {
-            if(keys[i]->name==kn)
-            {
-                return i;
-            }
-        }
-    }
-    return this->createkey(kn);
-}
+		size_t sbmain::getkeyid(string kn)
+		{
+			for(size_t i = 0; i < fileds; i++)
+			{
+				if(keys[i])
+				{
+					if(keys[i]->name == kn)
+					{
+						return i;
+					}
+				}
+			}
+			return this->createkey(kn);
+		}
 
-string& sbmain::getkey(string kn)
-{
-    size_t ki=this->getkeyid(kn);
-    return keys[ki]->cont;
-}
+		string &sbmain::getkey(string kn)
+		{
+			size_t ki = this->getkeyid(kn);
+			return keys[ki]->cont;
+		}
 
-void sbmain::setkey(string kn, string kv)
-{
-    this->getkey(kn)=kv;
-}
+		void sbmain::setkey(string kn, string kv)
+		{
+			this->getkey(kn) = kv;
+		}
 
-}
+	}
 }

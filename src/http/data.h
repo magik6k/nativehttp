@@ -45,109 +45,109 @@ using namespace std;
 namespace http
 {
 
-struct request
-{
-    SOCKET sender;
-    const char* request;
-    int taken;
-    int uid;
+	struct request
+	{
+		SOCKET sender;
+		const char *request;
+		int taken;
+		int uid;
 
-    int method;
-    bool http11;
-    void* post;
+		int method;
+		bool http11;
+		void *post;
 
-    void free();
-};
+		void free();
+	};
 
-struct outdata
-{
-    int uid;
-    unsigned long size;
-    char* data;
-    bool fas;//free after sending
-};
+	struct outdata
+	{
+		int uid;
+		unsigned long size;
+		char *data;
+		bool fas;//free after sending
+	};
 
-struct Sexecutor
-{
-    pthread_t* etheard;
-    long int state;//time execution/post reciving started OR -1 when waiting or requies stability
-    int in;//3 - kick, 2 - exec, 1 - post recv/kicki, 0-nothing
-    int id;
+	struct Sexecutor
+	{
+		pthread_t *etheard;
+		long int state;//time execution/post reciving started OR -1 when waiting or requies stability
+		int in;//3 - kick, 2 - exec, 1 - post recv/kicki, 0-nothing
+		int id;
 
-    void* fd1;
-    void* fd2;
-};
+		void *fd1;
+		void *fd2;
+	};
 
 #ifdef NHDBG
 
-extern size_t init_memory;
-extern bool extmemstats;
+	extern size_t init_memory;
+	extern bool extmemstats;
 
 #endif
 
-extern int maxConnections;
-extern unsigned int maxPost;
+	extern int maxConnections;
+	extern unsigned int maxPost;
 
-extern bool* ulock;
-extern SOCKET* connected;
-extern SOCKET server;
-extern uint32_t* client_ips;
+	extern bool *ulock;
+	extern SOCKET *connected;
+	extern SOCKET server;
+	extern uint32_t *client_ips;
 
-extern bool onssl;
-extern SSL **sslsck;
+	extern bool onssl;
+	extern SSL **sslsck;
 
-extern SDLNet_SocketSet CSet;
+	extern SDLNet_SocketSet CSet;
 
-extern int Nexec;
-extern int Nsend;
-extern Sexecutor* execUnits;
-extern size_t exec_heap_size;
-extern int asyncsnd;
+	extern int Nexec;
+	extern int Nsend;
+	extern Sexecutor *execUnits;
+	extern size_t exec_heap_size;
+	extern int asyncsnd;
 
-extern int usesessions;
-extern string sess_ssid_cnam;
-extern string sess_sslc_cnam;
-extern size_t max_sesions;
-extern time_t sess_life;
+	extern int usesessions;
+	extern string sess_ssid_cnam;
+	extern string sess_sslc_cnam;
+	extern size_t max_sesions;
+	extern time_t sess_life;
 
-extern uint32_t mExecQ;
+	extern uint32_t mExecQ;
 
-extern nativehttp::data::queue<request*>toexec;
-extern nativehttp::data::queue<outdata>tosend;
+	extern nativehttp::data::queue<request*>toexec;
+	extern nativehttp::data::queue<outdata>tosend;
 
-extern SDL_mutex* mtx_exec2;
-extern SDL_mutex* mtx_exec;
-extern SDL_mutex* mtx_snd;
+	extern SDL_mutex *mtx_exec2;
+	extern SDL_mutex *mtx_exec;
+	extern SDL_mutex *mtx_snd;
 
-extern pthread_t* theard_nc;
-extern pthread_t** theard_sd;
-extern pthread_t* theard_mg;
+	extern pthread_t *theard_nc;
+	extern pthread_t **theard_sd;
+	extern pthread_t *theard_mg;
 
-namespace headers
-{
-extern string standard;
-extern string alive;
-extern string alivetimeout;
-}
+	namespace headers
+	{
+		extern string standard;
+		extern string alive;
+		extern string alivetimeout;
+	}
 
-namespace error
-{
-extern nativehttp::data::pagedata e400;
-extern nativehttp::data::pagedata e403;
-extern nativehttp::data::pagedata e404;
-extern nativehttp::data::pagedata e500;
-extern nativehttp::data::pagedata e501;
-extern nativehttp::data::pagedata e505;
-}
+	namespace error
+	{
+		extern nativehttp::data::pagedata e400;
+		extern nativehttp::data::pagedata e403;
+		extern nativehttp::data::pagedata e404;
+		extern nativehttp::data::pagedata e500;
+		extern nativehttp::data::pagedata e501;
+		extern nativehttp::data::pagedata e505;
+	}
 
-namespace manager
-{
-extern int rate;
-extern int postto;
-extern int execto;
-extern bool apr;
-extern string fileloc;
-}
+	namespace manager
+	{
+		extern int rate;
+		extern int postto;
+		extern int execto;
+		extern bool apr;
+		extern string fileloc;
+	}
 
 }
 

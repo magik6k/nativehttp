@@ -26,12 +26,12 @@ freely, subject to the following restrictions:
 #include <sys/types.h>
 namespace utils
 {
-namespace memory
-{
+	namespace memory
+	{
 #ifdef NHDBG
-void printmemsize(int64_t mem);
+		void printmemsize(int64_t mem);
 #endif
-}
+	}
 }
 
 #endif // MEMORY_H_INCLUDED

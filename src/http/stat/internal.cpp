@@ -25,51 +25,51 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-namespace statdata
-{
+	namespace statdata
+	{
 
-void onrecv(unsigned long dlen)
-{
-    if(toggle&&transfer)
-    {
-        dlbytes+=dlen;
-        hrl_dl[0]+=dlen;
-    }
-}
-void onsend(unsigned long ulen)
-{
-    if(toggle&&transfer)
-    {
-        ulbytes+=ulen;
-        hrl_ul[0]+=ulen;
-    }
-}
-void onconnect()
-{
-    if(toggle)
-    {
-        connections++;
-        hrl_connections[0]++;
-    }
-}
+		void onrecv(unsigned long dlen)
+		{
+			if(toggle && transfer)
+			{
+				dlbytes += dlen;
+				hrl_dl[0] += dlen;
+			}
+		}
+		void onsend(unsigned long ulen)
+		{
+			if(toggle && transfer)
+			{
+				ulbytes += ulen;
+				hrl_ul[0] += ulen;
+			}
+		}
+		void onconnect()
+		{
+			if(toggle)
+			{
+				connections++;
+				hrl_connections[0]++;
+			}
+		}
 
-void onpost()
-{
-    if(toggle&&method)
-        post++;
-}
-void onget()
-{
-    if(toggle&&method)
-        get++;
-}
-void onhit()
-{
-    if(toggle&&hitlog)
-    {
-        hits++;
-        hrl_hits[0]++;
-    }
-}
-}
+		void onpost()
+		{
+			if(toggle && method)
+				post++;
+		}
+		void onget()
+		{
+			if(toggle && method)
+				get++;
+		}
+		void onhit()
+		{
+			if(toggle && hitlog)
+			{
+				hits++;
+				hrl_hits[0]++;
+			}
+		}
+	}
 }
