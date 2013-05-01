@@ -1,7 +1,11 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
-2903.13:
+0105.13:
+-option for logging to file
+-crash handler improved
+
+2904.13:
 -Makefile bug fixes
 -Bug-fixes
 -Security in NativeStat
