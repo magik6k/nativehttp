@@ -44,6 +44,9 @@ namespace http
 		nativehttp::rdata rd;
 		http::rproc::lrqd ld;
 		int ts = 0;
+
+		prctl(PR_SET_NAME,("nh-exec-"+nativehttp::data::superstring::from_int(exc->id)).c_str(),0,0,0);
+
 		while(true)
 		{
 			SDL_mutexP(http::mtx_exec);

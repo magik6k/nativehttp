@@ -104,6 +104,7 @@ namespace http
 					case mgr_wait:
 						{
 							nativehttp::server::log("manager.cpp", "Disabling manager");
+							pthread_cancel(pthread_self());
 							return;
 						}
 					}
@@ -192,6 +193,8 @@ namespace http
 
 		void *manager(void *unused)
 		{
+		    prctl(PR_SET_NAME,"nh-manager",0,0,0);
+
 			if(http::manager::rate == -1)return 0;
 			while(1)
 			{

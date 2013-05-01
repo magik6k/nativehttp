@@ -52,6 +52,7 @@ namespace http
 	{
 		void *sender(void *unused)
 		{
+		    prctl(PR_SET_NAME,("nh-snd-bsd-"+nativehttp::data::superstring::from_int(*(char*)unused)).c_str(),0,0,0);
 			int ts = 0;
 			while(1)
 			{

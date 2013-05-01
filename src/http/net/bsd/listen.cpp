@@ -38,6 +38,9 @@ namespace http
 
 		void *listener(void *unused)
 		{
+
+		    prctl(PR_SET_NAME,"nh-list-bsd",0,0,0);
+
 			while(1)
 			{
 				struct sockaddr_in sock_addr;

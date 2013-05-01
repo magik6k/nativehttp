@@ -203,11 +203,11 @@ namespace http
 
 			if(cfg->get_int("use_ssl"))
 			{
-				tmks = pthread_create(tmt, &at, http::ssl::sender, NULL);
+				tmks = pthread_create(tmt, &at, http::ssl::sender, new int(i));
 			}
 			else
 			{
-				tmks = pthread_create(tmt, &at, http::bsd::sender, NULL);
+				tmks = pthread_create(tmt, &at, http::bsd::sender, new int(i));
 			}
 
 

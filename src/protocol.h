@@ -33,6 +33,7 @@ freely, subject to the following restrictions:
 #include "data/vector.h"
 #include "nativehttp.h"
 #include "pagemap/pagemap.h"
+#include <sys/prctl.h>
 
 using namespace std;
 

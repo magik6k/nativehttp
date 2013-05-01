@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "http/manager.h"
 #include "data/queue.h"
 #include "http/net/net.h"
+#include <sys/prctl.h>
 #include <signal.h>
 
 page_mapper pmap;
@@ -41,8 +42,12 @@ int main(int argc, char *argv[])
 	size_t bim = (getacmem());
 	cout << "[DBG:main.cpp@core]before-init mem: " << bim << "b\n";
 #endif
+
 	cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
 	cout << "pre-init\n";
+
+	prctl(PR_SET_NAME,"nativehttp",0,0,0);
+
 	bool dmnz = false;
 	bool gr = true;
 	string conf = "/etc/nativehttp/config.cfg";
@@ -122,10 +127,12 @@ int main(int argc, char *argv[])
 
 	if(cfg->get_int("use_ssl"))
 	{
+	    prctl(PR_SET_NAME,"nh-recv-ssl",0,0,0);
 		http::ssl::reciver();
 	}
 	else
 	{
+	    prctl(PR_SET_NAME,"nh-recv-bsd",0,0,0);
 		http::bsd::reciver();
 	}
 

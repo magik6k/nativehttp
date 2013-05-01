@@ -62,6 +62,7 @@ void deamonize()
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
+	prctl(PR_SET_NAME,"nh-deamon",0,0,0);
 }
 
 void goroot()
