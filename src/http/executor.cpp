@@ -338,7 +338,7 @@ namespace http
 					ltrv -= rv;
 					(tv + ar)[0] = 0;
 				}
-				cout << endl;
+				
 				if(tv)
 				{
 					ars.str += tv;
