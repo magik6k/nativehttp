@@ -50,7 +50,7 @@ namespace http
 		void sig(int sig)
 		{
 			nativehttp::server::logid(sig, "manager.cpp", "SIG");
-			if(sig == 11)
+			if(sig == 11||sig == 4||sig == 8)
 			{
 				/*
 				log("manager.cpp","CRITICAL ERROR (SIGSEGV)");

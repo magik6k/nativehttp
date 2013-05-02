@@ -3,8 +3,10 @@ for more info visit eleinfo.cba.pl
 
 DEV:
 -Custom thread names
+-Manager now catch some more signals
 -fixed manager crash loop
 -fixed crashing on multi-packet POST data when deamonized
+-fixed not flipping hourly stats[probablt by accident]
 
 0105.13:
 -option for logging to file

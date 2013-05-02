@@ -100,6 +100,8 @@ int main(int argc, char *argv[])
 	if(gr)goroot();
 
 	signal(SIGSEGV, http::manager::sig);
+	signal(SIGILL, http::manager::sig);
+	signal(SIGFPE, http::manager::sig);
 	signal(SIGABRT, http::manager::sig);
 
 	cfg = new nativehttp::data::Ccfg(conf);

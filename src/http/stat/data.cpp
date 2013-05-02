@@ -63,9 +63,9 @@ namespace http
 		{
 			if(toggle && managersafe)
 			{
-				if(time(0) - lastHrlFlp >= 15)
+				if(time(0) - lastHrlFlp >= 3600)
 				{
-					lastHrlFlp += 15;
+					lastHrlFlp += 3600;
 					for(long long i = hourlylen - 2; i >= 0; i--)
 					{
 						hrl_hits[i+1] = hrl_hits[i];
