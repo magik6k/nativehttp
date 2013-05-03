@@ -66,7 +66,7 @@ namespace http
 				if(time(0) - lastHrlFlp >= 3600)
 				{
 					lastHrlFlp += 3600;
-					for(long long i = hourlylen - 2; i >= 0; i--)
+					for(long long i = hourlylen - 2LL; i >= 0; i--)
 					{
 						hrl_hits[i+1] = hrl_hits[i];
 						hrl_connections[i+1] = hrl_connections[i];
@@ -80,7 +80,7 @@ namespace http
 				}
 				if(time(0) - lastSave >= save_rate)
 				{
-					lastHrlFlp += save_rate;
+					lastSave += save_rate;
 					http::statdata::save();
 				}
 			}
@@ -111,7 +111,7 @@ namespace http
 
 				fwrite(&sd, sizeof(stunit), 1, stf);
 
-				for(long long i = 0; i < hourlylen; i++)
+				for(long long i = 0LL; i < hourlylen; i++)
 				{
 					sd.hits = hrl_hits[i];
 					sd.connections = hrl_connections[i];
