@@ -36,6 +36,12 @@ void nativehttp::data::superstring::set(string s)
 	str = s;
 }
 
+void nativehttp::data::superstring::set(superstring s)
+{
+	str = s.str;
+	pos = s.pos;
+}
+
 nativehttp::data::superstring::~superstring()
 {
 	str.clear();
@@ -61,9 +67,72 @@ void nativehttp::data::superstring::operator()(string s)
 	this->set(s);
 }
 
+void nativehttp::data::superstring::operator()(superstring s)
+{
+	this->set(s);
+}
+
+nativehttp::data::superstring nativehttp::data::superstring::operator+=(superstring in)
+{
+	this->str+=in.str;
+	return *this;
+}
+
+nativehttp::data::superstring nativehttp::data::superstring::operator*=(unsigned int rc)
+{
+    string ost=this->str;
+	for(unsigned int i=0;i<rc;i++)this->str+=ost;
+	ost.clear();
+	return *this;
+}
+
 void nativehttp::data::superstring::add_token(token t)
 {
 	tokens.push_back(t);
+}
+
+size_t nativehttp::data::superstring::num_tokens()
+{
+    return tokens.size();
+}
+
+void nativehttp::data::superstring::lock()
+{
+	lck = true;
+	lpos = pos;
+}
+
+void nativehttp::data::superstring::lock(unsigned int lp)
+{
+	lck = true;
+	lpos = lp;
+}
+
+void nativehttp::data::superstring::unlock()
+{
+	lck = false;
+	lpos = 0;
+}
+
+const char* nativehttp::data::superstring::c_str()
+{
+    return str.c_str();
+}
+
+size_t nativehttp::data::superstring::size()
+{
+    return str.size();
+}
+
+size_t nativehttp::data::superstring::length()
+{
+    return str.length();
+}
+
+void nativehttp::data::superstring::clear()
+{
+    str.clear();
+    tokens.clear();
 }
 
 nativehttp::data::token nativehttp::data::superstring::tok()
@@ -379,24 +448,6 @@ int nativehttp::data::superstring::check(string sch)
 		return 1;
 	}
 	return 0;
-}
-
-void nativehttp::data::superstring::lock()
-{
-	lck = true;
-	lpos = pos;
-}
-
-void nativehttp::data::superstring::lock(unsigned int lp)
-{
-	lck = true;
-	lpos = lp;
-}
-
-void nativehttp::data::superstring::unlock()
-{
-	lck = false;
-	lpos = 0;
 }
 
 string nativehttp::data::superstring::from_int(int in)

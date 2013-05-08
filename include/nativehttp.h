@@ -58,16 +58,24 @@ namespace nativehttp
 			string str;
 
 			void set(string s);
+			void set(superstring s);
 
 			~superstring();
 			superstring();
 			superstring(string s);
+
 			void operator()(string s);
+			void operator()(superstring s);
+			superstring operator+=(superstring in);
+			superstring operator*=(unsigned int rc);
+
 
 			void add_token(token t);
 			void clear_tokens();
 			token tok();
 			token tok(string &opt);
+			size_t num_tokens();
+			size_t token_base_size();
 
 			string to(string fend);
 			string back_to(string fend);
@@ -92,6 +100,13 @@ namespace nativehttp
 
 			static string from_int(int in);
 			static int from_string(string in);
+
+			const char* c_str();
+
+			size_t length();
+			size_t size();
+
+			void clear();
 
 		};
 
