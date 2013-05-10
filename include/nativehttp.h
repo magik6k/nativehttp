@@ -75,7 +75,6 @@ namespace nativehttp
 			token tok();
 			token tok(string &opt);
 			size_t num_tokens();
-			size_t token_base_size();
 
 			string to(string fend);
 			string back_to(string fend);
@@ -86,7 +85,7 @@ namespace nativehttp
 			void remove(string from, string to);
 			void remove(string s);
 
-			int count(char c);
+			int count(const char c);
 
 			int check(string sch);
 

@@ -10,6 +10,7 @@ FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native
 DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
 
 LIBS += -rdynamic
+LIBS += -lpthread
 LIBS += -ldl
 LIBS += -lSDL
 LIBS += -lsqlite3
@@ -33,8 +34,20 @@ NHS = \
 	$(NHD)/data/mime.cpp \
 	$(NHD)/data/nbase.cpp \
 	$(NHD)/data/postget.cpp \
-	$(NHD)/data/superstring.cpp \
 	$(NHD)/data/sqlite.cpp \
+	$(NHD)/data/superstring/typed/char/misc.cpp \
+	$(NHD)/data/superstring/typed/int32/convert.cpp \
+	$(NHD)/data/superstring/typed/int32/misc.cpp \
+	$(NHD)/data/superstring/typed/string/content.cpp \
+	$(NHD)/data/superstring/typed/string/convert.cpp \
+	$(NHD)/data/superstring/typed/string/core.cpp \
+	$(NHD)/data/superstring/typed/string/misc.cpp \
+	$(NHD)/data/superstring/typed/string/position.cpp \
+	$(NHD)/data/superstring/typed/superstring/core.cpp \
+	$(NHD)/data/superstring/typed/superstring/misc.cpp \
+	$(NHD)/data/superstring/core.cpp \
+	$(NHD)/data/superstring/file.cpp \
+	$(NHD)/data/superstring/token.cpp \
 	$(NHD)/data/session/api.cpp \
 	$(NHD)/data/session/key.cpp \
 	$(NHD)/data/session/manage.cpp \
