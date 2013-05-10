@@ -54,7 +54,7 @@ namespace nativehttp
 
 	extern "C" string server::version()
 	{
-		return "NativeHTTP Alpha 7";
+		return "NativeHTTP Alpha "+data::superstring::from_int(NATIVEHTTP_API_VERSION);
 	}
 
 	extern "C" void server::log(string lname, string value)

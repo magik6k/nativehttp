@@ -58,12 +58,28 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 		{
 			acp = pgi;
 			int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
-			if(initstate != 1)
+			if(initstate<0)
 			{
-				nativehttp::server::logid(initstate, "WARNING@reloaders/so.cpp", string("invalid init state: ") + f);
-				dlclose(((nativepage*)(*base)[pgi].data)->handle);
+                if(initstate != -NATIVEHTTP_API_VERSION)
+                {
+                    nativehttp::server::log("SO.loader@pagemap","API version invalid: "+(string(f)));
+                    dlclose(((nativepage*)(*base)[pgi].data)->handle);
+                }
+			}
+			else if(initstate == 1)
+			{
+#ifdef NHDBG
+				nativehttp::server::log("SO.loader@pagemap","page reloaded, but no API info were provided: "+(string(f)));
+#endif
+                initstate = -NATIVEHTTP_API_VERSION;
 			}
 			else
+			{
+                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::from_int(initstate-2)+"): "+(string(f)));
+                dlclose(((nativepage*)(*base)[pgi].data)->handle);
+			}
+
+			if(initstate == -NATIVEHTTP_API_VERSION)
 			{
 				nativehttp::data::superstring pgac((*base)[pgi].file);
 				string furi = '/' + pgac.from(dir);

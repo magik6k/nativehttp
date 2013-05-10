@@ -50,13 +50,30 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 		{
 			acp = base->size();
 			int initstate = (*ntm->onload)();
-			if(initstate != 1)
+			if(initstate<0)
 			{
-				cout << "invalid init state(" << initstate << "): " << f << endl;
-				dlclose(ntm->handle);
-				delete ntm;
+                if(initstate != -NATIVEHTTP_API_VERSION)
+                {
+                    nativehttp::server::log("SO.loader@pagemap","API version invalid: "+(nhp?string(nhp):string(f)));
+                    dlclose(ntm->handle);
+                    delete ntm;
+                }
+			}
+			else if(initstate == 1)
+			{
+#ifdef NHDBG
+				nativehttp::server::log("SO.loader@pagemap","page loaded, but no API info were provided: "+(nhp?string(nhp):string(f)));
+#endif
+                initstate = -NATIVEHTTP_API_VERSION;
 			}
 			else
+			{
+                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::from_int(initstate-2)+"): "+(nhp?string(nhp):string(f)));
+                dlclose(ntm->handle);
+                delete ntm;
+			}
+
+			if(initstate == -NATIVEHTTP_API_VERSION)
 			{
 				tmp.data = ntm;
 				base->push_back(tmp);

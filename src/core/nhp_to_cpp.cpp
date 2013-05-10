@@ -34,7 +34,7 @@ string parse_nhp(string nhp)
 {
 	string top = "#include <nativehttp/nativehttp.h>\n";
 	string init = "extern \"C\"\n{\nint onload()\n{\n";
-	string page = "return 1;\n}\nnativehttp::data::pagedata page(nativehttp::rdata* request)\n{\nstring result;\n";
+	string page = "initated();\n}\nnativehttp::data::pagedata page(nativehttp::rdata* request)\n{\nstring result;\n";
 	string end = "return nativehttp::data::pagedata(result);\n}\n}\n";
 	string thtm = "";
 	nativehttp::data::superstring data(nhp);
