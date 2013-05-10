@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
+#include <SDL/SDL.h>
 #include "nativehttp.h"
 #include "protocol.h"
 #include "data/queue.h"
@@ -95,8 +96,6 @@ namespace http
 
 	extern bool onssl;
 	extern SSL **sslsck;
-
-	extern SDLNet_SocketSet CSet;
 
 	extern int Nexec;
 	extern int Nsend;

@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef PROTOCOL_H_INCLUDED
 #define PROTOCOL_H_INCLUDED
 
-#include <SDL/SDL_net.h>
+#include <SDL/SDL.h>
 #include <string>
 #include <vector>
 #include <iostream>

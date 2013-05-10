@@ -28,7 +28,6 @@ freely, subject to the following restrictions:
 #include <pthread.h>
 
 #include <sys/types.h>
-#include <SDL/SDL_net.h>
 #include <netinet/tcp.h>
 #define SOCKET	int
 extern "C"
