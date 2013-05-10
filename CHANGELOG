@@ -1,10 +1,10 @@
 NativeHTTP By magik6000
 for more info visit eleinfo.cba.pl
 
-DEV:
+1005.13:
 -Custom thread names
 -Manager now catch some more signals
--Superstring clean up and new features
+-Superstring clean up and few new features
 -fixed manager crash loop
 -fixed crashing on multi-packet POST data when deamonized
 -fixed not flipping hourly stats[probablt by accident]

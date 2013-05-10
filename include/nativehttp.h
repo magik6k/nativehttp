@@ -54,59 +54,68 @@ namespace nativehttp
 
 		public:
 
-			unsigned int pos;
-			string str;
+			unsigned int pos;/** Position */
+			string str;/** Container string, DO NOT OVERUSE THIS, the type MAY CHANGE in future API versions */
 
-			void set(string s);
-			void set(superstring s);
 
-			~superstring();
+            /** Core functions*/
+            ~superstring();
 			superstring();
-			superstring(string s);
 
+			void lock();
+			void lock(unsigned int lp);
+			void unlock();
+
+			size_t length();
+			size_t size();
+
+			void clear();
+			const char* c_str();
+
+
+            /** C++ string functions*/
+            superstring(string s);
+			void set(string s);
 			void operator()(string s);
-			void operator()(superstring s);
+
+			string to(string fend);
+			string back_to(string fend);
+			string from(string start);
+			int check(string sch);
+
+			void change(string from, string to);
+			void remove(string from, string to);
+			void remove(string s);
+
+			static int from_string(string in);
+
+
+			/** SuperString functions*/
+			void set(superstring s);
+            void operator()(superstring s);
 			superstring operator+=(superstring in);
+
+
+			/** Integer functions*/
 			superstring operator*=(unsigned int rc);
+            static string from_int(int in);
 
-
+            /** Token functions*/
 			void add_token(token t);
 			void clear_tokens();
 			token tok();
 			token tok(string &opt);
 			size_t num_tokens();
 
-			string to(string fend);
-			string back_to(string fend);
 
-			string from(string start);
-
-			void change(string from, string to);
-			void remove(string from, string to);
-			void remove(string s);
-
+            /** Character functions*/
 			int count(const char c);
 
-			int check(string sch);
 
-			void lock();
-			void lock(unsigned int lp);
-			void unlock();
-
+            /** File functions*/
 			static string file(string fn);
 			void set_file(string fn);
 			void append_file(string fn);
-
-			static string from_int(int in);
-			static int from_string(string in);
-
-			const char* c_str();
-
-			size_t length();
-			size_t size();
-
-			void clear();
-
 		};
 
 		struct cfgfil
