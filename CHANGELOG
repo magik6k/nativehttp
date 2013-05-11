@@ -4,19 +4,19 @@ for more info visit eleinfo.cba.pl
 DEV:
 -Special macros for returning OnLoad status
 -Scales on diagrams in NativeStat
--fixed connections stats
+-Fixed connections stats
 
 1005.13:
 -Custom thread names
 -Manager now catch some more signals
 -Superstring clean up and few new features
--fixed manager crash loop
--fixed crashing on multi-packet POST data when deamonized
--fixed not flipping hourly stats[probably by accident]
+-Fixed manager crash loop
+-Fixed crashing on multi-packet POST data when deamonized
+-Fixed not flipping hourly stats[probably by accident]
 
 0105.13:
--option for logging to file
--crash handler improved
+-Option for logging to file
+-Crash handler improved
 
 2904.13:
 -Makefile bug fixes
@@ -26,89 +26,89 @@ DEV:
 2304.13:
 -SSL
 -Better memory stats in debug build
--option for launching with specified configuration file
+-Option for launching with specified configuration file
 -Bugfixes
 
 1804.13:
--now running on BSD sockets
--prepared for SSL integration
--few little bug fixes
+-Now running on BSD sockets
+-Prepared for SSL integration
+-Few little bug fixes
 
 1604.13:
 -Sessions!
 -3 superstring functions can be called w/o object
--few bugfixes
+-Few bugfixes
 
 1004.13:
--stats saving/loading
--memory usage reduced
--option to compile debug version
--debug version prints some memory stats
--option for async sending
--few small bugs fixed
+-Stats saving/loading
+-Memory usage reduced
+-Option to compile debug version
+-Debug version prints some memory stats
+-Option for async sending
+-Few small bugs fixed
 
 0204.13:
--simple stat module
--code formatting
+-Simple stat module
+-Code formatting
 
 3003.13
--new pagemaper
--bug fixes
--sqlite
+-New pagemaper
+-Bug fixes
+-Sqlite
 
 1903.13:
--bugfixes
--fixed many memory leaks
--better stability
+-Bugfixes
+-Fixed many memory leaks
+-Better stability
 
 1703.13:
 -New HTTP engine
--few bugfixes
+-Few bugfixes
 -New error pages
 -Now on GitHUB
 -Much more
 
 -----Older:
 version 0, release 3, patch 3(v0r3p3)
--default Content-tpye can be set in config
--content type can be set by native pages
--fixed bug with no 404 error
--server is demonizing wits '-d' parameter
--simple statistics of hits[will be expanded]
+-Default Content-tpye can be set in config
+-Content type can be set by native pages
+-Fixed bug with no 404 error
+-Server is demonizing wits '-d' parameter
+-Simple statistics of hits[will be expanded]
 
 version 0, release 3, patch 2(v0r3p2)
 -Fixed reciving requests with long POST data
 -Setting in configuration file to set maximal amount of POST data
 
 version 0, release 3, patch 1(v0r3p1)
--bug fixes in .nhp parser
--few bug fixes in page-mapper
--bug fix in nbase loader
--added -fPIC parameter to nhp compilation process
--remote user IP address fot native pages
--single nbase file is now open once[nbase_open function returns same pointer to file]
--added function to decode post data[% codes and '+' spaces]
--config - new option for instant stdout[w/o buffering]
+-Bug fixes in .nhp parser
+-Few bug fixes in page-mapper
+-Bug fix in nbase loader
+-Added -fPIC parameter to nhp compilation process
+-Remote user IP address fot native pages
+-Single nbase file is now open once[nbase_open function returns same pointer to file]
+-Added function to decode post data[% codes and '+' spaces]
+-Config - new option for instant stdout[w/o buffering]
 
 version 0, release 3, patch 0(v0r3p0)
 -NativeHTTP DataBase preview[nbase]
 
 version 0, release 2, patch 0(v0r2p0)
--class definitions for session menager(NOT IMPLEMENTED!/NOT DONE!)//removed in v0r3p0, to be done in future
+-Class definitions for session menager(NOT IMPLEMENTED!/NOT DONE!)//removed in v0r3p0, to be done in future
 -NativeHTTP Pages - nhp(parsing, compilation, loading, execution)
--superstring v0.1.2
+-Superstring v0.1.2
 
 version 0, release 1, patch 1(v0r1p1)
--headers "user-agent" and "referer" for native pages
--uri for native pages
+-Headers "user-agent" and "referer" for native pages
+-Uri for native pages
 -repaired uri parsing bug(uri /site.so?param=test is file /pagedir/site.so, server searched for /pagedir/site.so?param=test)
--uri params
--post data
+-Uri params
+-Post data
 
 version 0, release 1, patch 0(v0r1p0)
 -Cookies
--request data for 'page' function
--parsing of rest of HTTP/1.1 request headers will be relased in patch cause of bugs
+-Request data for 'page' function
+-Parsing of rest of HTTP/1.1 request headers will be relased in patch cause of bugs
 
 version 0, release 0, patch 1(v0r0p1)
 -added Ccfg lib 1.2(from my previous projects)
