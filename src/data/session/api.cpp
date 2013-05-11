@@ -44,15 +44,15 @@ namespace nativehttp
 					valid = false;
 					return;
 				}
-				cd->set(http::sess_ssid_cnam, nativehttp::data::superstring::from_int(ssid), "path=/");
-				cd->set(http::sess_sslc_cnam, nativehttp::data::superstring::from_int(ssid), "path=/");
+				cd->set(http::sess_ssid_cnam, nativehttp::data::superstring::str_from_int(ssid), "path=/");
+				cd->set(http::sess_sslc_cnam, nativehttp::data::superstring::str_from_int(ssid), "path=/");
 				valid = true;
 				return;
 			}
 			else
 			{
-				size_t nsi = nativehttp::data::superstring::from_string(stsi);
-				size_t nsv = nativehttp::data::superstring::from_string(stsv);
+				size_t nsi = nativehttp::data::superstring::int_from_str(stsi);
+				size_t nsv = nativehttp::data::superstring::int_from_str(stsv);
 
 				if(sdata::session::storage.cksess(nsi, nsv))
 				{
@@ -71,8 +71,8 @@ namespace nativehttp
 						return;
 					}
 
-					cd->set(http::sess_ssid_cnam, nativehttp::data::superstring::from_int(ssid), "path=/");
-					cd->set(http::sess_sslc_cnam, nativehttp::data::superstring::from_int(sslc), "path=/");
+					cd->set(http::sess_ssid_cnam, nativehttp::data::superstring::str_from_int(ssid), "path=/");
+					cd->set(http::sess_sslc_cnam, nativehttp::data::superstring::str_from_int(sslc), "path=/");
 					valid = true;
 					return;
 				}

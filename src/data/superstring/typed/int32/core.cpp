@@ -21,19 +21,16 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
-#include "assets.h"
-#include "dtg.h"
+#include <stdio.h>
 
-string mkdtd(unsigned long v1, unsigned long v2, string s1, string s2, string col1, string col2)
+#define SSLOCK if(lck)pos=lpos
+
+void nativehttp::data::superstring::set(int s)
 {
-    if(v1+v2==0)v1++;
-    nh::data::superstring rt(ddbase);
-    rt.lock();
-    rt.change("[[c1]]",s1);
-    rt.change("[[c2]]",s2);
-    rt.change("[[csslftu]]","text-align:left; float: left; width: 50%;");
-    rt.change("[[cssrgtu]]","text-align:right; margin-left: 50%; width: 50%;");
-    rt.change("[[csslft]]","height: 16px; text-align:left; float: left; width: "+rt.str_from_int((v1*100)/(v1+v2))+"%; background-color: #"+col1+";");
-    rt.change("[[cssrgt]]","height: 16px; text-align:right; margin-left:"+rt.str_from_int((v1*100)/(v1+v2))+"%; width: "+rt.str_from_int((v2*100)/(v1+v2))+"%; background-color: #"+col2+";");
-    return rt.str;
+	this->set(this->str_from_int(s));
+}
+
+void nativehttp::data::superstring::operator()(int s)
+{
+	this->set(this->str_from_int(s));
 }

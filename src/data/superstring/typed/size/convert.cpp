@@ -21,19 +21,45 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
-#include "assets.h"
-#include "dtg.h"
+#include <stdio.h>
 
-string mkdtd(unsigned long v1, unsigned long v2, string s1, string s2, string col1, string col2)
+#define SSLOCK if(lck)pos=lpos
+
+
+string nativehttp::data::superstring::str_from_size(size_t in)
 {
-    if(v1+v2==0)v1++;
-    nh::data::superstring rt(ddbase);
-    rt.lock();
-    rt.change("[[c1]]",s1);
-    rt.change("[[c2]]",s2);
-    rt.change("[[csslftu]]","text-align:left; float: left; width: 50%;");
-    rt.change("[[cssrgtu]]","text-align:right; margin-left: 50%; width: 50%;");
-    rt.change("[[csslft]]","height: 16px; text-align:left; float: left; width: "+rt.str_from_int((v1*100)/(v1+v2))+"%; background-color: #"+col1+";");
-    rt.change("[[cssrgt]]","height: 16px; text-align:right; margin-left:"+rt.str_from_int((v1*100)/(v1+v2))+"%; width: "+rt.str_from_int((v2*100)/(v1+v2))+"%; background-color: #"+col2+";");
-    return rt.str;
+    int tcn = 0;
+    string end;
+    if(in>=1099511627776LL)
+    {
+        tcn = in/1024LL/1024LL/1024LL/1024LL;
+        end=" TiB";
+    }
+    else if(in>=1073741824LL)
+    {
+        tcn = in/1024LL/1024LL/1024LL;
+        end=" GiB";
+    }
+    else if(in>=1048576LL)
+    {
+        tcn = in/1024LL/1024LL;
+        end=" MiB";
+    }
+    else if(in>=1024LL)
+    {
+        tcn = in/1024LL;
+        end=" KiB";
+    }
+    else
+    {
+        tcn = in;
+        end=" B";
+    }
+
+	return nativehttp::data::superstring::str_from_int(tcn)+end;
+}
+
+nativehttp::data::superstring nativehttp::data::superstring::sst_from_size(size_t in)
+{
+    return nativehttp::data::superstring(nativehttp::data::superstring::str_from_size(in));
 }

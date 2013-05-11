@@ -92,18 +92,25 @@ namespace nativehttp
 			void remove(string from, string to);
 			void remove(string s);
 
-			static int from_string(string in);
-
 
 			/** SuperString functions*/
 			void set(superstring s);
             void operator()(superstring s);
 			superstring operator+=(superstring in);
-
+            static int int_from_str(string in);
 
 			/** Integer functions*/
+			void set(int s);
+			void operator()(int s);
 			superstring operator*=(unsigned int rc);
-            static string from_int(int in);
+            static string str_from_int(int in);
+            static superstring sst_from_int(int in);
+
+
+            /** Size functions */
+            static string str_from_size(size_t in);
+            static superstring sst_from_size(size_t in);
+
 
             /** Token functions*/
 			void add_token(token t);

@@ -75,7 +75,7 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 			}
 			else
 			{
-                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::from_int(initstate-2)+"): "+(string(f)));
+                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::str_from_int(initstate-2)+"): "+(string(f)));
                 dlclose(((nativepage*)(*base)[pgi].data)->handle);
 			}
 

@@ -68,7 +68,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 			}
 			else
 			{
-                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::from_int(initstate-2)+"): "+(nhp?string(nhp):string(f)));
+                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::str_from_int(initstate-2)+"): "+(nhp?string(nhp):string(f)));
                 dlclose(ntm->handle);
                 delete ntm;
 			}

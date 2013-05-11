@@ -37,7 +37,9 @@ NHS = \
 	$(NHD)/data/sqlite.cpp \
 	$(NHD)/data/superstring/typed/char/misc.cpp \
 	$(NHD)/data/superstring/typed/int32/convert.cpp \
+	$(NHD)/data/superstring/typed/int32/core.cpp \
 	$(NHD)/data/superstring/typed/int32/misc.cpp \
+	$(NHD)/data/superstring/typed/size/convert.cpp \
 	$(NHD)/data/superstring/typed/string/content.cpp \
 	$(NHD)/data/superstring/typed/string/convert.cpp \
 	$(NHD)/data/superstring/typed/string/core.cpp \

@@ -45,7 +45,7 @@ namespace http
 		http::rproc::lrqd ld;
 		int ts = 0;
 
-		prctl(PR_SET_NAME,("nh-exec-"+nativehttp::data::superstring::from_int(exc->id)).c_str(),0,0,0);
+		prctl(PR_SET_NAME,("nh-exec-"+nativehttp::data::superstring::str_from_int(exc->id)).c_str(),0,0,0);
 
 		while(true)
 		{
@@ -338,7 +338,7 @@ namespace http
 					ltrv -= rv;
 					(tv + ar)[0] = 0;
 				}
-				
+
 				if(tv)
 				{
 					ars.str += tv;

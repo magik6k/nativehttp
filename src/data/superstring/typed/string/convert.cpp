@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #define SSLOCK if(lck)pos=lpos
 
 
-int nativehttp::data::superstring::from_string(string in)
+int nativehttp::data::superstring::int_from_str(string in)
 {
 	int tmp = 0;
 	unsigned int i = 0;
