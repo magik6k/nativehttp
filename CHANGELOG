@@ -3,6 +3,7 @@ for more info visit eleinfo.cba.pl
 
 DEV:
 -Special macros for returning OnLoad status
+-Scales on diagrams in NativeStat
 
 1005.13:
 -Custom thread names

@@ -40,7 +40,7 @@ extern "C"
         html_top=htmss.str;
         nativehttp::data::Ccfg cfg(config);
         pass=cfg.get_var("pass");
-        return 1;
+        initated();
     }
     nativehttp::data::pagedata page(nativehttp::rdata* request)
     {
@@ -102,6 +102,11 @@ extern "C"
                     long long olt=(nh::server::stat::hour_upload(0)+nh::server::stat::hour_download(0));
                     long long olu=(nh::server::stat::hour_upload(0));
                     long long old=(nh::server::stat::hour_download(0));
+                    for(unsigned long i=0;i<4;i++)
+                    {
+                        diag+="<line x1=\"0\" x2=\"100%\" y1=\""+nh::data::superstring::from_int((i+1)*20)+"%\" y2=\""+nh::data::superstring::from_int((i+1)*20)+"%\" style=\"stroke:rgb(50,50,50);stroke-width:0.5px\" />";
+                        diag+="<text x=\"90%\"  y=\""+nh::data::superstring::from_int((i+1)*20)+"%\"> "+nh::data::superstring::from_int(mxt/(i+2)/1024)+"kb</text>";
+                    }
                     for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
                     {
                         diag+="<line x1=\""+content.from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
@@ -156,6 +161,11 @@ extern "C"
                 string diag = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" style=\"width: 100%; height: 300px;\"><rect width=\"100%\" height=\"100%\" style=\"fill:rgb(200,200,200);\"/>";
 
                 long long olh=(nh::server::stat::hour_hits(0));
+                for(unsigned long i=0;i<4;i++)
+                {
+                    diag+="<line x1=\"0\" x2=\"100%\" y1=\""+nh::data::superstring::from_int((i+1)*20)+"%\" y2=\""+nh::data::superstring::from_int((i+1)*20)+"%\" style=\"stroke:rgb(50,50,50);stroke-width:0.5px\" />";
+                    diag+="<text x=\"90%\"  y=\""+nh::data::superstring::from_int((i+1)*20)+"%\"> "+nh::data::superstring::from_int((mxt/5)*(4-i))+"</text>";
+                }
                 for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
                 {
                     diag+="<line x1=\""+content.from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
@@ -168,7 +178,7 @@ extern "C"
 
                 diag+="</svg>";
 
-                content.change("[[hits]]","<br/><b>Requests: </b> <code>"+content.from_int(nh::server::stat::hits())+"</code><br/>"+diag+"<br/>");
+                content.change("[[hits]]","<br/><b>Total requests: </b> <code>"+content.from_int(nh::server::stat::hits())+"</code><br/><b>Hourly peak: </b><code>"+content.from_int(mxt)+"</code><br/>"+diag+"<br/>");
             }
             else content.remove("[[hits]]");
 
