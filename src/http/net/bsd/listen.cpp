@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../net.h"
+#include "http/stat.h"
 
 namespace http
 {
@@ -69,6 +70,8 @@ namespace http
 				}
 				http::connected[fs] = tmp;
 				http::client_ips[fs] = sock_addr.sin_addr.s_addr;
+
+				http::statdata::onconnect();
 
 			}
 			return NULL;

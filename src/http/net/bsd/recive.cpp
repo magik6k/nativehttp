@@ -32,7 +32,7 @@ namespace http
 		{
 			while(1)
 			{
-				SOCKET mfd;
+				SOCKET mfd = 0;
 				fd_set set;
 				struct timeval tv;
 				int slr;
