@@ -365,20 +365,20 @@ namespace nativehttp
 			extern "C" bool hit_stats();
 			extern "C" bool method_stats();
 
-			extern "C" unsigned long hits();
-			extern "C" unsigned long connections();
-			extern "C" unsigned long uploaded();
-			extern "C" unsigned long downloaded();
+			extern "C" unsigned long long hits();
+			extern "C" unsigned long long connections();
+			extern "C" unsigned long long uploaded();
+			extern "C" unsigned long long downloaded();
 
-			extern "C" unsigned long get_requests();
-			extern "C" unsigned long post_requests();
+			extern "C" unsigned long long get_requests();
+			extern "C" unsigned long long post_requests();
 
-			extern "C" unsigned long hourly_length();
+			extern "C" unsigned long long hourly_length();
 
-			extern "C" unsigned long hour_hits(unsigned long hid);
-			extern "C" unsigned long hour_connections(unsigned long hid);
-			extern "C" unsigned long hour_upload(unsigned long hid);
-			extern "C" unsigned long hour_download(unsigned long hid);
+			extern "C" unsigned long long hour_hits(unsigned long hid);
+			extern "C" unsigned long long hour_connections(unsigned long hid);
+			extern "C" unsigned long long hour_upload(unsigned long hid);
+			extern "C" unsigned long long hour_download(unsigned long hid);
 
 		}
 	}

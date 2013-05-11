@@ -29,6 +29,8 @@ freely, subject to the following restrictions:
 nativehttp::data::superstring::~superstring()
 {
 	str.clear();
+	for(int i=0;i<tokens.size();i++)tokens[i].s.clear();
+	tokens.clear();
 }
 
 nativehttp::data::superstring::superstring()

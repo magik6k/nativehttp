@@ -36,26 +36,26 @@ namespace http
 
 		long long hourlylen;
 
-		unsigned long hits;
-		unsigned long connections;
+		unsigned long long hits;
+		unsigned long long connections;
 
-		unsigned long ulbytes;
-		unsigned long dlbytes;
+		unsigned long long ulbytes;
+		unsigned long long dlbytes;
 
-		unsigned long get;
-		unsigned long post;
+		unsigned long long get;
+		unsigned long long post;
 
-		unsigned long *hrl_hits;
-		unsigned long *hrl_connections;
-		unsigned long *hrl_ul;
-		unsigned long *hrl_dl;
+		unsigned long long *hrl_hits;
+		unsigned long long *hrl_connections;
+		unsigned long long *hrl_ul;
+		unsigned long long *hrl_dl;
 
 		time_t lastHrlFlp;
 		time_t lastSave;
 
 		time_t save_rate;
 
-		uint16_t filever = 0x0001;
+		uint16_t filever = 0x0002;
 		bool managersafe = true;
 		string stfn;
 
@@ -100,8 +100,8 @@ namespace http
 				fwrite(&filever, 2, 1, stf);
 				fwrite(&hourlylen, sizeof(long long), 1, stf);
 
-				fwrite(&get, sizeof(unsigned long), 1, stf);
-				fwrite(&post, sizeof(unsigned long), 1, stf);
+				fwrite(&get, sizeof(unsigned long long), 1, stf);
+				fwrite(&post, sizeof(unsigned long long), 1, stf);
 
 				stunit sd = {0, 0, 0, 0};
 				sd.hits = hits;

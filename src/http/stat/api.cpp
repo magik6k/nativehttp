@@ -44,38 +44,38 @@ namespace nativehttp
 			return http::statdata::method;
 		}
 
-		extern "C" unsigned long hits()
+		extern "C" unsigned long long hits()
 		{
 			return http::statdata::hits;
 		}
-		extern "C" unsigned long connections()
+		extern "C" unsigned long long connections()
 		{
 			return http::statdata::connections;
 		}
-		extern "C" unsigned long uploaded()
+		extern "C" unsigned long long uploaded()
 		{
 			return http::statdata::ulbytes;
 		}
-		extern "C" unsigned long downloaded()
+		extern "C" unsigned long long downloaded()
 		{
 			return http::statdata::dlbytes;
 		}
 
-		extern "C" unsigned long get_requests()
+		extern "C" unsigned long long get_requests()
 		{
 			return http::statdata::get;
 		}
-		extern "C" unsigned long post_requests()
+		extern "C" unsigned long long post_requests()
 		{
 			return http::statdata::post;
 		}
 
-		extern "C" unsigned long hourly_length()
+		extern "C" unsigned long long hourly_length()
 		{
 			return http::statdata::hourlylen;
 		}
 
-		extern "C" unsigned long hour_hits(unsigned long hid)
+		extern "C" unsigned long long hour_hits(unsigned long hid)
 		{
 			if(hid < http::statdata::hourlylen)
 			{
@@ -83,7 +83,7 @@ namespace nativehttp
 			}
 			return 0;
 		}
-		extern "C" unsigned long hour_connections(unsigned long hid)
+		extern "C" unsigned long long hour_connections(unsigned long hid)
 		{
 			if(hid < http::statdata::hourlylen)
 			{
@@ -91,7 +91,7 @@ namespace nativehttp
 			}
 			return 0;
 		}
-		extern "C" unsigned long hour_upload(unsigned long hid)
+		extern "C" unsigned long long hour_upload(unsigned long hid)
 		{
 			if(hid < http::statdata::hourlylen)
 			{
@@ -99,7 +99,7 @@ namespace nativehttp
 			}
 			return 0;
 		}
-		extern "C" unsigned long hour_download(unsigned long hid)
+		extern "C" unsigned long long hour_download(unsigned long hid)
 		{
 			if(hid < http::statdata::hourlylen)
 			{

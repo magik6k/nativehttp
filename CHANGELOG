@@ -6,6 +6,7 @@ DEV:
 -Scales on diagrams in NativeStat
 -Added few SuperString functions - RE-NAMED SOME OLD!
 -Fixed connections stats
+-Longer data type for statistics
 
 1005.13:
 -Custom thread names

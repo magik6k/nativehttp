@@ -37,19 +37,19 @@ namespace http
 
 		extern long long hourlylen;
 
-		extern unsigned long hits;
-		extern unsigned long connections;
+		extern unsigned long long hits;
+		extern unsigned long long connections;
 
-		extern unsigned long ulbytes;
-		extern unsigned long dlbytes;
+		extern unsigned long long ulbytes;
+		extern unsigned long long dlbytes;
 
-		extern unsigned long get;
-		extern unsigned long post;
+		extern unsigned long long get;
+		extern unsigned long long post;
 
-		extern unsigned long *hrl_hits;
-		extern unsigned long *hrl_connections;
-		extern unsigned long *hrl_ul;
-		extern unsigned long *hrl_dl;
+		extern unsigned long long *hrl_hits;
+		extern unsigned long long *hrl_connections;
+		extern unsigned long long *hrl_ul;
+		extern unsigned long long *hrl_dl;
 
 		extern time_t lastHrlFlp;
 		extern time_t lastSave;
@@ -62,11 +62,11 @@ namespace http
 
 		struct stunit
 		{
-			unsigned long hits;
-			unsigned long connections;
+			unsigned long long hits;
+			unsigned long long connections;
 
-			unsigned long ulbytes;
-			unsigned long dlbytes;
+			unsigned long long ulbytes;
+			unsigned long long dlbytes;
 		};
 
 		void manage();

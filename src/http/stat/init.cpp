@@ -45,10 +45,10 @@ namespace http
 
 			http::statdata::save_rate = cfg->get_int("stat_save_rate") * 60;
 
-			http::statdata::hrl_hits = new unsigned long[http::statdata::hourlylen];
-			http::statdata::hrl_connections = new unsigned long[http::statdata::hourlylen];
-			http::statdata::hrl_dl = new unsigned long[http::statdata::hourlylen];
-			http::statdata::hrl_ul = new unsigned long[http::statdata::hourlylen];
+			http::statdata::hrl_hits = new unsigned long long[http::statdata::hourlylen];
+			http::statdata::hrl_connections = new unsigned long long[http::statdata::hourlylen];
+			http::statdata::hrl_dl = new unsigned long long[http::statdata::hourlylen];
+			http::statdata::hrl_ul = new unsigned long long[http::statdata::hourlylen];
 
 			for(size_t i = 0; i < http::statdata::hourlylen; i++)
 			{
@@ -83,6 +83,7 @@ namespace http
 				fread(&tfv, 2, 1, stf);
 				if(tfv != filever)
 				{
+                    nativehttp::server::log("init.cpp@stat","Could not load stats due to old file format");
 					fclose(stf);
 					return;
 				}
@@ -91,8 +92,8 @@ namespace http
 				fread(&thl, sizeof(long long), 1, stf);
 				if(thl > hourlylen)thl = hourlylen;
 
-				fread(&get, sizeof(unsigned long), 1, stf);
-				fread(&post, sizeof(unsigned long), 1, stf);
+				fread(&get, sizeof(unsigned long long), 1, stf);
+				fread(&post, sizeof(unsigned long long), 1, stf);
 
 				stunit sd = {0, 0, 0, 0};
 
