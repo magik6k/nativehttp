@@ -1,6 +1,9 @@
 NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
+DEV:
+-subdomains
+
 1105.13:
 -Special macros for returning OnLoad status
 -Scales on diagrams in NativeStat

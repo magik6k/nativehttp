@@ -32,22 +32,22 @@ string nativehttp::data::superstring::str_from_size(size_t in)
     string end;
     if(in>=1099511627776LL)
     {
-        tcn = double(in)/1024.d/1024.d/1024.d/1024.d;
+        tcn = double(in)/1024.f/1024.f/1024.f/1024.f;
         end=" TiB";
     }
     else if(in>=1073741824LL)
     {
-        tcn = double(in)/1024.d/1024.d/1024.d;
+        tcn = double(in)/1024.f/1024.f/1024.f;
         end=" GiB";
     }
     else if(in>=1048576LL)
     {
-        tcn = double(in)/1024.d/1024.d;
+        tcn = double(in)/1024.f/1024.f;
         end=" MiB";
     }
     else if(in>=1024LL)
     {
-        tcn = double(in)/1024.d;
+        tcn = double(in)/1024.f;
         end=" KiB";
     }
     else
