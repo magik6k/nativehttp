@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 nativehttp::data::superstring::~superstring()
 {
 	str.clear();
-	for(int i=0;i<tokens.size();i++)tokens[i].s.clear();
+	for(unsigned int i=0;i<tokens.size();i++)tokens[i].s.clear();
 	tokens.clear();
 }
 
@@ -76,5 +76,6 @@ size_t nativehttp::data::superstring::length()
 void nativehttp::data::superstring::clear()
 {
     str.clear();
-    tokens.clear();
+	for(unsigned int i=0;i<tokens.size();i++)tokens[i].s.clear();
+	tokens.clear();
 }

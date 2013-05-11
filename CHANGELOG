@@ -1,12 +1,13 @@
 NativeHTTP By magik6000
-For more info visit eleinfo.cba.pl
+For more info visit http://nativehttp.org
 
-DEV:
+1105.13:
 -Special macros for returning OnLoad status
 -Scales on diagrams in NativeStat
 -Added few SuperString functions - RE-NAMED SOME OLD!
--Fixed connections stats
 -Longer data type for statistics
+-Fixed connections stats
+-Fixed SuperString Destructor
 
 1005.13:
 -Custom thread names
