@@ -105,7 +105,7 @@ extern "C"
                     for(unsigned long i=0;i<4;i++)
                     {
                         diag+="<line x1=\"0\" x2=\"100%\" y1=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\" y2=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\" style=\"stroke:rgb(50,50,50);stroke-width:0.5px\" />";
-                        diag+="<text x=\"90%\"  y=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\"> "+nh::data::superstring::str_from_int(mxt/(i+2)/1024)+"kb</text>";
+                        diag+="<text x=\"90%\"  y=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\"> "+nh::data::superstring::str_from_size(mxt/(i+2))+"</text>";
                     }
                     for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
                     {
@@ -135,16 +135,16 @@ extern "C"
 
                     content.change("[[transfer_usage]]","<br/><b>Transfer used:</b> "+
                                    mkdtd(nh::server::stat::uploaded()/1024,nh::server::stat::downloaded()/1024,
-                                         "UL: "+content.str_from_int(nh::server::stat::uploaded()/1024.f)+" kb",
-                                         "DL: "+content.str_from_int(nh::server::stat::downloaded()/1024.f)+" kb",
-                                         "11aa11","aa1111")+"<br/>Hourly max:"+content.str_from_int(mxt/1024)+" kb<br/>"+diag+"<br/>");
+                                         "UL: "+content.str_from_size(nh::server::stat::uploaded()),
+                                         "DL: "+content.str_from_size(nh::server::stat::downloaded()),
+                                         "11aa11","aa1111")+"<br/>Hourly max:"+content.str_from_size(mxt)+"<br/>"+diag+"<br/>");
                 }
                 else
                 {
                     content.change("[[transfer_usage]]","<br/><b>Transfer used:</b> "+
                                    mkdtd(nh::server::stat::uploaded(),nh::server::stat::downloaded(),
-                                         "UL: "+content.str_from_int(nh::server::stat::uploaded()/1024)+" kb",
-                                         "DL: "+content.str_from_int(nh::server::stat::downloaded()/1024)+" kb",
+                                         "UL: "+content.str_from_size(nh::server::stat::uploaded()),
+                                         "DL: "+content.str_from_size(nh::server::stat::downloaded()),
                                          "11aa11","aa1111")+"<br/>");
                 }
             }

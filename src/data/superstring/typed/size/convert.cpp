@@ -28,26 +28,26 @@ freely, subject to the following restrictions:
 
 string nativehttp::data::superstring::str_from_size(size_t in)
 {
-    int tcn = 0;
+    float tcn = 0;
     string end;
     if(in>=1099511627776LL)
     {
-        tcn = in/1024LL/1024LL/1024LL/1024LL;
+        tcn = double(in)/1024.d/1024.d/1024.d/1024.d;
         end=" TiB";
     }
     else if(in>=1073741824LL)
     {
-        tcn = in/1024LL/1024LL/1024LL;
+        tcn = double(in)/1024.d/1024.d/1024.d;
         end=" GiB";
     }
     else if(in>=1048576LL)
     {
-        tcn = in/1024LL/1024LL;
+        tcn = double(in)/1024.d/1024.d;
         end=" MiB";
     }
     else if(in>=1024LL)
     {
-        tcn = in/1024LL;
+        tcn = double(in)/1024.d;
         end=" KiB";
     }
     else
@@ -56,7 +56,15 @@ string nativehttp::data::superstring::str_from_size(size_t in)
         end=" B";
     }
 
-	return nativehttp::data::superstring::str_from_int(tcn)+end;
+    string ret = nativehttp::data::superstring::str_from_int(tcn);
+    if(int(10.f*(tcn-float(int(tcn)))))
+    {
+        ret+=".";
+        ret+=nativehttp::data::superstring::str_from_int(int(10.f*(tcn-float(int(tcn)))));
+    }
+    ret+=end;
+
+	return ret;
 }
 
 nativehttp::data::superstring nativehttp::data::superstring::sst_from_size(size_t in)
