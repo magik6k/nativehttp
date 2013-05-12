@@ -111,6 +111,9 @@ namespace nativehttp
             static string str_from_size(size_t in);
             static superstring sst_from_size(size_t in);
 
+            /** Double precission functions */
+            static string str_from_double(double in);
+            static superstring sst_from_double(double in);
 
             /** Token functions*/
 			void add_token(token t);

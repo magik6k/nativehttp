@@ -36,6 +36,7 @@ NHS = \
 	$(NHD)/data/postget.cpp \
 	$(NHD)/data/sqlite.cpp \
 	$(NHD)/data/superstring/typed/char/misc.cpp \
+	$(NHD)/data/superstring/typed/double/convert.cpp \
 	$(NHD)/data/superstring/typed/int32/convert.cpp \
 	$(NHD)/data/superstring/typed/int32/core.cpp \
 	$(NHD)/data/superstring/typed/int32/misc.cpp \
