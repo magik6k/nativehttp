@@ -37,25 +37,25 @@ namespace nativehttp
 
 		template<class T>class queue
 		{
-		private:
-			qelm<T>* newest;
-			qelm<T>* oldest;
-			size_t elems;
+			private:
+				qelm<T>* newest;
+				qelm<T>* oldest;
+				size_t elems;
 
-		public:
-			T dflt;
+			public:
+				T dflt;
 
-			queue();
-			~queue();
+				queue();
+				~queue();
 
-			int push(T tp);
-			int pop();
+				int push(T tp);
+				int pop();
 
-			size_t size();
-			int empty();
+				size_t size();
+				int empty();
 
-			T &front();
-			T &front(int &state);
+				T &front();
+				T &front(int &state);
 
 		};
 
@@ -68,24 +68,24 @@ namespace nativehttp
 
 		template<class T>queue<T>::~queue()
 		{
-			while(newest)this->pop();
+			while (newest)this->pop();
 		}
 
 		template<class T>int queue<T>::push(T tp)
 		{
 			qelm<T>* nqe = new qelm<T>;
-			if(!nqe)return 1;
+			if (!nqe)return 1;
 			nqe->d = tp;
 			nqe->newer = NULL;
 			nqe->older = NULL;
 
-			if(newest)
+			if (newest)
 			{
 				newest->newer = nqe;
 				nqe->older = newest;
 			}
 			newest = nqe;
-			if(!oldest)oldest = nqe;
+			if (!oldest)oldest = nqe;
 
 			elems++;
 			return 0;
@@ -93,12 +93,12 @@ namespace nativehttp
 
 		template<class T>int queue<T>::pop()
 		{
-			if(oldest)
+			if (oldest)
 			{
 				qelm<T>* tf = oldest;
 				oldest = oldest->newer;
-				if(oldest)oldest->older = NULL;
-				if(!oldest)newest = NULL;
+				if (oldest)oldest->older = NULL;
+				if (!oldest)newest = NULL;
 				delete tf;
 				elems--;
 				return 0;
@@ -113,7 +113,7 @@ namespace nativehttp
 
 		template<class T>T &queue<T>::front(int &state)
 		{
-			if(oldest)
+			if (oldest)
 			{
 				state = 0;
 				return oldest->d;

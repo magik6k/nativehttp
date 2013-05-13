@@ -43,18 +43,18 @@ void nativehttp::data::superstring::add_token(token t)
 
 size_t nativehttp::data::superstring::num_tokens()
 {
-    return tokens.size();
+	return tokens.size();
 }
 
 nativehttp::data::token nativehttp::data::superstring::tok()
 {
 	vector<unsigned int>d(tokens.size(), 0);
 
-	while(pos < str.size())
+	while (pos < str.size())
 	{
-		for(unsigned int i = 0; i < tokens.size(); i++)
+		for (unsigned int i = 0; i < tokens.size(); i++)
 		{
-			if(str[pos] == tokens[i].s[d[i]])
+			if (str[pos] == tokens[i].s[d[i]])
 			{
 				d[i]++;
 			}
@@ -62,7 +62,7 @@ nativehttp::data::token nativehttp::data::superstring::tok()
 			{
 				d[i] = 0;
 			}
-			if(d[i] >= tokens[i].s.size())
+			if (d[i] >= tokens[i].s.size())
 			{
 				pos++;
 				SSLOCK;
@@ -79,12 +79,12 @@ nativehttp::data::token nativehttp::data::superstring::tok(string &opt)
 {
 	vector<unsigned int>d(tokens.size(), 0);
 
-	while(pos < str.size())
+	while (pos < str.size())
 	{
 		opt += str[pos];
-		for(unsigned int i = 0; i < tokens.size(); i++)
+		for (unsigned int i = 0; i < tokens.size(); i++)
 		{
-			if(str[pos] == tokens[i].s[d[i]])
+			if (str[pos] == tokens[i].s[d[i]])
 			{
 				d[i]++;
 			}
@@ -92,7 +92,7 @@ nativehttp::data::token nativehttp::data::superstring::tok(string &opt)
 			{
 				d[i] = 0;
 			}
-			if(d[i] >= tokens[i].s.size())
+			if (d[i] >= tokens[i].s.size())
 			{
 				pos++;
 				SSLOCK;

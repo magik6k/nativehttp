@@ -39,7 +39,7 @@ namespace http
 
 	void kickclient(int i)
 	{
-		if(http::onssl && http::sslsck[i])
+		if (http::onssl && http::sslsck[i])
 		{
 			SSL_shutdown(http::sslsck[i]);
 			SSL_free(http::sslsck[i]);

@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 nativehttp::data::superstring::~superstring()
 {
 	str.clear();
-	for(unsigned int i=0;i<tokens.size();i++)tokens[i].s.clear();
+	for (unsigned int i = 0; i < tokens.size(); i++)tokens[i].s.clear();
 	tokens.clear();
 }
 
@@ -60,22 +60,22 @@ void nativehttp::data::superstring::unlock()
 
 const char* nativehttp::data::superstring::c_str()
 {
-    return str.c_str();
+	return str.c_str();
 }
 
 size_t nativehttp::data::superstring::size()
 {
-    return str.size();
+	return str.size();
 }
 
 size_t nativehttp::data::superstring::length()
 {
-    return str.length();
+	return str.length();
 }
 
 void nativehttp::data::superstring::clear()
 {
-    str.clear();
-	for(unsigned int i=0;i<tokens.size();i++)tokens[i].s.clear();
+	str.clear();
+	for (unsigned int i = 0; i < tokens.size(); i++)tokens[i].s.clear();
 	tokens.clear();
 }

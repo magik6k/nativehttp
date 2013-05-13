@@ -28,8 +28,8 @@ freely, subject to the following restrictions:
 
 nativehttp::data::superstring nativehttp::data::superstring::operator*=(unsigned int rc)
 {
-    string ost=this->str;
-	for(unsigned int i=0;i<rc;i++)this->str+=ost;
+	string ost = this->str;
+	for (unsigned int i = 0; i < rc; i++)this->str += ost;
 	ost.clear();
 	return *this;
 }

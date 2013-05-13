@@ -50,87 +50,87 @@ namespace nativehttp
 
 		class superstring
 		{
-		private:
+			private:
 
-			vector<token>tokens;
-			bool rae;
-			bool lck;
-			unsigned int lpos;
+				vector<token>tokens;
+				bool rae;
+				bool lck;
+				unsigned int lpos;
 
-		public:
+			public:
 
-			unsigned int pos;/** Position */
-			string str;/** Container string, DO NOT OVERUSE THIS, the type MAY CHANGE in future API versions */
-
-
-            /** Core functions*/
-            ~superstring();
-			superstring();
-
-			void lock();
-			void lock(unsigned int lp);
-			void unlock();
-
-			size_t length();
-			size_t size();
-
-			void clear();
-			const char* c_str();
+				unsigned int pos;/** Position */
+				string str;/** Container string, DO NOT OVERUSE THIS, the type MAY CHANGE in future API versions */
 
 
-            /** C++ string functions*/
-            superstring(string s);
-			void set(string s);
-			void operator()(string s);
+				/** Core functions*/
+				~superstring();
+				superstring();
 
-			string to(string fend);
-			string back_to(string fend);
-			string from(string start);
-			int check(string sch);
+				void lock();
+				void lock(unsigned int lp);
+				void unlock();
 
-			void change(string from, string to);
-			void remove(string from, string to);
-			void remove(string s);
+				size_t length();
+				size_t size();
 
-
-			/** SuperString functions*/
-			void set(superstring s);
-            void operator()(superstring s);
-			superstring operator+=(superstring in);
-            static int int_from_str(string in);
-
-			/** Integer functions*/
-			void set(int s);
-			void operator()(int s);
-			superstring operator*=(unsigned int rc);
-            static string str_from_int(int in);
-            static superstring sst_from_int(int in);
+				void clear();
+				const char* c_str();
 
 
-            /** Size functions */
-            static string str_from_size(size_t in);
-            static superstring sst_from_size(size_t in);
+				/** C++ string functions*/
+				superstring(string s);
+				void set(string s);
+				void operator()(string s);
 
-            /** Double precission functions */
-            static string str_from_double(double in);
-            static superstring sst_from_double(double in);
+				string to(string fend);
+				string back_to(string fend);
+				string from(string start);
+				int check(string sch);
 
-            /** Token functions*/
-			void add_token(token t);
-			void clear_tokens();
-			token tok();
-			token tok(string &opt);
-			size_t num_tokens();
-
-
-            /** Character functions*/
-			int count(const char c);
+				void change(string from, string to);
+				void remove(string from, string to);
+				void remove(string s);
 
 
-            /** File functions*/
-			static string file(string fn);
-			void set_file(string fn);
-			void append_file(string fn);
+				/** SuperString functions*/
+				void set(superstring s);
+				void operator()(superstring s);
+				superstring operator+=(superstring in);
+				static int int_from_str(string in);
+
+				/** Integer functions*/
+				void set(int s);
+				void operator()(int s);
+				superstring operator*=(unsigned int rc);
+				static string str_from_int(int in);
+				static superstring sst_from_int(int in);
+
+
+				/** Size functions */
+				static string str_from_size(size_t in);
+				static superstring sst_from_size(size_t in);
+
+				/** Double precission functions */
+				static string str_from_double(double in);
+				static superstring sst_from_double(double in);
+
+				/** Token functions*/
+				void add_token(token t);
+				void clear_tokens();
+				token tok();
+				token tok(string &opt);
+				size_t num_tokens();
+
+
+				/** Character functions*/
+				int count(const char c);
+
+
+				/** File functions*/
+				static string file(string fn);
+				void set_file(string fn);
+				void append_file(string fn);
 		};
 
 		struct cfgfil
@@ -143,24 +143,24 @@ namespace nativehttp
 
 		class Ccfg
 		{
-		private:
+			private:
 
-			string flie;
-			vector<cfgfil>fileds;
+				string flie;
+				vector<cfgfil>fileds;
 
-		public:
+			public:
 
-			void parse_file(const char *f);
-			string get_var(string name);
-			int get_int(string name);
-			Ccfg(string f)
-			{
-				parse_file(f.c_str());
-			}
-			~Ccfg()
-			{
-				fileds.clear();
-			}
+				void parse_file(const char *f);
+				string get_var(string name);
+				int get_int(string name);
+				Ccfg(string f)
+				{
+					parse_file(f.c_str());
+				}
+				~Ccfg()
+				{
+					fileds.clear();
+				}
 
 		};
 
@@ -181,35 +181,35 @@ namespace nativehttp
 
 		class cookiedata
 		{
-		private:
-			vector<cfil>data;
-			string sets;
-		public:
-			cookiedata(string strcookie);
-			string get(string name);
-			void set(string name, string value);
-			void set(string name, string value, string attributes);
-			string gethead();
+			private:
+				vector<cfil>data;
+				string sets;
+			public:
+				cookiedata(string strcookie);
+				string get(string name);
+				void set(string name, string value);
+				void set(string name, string value, string attributes);
+				string gethead();
 		};
 
 		class postgetdata
 		{
-		private:
-			vector<cfil>data;
-		public:
-			postgetdata(string dstr);
-			string get(string name);
+			private:
+				vector<cfil>data;
+			public:
+				postgetdata(string dstr);
+				string get(string name);
 		};
 
 		class session
 		{
-		private:
-			unsigned int ssid;
-			bool valid;
-		public:
-			void __init(cookiedata *cd);
-			string get(string name);
-			void set(string name, string value);
+			private:
+				unsigned int ssid;
+				bool valid;
+			public:
+				void __init(cookiedata *cd);
+				string get(string name);
+				void set(string name, string value);
 		};
 
 	}//data namespace
@@ -241,47 +241,47 @@ namespace nativehttp
 
 		class nbrow
 		{
-		public:
-			string *data;
-			~nbrow();
+			public:
+				string *data;
+				~nbrow();
 		};
 
 		class nbtable
 		{
-		public:
-			int cn;
-			string *cols;
-			vector<nbrow*>data;
-			string name;
-			nbtable(string n, string *cl, int cnb);
-			~nbtable();
-			int ins(string *in);
+			public:
+				int cn;
+				string *cols;
+				vector<nbrow*>data;
+				string name;
+				nbtable(string n, string *cl, int cnb);
+				~nbtable();
+				int ins(string *in);
 		};
 
 		class nbresult
 		{
-		public:
-			vector<string*>res;
-			int count();
-			int filter(nbfilter flt, void *fltdata);
+			public:
+				vector<string*>res;
+				int count();
+				int filter(nbfilter flt, void *fltdata);
 
-			string *operator[](int rowid);
+				string *operator[](int rowid);
 		};
 
 		class nbase
 		{
-		private:
-			vector<nbtable*>data;
-			string bfn;
-		public:
-			nbase(string file);
-			int createtable(string name, string *columns, int cnum);
-			int insert(string tabname, string *rowdata);
-			int del(string tabname, nbfilter flt, void *fltdata);
-			int save();
-			int istable(string name);
-			nbresult operator()(string table);
-			nbresult operator()(string table, nbfilter flt, void *fltdata);
+			private:
+				vector<nbtable*>data;
+				string bfn;
+			public:
+				nbase(string file);
+				int createtable(string name, string *columns, int cnum);
+				int insert(string tabname, string *rowdata);
+				int del(string tabname, nbfilter flt, void *fltdata);
+				int save();
+				int istable(string name);
+				nbresult operator()(string table);
+				nbresult operator()(string table, nbfilter flt, void *fltdata);
 		};
 
 		extern "C" nbase *nbase_open(string file);
@@ -290,30 +290,30 @@ namespace nativehttp
 
 		class SQLiteResult
 		{
-		private:
-			unsigned int cols;
-			unsigned int rows;
-			char *** dt;
-			nativehttp::base::SQLite *from;
-		public:
+			private:
+				unsigned int cols;
+				unsigned int rows;
+				char *** dt;
+				nativehttp::base::SQLite *from;
+			public:
 
-			SQLiteResult();
-			void __set(unsigned int c, unsigned int r, char *** d, nativehttp::base::SQLite *clr);
+				SQLiteResult();
+				void __set(unsigned int c, unsigned int r, char *** d, nativehttp::base::SQLite *clr);
 
-			void free();
+				void free();
 
-			unsigned int numRows();
-			char **operator[](int);
+				unsigned int numRows();
+				char **operator[](int);
 
 		};
 
 		enum SQLite_ctype
 		{
-			SLC_NULL,
-			SLC_INTEGER,
-			SLC_REAL,
-			SLC_TEXT,
-			SLC_BLOB
+		    SLC_NULL,
+		    SLC_INTEGER,
+		    SLC_REAL,
+		    SLC_TEXT,
+		    SLC_BLOB
 		};
 
 		struct SQLiteCol
@@ -326,24 +326,24 @@ namespace nativehttp
 
 		class SQLite
 		{
-		private:
+			private:
 
-			sqlite3 *db;
-			char *emsg;
+				sqlite3 *db;
+				char *emsg;
 
-		public:
+			public:
 
-			const char *getLastError();
-			void open(const char *file, bool fast);
-			SQLiteResult exec(const char *q);
+				const char *getLastError();
+				void open(const char *file, bool fast);
+				SQLiteResult exec(const char *q);
 
-			void transaction_start();
-			void transaction_done();
+				void transaction_start();
+				void transaction_done();
 
-			void create_table(const char *name, unsigned int cols, ...);
-			void create_table(const char *name, unsigned int cols, SQLiteCol *cl);
+				void create_table(const char *name, unsigned int cols, ...);
+				void create_table(const char *name, unsigned int cols, SQLiteCol *cl);
 
-			bool isTable(const char *name);
+				bool isTable(const char *name);
 
 		};
 

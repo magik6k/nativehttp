@@ -28,7 +28,7 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 
 	FILE *fil = fopen(f, "rt");
 
-	if(fil == NULL)
+	if (fil == NULL)
 	{
 		return;
 	}
@@ -46,11 +46,11 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 
 		c = fgetc(fil);
 
-		if(c != EOF)
+		if (c != EOF)
 		{
-			if(c == '/')
+			if (c == '/')
 			{
-				if(acmt)
+				if (acmt)
 				{
 					acmt = false;
 					comment = true;
@@ -62,21 +62,21 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 			}
 			else
 			{
-				if(!comment)acmt = false;
+				if (!comment)acmt = false;
 			}
-			if(c == '\n' && comment)
+			if (c == '\n' && comment)
 			{
 				comment = false;
 			}
-			if(!comment || !acmt)
+			if (!comment || !acmt)
 			{
-				if(!sside)
+				if (!sside)
 				{
-					if(c == '=')
+					if (c == '=')
 					{
 						sside = true;
 					}
-					else if(c == '\n')
+					else if (c == '\n')
 					{
 						tmp.name = "";
 					}
@@ -87,14 +87,14 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 				}
 				else
 				{
-					if(c == '\n')
+					if (c == '\n')
 					{
 						fileds.push_back(tmp);
 						tmp.name = "";
 						tmp.cont = "";
 						sside = false;
 					}
-					else if(c != '\r')
+					else if (c != '\r')
 					{
 						tmp.cont += c;
 					}
@@ -104,7 +104,7 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 
 
 	}
-	while(c != EOF);
+	while (c != EOF);
 
 	fclose(fil);
 
@@ -117,9 +117,9 @@ string nativehttp::data::Ccfg::get_var(string name)
 
 	unsigned int i = 0;
 
-	while(i != fileds.size())
+	while (i != fileds.size())
 	{
-		if(fileds[i].name == name)
+		if (fileds[i].name == name)
 		{
 			return fileds[i].cont;
 		}
@@ -136,12 +136,12 @@ int nativehttp::data::Ccfg::get_int(string name)
 	int tmp = 0;
 	unsigned int i = 0;
 	bool m = false;
-	if(s[0] == '-')
+	if (s[0] == '-')
 	{
 		m = true;
 		i++;
 	}
-	for(; i < s.size(); i++)
+	for (; i < s.size(); i++)
 		tmp = 10 * tmp + s[i] - 48;
 	return m ? -tmp : tmp;
 }

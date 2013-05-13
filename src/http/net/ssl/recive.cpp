@@ -30,7 +30,7 @@ namespace http
 	{
 		void reciver()
 		{
-			while(1)
+			while (1)
 			{
 				SOCKET mfd = 0;
 				fd_set set;
@@ -40,11 +40,11 @@ namespace http
 				tv.tv_sec = 0;
 				tv.tv_usec = 0;
 
-				for(int i = 0; i < http::maxConnections; i++)
+				for (int i = 0; i < http::maxConnections; i++)
 				{
-					if(http::connected[i] != -1 && !http::ulock[i])
+					if (http::connected[i] != -1 && !http::ulock[i])
 					{
-						if(mfd < http::connected[i])
+						if (mfd < http::connected[i])
 						{
 							mfd = http::connected[i];
 						}
@@ -53,9 +53,9 @@ namespace http
 
 				FD_ZERO(&set);
 
-				for(int i = 0; i < http::maxConnections; i++)
+				for (int i = 0; i < http::maxConnections; i++)
 				{
-					if(http::connected[i] != -1 && !http::ulock[i])
+					if (http::connected[i] != -1 && !http::ulock[i])
 					{
 						FD_SET(http::connected[i], &set);
 					}
@@ -63,19 +63,19 @@ namespace http
 
 				slr = select(mfd + 1, &set, NULL, NULL, &tv);
 
-				for(int i = 0; i < http::maxConnections && (slr > 0); i++)
+				for (int i = 0; i < http::maxConnections && (slr > 0); i++)
 				{
-					if(http::connected[i] != -1 &&
+					if (http::connected[i] != -1 &&
 					        !http::ulock[i] &&
 					        FD_ISSET(http::connected[i], &set))
 					{
 						http::request *trq = new http::request();
 
-						trq->request = new char[(HTTP_MAX_USER_HEADER_SIZE+1)];
+						trq->request = new char[(HTTP_MAX_USER_HEADER_SIZE + 1)];
 						int ra = SSL_read(http::sslsck[i], (char *) trq->request, HTTP_MAX_USER_HEADER_SIZE);
 						int ra2 = 0;
-						if(ra == 1 && ra > 0)ra2 = SSL_read(http::sslsck[i], (char *) trq->request + 1, HTTP_MAX_USER_HEADER_SIZE - 1);
-						if(ra > 0 && ra2 > 0)
+						if (ra == 1 && ra > 0)ra2 = SSL_read(http::sslsck[i], (char *) trq->request + 1, HTTP_MAX_USER_HEADER_SIZE - 1);
+						if (ra > 0 && ra2 > 0)
 						{
 							ra += ra2;
 							((char*)trq->request)[ra] = '\0';

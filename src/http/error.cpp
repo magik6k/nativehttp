@@ -32,7 +32,7 @@ namespace http
 			nativehttp::data::pagedata rt;
 			string epc = "HTTP/1.1 " + head + "\r\n" + http::headers::standard + "Content-Length: ";
 			FILE *f = fopen(file.c_str(), "r");
-			if(f)
+			if (f)
 			{
 				fseek(f, 0, SEEK_END);
 				rt.size = ftell(f);
@@ -44,9 +44,9 @@ namespace http
 				rt.data = new char[rt.size];
 				memcpy(rt.data, epc.c_str(), epc.size());
 				fread(rt.data + epc.size(), 1, rs, f);
-				rt.data[rt.size-3] = '\r';
-				rt.data[rt.size-2] = '\n';
-				rt.data[rt.size-1] = '\0';
+				rt.data[rt.size - 3] = '\r';
+				rt.data[rt.size - 2] = '\n';
+				rt.data[rt.size - 1] = '\0';
 				fclose(f);
 			}
 			else

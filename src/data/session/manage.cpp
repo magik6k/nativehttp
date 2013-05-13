@@ -25,11 +25,11 @@ freely, subject to the following restrictions:
 
 void sdata::session::sstg::mng()
 {
-	for(size_t i = 0; i < scount; i++)
+	for (size_t i = 0; i < scount; i++)
 	{
-		if(data[i].started)
+		if (data[i].started)
 		{
-			if(data[i].started + http::sess_life < time(0))
+			if (data[i].started + http::sess_life < time(0))
 			{
 				data[i].started = 0;
 				data[i].svid = 0;
@@ -41,20 +41,20 @@ void sdata::session::sstg::mng()
 
 void sdata::session::sbmain::free()
 {
-	if(!keys)
+	if (!keys)
 	{
 		fileds = 0;
 		return;
 	}
 
-	for(size_t i = 0; i < fileds; i++)
+	for (size_t i = 0; i < fileds; i++)
 	{
-		if(keys[i])
+		if (keys[i])
 		{
 			delete keys[i];
 		}
 	}
-	if(keys)
+	if (keys)
 		delete[] keys;
 	keys = NULL;
 	fileds = 0;

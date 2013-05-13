@@ -34,16 +34,16 @@ int nhSend(SOCKET sock, const void *data, int len)
 	do
 	{
 		len = send(sock, (const char *)dp, left, http::asyncsnd ? MSG_DONTWAIT : 0);
-		if(len > 0)
+		if (len > 0)
 		{
 			sent += len;
 			left -= len;
 			dp += len;
 		}
 	}
-	while((left > 0) && ((len > 0) || (errno == EINTR)));
+	while ((left > 0) && ((len > 0) || (errno == EINTR)));
 
-	return(sent);
+	return (sent);
 }
 
 namespace http
@@ -52,11 +52,11 @@ namespace http
 	{
 		void *sender(void *unused)
 		{
-		    prctl(PR_SET_NAME,("nh-snd-bsd-"+nativehttp::data::superstring::str_from_int(*(char*)unused)).c_str(),0,0,0);
+			prctl(PR_SET_NAME, ("nh-snd-bsd-" + nativehttp::data::superstring::str_from_int(*(char*)unused)).c_str(), 0, 0, 0);
 			int ts = 0;
-			while(1)
+			while (1)
 			{
-				if(http::tosend.empty())
+				if (http::tosend.empty())
 				{
 					SDL_Delay(1);
 					continue;
@@ -65,7 +65,7 @@ namespace http
 				SDL_mutexP(http::mtx_snd);
 
 				outdata proc = http::tosend.front(ts);
-				if(ts == 1)
+				if (ts == 1)
 				{
 					SDL_mutexV(http::mtx_snd);
 					continue;
@@ -73,7 +73,7 @@ namespace http
 				http::tosend.pop();
 				SDL_mutexV(http::mtx_snd);
 
-				if(http::connected[proc.uid])
+				if (http::connected[proc.uid])
 				{
 
 					nhSend(http::connected[proc.uid], proc.data, proc.size);
@@ -81,7 +81,7 @@ namespace http
 				}
 
 
-				if(proc.fas)
+				if (proc.fas)
 				{
 					delete[] proc.data;
 				}
@@ -92,7 +92,7 @@ namespace http
 		void sendNow(int uid, unsigned long datasize, char *data, bool free)
 		{
 			nhSend(http::connected[uid], data, datasize);
-			if(free)
+			if (free)
 			{
 				delete[] data;
 			}

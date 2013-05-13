@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 string nativehttp::data::superstring::file(string fn)
 {
 	FILE *f = fopen(fn.c_str(), "r");
-	if(f)
+	if (f)
 	{
 		fseek(f, 0, SEEK_END);
 		int size = ftell(f);

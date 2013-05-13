@@ -77,7 +77,7 @@ namespace nativehttp
 
 		extern "C" unsigned long long hour_hits(unsigned long hid)
 		{
-			if(hid < http::statdata::hourlylen)
+			if (hid < http::statdata::hourlylen)
 			{
 				return http::statdata::hrl_hits[hid];
 			}
@@ -85,7 +85,7 @@ namespace nativehttp
 		}
 		extern "C" unsigned long long hour_connections(unsigned long hid)
 		{
-			if(hid < http::statdata::hourlylen)
+			if (hid < http::statdata::hourlylen)
 			{
 				return http::statdata::hrl_connections[hid];
 			}
@@ -93,7 +93,7 @@ namespace nativehttp
 		}
 		extern "C" unsigned long long hour_upload(unsigned long hid)
 		{
-			if(hid < http::statdata::hourlylen)
+			if (hid < http::statdata::hourlylen)
 			{
 				return http::statdata::hrl_ul[hid];
 			}
@@ -101,7 +101,7 @@ namespace nativehttp
 		}
 		extern "C" unsigned long long hour_download(unsigned long hid)
 		{
-			if(hid < http::statdata::hourlylen)
+			if (hid < http::statdata::hourlylen)
 			{
 				return http::statdata::hrl_dl[hid];
 			}

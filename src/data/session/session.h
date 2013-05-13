@@ -32,18 +32,18 @@ namespace data
 	{
 		class sbmain
 		{
-		private:
-			nativehttp::data::cfgfil **keys;
-			size_t fileds;
-			size_t getkeyid(string kn);
-			size_t createkey(string kn);
-			size_t getfreekeyid();
-			void alloc_keys();
-		public:
-			sbmain();
-			void free();
-			void setkey(string kn, string kv);
-			string &getkey(string kn);
+			private:
+				nativehttp::data::cfgfil **keys;
+				size_t fileds;
+				size_t getkeyid(string kn);
+				size_t createkey(string kn);
+				size_t getfreekeyid();
+				void alloc_keys();
+			public:
+				sbmain();
+				void free();
+				void setkey(string kn, string kv);
+				string &getkey(string kn);
 		};
 
 		extern time_t sess_life;
@@ -56,19 +56,19 @@ namespace data
 
 		class sstg
 		{
-		private:
-			session *data;
-			size_t scount;
+			private:
+				session *data;
+				size_t scount;
 
-			size_t findfreesess(bool &vld);
-			void allocsessions();
-		public:
-			sstg();
-			void prealloc(size_t amnt);
-			bool cksess(size_t id, unsigned int scd);
-			size_t mksess(unsigned int scd);
-			sbmain &gtsess(size_t id);
-			void mng();
+				size_t findfreesess(bool &vld);
+				void allocsessions();
+			public:
+				sstg();
+				void prealloc(size_t amnt);
+				bool cksess(size_t id, unsigned int scd);
+				size_t mksess(unsigned int scd);
+				sbmain &gtsess(size_t id);
+				void mng();
 		};
 
 		extern sstg storage;

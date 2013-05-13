@@ -22,3 +22,6 @@ freely, subject to the following restrictions:
 */
 
 #include "nativehttp.h"
+#include "filesender.h"
+
+

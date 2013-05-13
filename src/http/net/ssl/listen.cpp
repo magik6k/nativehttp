@@ -30,18 +30,18 @@ namespace http
 
 		int findfreesock()
 		{
-			for(int i = 0; i < http::maxConnections; i++)
+			for (int i = 0; i < http::maxConnections; i++)
 			{
-				if(http::connected[i] == -1)return i;
+				if (http::connected[i] == -1)return i;
 			}
 			return -1;
 		}
 
 		void *listener(void *unused)
 		{
-		    prctl(PR_SET_NAME,"nh-list-ssl",0,0,0);
+			prctl(PR_SET_NAME, "nh-list-ssl", 0, 0, 0);
 
-			while(1)
+			while (1)
 			{
 				struct sockaddr_in sock_addr;
 				socklen_t sock_alen;
@@ -51,7 +51,7 @@ namespace http
 
 				tmp = accept(http::server, (struct sockaddr*)&sock_addr, &sock_alen);
 
-				if(tmp == -1)
+				if (tmp == -1)
 				{
 					SDL_Delay(1);
 					continue;
@@ -61,7 +61,7 @@ namespace http
 				fcntl(tmp, F_SETFL, flags & ~O_NONBLOCK);
 
 				int fs = http::bsd::findfreesock();
-				if(fs == -1)
+				if (fs == -1)
 				{
 					close(tmp);
 					SDL_Delay(10);
@@ -70,7 +70,7 @@ namespace http
 
 				http::sslsck[fs] = SSL_new(http::ssl::ctx);
 
-				if(!http::sslsck[fs])
+				if (!http::sslsck[fs])
 				{
 					close(tmp);
 					SDL_Delay(1);
@@ -78,7 +78,7 @@ namespace http
 				}
 
 				SSL_set_fd(http::sslsck[fs], tmp);
-				if(SSL_accept(http::sslsck[fs]) == -1)
+				if (SSL_accept(http::sslsck[fs]) == -1)
 				{
 					SSL_shutdown(http::sslsck[fs]);
 					SSL_free(http::sslsck[fs]);

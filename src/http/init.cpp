@@ -62,7 +62,7 @@ namespace http
 		http::ulock = new bool[http::maxConnections];
 		http::client_ips = new uint32_t[http::maxConnections];
 		http::sslsck = new SSL*[http::maxConnections];
-		for(int i = 0; i < http::maxConnections; i++)
+		for (int i = 0; i < http::maxConnections; i++)
 		{
 			http::connected[i] = INVALID_SOCKET;
 			http::ulock[i] = false;
@@ -104,7 +104,7 @@ namespace http
 		sess_life = cfg->get_int("session_life");
 		sdata::session::storage.prealloc(cfg->get_int("inital_sessions"));
 
-		if(!cfg->get_var("log").empty())logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);
+		if (!cfg->get_var("log").empty())logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);
 
 #ifdef NHDBG
 		cout << "[DBG:init.cpp@http]Server data mem: " << (getrsmem() - bm) / 1024.f << "kb\n";
@@ -116,7 +116,7 @@ namespace http
 #ifdef NHDBG
 		size_t abm = getacmem();
 #endif
-		for(int i = 0; i < http::Nexec; i++)
+		for (int i = 0; i < http::Nexec; i++)
 		{
 			http::execUnits[i].state = -1;
 			http::execUnits[i].in = 0;
@@ -125,11 +125,11 @@ namespace http
 			http::execUnits[i].etheard = new pthread_t;
 
 			pthread_attr_t at;
-			if(pthread_attr_init(&at) != 0)
+			if (pthread_attr_init(&at) != 0)
 			{
 				nativehttp::server::log("init.cpp@http", "ERROR: executor attr setup failed");
 			}
-			if(pthread_attr_setstacksize(&at, http::exec_heap_size) != 0)
+			if (pthread_attr_setstacksize(&at, http::exec_heap_size) != 0)
 			{
 				nativehttp::server::log("init.cpp@http", "ERROR: Setting executor heap size failed");
 			}
@@ -138,7 +138,7 @@ namespace http
 			int tms = pthread_create(tt, &at, http::executor, &(http::execUnits[i]));
 
 			http::execUnits[i].etheard = tt;
-			if(tms != 0)nativehttp::server::logid(i, "init.cpp", "Executor failed to start");
+			if (tms != 0)nativehttp::server::logid(i, "init.cpp", "Executor failed to start");
 		}
 #ifdef NHDBG
 		SDL_Delay(250);
@@ -151,7 +151,7 @@ namespace http
 		size_t abm = getacmem();
 		size_t bm = getrsmem();
 #endif
-		if(cfg->get_int("use_ssl"))
+		if (cfg->get_int("use_ssl"))
 		{
 			http::ssl::init();
 		}
@@ -170,11 +170,11 @@ namespace http
 #endif
 
 		pthread_attr_t at;
-		if(pthread_attr_init(&at) != 0)
+		if (pthread_attr_init(&at) != 0)
 		{
 			nativehttp::server::log("init.cpp@http", "ERROR: attr setup failed");
 		}
-		if(pthread_attr_setstacksize(&at, 16 * 1024) != 0)     //16kb is minimal
+		if (pthread_attr_setstacksize(&at, 16 * 1024) != 0)     //16kb is minimal
 		{
 			nativehttp::server::log("init.cpp@http", "ERROR: Setting heap size failed");
 		}
@@ -182,7 +182,7 @@ namespace http
 		pthread_t *tt = new pthread_t;
 
 		int tms;
-		if(cfg->get_int("use_ssl"))
+		if (cfg->get_int("use_ssl"))
 		{
 			tms = pthread_create(tt, &at, http::ssl::listener, NULL);
 		}
@@ -193,15 +193,15 @@ namespace http
 
 
 		http::theard_nc = tt;
-		if(tms != 0)nativehttp::server::log("init.cpp", "ANC failed to start");
+		if (tms != 0)nativehttp::server::log("init.cpp", "ANC failed to start");
 
-		for(int i = 0; i < http::Nsend; i++)
+		for (int i = 0; i < http::Nsend; i++)
 		{
 			pthread_t *tmt = new pthread_t;
 
 			int tmks;
 
-			if(cfg->get_int("use_ssl"))
+			if (cfg->get_int("use_ssl"))
 			{
 				tmks = pthread_create(tmt, &at, http::ssl::sender, new int(i));
 			}
@@ -213,10 +213,10 @@ namespace http
 
 
 			http::theard_sd[i] = tmt;
-			if(tmks != 0)nativehttp::server::logid(i, "init.cpp", "Sender failed to start");
+			if (tmks != 0)nativehttp::server::logid(i, "init.cpp", "Sender failed to start");
 		}
 
-		if(pthread_attr_setstacksize(&at, 256 * 1024) != 0)
+		if (pthread_attr_setstacksize(&at, 256 * 1024) != 0)
 		{
 			nativehttp::server::log("init.cpp@http", "ERROR: Setting manager heap size failed");
 		}
@@ -225,7 +225,7 @@ namespace http
 		tms = pthread_create(tt, &at, http::manager::manager, NULL);
 
 		http::theard_mg = tt;
-		if(tms != 0)nativehttp::server::log("init.cpp", "Manager failed to start");
+		if (tms != 0)nativehttp::server::log("init.cpp", "Manager failed to start");
 
 #ifdef NHDBG
 		SDL_Delay(250);

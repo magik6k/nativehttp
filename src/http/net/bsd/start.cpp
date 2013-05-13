@@ -33,7 +33,7 @@ namespace http
 			struct sockaddr_in sock_addr;
 			http::server = socket(AF_INET, SOCK_STREAM, 0);
 
-			if(http::server == INVALID_SOCKET)
+			if (http::server == INVALID_SOCKET)
 			{
 				nativehttp::server::log("start.cpp@bsd", "Couldn't create socket");
 				return;
@@ -50,13 +50,13 @@ namespace http
 				setsockopt(http::server, SOL_SOCKET, SO_REUSEADDR, (char*)&y, sizeof(y));
 			}
 
-			if(bind(http::server, (struct sockaddr*)&sock_addr, sizeof(sock_addr)) == -1)
+			if (bind(http::server, (struct sockaddr*)&sock_addr, sizeof(sock_addr)) == -1)
 			{
 				nativehttp::server::log("start.cpp@bsd", "Couldn't bind to local port");
 				return;
 			}
 
-			if(listen(http::server, cfg->get_int("max_waiting_connectons")) == -1)
+			if (listen(http::server, cfg->get_int("max_waiting_connectons")) == -1)
 			{
 				nativehttp::server::log("start.cpp@bsd", "Couldn't listen to local port");
 				return;

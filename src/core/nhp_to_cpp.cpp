@@ -24,10 +24,10 @@ freely, subject to the following restrictions:
 
 enum nhps
 {
-	nhps_html,
-	nhps_top,
-	nhps_init,
-	nhps_page
+    nhps_html,
+    nhps_top,
+    nhps_init,
+    nhps_page
 };
 
 string parse_nhp(string nhp)
@@ -40,40 +40,40 @@ string parse_nhp(string nhp)
 	nativehttp::data::superstring data(nhp);
 	nhps scope = nhps_html;
 	bool iq = false;
-	while(data.pos < data.str.size())
+	while (data.pos < data.str.size())
 	{
 		bool nap = false;
 		//bool csc=false;
-		if(scope != nhps_html)
+		if (scope != nhps_html)
 		{
-			if(data.check("\\"))
+			if (data.check("\\"))
 			{
 				//data.pos+=2;
 				//csc=true;
 			}
-			if(data.check("\"") && !nap)
+			if (data.check("\"") && !nap)
 			{
-				if(iq)iq = false;
+				if (iq)iq = false;
 				else iq = true;
 			}
-			if(!iq)
+			if (!iq)
 			{
 				//comment skipping
-				if(data.check("//"))
+				if (data.check("//"))
 				{
 					data.to("\n");
 					nap = true;
 				}
-				if(data.check("/*"))
+				if (data.check("/*"))
 				{
 					data.to("*/");
 					nap = true;
 				}
 				//comment skipping end
 				//scope change detection
-				if(data.check("%>"))     //init scope end
+				if (data.check("%>"))     //init scope end
 				{
-					if(scope == nhps_init)
+					if (scope == nhps_init)
 					{
 						scope = nhps_html;
 						nap = true;
@@ -86,9 +86,9 @@ string parse_nhp(string nhp)
 					data.pos += 2;
 					nap = true;
 				}
-				if(data.check("?>"))     //top scope end
+				if (data.check("?>"))     //top scope end
 				{
-					if(scope == nhps_top)
+					if (scope == nhps_top)
 					{
 						scope = nhps_html;
 					}
@@ -100,9 +100,9 @@ string parse_nhp(string nhp)
 					data.pos += 2;
 					nap = true;
 				}
-				if(data.check("$>"))     //page scope end
+				if (data.check("$>"))     //page scope end
 				{
-					if(scope == nhps_page)
+					if (scope == nhps_page)
 					{
 						scope = nhps_html;
 					}
@@ -118,25 +118,25 @@ string parse_nhp(string nhp)
 		}
 		else
 		{
-			if(data.check("<%"))     //init scope begin
+			if (data.check("<%"))     //init scope begin
 			{
 				scope = nhps_init;
 				data.pos += 2;
 				nap = true;
 			}
-			if(data.check("<?"))     //top scope begin
+			if (data.check("<?"))     //top scope begin
 			{
 				scope = nhps_top;
 				data.pos += 2;
 				nap = true;
 			}
-			if(data.check("<$"))     //page scope begin
+			if (data.check("<$"))     //page scope begin
 			{
 				scope = nhps_page;
 				data.pos += 2;
 				nap = true;
 			}
-			if(nap && !thtm.empty())
+			if (nap && !thtm.empty())
 			{
 				nativehttp::data::superstring htenc(thtm);
 				thtm.clear();
@@ -150,28 +150,28 @@ string parse_nhp(string nhp)
 				page += "result+=\"" + htenc.str + "\";\n";
 			}
 		}
-		if(!nap)
+		if (!nap)
 		{
 			//char tc=data.str[data.pos];
-			switch(scope)
+			switch (scope)
 			{
-			case nhps_html:
-				thtm += data.str[data.pos];
-				break;
-			case nhps_init:
-				init += data.str[data.pos];
-				break;
-			case nhps_page:
-				page += data.str[data.pos];
-				break;
-			case nhps_top:
-				top += data.str[data.pos];
+				case nhps_html:
+					thtm += data.str[data.pos];
+					break;
+				case nhps_init:
+					init += data.str[data.pos];
+					break;
+				case nhps_page:
+					page += data.str[data.pos];
+					break;
+				case nhps_top:
+					top += data.str[data.pos];
 
 			}
 			data.pos++;
 		}
 	}
-	if(!thtm.empty())
+	if (!thtm.empty())
 	{
 		nativehttp::data::superstring htenc(thtm);
 		thtm.clear();

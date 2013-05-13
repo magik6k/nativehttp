@@ -31,15 +31,15 @@ namespace nativehttp
 		{
 			ssid = 0;
 			valid = false;
-			if(!cd)return;
+			if (!cd)return;
 			string stsi = cd->get("NH_ssid");
 			string stsv = cd->get("NH_sslc");
-			if(stsi.empty() || stsv.empty())
+			if (stsi.empty() || stsv.empty())
 			{
 				unsigned int sslc = rand() % (2 << 30);
 				ssid = sdata::session::storage.mksess(sslc);
 
-				if(!sdata::session::storage.cksess(ssid, sslc))
+				if (!sdata::session::storage.cksess(ssid, sslc))
 				{
 					valid = false;
 					return;
@@ -54,7 +54,7 @@ namespace nativehttp
 				size_t nsi = nativehttp::data::superstring::int_from_str(stsi);
 				size_t nsv = nativehttp::data::superstring::int_from_str(stsv);
 
-				if(sdata::session::storage.cksess(nsi, nsv))
+				if (sdata::session::storage.cksess(nsi, nsv))
 				{
 					ssid = nsi;
 					valid = true;
@@ -65,7 +65,7 @@ namespace nativehttp
 					unsigned int sslc = rand() % (2 << 30);
 					ssid = sdata::session::storage.mksess(sslc);
 
-					if(!sdata::session::storage.cksess(ssid, sslc))
+					if (!sdata::session::storage.cksess(ssid, sslc))
 					{
 						valid = false;
 						return;
@@ -81,7 +81,7 @@ namespace nativehttp
 
 		string session::get(string name)
 		{
-			if(valid)
+			if (valid)
 			{
 				return sdata::session::storage.gtsess(ssid).getkey(name);
 			}
@@ -90,7 +90,7 @@ namespace nativehttp
 
 		void session::set(string name, string value)
 		{
-			if(valid)
+			if (valid)
 			{
 				sdata::session::storage.gtsess(ssid).setkey(name, value);
 			}

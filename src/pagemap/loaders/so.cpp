@@ -31,7 +31,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 	tmp.type = page_native;
 	nativepage *ntm = new nativepage;
 	ntm->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
-	if(!ntm->handle)
+	if (!ntm->handle)
 	{
 		cout << "can't open shared file: " << f << ": " << dlerror() << endl;
 		delete ntm;
@@ -40,7 +40,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 	{
 		ntm->onload = (nativehttp::data::Tonload) dlsym(ntm->handle, "onload");
 		ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle, "page");
-		if(!ntm->onload || !ntm->page)
+		if (!ntm->onload || !ntm->page)
 		{
 			cout << "error loading native symbols: " << f << endl;
 			dlclose(ntm->handle);
@@ -50,39 +50,39 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 		{
 			acp = base->size();
 			int initstate = (*ntm->onload)();
-			if(initstate<0)
+			if (initstate < 0)
 			{
-                if(initstate != -NATIVEHTTP_API_VERSION)
-                {
-                    nativehttp::server::log("SO.loader@pagemap","API version invalid: "+(nhp?string(nhp):string(f)));
-                    dlclose(ntm->handle);
-                    delete ntm;
-                }
+				if (initstate != -NATIVEHTTP_API_VERSION)
+				{
+					nativehttp::server::log("SO.loader@pagemap", "API version invalid: " + (nhp ? string(nhp) : string(f)));
+					dlclose(ntm->handle);
+					delete ntm;
+				}
 			}
-			else if(initstate == 1)
+			else if (initstate == 1)
 			{
 #ifdef NHDBG
-				nativehttp::server::log("SO.loader@pagemap","page loaded, but no API info were provided: "+(nhp?string(nhp):string(f)));
+				nativehttp::server::log("SO.loader@pagemap", "page loaded, but no API info were provided: " + (nhp ? string(nhp) : string(f)));
 #endif
-                initstate = -NATIVEHTTP_API_VERSION;
+				initstate = -NATIVEHTTP_API_VERSION;
 			}
 			else
 			{
-                nativehttp::server::log("SO.loader@pagemap","Page loading error("+nativehttp::data::superstring::str_from_int(initstate-2)+"): "+(nhp?string(nhp):string(f)));
-                dlclose(ntm->handle);
-                delete ntm;
+				nativehttp::server::log("SO.loader@pagemap", "Page loading error(" + nativehttp::data::superstring::str_from_int(initstate - 2) + "): " + (nhp ? string(nhp) : string(f)));
+				dlclose(ntm->handle);
+				delete ntm;
 			}
 
-			if(initstate == -NATIVEHTTP_API_VERSION)
+			if (initstate == -NATIVEHTTP_API_VERSION)
 			{
 				tmp.data = ntm;
 				base->push_back(tmp);
 
-				if(!nhp)
+				if (!nhp)
 				{
 					nativehttp::data::superstring pgac(f);
 					string furi = '/' + pgac.from(dir);
-					char *tfu = new char[furi.size()+1];
+					char *tfu = new char[furi.size() + 1];
 					memcpy(tfu, furi.c_str(), furi.size());
 					tfu[furi.size()] = '\0';
 
@@ -93,7 +93,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 				{
 					nativehttp::data::superstring pgac(nhp);
 					string furi = '/' + pgac.from(dir);
-					char *tfu = new char[furi.size()+1];
+					char *tfu = new char[furi.size() + 1];
 					memcpy(tfu, furi.c_str(), furi.size());
 					tfu[furi.size()] = '\0';
 

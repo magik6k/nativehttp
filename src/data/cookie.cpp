@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 nativehttp::data::cookiedata::cookiedata(string strcookie)
 {
 	superstring cke(strcookie);
-	while(cke.pos < cke.str.size())
+	while (cke.pos < cke.str.size())
 	{
 		cfil ctm;
 		ctm.name = cke.to("=");
@@ -36,9 +36,9 @@ nativehttp::data::cookiedata::cookiedata(string strcookie)
 
 string nativehttp::data::cookiedata::get(string name)
 {
-	for(unsigned int i = 0; i < data.size(); i++)
+	for (unsigned int i = 0; i < data.size(); i++)
 	{
-		if(data[i].name == name)
+		if (data[i].name == name)
 		{
 			return data[i].value;
 		}

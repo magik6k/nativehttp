@@ -28,7 +28,7 @@ namespace http
 	{
 		void disconnect(int scid)
 		{
-			if(http::connected[scid] != -1)
+			if (http::connected[scid] != -1)
 			{
 				close(http::connected[scid]);
 				http::connected[scid] = -1;

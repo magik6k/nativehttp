@@ -31,12 +31,12 @@ int nativehttp::data::superstring::int_from_str(string in)
 	int tmp = 0;
 	unsigned int i = 0;
 	bool m = false;
-	if(in[0] == '-')
+	if (in[0] == '-')
 	{
 		m = true;
 		i++;
 	}
-	for(; i < in.size(); i++)
+	for (; i < in.size(); i++)
 		tmp = 10 * tmp + in[i] - 48;
 	return m ? -tmp : tmp;
 }

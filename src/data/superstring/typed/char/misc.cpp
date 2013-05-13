@@ -29,9 +29,9 @@ freely, subject to the following restrictions:
 int nativehttp::data::superstring::count(const char c)
 {
 	int rt = 0;
-	for(; pos < str.size(); pos++)
+	for (; pos < str.size(); pos++)
 	{
-		if(str[pos] == c)
+		if (str[pos] == c)
 		{
 			rt++;
 		}

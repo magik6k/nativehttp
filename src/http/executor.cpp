@@ -45,24 +45,24 @@ namespace http
 		http::rproc::lrqd ld;
 		int ts = 0;
 
-		prctl(PR_SET_NAME,("nh-exec-"+nativehttp::data::superstring::str_from_int(exc->id)).c_str(),0,0,0);
+		prctl(PR_SET_NAME, ("nh-exec-" + nativehttp::data::superstring::str_from_int(exc->id)).c_str(), 0, 0, 0);
 
-		while(true)
+		while (true)
 		{
 			SDL_mutexP(http::mtx_exec);
-			if(http::toexec.size() <= 0)
+			if (http::toexec.size() <= 0)
 			{
 				SDL_mutexV(http::mtx_exec);
 				SDL_Delay(1);
 				continue;
 			}
-			if(http::toexec.front(ts)->taken > 0)
+			if (http::toexec.front(ts)->taken > 0)
 			{
 				SDL_mutexV(http::mtx_exec);
 				SDL_Delay(1);
 				continue;
 			}
-			if(ts == 1)
+			if (ts == 1)
 			{
 				SDL_mutexV(http::mtx_exec);
 				SDL_Delay(1);
@@ -70,13 +70,13 @@ namespace http
 			}
 			http::toexec.front()->taken = exc->id;
 			http::request *process = http::toexec.front(ts);
-			if(ts == 1)
+			if (ts == 1)
 			{
 				SDL_mutexV(http::mtx_exec);
 				SDL_Delay(1);
 				continue;
 			}
-			if(http::toexec.front()->taken != exc->id)   //it's just impossible, but...
+			if (http::toexec.front()->taken != exc->id)   //it's just impossible, but...
 			{
 				nativehttp::server::log("IMPOSSIBLE ERROR", "This error is impossible to occur, if you see this, god will left you..");
 				SDL_mutexV(http::mtx_exec);
@@ -98,17 +98,17 @@ namespace http
 
 			http::rproc::line0(process, rd, ld);
 
-			switch(process->method)
+			switch (process->method)
 			{
-			case 1:
-				http::statdata::onget();
-				break;
-			case 2:
-				http::statdata::onpost();
-				break;
+				case 1:
+					http::statdata::onget();
+					break;
+				case 2:
+					http::statdata::onpost();
+					break;
 			}
 
-			if(process->method == 0)
+			if (process->method == 0)
 			{
 
 				http::send(process->uid, http::error::e400.size, http::error::e400.data, false);
@@ -116,14 +116,14 @@ namespace http
 				delete[] process->request;
 				continue;
 			}
-			if(process->method == 3)
+			if (process->method == 3)
 			{
 				http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
 				http::unlockclient(process->uid);
 				delete[] process->request;
 				continue;
 			}
-			if(!process->http11)
+			if (!process->http11)
 			{
 				http::send(process->uid, http::error::e505.size, http::error::e505.data, false);
 				http::unlockclient(process->uid);
@@ -135,24 +135,24 @@ namespace http
 			http::rproc::header(process, rd, ld);
 
 
-			if(!rd.cookie)
+			if (!rd.cookie)
 			{
 				rd.cookie = new nativehttp::data::cookiedata("");
 			}
 
-			if(ld.clen > 0 && process->method == 2)
+			if (ld.clen > 0 && process->method == 2)
 			{
-				if(ld.clen > http::maxPost)
+				if (ld.clen > http::maxPost)
 				{
-					if(rd.cookie)
+					if (rd.cookie)
 					{
 						delete rd.cookie;
 					}
-					if(rd.get)
+					if (rd.get)
 					{
 						delete rd.get;
 					}
-					if(rd.post)
+					if (rd.post)
 					{
 						delete rd.post;
 					}
@@ -175,20 +175,20 @@ namespace http
 				http::rproc::post(rd, process, ld);
 				exc->state = -1;
 				exc->in = 0;
-				if(!rd.post)
+				if (!rd.post)
 				{
 					delete[] process->request;
 					delete process;
 					process->request = NULL;
-					if(rd.cookie)
+					if (rd.cookie)
 					{
 						delete rd.cookie;
 					}
-					if(rd.get)
+					if (rd.get)
 					{
 						delete rd.get;
 					}
-					if(rd.post)
+					if (rd.post)
 					{
 						delete rd.post;
 					}
@@ -201,7 +201,7 @@ namespace http
 
 			rd.remoteIP = http::client_ips[process->uid];
 
-			if(rd.cookie && http::usesessions)
+			if (rd.cookie && http::usesessions)
 			{
 				rd.session = new nativehttp::data::session;
 				rd.session->__init(rd.cookie);
@@ -212,19 +212,19 @@ namespace http
 			exc->fd2 = rd.get;
 			exc->in = 2;
 			exc->state = time(0);
-			if(http::rproc::ex(result, &rd))
+			if (http::rproc::ex(result, &rd))
 			{
 				exc->state = -1;
 				exc->in = 0;
-				if(rd.cookie)
+				if (rd.cookie)
 				{
 					delete rd.cookie;
 				}
-				if(rd.get)
+				if (rd.get)
 				{
 					delete rd.get;
 				}
-				if(rd.post)
+				if (rd.post)
 				{
 					delete rd.post;
 				}
@@ -238,20 +238,20 @@ namespace http
 			exc->state = -1;
 			exc->in = 0;
 
-			if(rd.cookie)
+			if (rd.cookie)
 			{
 				delete rd.cookie;
 			}
-			if(rd.get)
+			if (rd.get)
 			{
 				delete rd.get;
 			}
-			if(rd.post)
+			if (rd.post)
 			{
 				delete rd.post;
 			}
 
-			if(result.data)
+			if (result.data)
 			{
 				http::send(process->uid, result.size, result.data, true);
 			}
@@ -280,27 +280,27 @@ namespace http
 			hss.add_token(nativehttp::data::token("Cookie: ", 4));
 			hss.add_token(nativehttp::data::token("Content-Length: ", 5));
 
-			while(hss.pos < hss.str.size())
+			while (hss.pos < hss.str.size())
 			{
 				nativehttp::data::token pt = hss.tok();
-				if(pt.id == 0)break;
-				switch(pt.id)
+				if (pt.id == 0)break;
+				switch (pt.id)
 				{
-				case 1:
-					rd.host = hss.to("\r\n");
-					break;
-				case 2:
-					rd.userAgent = hss.to("\r\n");
-					break;
-				case 3:
-					rd.referer = hss.to("\r\n");
-					break;
-				case 4:
-					rd.cookie = new nativehttp::data::cookiedata(hss.to("\r\n"));
-					break;
-				case 5:
-					ld.clen = strtol(hss.to("\r\n").c_str(), NULL, 10);
-					break;
+					case 1:
+						rd.host = hss.to("\r\n");
+						break;
+					case 2:
+						rd.userAgent = hss.to("\r\n");
+						break;
+					case 3:
+						rd.referer = hss.to("\r\n");
+						break;
+					case 4:
+						rd.cookie = new nativehttp::data::cookiedata(hss.to("\r\n"));
+						break;
+					case 5:
+						ld.clen = strtol(hss.to("\r\n").c_str(), NULL, 10);
+						break;
 				}
 			}
 			hss.str.clear();
@@ -311,15 +311,15 @@ namespace http
 		{
 			nativehttp::data::superstring ars(process->request);
 			ars.str = ars.from("\r\n\r\n");
-			if(ars.str.size() < ld.clen)
+			if (ars.str.size() < ld.clen)
 			{
 				unsigned int ltrv = ld.clen - ars.str.size();
-				char *tv = new char[ltrv+1];
+				char *tv = new char[ltrv + 1];
 				unsigned int ar = 0;
-				while(0 < ltrv)
+				while (0 < ltrv)
 				{
 					int rv;
-					if(http::onssl)
+					if (http::onssl)
 					{
 						rv = SSL_read(http::sslsck[process->uid], tv + ar, ltrv);
 					}
@@ -328,7 +328,7 @@ namespace http
 						rv = recv(process->sender, tv + ar, ltrv, 0);
 					}
 
-					if(rv <= 0)
+					if (rv <= 0)
 					{
 						delete[] tv;
 						tv = NULL;
@@ -339,7 +339,7 @@ namespace http
 					(tv + ar)[0] = 0;
 				}
 
-				if(tv)
+				if (tv)
 				{
 					ars.str += tv;
 					delete[] tv;
@@ -352,113 +352,113 @@ namespace http
 		{
 			page pid = pmap.by_uri(rd->uri.c_str());
 
-			switch(pid.type)
+			switch (pid.type)
 			{
-			case page_native:
-				{
-					rd->ctype = "text/html;charset=" + charset;
-					rd->response = "200 OK";
+				case page_native:
+					{
+						rd->ctype = "text/html;charset=" + charset;
+						rd->response = "200 OK";
 
-					nativepage *npp = (nativepage*)pid.data;
+						nativepage *npp = (nativepage*)pid.data;
 #ifdef NHDBG
-					size_t bm = getacmem() + getrsmem();
-					unsigned int pgt = SDL_GetTicks();
+						size_t bm = getacmem() + getrsmem();
+						unsigned int pgt = SDL_GetTicks();
 #endif
-					SDL_mutexP(http::mtx_exec2);
-					nativehttp::data::pagedata ts = npp->page(rd);   //<<<execution of page
-					SDL_mutexV(http::mtx_exec2);
+						SDL_mutexP(http::mtx_exec2);
+						nativehttp::data::pagedata ts = npp->page(rd);   //<<<execution of page
+						SDL_mutexV(http::mtx_exec2);
 #ifdef NHDBG
-					unsigned int et = SDL_GetTicks() - pgt;
-					if(!http::extmemstats)
-					{
-						cout << "[DBG:executor.cpp@http]Page execution allcocated: "
-						     << (getacmem() + getrsmem() - bm) / 1024LL << "kb, time: " << et << "ms\n";
-					}
-					else
-					{
-						cout << "-------\n";
-						cout << "Native Page execution stats:\n";
-						cout << "File: " << pid.file << endl;
-						cout << "Time of execution: " << et << "ms\n";
+						unsigned int et = SDL_GetTicks() - pgt;
+						if (!http::extmemstats)
+						{
+							cout << "[DBG:executor.cpp@http]Page execution allcocated: "
+							     << (getacmem() + getrsmem() - bm) / 1024LL << "kb, time: " << et << "ms\n";
+						}
+						else
+						{
+							cout << "-------\n";
+							cout << "Native Page execution stats:\n";
+							cout << "File: " << pid.file << endl;
+							cout << "Time of execution: " << et << "ms\n";
 
-						cout << "Total Memory: ";
-						utils::memory::printmemsize(getacmem() + getrsmem());
-						cout << endl;
+							cout << "Total Memory: ";
+							utils::memory::printmemsize(getacmem() + getrsmem());
+							cout << endl;
 
-						cout << "Memory allocated by page execution: ";
-						utils::memory::printmemsize(getacmem() + getrsmem() - bm);
-						cout << endl;
+							cout << "Memory allocated by page execution: ";
+							utils::memory::printmemsize(getacmem() + getrsmem() - bm);
+							cout << endl;
 
-						cout << "Memory change since init: ";
-						utils::memory::printmemsize
-						(int64_t(getacmem() + getrsmem()) - int64_t(http::init_memory));
-						cout << endl;
+							cout << "Memory change since init: ";
+							utils::memory::printmemsize
+							(int64_t(getacmem() + getrsmem()) - int64_t(http::init_memory));
+							cout << endl;
 
-						cout << "Memory change since LPE: ";
-						utils::memory::printmemsize
-						(int64_t(getacmem() + getrsmem()) - int64_t(lastexecmem));
-						cout << endl;
+							cout << "Memory change since LPE: ";
+							utils::memory::printmemsize
+							(int64_t(getacmem() + getrsmem()) - int64_t(lastexecmem));
+							cout << endl;
 
-						cout << "-------\n";
-					}
+							cout << "-------\n";
+						}
 
-					lastexecmem = getacmem() + getrsmem();
+						lastexecmem = getacmem() + getrsmem();
 #endif
-					string snd = "HTTP/1.1 " + rd->response + "\r\n" + http::headers::standard;
-					snd += http::headers::alive + http::headers::alivetimeout;
-					snd += "Content-Type: " + rd->ctype + "\r\nContent-Length: ";
-					snd += its(ts.size);
-					snd += "\r\n";
-					snd += rd->cookie->gethead();
-					snd += "\r\n";
-					string snd2 = "\r\n";
-
-					pd.size = snd.size() + ts.size + snd2.size();
-					pd.data = new char[pd.size];
-					memcpy(pd.data, snd.c_str(), snd.size());
-					memcpy(pd.data + snd.size(), ts.data, ts.size);
-					memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
-					delete[]ts.data;
-					return false;
-				}
-				break;
-			case page_file:
-				{
-
-					FILE *f = fopen((const char*)pid.data, "r");
-					if(f)
-					{
-						fseek(f, 0, SEEK_END);
-						int size = ftell(f);
-						fseek(f, 0, SEEK_SET);
-						rewind(f);
-						string snd("HTTP/1.1 200 OK\r\n");
-						snd += http::headers::standard;
+						string snd = "HTTP/1.1 " + rd->response + "\r\n" + http::headers::standard;
 						snd += http::headers::alive + http::headers::alivetimeout;
-						snd += mime->get_ctype((char*)pid.data);
-						snd += "\r\nContent-Length: ";
-						snd += its(size);
-						snd += "\r\n\r\n";
-						char *b = new char[size];
-						fread(b, 1, size, f);
+						snd += "Content-Type: " + rd->ctype + "\r\nContent-Length: ";
+						snd += its(ts.size);
+						snd += "\r\n";
+						snd += rd->cookie->gethead();
+						snd += "\r\n";
 						string snd2 = "\r\n";
-						pd.size = size + snd.size() + snd2.size();
+
+						pd.size = snd.size() + ts.size + snd2.size();
 						pd.data = new char[pd.size];
 						memcpy(pd.data, snd.c_str(), snd.size());
-						memcpy(pd.data + snd.size(), b, size);
-						memcpy(pd.data + snd.size() + size, snd2.c_str(), snd2.size());
-						delete[] b;
-						fclose(f);
+						memcpy(pd.data + snd.size(), ts.data, ts.size);
+						memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
+						delete[]ts.data;
 						return false;
 					}
-					else
+					break;
+				case page_file:
 					{
-						return true;
+
+						FILE *f = fopen((const char*)pid.data, "r");
+						if (f)
+						{
+							fseek(f, 0, SEEK_END);
+							int size = ftell(f);
+							fseek(f, 0, SEEK_SET);
+							rewind(f);
+							string snd("HTTP/1.1 200 OK\r\n");
+							snd += http::headers::standard;
+							snd += http::headers::alive + http::headers::alivetimeout;
+							snd += mime->get_ctype((char*)pid.data);
+							snd += "\r\nContent-Length: ";
+							snd += its(size);
+							snd += "\r\n\r\n";
+							char *b = new char[size];
+							fread(b, 1, size, f);
+							string snd2 = "\r\n";
+							pd.size = size + snd.size() + snd2.size();
+							pd.data = new char[pd.size];
+							memcpy(pd.data, snd.c_str(), snd.size());
+							memcpy(pd.data + snd.size(), b, size);
+							memcpy(pd.data + snd.size() + size, snd2.c_str(), snd2.size());
+							delete[] b;
+							fclose(f);
+							return false;
+						}
+						else
+						{
+							return true;
+						}
 					}
-				}
-				break;
-			default:
-				return true;
+					break;
+				default:
+					return true;
 			}
 			return true;
 
@@ -485,7 +485,7 @@ namespace http
 
 			rd.uri = rawuri.to("?");
 			string gu = rawuri.to("#");
-			if(!gu.empty())
+			if (!gu.empty())
 			{
 				rd.get = new nativehttp::data::postgetdata(gu);
 			}

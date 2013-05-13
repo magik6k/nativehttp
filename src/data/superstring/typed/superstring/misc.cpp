@@ -27,6 +27,6 @@ freely, subject to the following restrictions:
 
 nativehttp::data::superstring nativehttp::data::superstring::operator+=(superstring in)
 {
-	this->str+=in.str;
+	this->str += in.str;
 	return *this;
 }

@@ -50,7 +50,7 @@ namespace http
 			http::statdata::hrl_dl = new unsigned long long[http::statdata::hourlylen];
 			http::statdata::hrl_ul = new unsigned long long[http::statdata::hourlylen];
 
-			for(size_t i = 0; i < http::statdata::hourlylen; i++)
+			for (size_t i = 0; i < http::statdata::hourlylen; i++)
 			{
 				http::statdata::hrl_hits[i] = 0u;
 				http::statdata::hrl_connections[i] = 0u;
@@ -65,32 +65,32 @@ namespace http
 			http::statdata::get = 0u;
 			http::statdata::post = 0u;
 
-			if(!cfg->get_var("statfile").empty())
+			if (!cfg->get_var("statfile").empty())
 			{
 				stfn = cfg->get_var("statfile");
 
 				FILE *stf = fopen(cfg->get_var("statfile").c_str(), "r");
-				if(!stf)return;
+				if (!stf)return;
 
 				char ftc[3];
 				fread(ftc, 1, 3, stf);
-				if((ftc[0] != 'N') || (ftc[1] != 'S') || (ftc[2] != 'F'))
+				if ((ftc[0] != 'N') || (ftc[1] != 'S') || (ftc[2] != 'F'))
 				{
 					fclose(stf);
 					return;
 				}
 				uint16_t tfv = 0x0000;
 				fread(&tfv, 2, 1, stf);
-				if(tfv != filever)
+				if (tfv != filever)
 				{
-                    nativehttp::server::log("init.cpp@stat","Could not load stats due to old file format");
+					nativehttp::server::log("init.cpp@stat", "Could not load stats due to old file format");
 					fclose(stf);
 					return;
 				}
 
 				long long thl = 0;
 				fread(&thl, sizeof(long long), 1, stf);
-				if(thl > hourlylen)thl = hourlylen;
+				if (thl > hourlylen)thl = hourlylen;
 
 				fread(&get, sizeof(unsigned long long), 1, stf);
 				fread(&post, sizeof(unsigned long long), 1, stf);
@@ -104,7 +104,7 @@ namespace http
 				ulbytes = sd.ulbytes;
 				dlbytes = sd.dlbytes;
 
-				for(long long i = 0; i < thl; i++)
+				for (long long i = 0; i < thl; i++)
 				{
 					fread(&sd, sizeof(stunit), 1, stf);
 					hrl_hits[i] = sd.hits;
@@ -113,12 +113,12 @@ namespace http
 					hrl_dl[i] = sd.dlbytes;
 				}
 
-				for(long long i = hourlylen - 2; i >= 0; i--)
+				for (long long i = hourlylen - 2; i >= 0; i--)
 				{
-					hrl_hits[i+1] = hrl_hits[i];
-					hrl_connections[i+1] = hrl_connections[i];
-					hrl_ul[i+1] = hrl_ul[i];
-					hrl_dl[i+1] = hrl_dl[i];
+					hrl_hits[i + 1] = hrl_hits[i];
+					hrl_connections[i + 1] = hrl_connections[i];
+					hrl_ul[i + 1] = hrl_ul[i];
+					hrl_dl[i + 1] = hrl_dl[i];
 				}
 				hrl_hits[0] = 0;
 				hrl_connections[0] = 0;

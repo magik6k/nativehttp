@@ -43,17 +43,17 @@ void deamonize()
 	nativehttp::server::log("system.cpp", "demonizing");
 	pid_t pid, sid;
 	pid = fork();
-	if(pid < 0)
+	if (pid < 0)
 	{
 		exit(EXIT_FAILURE);
 	}
-	if(pid > 0)
+	if (pid > 0)
 	{
 		exit(EXIT_SUCCESS);
 	}
 	umask(0);
 	sid = setsid();
-	if(sid < 0)
+	if (sid < 0)
 	{
 		exit(EXIT_FAILURE);
 	}
@@ -61,12 +61,12 @@ void deamonize()
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
-	prctl(PR_SET_NAME,"nh-deamon",0,0,0);
+	prctl(PR_SET_NAME, "nh-deamon", 0, 0, 0);
 }
 
 void goroot()
 {
-	if((chdir("/")) < 0)
+	if ((chdir("/")) < 0)
 	{
 		exit(EXIT_FAILURE);
 	}
@@ -76,9 +76,9 @@ size_t getacmem()
 {
 	long long r = 0LL;
 	FILE *fp = NULL;
-	if(!(fp = fopen("/proc/self/statm", "r")))
+	if (!(fp = fopen("/proc/self/statm", "r")))
 		return size_t(0LL);
-	if(fscanf(fp, "%*s%*s%*s%*s%*s%lld", &r) != 1)
+	if (fscanf(fp, "%*s%*s%*s%*s%*s%lld", &r) != 1)
 	{
 		fclose(fp);
 		return size_t(0LL);
@@ -91,9 +91,9 @@ size_t getrsmem()
 {
 	long long r = 0LL;
 	FILE *fp = NULL;
-	if(!(fp = fopen("/proc/self/statm", "r")))
+	if (!(fp = fopen("/proc/self/statm", "r")))
 		return size_t(0LL);
-	if(fscanf(fp, "%*s%lld", &r) != 1)
+	if (fscanf(fp, "%*s%lld", &r) != 1)
 	{
 		fclose(fp);
 		return size_t(0LL);

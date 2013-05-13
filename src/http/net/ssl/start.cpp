@@ -45,25 +45,25 @@ namespace http
 			SSL_load_error_strings();
 			meth = (SSL_METHOD*) SSLv3_method();
 			ctx = SSL_CTX_new(meth);
-			if(!ctx)
+			if (!ctx)
 			{
 				nativehttp::server::log("ssl.cpp", "CTX init failed");
 				ERR_print_errors_fp(stderr);
 				exit(1);
 			}
-			if(SSL_CTX_use_certificate_file(ctx, cfg->get_var("ssl_crt_file").c_str(), SSL_FILETYPE_PEM) <= 0)
+			if (SSL_CTX_use_certificate_file(ctx, cfg->get_var("ssl_crt_file").c_str(), SSL_FILETYPE_PEM) <= 0)
 			{
 				nativehttp::server::log("ssl.cpp", "certificate loading failed");
 				ERR_print_errors_fp(stderr);
 				exit(1);
 			}
-			if(SSL_CTX_use_PrivateKey_file(ctx, cfg->get_var("ssl_key_file").c_str(), SSL_FILETYPE_PEM) <= 0)
+			if (SSL_CTX_use_PrivateKey_file(ctx, cfg->get_var("ssl_key_file").c_str(), SSL_FILETYPE_PEM) <= 0)
 			{
 				nativehttp::server::log("ssl.cpp", "key loading failed");
 				ERR_print_errors_fp(stderr);
 				exit(1);
 			}
-			if(!SSL_CTX_check_private_key(ctx))
+			if (!SSL_CTX_check_private_key(ctx))
 			{
 				nativehttp::server::log("ssl.cpp", "key does not match certificate");
 				exit(1);

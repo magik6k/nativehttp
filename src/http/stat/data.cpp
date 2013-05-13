@@ -61,24 +61,24 @@ namespace http
 
 		void manage()
 		{
-			if(toggle && managersafe)
+			if (toggle && managersafe)
 			{
-				if(time(0) - lastHrlFlp >= 3600)
+				if (time(0) - lastHrlFlp >= 3600)
 				{
 					lastHrlFlp += 3600;
-					for(long long i = hourlylen - 2LL; i >= 0; i--)
+					for (long long i = hourlylen - 2LL; i >= 0; i--)
 					{
-						hrl_hits[i+1] = hrl_hits[i];
-						hrl_connections[i+1] = hrl_connections[i];
-						hrl_ul[i+1] = hrl_ul[i];
-						hrl_dl[i+1] = hrl_dl[i];
+						hrl_hits[i + 1] = hrl_hits[i];
+						hrl_connections[i + 1] = hrl_connections[i];
+						hrl_ul[i + 1] = hrl_ul[i];
+						hrl_dl[i + 1] = hrl_dl[i];
 					}
 					hrl_hits[0] = 0;
 					hrl_connections[0] = 0;
 					hrl_ul[0] = 0;
 					hrl_dl[0] = 0;
 				}
-				if(time(0) - lastSave >= save_rate)
+				if (time(0) - lastSave >= save_rate)
 				{
 					lastSave += save_rate;
 					http::statdata::save();
@@ -88,10 +88,10 @@ namespace http
 
 		void save()
 		{
-			if(!stfn.empty())
+			if (!stfn.empty())
 			{
 				FILE *stf = fopen(stfn.c_str(), "w");
-				if(!stf)
+				if (!stf)
 				{
 					stfn.clear();
 					return;
@@ -111,7 +111,7 @@ namespace http
 
 				fwrite(&sd, sizeof(stunit), 1, stf);
 
-				for(long long i = 0LL; i < hourlylen; i++)
+				for (long long i = 0LL; i < hourlylen; i++)
 				{
 					sd.hits = hrl_hits[i];
 					sd.connections = hrl_connections[i];

@@ -225,7 +225,7 @@ mimec::mimec()
 	nativehttp::data::superstring mp(ts.str + smime_types);
 	int n = mp.count('\n');
 	mp.pos = 0;
-	for(int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++)
 	{
 		string tnam = mp.to("=");
 		string tmi = mp.to("\n");
@@ -241,7 +241,7 @@ string mimec::get_ctype(string fn)
 	fnm.pos = fn.size() - 1;
 	string fext = fnm.back_to(".");
 	string tm = mimes[fext];
-	if(!tm.empty())
+	if (!tm.empty())
 	{
 		string rt = "Content-Type: ";
 		rt += tm;

@@ -30,7 +30,7 @@ namespace http
 
 		void onrecv(unsigned long dlen)
 		{
-			if(toggle && transfer)
+			if (toggle && transfer)
 			{
 				dlbytes += dlen;
 				hrl_dl[0] += dlen;
@@ -38,7 +38,7 @@ namespace http
 		}
 		void onsend(unsigned long ulen)
 		{
-			if(toggle && transfer)
+			if (toggle && transfer)
 			{
 				ulbytes += ulen;
 				hrl_ul[0] += ulen;
@@ -46,7 +46,7 @@ namespace http
 		}
 		void onconnect()
 		{
-			if(toggle)
+			if (toggle)
 			{
 				connections++;
 				hrl_connections[0]++;
@@ -55,17 +55,17 @@ namespace http
 
 		void onpost()
 		{
-			if(toggle && method)
+			if (toggle && method)
 				post++;
 		}
 		void onget()
 		{
-			if(toggle && method)
+			if (toggle && method)
 				get++;
 		}
 		void onhit()
 		{
-			if(toggle && hitlog)
+			if (toggle && hitlog)
 			{
 				hits++;
 				hrl_hits[0]++;

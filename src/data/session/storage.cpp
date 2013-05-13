@@ -37,8 +37,8 @@ namespace data
 
 		bool sstg::cksess(size_t id, unsigned int scd)
 		{
-			if(scount <= id)return false;
-			if(data[id].started == 0)return false;
+			if (scount <= id)return false;
+			if (data[id].started == 0)return false;
 			return data[id].svid == scd;
 		}
 
@@ -46,15 +46,15 @@ namespace data
 		{
 			size_t nsize = scount + 3;
 			session *tsp = new session[nsize];
-			if(!tsp)return;
+			if (!tsp)return;
 			size_t i;
-			for(i = 0; i < scount; i++)
+			for (i = 0; i < scount; i++)
 			{
 				tsp[i].started = data[i].started;
 				tsp[i].svid = data[i].svid;
 				tsp[i].data = data[i].data;
 			}
-			for(; i < nsize; i++)
+			for (; i < nsize; i++)
 			{
 				tsp[i].started = 0;
 				tsp[i].svid = 0;
@@ -67,9 +67,9 @@ namespace data
 		void sstg::prealloc(size_t amnt)
 		{
 			data = new session[amnt];
-			if(!data)return;
+			if (!data)return;
 
-			for(size_t i = 0; i < amnt; i++)
+			for (size_t i = 0; i < amnt; i++)
 			{
 				data[i].started = 0;
 				data[i].svid = 0;
@@ -79,11 +79,11 @@ namespace data
 		size_t sstg::findfreesess(bool &vld)
 		{
 			vld = true;
-			for(size_t i = 0; i < scount; i++)
+			for (size_t i = 0; i < scount; i++)
 			{
-				if(data[i].started == 0)return i;
+				if (data[i].started == 0)return i;
 			}
-			if(scount + 3 > http::max_sesions)
+			if (scount + 3 > http::max_sesions)
 			{
 				vld = false;
 				return 0;
@@ -96,7 +96,7 @@ namespace data
 		{
 			bool v;
 			size_t si = this->findfreesess(v);
-			if(v)
+			if (v)
 			{
 				data[si].svid = scd;
 				data[si].started = time(0);

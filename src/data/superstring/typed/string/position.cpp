@@ -32,16 +32,16 @@ string nativehttp::data::superstring::to(string fend)
 	unsigned int c = 0;
 	string rt;
 	string prt;
-	while(pos < str.size())
+	while (pos < str.size())
 	{
-		if(str[pos] == fend[c])
+		if (str[pos] == fend[c])
 		{
 			prt += str[pos];
 			c++;
 		}
 		else
 		{
-			if(!prt.empty())
+			if (!prt.empty())
 			{
 				rt += prt;
 				prt.clear();
@@ -50,7 +50,7 @@ string nativehttp::data::superstring::to(string fend)
 			rt += str[pos];
 		}
 		pos++;
-		if(c >= fend.size())
+		if (c >= fend.size())
 		{
 			SSLOCK;
 			return rt;
@@ -65,26 +65,26 @@ string nativehttp::data::superstring::from(string start)
 {
 	unsigned int c = 0;
 	string rt;
-	while(pos < str.size())
+	while (pos < str.size())
 	{
-		if(str[pos] == start[c])
+		if (str[pos] == start[c])
 		{
 			c++;
 		}
 		else
 		{
-			if(c > 0)
+			if (c > 0)
 			{
 				c = 0;
 			}
 		}
 		pos++;
-		if(c >= start.size())
+		if (c >= start.size())
 		{
 			break;
 		}
 	}
-	while(pos < str.size())
+	while (pos < str.size())
 	{
 		rt += str[pos];
 		pos++;
@@ -96,23 +96,23 @@ string nativehttp::data::superstring::from(string start)
 string nativehttp::data::superstring::back_to(string fend)
 {
 	string nfe;
-	for(int i = fend.size() - 1; i >= 0; i--)
+	for (int i = fend.size() - 1; i >= 0; i--)
 	{
 		nfe += fend[i];
 	}
 	unsigned int c = 0;
 	string rt;
 	string prt;
-	while(pos > 0)
+	while (pos > 0)
 	{
-		if(str[pos] == nfe[c])
+		if (str[pos] == nfe[c])
 		{
 			prt += str[pos];
 			c++;
 		}
 		else
 		{
-			if(!prt.empty())
+			if (!prt.empty())
 			{
 				rt += prt;
 				prt.clear();
@@ -121,10 +121,10 @@ string nativehttp::data::superstring::back_to(string fend)
 			rt += str[pos];
 		}
 		pos--;
-		if(c >= nfe.size())
+		if (c >= nfe.size())
 		{
 			string ert;
-			for(int i = rt.size() - 1; i >= 0; i--)
+			for (int i = rt.size() - 1; i >= 0; i--)
 			{
 				ert += rt[i];
 			}
@@ -133,7 +133,7 @@ string nativehttp::data::superstring::back_to(string fend)
 		}
 	}
 	string ert;
-	for(int i = rt.size() - 1; i >= 0; i--)
+	for (int i = rt.size() - 1; i >= 0; i--)
 	{
 		ert += rt[i];
 	}

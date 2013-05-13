@@ -30,9 +30,9 @@ int nativehttp::data::superstring::check(string sch)
 
 	unsigned int left = sch.size();
 	unsigned int tpos = pos;
-	while(left > 0 && tpos < str.size())
+	while (left > 0 && tpos < str.size())
 	{
-		if(str[tpos] == sch[sch.size()-left])
+		if (str[tpos] == sch[sch.size() - left])
 		{
 			left--;
 		}
@@ -44,7 +44,7 @@ int nativehttp::data::superstring::check(string sch)
 	}
 
 
-	if(left <= 0)
+	if (left <= 0)
 	{
 		return 1;
 	}

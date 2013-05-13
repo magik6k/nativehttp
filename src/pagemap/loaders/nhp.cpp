@@ -30,7 +30,7 @@ void page_mapper::load_nhp(page &tmp, const char *f, string dir)
 	FILE *nhpf = NULL;
 	FILE *tmf = NULL;
 
-	if(nhp_prepare_env(f, nhpf, tmf))
+	if (nhp_prepare_env(f, nhpf, tmf))
 	{
 		load_so(tmp, nhp_compile(f, nhpf, tmf).c_str(), dir, f);
 	}
@@ -57,7 +57,7 @@ string page_mapper::nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf)
 	pname += its(rand());
 	string command = cfg->get_var("cppcmp") + " -shared -fPIC " + cfg->get_var("flags") + " -o /tmp/nativehttp/nhpage_" + pname + ".so /tmp/nativehttp/tmp.cpp";
 	bool shw;
-	if(cfg->get_int("cmpout") == 1)
+	if (cfg->get_int("cmpout") == 1)
 	{
 		shw = true;
 	}
@@ -65,20 +65,20 @@ string page_mapper::nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf)
 	{
 		shw = false;
 	}
-	if(shw)
+	if (shw)
 	{
 		cout << "Compile " << f << ":" << endl;
 		cout << command.c_str() << endl;
 	}
 	FILE *cmp = NULL;
-	if(!(cmp = popen(command.c_str(), "r")))
+	if (!(cmp = popen(command.c_str(), "r")))
 	{
 		cerr << "CAN'T OPEN " << cfg->get_var("cppcmp").c_str() << endl;
 	}
 	char b[256];
-	while(fgets(b, 256, cmp) != NULL)
+	while (fgets(b, 256, cmp) != NULL)
 	{
-		if(shw)
+		if (shw)
 		{
 			cout << b;
 		}
@@ -92,15 +92,15 @@ bool page_mapper::nhp_prepare_env(const char *f, FILE*& nhpf, FILE*& tmf)
 {
 	struct stat st;
 drch:
-	if(stat("/tmp/nativehttp", &st) == 0)
+	if (stat("/tmp/nativehttp", &st) == 0)
 	{
-		if(S_ISDIR(st.st_mode))
+		if (S_ISDIR(st.st_mode))
 		{
 			tmf = fopen("/tmp/nativehttp/tmp.cpp", "w");
-			if(tmf != NULL)
+			if (tmf != NULL)
 			{
 				nhpf = fopen(f, "r");
-				if(nhpf != NULL)
+				if (nhpf != NULL)
 				{
 					return true;
 				}

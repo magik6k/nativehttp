@@ -30,17 +30,17 @@ void nativehttp::data::superstring::change(string from, string to)
 {
 	string out;
 	bool ls = lck;
-	if(lck)
+	if (lck)
 	{
 		lck = false;
 	}
-	while(pos < str.size())
+	while (pos < str.size())
 	{
 		string ctg = this->to(from);
-		if(!ctg.empty())
+		if (!ctg.empty())
 		{
 			out += ctg;
-			if(!rae)
+			if (!rae)
 			{
 				out += to;
 			}
@@ -55,18 +55,18 @@ void nativehttp::data::superstring::remove(string from, string to)
 {
 	string out;
 	bool ls = lck;
-	if(lck)
+	if (lck)
 	{
 		lck = false;
 	}
-	while(pos < str.size())
+	while (pos < str.size())
 	{
 
 		string ctg = this->to(from);
-		if(!ctg.empty())
+		if (!ctg.empty())
 		{
 			out += ctg;
-			if(!rae)
+			if (!rae)
 			{
 				this->to(to);
 			}
@@ -81,11 +81,11 @@ void nativehttp::data::superstring::remove(string s)
 {
 	string out;
 	bool ls = lck;
-	if(lck)
+	if (lck)
 	{
 		lck = false;
 	}
-	while(pos < str.size())
+	while (pos < str.size())
 	{
 		string ctg = this->to(s);
 		out += ctg;

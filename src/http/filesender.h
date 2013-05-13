@@ -20,19 +20,15 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
+#ifndef FILESENDER_H_INCLUDED
+#define FILESENDER_H_INCLUDED
 
-#include "../pagemap.h"
-#include "http/data.h"
-#include <iostream>
-#include <string.h>
-
-void page_mapper::reload_nhp(int pgi, time_t fatt, string dir, const char *f)
+namespace http
 {
-	FILE *nhpf = NULL;
-	FILE *tmf = NULL;
-
-	if (nhp_prepare_env(f, nhpf, tmf))
+	namespace filesender
 	{
-		reload_so(pgi, fatt, dir, nhp_compile(f, nhpf, tmf).c_str());
+
 	}
 }
+
+#endif // FILESENDER_H_INCLUDED

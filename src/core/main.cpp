@@ -46,48 +46,48 @@ int main(int argc, char *argv[])
 	cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
 	cout << "pre-init\n";
 
-	prctl(PR_SET_NAME,"nativehttp",0,0,0);
+	prctl(PR_SET_NAME, "nativehttp", 0, 0, 0);
 
 	bool dmnz = false;
 	bool gr = true;
 	string conf = "/etc/nativehttp/config.cfg";
 
-	for(int i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
-		if(argv[i][0])
+		if (argv[i][0])
 		{
-			switch(argv[i][1])
+			switch (argv[i][1])
 			{
-			case 'd':
-				dmnz = true;
-				break;
-			case 'c':
-				if(i + 1 < argc)
-				{
-					if(argv[i+1][0] != '-')
+				case 'd':
+					dmnz = true;
+					break;
+				case 'c':
+					if (i + 1 < argc)
 					{
-						conf = argv[i+1];
-						cout << "Using non-standard configuration file: " << conf << endl;
-						i++;
+						if (argv[i + 1][0] != '-')
+						{
+							conf = argv[i + 1];
+							cout << "Using non-standard configuration file: " << conf << endl;
+							i++;
+						}
+						else
+						{
+							cout << "ERROR: " << "Wrong config file name: " << argv[i + 1] << "\n";
+							exit(1);
+						}
 					}
 					else
 					{
-						cout << "ERROR: " << "Wrong config file name: " << argv[i+1] << "\n";
+						cout << "ERROR: " << "No config file specified\n";
 						exit(1);
 					}
-				}
-				else
-				{
-					cout << "ERROR: " << "No config file specified\n";
+					break;
+				case 'k':
+					gr = false;
+					break;
+				default:
+					cout << "ERROR: " << "Unknown option: " << argv[i] << endl;;
 					exit(1);
-				}
-				break;
-			case 'k':
-				gr = false;
-				break;
-			default:
-				cout << "ERROR: " << "Unknown option: " << argv[i] << endl;;
-				exit(1);
 			}
 		}
 		else
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if(gr)goroot();
+	if (gr)goroot();
 
 	signal(SIGSEGV, http::manager::sig);
 	signal(SIGILL, http::manager::sig);
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 	cfg = new nativehttp::data::Ccfg(conf);
 	charset = cfg->get_var("charset");
 	default_mime = cfg->get_var("default_content_type");
-	if(cfg->get_int("instantso"))
+	if (cfg->get_int("instantso"))
 	{
 		setbuf(stdout, NULL);
 	}
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 	nativehttp::server::log("INIT", "Mapping server directory, loading native pages");
 	pmap.preinit();
 	pmap.page_mapper_init(cfg->get_var("files_location"));
-	if(dmnz)deamonize();
+	if (dmnz)deamonize();
 	nativehttp::server::log("INIT", "Starting HTTP system");
 
 
@@ -127,14 +127,14 @@ int main(int argc, char *argv[])
 
 	nativehttp::server::log("INIT", "Ready");
 
-	if(cfg->get_int("use_ssl"))
+	if (cfg->get_int("use_ssl"))
 	{
-	    prctl(PR_SET_NAME,"nh-recv-ssl",0,0,0);
+		prctl(PR_SET_NAME, "nh-recv-ssl", 0, 0, 0);
 		http::ssl::reciver();
 	}
 	else
 	{
-	    prctl(PR_SET_NAME,"nh-recv-bsd",0,0,0);
+		prctl(PR_SET_NAME, "nh-recv-bsd", 0, 0, 0);
 		http::bsd::reciver();
 	}
 
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 string its(int n)
 {
 	string tmp, ret;
-	if(n < 0)
+	if (n < 0)
 	{
 		ret = "-";
 		n = -n;
@@ -155,8 +155,8 @@ string its(int n)
 		tmp += n % 10 + 48;
 		n -= n % 10;
 	}
-	while(n /= 10);
-	for(int i = tmp.size() - 1; i >= 0; i--)
+	while (n /= 10);
+	for (int i = tmp.size() - 1; i >= 0; i--)
 		ret += tmp[i];
 	return ret;
 }

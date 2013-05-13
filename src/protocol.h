@@ -46,11 +46,11 @@ nativehttp::data::pagedata exec(string uri, nativehttp::rdata *rd);
 
 class mimec
 {
-private:
-	map<string, string> mimes;
-public:
-	mimec();
-	string get_ctype(string fn);
+	private:
+		map<string, string> mimes;
+	public:
+		mimec();
+		string get_ctype(string fn);
 };
 
 

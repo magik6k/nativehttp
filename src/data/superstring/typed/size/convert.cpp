@@ -28,46 +28,46 @@ freely, subject to the following restrictions:
 
 string nativehttp::data::superstring::str_from_size(size_t in)
 {
-    float tcn = 0;
-    string end;
-    if(in>=1099511627776LL)
-    {
-        tcn = double(in)/1024.f/1024.f/1024.f/1024.f;
-        end=" TiB";
-    }
-    else if(in>=1073741824LL)
-    {
-        tcn = double(in)/1024.f/1024.f/1024.f;
-        end=" GiB";
-    }
-    else if(in>=1048576LL)
-    {
-        tcn = double(in)/1024.f/1024.f;
-        end=" MiB";
-    }
-    else if(in>=1024LL)
-    {
-        tcn = double(in)/1024.f;
-        end=" KiB";
-    }
-    else
-    {
-        tcn = in;
-        end=" B";
-    }
+	float tcn = 0;
+	string end;
+	if (in >= 1099511627776LL)
+	{
+		tcn = double(in) / 1024.f / 1024.f / 1024.f / 1024.f;
+		end = " TiB";
+	}
+	else if (in >= 1073741824LL)
+	{
+		tcn = double(in) / 1024.f / 1024.f / 1024.f;
+		end = " GiB";
+	}
+	else if (in >= 1048576LL)
+	{
+		tcn = double(in) / 1024.f / 1024.f;
+		end = " MiB";
+	}
+	else if (in >= 1024LL)
+	{
+		tcn = double(in) / 1024.f;
+		end = " KiB";
+	}
+	else
+	{
+		tcn = in;
+		end = " B";
+	}
 
-    string ret = nativehttp::data::superstring::str_from_int(tcn);
-    if(int(10.f*(tcn-float(int(tcn)))))
-    {
-        ret+=".";
-        ret+=nativehttp::data::superstring::str_from_int(int(10.f*(tcn-float(int(tcn)))));
-    }
-    ret+=end;
+	string ret = nativehttp::data::superstring::str_from_int(tcn);
+	if (int(10.f * (tcn - float(int(tcn)))))
+	{
+		ret += ".";
+		ret += nativehttp::data::superstring::str_from_int(int(10.f * (tcn - float(int(tcn)))));
+	}
+	ret += end;
 
 	return ret;
 }
 
 nativehttp::data::superstring nativehttp::data::superstring::sst_from_size(size_t in)
 {
-    return nativehttp::data::superstring(nativehttp::data::superstring::str_from_size(in));
+	return nativehttp::data::superstring(nativehttp::data::superstring::str_from_size(in));
 }

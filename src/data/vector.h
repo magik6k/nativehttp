@@ -29,23 +29,23 @@ namespace data
 
 	template<class T>class vector
 	{
-	private:
+		private:
 
-		size_t elems;
-		size_t msize;
-		T **eptr;
+			size_t elems;
+			size_t msize;
+			T **eptr;
 
-	public:
+		public:
 
-		vector(size_t maxsize);
+			vector(size_t maxsize);
 
-		void push_back(T tp);
-		T &operator[](size_t id);
+			void push_back(T tp);
+			T &operator[](size_t id);
 
-		size_t size();
-		int empty();
+			size_t size();
+			int empty();
 
-		void destroy();
+			void destroy();
 
 	};
 
@@ -81,7 +81,7 @@ namespace data
 
 	template<class T>void vector<T>::destroy()
 	{
-		for(int i = 0; i < elems; i++)
+		for (int i = 0; i < elems; i++)
 		{
 			delete eptr[i];
 		}

@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 string nativehttp::data::superstring::str_from_int(int in)
 {
 	string tmp, ret;
-	if(in < 0)
+	if (in < 0)
 	{
 		ret = "-";
 		in = -in;
@@ -39,8 +39,8 @@ string nativehttp::data::superstring::str_from_int(int in)
 		tmp += in % 10 + 48;
 		in -= in % 10;
 	}
-	while(in /= 10);
-	for(int i = tmp.size() - 1; i >= 0; i--)
+	while (in /= 10);
+	for (int i = tmp.size() - 1; i >= 0; i--)
 		ret += tmp[i];
 
 	return ret;
@@ -50,7 +50,7 @@ nativehttp::data::superstring nativehttp::data::superstring::sst_from_int(int in
 {
 	string tmp;
 	nativehttp::data::superstring ret;
-	if(in < 0)
+	if (in < 0)
 	{
 		ret.str = "-";
 		in = -in;
@@ -60,8 +60,8 @@ nativehttp::data::superstring nativehttp::data::superstring::sst_from_int(int in
 		tmp += in % 10 + 48;
 		in -= in % 10;
 	}
-	while(in /= 10);
-	for(int i = tmp.size() - 1; i >= 0; i--)
+	while (in /= 10);
+	for (int i = tmp.size() - 1; i >= 0; i--)
 		ret.str += tmp[i];
 
 	return ret;

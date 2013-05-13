@@ -45,7 +45,7 @@ string ddbase = "<div style='width: 100%'>\
 <div style='[[cssrgt]]'></div>\
 </div>";
 
-string html_top="<html>\
+string html_top = "<html>\
 <head>\
 <title>NativeStat - NativeHTTP server stats</title>\
 <link href='http://fonts.googleapis.com/css?family=Basic' rel='stylesheet' type='text/css'>\
@@ -69,14 +69,14 @@ Server version: [[srvVer]]</div>\
 </html>\
 ";
 
-string logform="\
+string logform = "\
 <form method='POST' action='#'>\
 Security Password:<br/>\
 <input type='password' name='scky' />\
 <input type='submit' value='enter' />\
 </form>";
 
-string logformbad="\
+string logformbad = "\
 <span style='color: red;'>Wrong Password!</span> Retry:<br/>\
 <form method='POST' action='#'>\
 Security Password:<br/>\
@@ -84,7 +84,7 @@ Security Password:<br/>\
 <input type='submit' value='enter' />\
 </form>";
 
-string page_style="body\
+string page_style = "body\
 {\
 background-color: #eee;\
 }\

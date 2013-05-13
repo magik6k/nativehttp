@@ -32,24 +32,24 @@ freely, subject to the following restrictions:
 void page_mapper::page_mapper_init(string d)
 {
 	mapdir(d);
-	for(unsigned int i = 0; i < files.size(); i++)
+	for (unsigned int i = 0; i < files.size(); i++)
 	{
 		page tmp = bscpageset(files[i]);
-		if(tmp.type == -1)continue;
+		if (tmp.type == -1)continue;
 
 #ifdef NHDBG
 		size_t bm = getacmem();
 		size_t rm = getrsmem();
 #endif
 
-		if(is_dotso(files[i], strlen(files[i])))
+		if (is_dotso(files[i], strlen(files[i])))
 		{
 			load_so(tmp, files[i], d, NULL);
 #ifdef NHDBG
 			cout << "[DBG:init.cpp@pagemap]so init virt mem: " << (getacmem() - bm) / 1024.f << "kb, res: " << (getrsmem() - rm) / 1024.f << "kb\n(" << files[i] << ")\n";
 #endif
 		}
-		else if(is_dotnhp(files[i], strlen(files[i])))
+		else if (is_dotnhp(files[i], strlen(files[i])))
 		{
 			load_nhp(tmp, files[i], d);
 #ifdef NHDBG

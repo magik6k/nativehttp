@@ -36,7 +36,7 @@ namespace nativehttp
 	}
 	void data::pagedata::operator()(string s)
 	{
-		if(data)delete[]data;
+		if (data)delete[]data;
 		data = new char[s.size()];
 		size = s.size();
 		memcpy(data, s.c_str(), size);
@@ -54,19 +54,19 @@ namespace nativehttp
 
 	extern "C" string server::version()
 	{
-		return "NativeHTTP Alpha "+data::superstring::str_from_int(NATIVEHTTP_API_VERSION);
+		return "NativeHTTP Alpha " + data::superstring::str_from_int(NATIVEHTTP_API_VERSION);
 	}
 
 	extern "C" void server::log(string lname, string value)
 	{
-		if(!deamonized)cout << "[" << lname.c_str() << "]" << value.c_str() << endl;
-		if(logfile.is_open())logfile << "[" << lname.c_str() << "]" << value.c_str() << endl;
+		if (!deamonized)cout << "[" << lname.c_str() << "]" << value.c_str() << endl;
+		if (logfile.is_open())logfile << "[" << lname.c_str() << "]" << value.c_str() << endl;
 	}
 
 	extern "C" void server::logid(int id, string lname, string value)
 	{
-		if(!deamonized)cout << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
-		if(logfile.is_open())logfile << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
+		if (!deamonized)cout << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
+		if (logfile.is_open())logfile << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
 	}
 
 }

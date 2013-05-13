@@ -40,25 +40,25 @@ namespace data
 			size_t newsize = fileds + 3; //alloc 3 more keys
 			nativehttp::data::cfgfil **newkeys = new nativehttp::data::cfgfil*[newsize];
 			size_t i;
-			for(i = 0; i < fileds; i++)
+			for (i = 0; i < fileds; i++)
 			{
 				newkeys[i] = keys[i];
 			}
-			for(; i < newsize; i++)
+			for (; i < newsize; i++)
 			{
 				newkeys[i] = NULL;
 			}
 			nativehttp::data::cfgfil **oks = keys;
 			keys = newkeys;
-			if(oks)delete[] oks;
+			if (oks)delete[] oks;
 			fileds = newsize;
 		}
 
 		size_t sbmain::getfreekeyid()
 		{
-			for(size_t i = 0; i < fileds; i++)
+			for (size_t i = 0; i < fileds; i++)
 			{
-				if(!keys[i])
+				if (!keys[i])
 				{
 					return i;
 				}
@@ -78,11 +78,11 @@ namespace data
 
 		size_t sbmain::getkeyid(string kn)
 		{
-			for(size_t i = 0; i < fileds; i++)
+			for (size_t i = 0; i < fileds; i++)
 			{
-				if(keys[i])
+				if (keys[i])
 				{
-					if(keys[i]->name == kn)
+					if (keys[i]->name == kn)
 					{
 						return i;
 					}
