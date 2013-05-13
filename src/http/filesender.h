@@ -22,13 +22,12 @@ freely, subject to the following restrictions:
 */
 #ifndef FILESENDER_H_INCLUDED
 #define FILESENDER_H_INCLUDED
-
+#include "protocol.h"
+#include "data.h"
 namespace http
 {
-	namespace filesender
-	{
+	void *fsender(void *unused);
 
-	}
 }
 
 #endif // FILESENDER_H_INCLUDED

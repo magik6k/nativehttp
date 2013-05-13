@@ -129,6 +129,10 @@ namespace http
 				{
 					cout << "ANC module crash\n";
 				}
+				if (pthread_equal(*http::theard_fs, pthread_self()) != 0)
+				{
+					cout << "File sender module crash\n";
+				}
 				for (int i = 0; i < http::Nsend; i++)
 				{
 					if (pthread_equal(*(http::theard_sd[i]), pthread_self()) != 0)

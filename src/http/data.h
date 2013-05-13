@@ -121,6 +121,7 @@ namespace http
 	extern pthread_t *theard_nc;
 	extern pthread_t **theard_sd;
 	extern pthread_t *theard_mg;
+	extern pthread_t *theard_fs;
 
 	namespace headers
 	{

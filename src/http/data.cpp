@@ -70,6 +70,7 @@ namespace http
 	pthread_t *theard_nc = NULL;
 	pthread_t **theard_sd = NULL;
 	pthread_t *theard_mg = NULL;
+	pthread_t *theard_fs = NULL;
 
 	namespace headers
 	{

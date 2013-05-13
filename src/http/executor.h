@@ -36,6 +36,7 @@ namespace http
 		struct lrqd
 		{
 			unsigned int clen;
+			char d501;
 		};
 
 		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld);

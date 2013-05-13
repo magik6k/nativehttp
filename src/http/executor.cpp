@@ -76,13 +76,7 @@ namespace http
 				SDL_Delay(1);
 				continue;
 			}
-			if (http::toexec.front()->taken != exc->id)   //it's just impossible, but...
-			{
-				nativehttp::server::log("IMPOSSIBLE ERROR", "This error is impossible to occur, if you see this, god will left you..");
-				SDL_mutexV(http::mtx_exec);
-				SDL_Delay(1);
-				continue;
-			}
+
 
 			http::toexec.pop();
 			SDL_mutexV(http::mtx_exec);
@@ -95,6 +89,7 @@ namespace http
 			rd.session = NULL;
 
 			ld.clen = 0;
+			ld.d501 = 0;
 
 			http::rproc::line0(process, rd, ld);
 
@@ -134,6 +129,27 @@ namespace http
 
 			http::rproc::header(process, rd, ld);
 
+            if(ld.d501)
+            {
+                if (rd.cookie)
+                {
+                    delete rd.cookie;
+                }
+                if (rd.get)
+                {
+                    delete rd.get;
+                }
+                if (rd.post)
+                {
+                    delete rd.post;
+                }
+
+                http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
+				http::unlockclient(process->uid);
+				delete process;
+				process = NULL;
+				continue;
+            }
 
 			if (!rd.cookie)
 			{

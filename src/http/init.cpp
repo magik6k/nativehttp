@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "error.h"
 #include "manager.h"
 #include "stat.h"
+#include "filesender.h"
 #include "data/session/session.h"
 #include "net/net.h"
 #ifdef NHDBG
@@ -216,10 +217,19 @@ namespace http
 			if (tmks != 0)nativehttp::server::logid(i, "init.cpp", "Sender failed to start");
 		}
 
+
+
 		if (pthread_attr_setstacksize(&at, 256 * 1024) != 0)
 		{
-			nativehttp::server::log("init.cpp@http", "ERROR: Setting manager heap size failed");
+			nativehttp::server::log("init.cpp@http", "ERROR: Setting manager/file sender heap size failed");
 		}
+
+		tt = new pthread_t;
+		tms = pthread_create(tt, &at, http::fsender, NULL);
+
+		http::theard_fs = tt;
+		if (tms != 0)nativehttp::server::log("init.cpp", "File Sender failed to start");
+
 
 		tt = new pthread_t;
 		tms = pthread_create(tt, &at, http::manager::manager, NULL);

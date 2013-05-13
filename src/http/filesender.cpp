@@ -24,4 +24,17 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include "filesender.h"
 
+namespace http
+{
+    void *fsender(void *unused)
+    {
+        prctl(PR_SET_NAME, "nh-fsend", 0, 0, 0);
+        nativehttp::server::log("filesender.cpp","fs UP!");
+        while(1)
+        {
+            SDL_Delay(1);
+        }
 
+        return NULL;
+    }
+}
