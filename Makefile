@@ -40,6 +40,7 @@ NHS = \
 	$(NHD)/data/superstring/typed/int32/convert.cpp \
 	$(NHD)/data/superstring/typed/int32/core.cpp \
 	$(NHD)/data/superstring/typed/int32/misc.cpp \
+	$(NHD)/data/superstring/typed/int64/convert.cpp \
 	$(NHD)/data/superstring/typed/size/convert.cpp \
 	$(NHD)/data/superstring/typed/string/content.cpp \
 	$(NHD)/data/superstring/typed/string/convert.cpp \
@@ -61,6 +62,7 @@ NHS = \
 	$(NHD)/http/executor/executor.cpp \
 	$(NHD)/http/executor/header.cpp \
 	$(NHD)/http/executor/post.cpp \
+	$(NHD)/http/executor/queue.cpp \
 	$(NHD)/http/filesender.cpp \
 	$(NHD)/http/init.cpp \
 	$(NHD)/http/manager.cpp \

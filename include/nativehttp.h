@@ -106,6 +106,11 @@ namespace nativehttp
 				static string str_from_int(int in);
 				static superstring sst_from_int(int in);
 
+				/** 64bit integer functions */
+                static string str_from_int64(int64_t in);
+				static superstring sst_from_int64(int64_t in);
+                static int64_t int64_from_sst(superstring in);
+                static int64_t int64_from_str(string in);
 
 				/** Size functions */
 				static string str_from_size(size_t in);

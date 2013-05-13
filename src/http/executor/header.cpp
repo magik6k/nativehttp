@@ -46,12 +46,17 @@ namespace http
 			hss.str = hss.to("\r\n\r\n");
 			hss.pos = 0;
 
+			ld.rng_start=0;
+			ld.rng_end=-1;
+
+            hss.add_token(nativehttp::data::token("_%$<Unimplemented>$%_", -1));
 			hss.add_token(nativehttp::data::token("\r\n\r\n", 0));
 			hss.add_token(nativehttp::data::token("Host: ", 1));
 			hss.add_token(nativehttp::data::token("User-Agent: ", 2));
 			hss.add_token(nativehttp::data::token("Referer: ", 3));
 			hss.add_token(nativehttp::data::token("Cookie: ", 4));
 			hss.add_token(nativehttp::data::token("Content-Length: ", 5));
+			hss.add_token(nativehttp::data::token("Range: ", 6));
 
 			while (hss.pos < hss.str.size())
 			{
@@ -59,6 +64,9 @@ namespace http
 				if (pt.id == 0)break;
 				switch (pt.id)
 				{
+                    case -1:
+						ld.d501 = 1;
+						break;
 					case 1:
 						rd.host = hss.to("\r\n");
 						break;
@@ -74,6 +82,25 @@ namespace http
 					case 5:
 						ld.clen = strtol(hss.to("\r\n").c_str(), NULL, 10);
 						break;
+                    case 6:
+                        nativehttp::data::superstring btr(hss.to("\r\n"));
+                        btr(btr.from("bytes="));
+                        btr.pos=0;
+                        if(btr.str[0]!='-')
+                        {
+                            ld.rng_start = nativehttp::data::superstring::int64_from_str(btr.to("-"));
+                        }
+                        else
+                        {
+                            btr.pos++;
+                            ld.rng_start = -nativehttp::data::superstring::int64_from_str(btr.to(","));///handling only 1 range. @TODO 206 here
+                            btr.pos = btr.str.size()-1;
+                        }
+                        if(btr.str[btr.str.size()-1]!='-'&&btr.pos<btr.str.size()-1)
+                        {
+                            ld.rng_end = nativehttp::data::superstring::int64_from_str(btr.to(","));///handling only 1 range. @TODO 206 here
+                        }
+                        break;
 				}
 			}
 

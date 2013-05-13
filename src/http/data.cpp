@@ -74,7 +74,7 @@ namespace http
 
 	namespace headers
 	{
-		string standard = "Accept-Ranges: none\r\nAllow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";
+		string standard = "Allow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";
 		string alive = "Connection: keep-alive\r\nKeep-Alive: timeout=";
 		string alivetimeout;
 	}

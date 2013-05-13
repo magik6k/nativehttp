@@ -37,7 +37,11 @@ namespace http
 		{
 			unsigned int clen;
 			char d501;
+			size_t rng_start;
+			size_t rng_end;
 		};
+
+		http::request* get_proc(http::Sexecutor *exc);
 
 		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld);
 		bool ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd);

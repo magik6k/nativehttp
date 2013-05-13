@@ -39,47 +39,18 @@ namespace http
 	void *executor(void *eid)
 	{
 		http::Sexecutor *exc = (http::Sexecutor*)eid;
+
 		exc->state = -1;
+
 		nativehttp::rdata rd;
 		http::rproc::lrqd ld;
-		int ts = 0;
 
 		prctl(PR_SET_NAME, ("nh-exec-" + nativehttp::data::superstring::str_from_int(exc->id)).c_str(), 0, 0, 0);
 
 		while (true)
 		{
-			SDL_mutexP(http::mtx_exec);
-			if (http::toexec.size() <= 0)
-			{
-				SDL_mutexV(http::mtx_exec);
-				SDL_Delay(1);
-				continue;
-			}
-			if (http::toexec.front(ts)->taken > 0)
-			{
-				SDL_mutexV(http::mtx_exec);
-				SDL_Delay(1);
-				continue;
-			}
-			if (ts == 1)
-			{
-				SDL_mutexV(http::mtx_exec);
-				SDL_Delay(1);
-				continue;
-			}
-			http::toexec.front()->taken = exc->id;
-			http::request *process = http::toexec.front(ts);
-			if (ts == 1)
-			{
-				SDL_mutexV(http::mtx_exec);
-				SDL_Delay(1);
-				continue;
-			}
 
-
-			http::toexec.pop();
-			SDL_mutexV(http::mtx_exec);
-
+            http::request *process = http::rproc::get_proc(exc);
 			http::statdata::onhit();
 
 			rd.get = NULL;
@@ -102,7 +73,7 @@ namespace http
 					break;
 			}
 
-			if (process->method == 0)
+			if (process->method == 0)///unkown method
 			{
 
 				http::send(process->uid, http::error::e400.size, http::error::e400.data, false);
@@ -110,14 +81,15 @@ namespace http
 				delete[] process->request;
 				continue;
 			}
-			if (process->method == 3)
+
+			if (process->method == 3)///unimplemented method
 			{
 				http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
 				http::unlockclient(process->uid);
 				delete[] process->request;
 				continue;
 			}
-			if (!process->http11)
+			if (!process->http11)///HTTP/1.1 only
 			{
 				http::send(process->uid, http::error::e505.size, http::error::e505.data, false);
 				http::unlockclient(process->uid);
@@ -155,6 +127,7 @@ namespace http
 				rd.cookie = new nativehttp::data::cookiedata("");
 			}
 
+            ///POST checking begin
 			if (ld.clen > 0 && process->method == 2)
 			{
 				if (ld.clen > http::maxPost)
@@ -211,12 +184,15 @@ namespace http
 					continue;//will be disconnected
 				}
 			}
+			///POST checking end
+
+
 			delete[] process->request;
 			process->request = NULL;
 
 			rd.remoteIP = http::client_ips[process->uid];
 
-			if (rd.cookie && http::usesessions)
+			if (rd.cookie && http::usesessions)///setup sessions
 			{
 				rd.session = new nativehttp::data::session;
 				rd.session->__init(rd.cookie);
@@ -227,7 +203,11 @@ namespace http
 			exc->fd2 = rd.get;
 			exc->in = 2;
 			exc->state = time(0);
-			if (http::rproc::ex(result, &rd))
+
+			bool exstate = http::rproc::ex(result, &rd);
+
+			///CLEANUP, sending
+			if (exstate)
 			{
 				exc->state = -1;
 				exc->in = 0;
@@ -274,6 +254,9 @@ namespace http
 			http::unlockclient(process->uid);
 			delete process;
 			process = NULL;
+
+			///CLEANUP end
+
 		}
 		return NULL;
 	}
