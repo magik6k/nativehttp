@@ -57,7 +57,10 @@ NHS = \
 	$(NHD)/data/session/storage.cpp \
 	$(NHD)/http/data.cpp \
 	$(NHD)/http/error.cpp \
-	$(NHD)/http/executor.cpp \
+	$(NHD)/http/executor/excore.cpp \
+	$(NHD)/http/executor/executor.cpp \
+	$(NHD)/http/executor/header.cpp \
+	$(NHD)/http/executor/post.cpp \
 	$(NHD)/http/filesender.cpp \
 	$(NHD)/http/init.cpp \
 	$(NHD)/http/manager.cpp \
