@@ -153,4 +153,19 @@ a:hover\
 {\
 text-decoration: none;\
 color: #009E18;\
+}\
+.lr\
+{\
+stroke:rgb(187,17,17);\
+stroke-width:1;\
+}\
+.lo\
+{\
+stroke:rgb(220,80,0);\
+stroke-width:1;\
+}\
+.lg\
+{\
+stroke:rgb(17,187,17);\
+stroke-width:1;\
 }";

@@ -3,6 +3,7 @@ For more info visit http://nativehttp.org
 
 DEV:
 -subdomains
+-NativeStat improvements
 
 1105.13:
 -Special macros for returning OnLoad status

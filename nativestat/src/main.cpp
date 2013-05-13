@@ -92,7 +92,7 @@ extern "C"
             {
                 if(nh::server::stat::hourly_length())
                 {
-                    unsigned long mxt=1;
+                    double mxt=1;
                     for(unsigned long i=0;i<nh::server::stat::hourly_length();i++)
                     {
                         if(mxt<(nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i)))mxt=(nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i));
@@ -104,28 +104,28 @@ extern "C"
                     long long old=(nh::server::stat::hour_download(0));
                     for(unsigned long i=0;i<4;i++)
                     {
-                        diag+="<line x1=\"0\" x2=\"100%\" y1=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\" y2=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\" style=\"stroke:rgb(50,50,50);stroke-width:0.5px\" />";
-                        diag+="<text x=\"90%\"  y=\""+nh::data::superstring::str_from_int((i+1)*20)+"%\"> "+nh::data::superstring::str_from_size(mxt/(i+2))+"</text>";
+                        diag+="<line x1=\"0\" x2=\"100%\" y1=\""+nh::data::superstring::str_from_double((i+1)*20)+"%\" y2=\""+nh::data::superstring::str_from_double((i+1)*20)+"%\" style=\"stroke:rgb(50,50,50);stroke-width:0.5px\" />";
+                        diag+="<text x=\"90%\"  y=\""+nh::data::superstring::str_from_double((i+1)*20)+"%\"> "+nh::data::superstring::str_from_size(mxt/(i+2))+"</text>";
                     }
-                    for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
+                    for(double i=1.f;i<nh::server::stat::hourly_length();i++)
                     {
-                        diag+="<line x1=\""+content.str_from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
-                            "%\" y1=\""+content.str_from_int(100-((olt*100)/mxt))+\
-                            "%\" x2=\""+content.str_from_int(((i)*100)/nh::server::stat::hourly_length())+\
-                            "%\" y2=\""+content.str_from_int(100-(((nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i))*100)/mxt))+\
-                            "%\" style=\"stroke:rgb(220,80,0);stroke-width:1\" />";
+                        diag+="<line x1=\""+content.str_from_double(((i-1.f)*100.f)/double(nh::server::stat::hourly_length()))+\
+                            "%\" y1=\""+content.str_from_double(100.f-((olt*100.f)/mxt))+\
+                            "%\" x2=\""+content.str_from_double(((i)*100.f)/double(nh::server::stat::hourly_length()))+\
+                            "%\" y2=\""+content.str_from_double(100.f-(((nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i))*100.f)/mxt))+\
+                            "%\" class=lo />";
 
-                        diag+="<line x1=\""+content.str_from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
-                            "%\" y1=\""+content.str_from_int(100-((olu*100)/mxt))+\
-                            "%\" x2=\""+content.str_from_int(((i)*100)/nh::server::stat::hourly_length())+\
-                            "%\" y2=\""+content.str_from_int(100-(((nh::server::stat::hour_upload(i))*100)/mxt))+\
-                            "%\" style=\"stroke:rgb(17,187,17);stroke-width:1\" />";
+                        diag+="<line x1=\""+content.str_from_double(((i-1.f)*100.f)/double(nh::server::stat::hourly_length()))+\
+                            "%\" y1=\""+content.str_from_double(100.f-((olu*100.f)/mxt))+\
+                            "%\" x2=\""+content.str_from_double(((i)*100.f)/double(nh::server::stat::hourly_length()))+\
+                            "%\" y2=\""+content.str_from_double(100.f-(((nh::server::stat::hour_upload(i))*100.f)/mxt))+\
+                            "%\" class=lg />";
 
-                        diag+="<line x1=\""+content.str_from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
-                            "%\" y1=\""+content.str_from_int(100-((old*100)/mxt))+\
-                            "%\" x2=\""+content.str_from_int(((i)*100)/nh::server::stat::hourly_length())+\
-                            "%\" y2=\""+content.str_from_int(100-(((nh::server::stat::hour_download(i))*100)/mxt))+\
-                            "%\" style=\"stroke:rgb(187,17,17);stroke-width:1\" />";
+                        diag+="<line x1=\""+content.str_from_double(((i-1)*100.f)/double(nh::server::stat::hourly_length()))+\
+                            "%\" y1=\""+content.str_from_double(100.f-((old*100.f)/mxt))+\
+                            "%\" x2=\""+content.str_from_double(((i)*100.f)/double(nh::server::stat::hourly_length()))+\
+                            "%\" y2=\""+content.str_from_double(100.f-(((nh::server::stat::hour_download(i))*100.f)/mxt))+\
+                            "%\" class=lr />";
 
                         olt=(nh::server::stat::hour_upload(i)+nh::server::stat::hour_download(i));
                         olu=(nh::server::stat::hour_upload(i));
@@ -153,7 +153,7 @@ extern "C"
             content.change("[[general_usage]]","<br/><b>Recived Connections: </b> <code>"+content.str_from_int(nh::server::stat::connections())+"</code>");
             if(nh::server::stat::hit_stats())
             {
-                unsigned long mxt=1;
+                double mxt=1;
                 for(unsigned long i=0;i<nh::server::stat::hourly_length();i++)
                 {
                     if(mxt<(nh::server::stat::hour_hits(i)))mxt=(nh::server::stat::hour_hits(i));
@@ -168,11 +168,11 @@ extern "C"
                 }
                 for(unsigned long i=1;i<nh::server::stat::hourly_length();i++)
                 {
-                    diag+="<line x1=\""+content.str_from_int(((i-1)*100)/nh::server::stat::hourly_length())+\
-                        "%\" y1=\""+content.str_from_int(100-((olh*100)/mxt))+\
-                        "%\" x2=\""+content.str_from_int(((i)*100)/nh::server::stat::hourly_length())+\
-                        "%\" y2=\""+content.str_from_int(100-(((nh::server::stat::hour_hits(i))*100)/mxt))+\
-                        "%\" style=\"stroke:rgb(187,17,17);stroke-width:1\" />";
+                    diag+="<line x1=\""+content.str_from_double(((i-1.f)*100.f)/nh::server::stat::hourly_length())+\
+                        "%\" y1=\""+content.str_from_double(100.f-((double(olh)*100.f)/mxt))+\
+                        "%\" x2=\""+content.str_from_double(((i)*100.f)/double(nh::server::stat::hourly_length()))+\
+                        "%\" y2=\""+content.str_from_double(100.f-(double((nh::server::stat::hour_hits(i))*100.f)/mxt))+\
+                        "%\" class=lr />";
                     olh=(nh::server::stat::hour_hits(i));
                 }
 
@@ -199,6 +199,7 @@ extern "C"
         }
 
         page.change("[[content]]",content.str);
+        content.clear();
         return nativehttp::data::pagedata(page.str);
     }
 }
