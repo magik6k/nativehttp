@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <sqlite3.h>
 
-#define NATIVEHTTP_API_VERSION 8
+#define NATIVEHTTP_API_VERSION 9
 #define initated() return -(NATIVEHTTP_API_VERSION)
 #define initerr(_rcode) return ((_rcode>0)?(_rcode):(-(_rcode)))+2
 

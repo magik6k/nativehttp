@@ -39,7 +39,7 @@ namespace http
 	namespace rproc
 	{
 
-		bool ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd)
+		uint8_t ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd, http::rproc::lrqd &ld)
 		{
 			page pid = pmap.by_uri(rd->uri.c_str());
 
@@ -68,7 +68,7 @@ namespace http
 						else
 						{
 							cout << "-------\n";
-							cout << "Native Page execution stats:\n";
+							cout << "[Debug]Native Page execution stats:\n";
 							cout << "File: " << pid.file << endl;
 							cout << "Time of execution: " << et << "ms\n";
 
@@ -110,12 +110,24 @@ namespace http
 						memcpy(pd.data + snd.size(), ts.data, ts.size);
 						memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
 						delete[]ts.data;
-						return false;
+						return 0;
 					}
 					break;
 				case page_file:
 					{
 
+                        fsrq req;
+                        req.file = (const char*)pid.data;
+                        req.uid = ld.uid;
+                        req.rngs = ld.rng_start;
+                        req.rnge = ld.rng_end;
+
+                        SDL_mutexP(http::mtx_fsnd);
+                        http::fsend.push(req);
+                        SDL_mutexV(http::mtx_fsnd);
+
+                        return 2;
+                        /*
 						FILE *f = fopen((const char*)pid.data, "r");
 						if (f)
 						{
@@ -140,18 +152,16 @@ namespace http
 							memcpy(pd.data + snd.size() + size, snd2.c_str(), snd2.size());
 							delete[] b;
 							fclose(f);
+
 							return false;
-						}
-						else
-						{
-							return true;
-						}
+						}*/
+
 					}
 					break;
 				default:
-					return true;
+					return 1;
 			}
-			return true;
+			return 1;
 
 		}
 

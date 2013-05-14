@@ -2,7 +2,7 @@ NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
 DEV:
--Subdomains[TODO]
+-Async file sender
 -NativeStat improvements
 -Executor clean-up
 -64bit integer conversions in SuperString

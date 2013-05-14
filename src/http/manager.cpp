@@ -127,11 +127,11 @@ namespace http
 				}
 				if (pthread_equal(*http::theard_nc, pthread_self()) != 0)
 				{
-					cout << "ANC module crash\n";
+					nativehttp::server::log("manager.cpp", "ANC module crash");
 				}
 				if (pthread_equal(*http::theard_fs, pthread_self()) != 0)
 				{
-					cout << "File sender module crash\n";
+					nativehttp::server::log("manager.cpp", "File sender module crash");
 				}
 				for (int i = 0; i < http::Nsend; i++)
 				{

@@ -39,12 +39,15 @@ namespace http
 			char d501;
 			size_t rng_start;
 			size_t rng_end;
+			int uid;
 		};
 
 		http::request* get_proc(http::Sexecutor *exc);
 
 		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld);
-		bool ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd);
+
+		uint8_t ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd, http::rproc::lrqd &ld);
+
 		void line0(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld);
 		void header(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld);
 	}

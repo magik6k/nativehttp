@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include <SDL/SDL.h>
 #include "nativehttp.h"
 #include "protocol.h"
+#include "filesender.h"
 #include "data/queue.h"
 
 #include <pthread.h>
@@ -114,9 +115,14 @@ namespace http
 	extern nativehttp::data::queue<request*>toexec;
 	extern nativehttp::data::queue<outdata>tosend;
 
+	extern nativehttp::data::queue<fsrq>fsend;//file sender
+	extern fsrq_run* shq;
+	extern size_t sqln;
+
 	extern SDL_mutex *mtx_exec2;
 	extern SDL_mutex *mtx_exec;
 	extern SDL_mutex *mtx_snd;
+	extern SDL_mutex *mtx_fsnd;
 
 	extern pthread_t *theard_nc;
 	extern pthread_t **theard_sd;

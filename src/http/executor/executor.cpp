@@ -204,10 +204,12 @@ namespace http
 			exc->in = 2;
 			exc->state = time(0);
 
-			bool exstate = http::rproc::ex(result, &rd);
+			ld.uid = process->uid;
+
+			uint8_t exstate = http::rproc::ex(result, &rd, ld);
 
 			///CLEANUP, sending
-			if (exstate)
+			if (exstate == 1)
 			{
 				exc->state = -1;
 				exc->in = 0;
@@ -246,12 +248,16 @@ namespace http
 				delete rd.post;
 			}
 
-			if (result.data)
-			{
-				http::send(process->uid, result.size, result.data, true);
+            if(exstate != 2)
+            {
+                if (result.data)
+                {
+                    http::send(process->uid, result.size, result.data, true);
+                }
+
+                http::unlockclient(process->uid);
 			}
 
-			http::unlockclient(process->uid);
 			delete process;
 			process = NULL;
 

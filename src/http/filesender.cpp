@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 
 #include "nativehttp.h"
 #include "filesender.h"
+#include "data.h"
 
 namespace http
 {
@@ -32,7 +33,39 @@ namespace http
         nativehttp::server::log("filesender.cpp","fs UP!");
         while(1)
         {
-            SDL_Delay(1);
+
+
+            for(size_t i = 0; i<http::sqln; i++)
+            {
+
+            }
+
+            SDL_mutexP(http::mtx_fsnd);
+            if(http::fsend.size()>0)///Recive new sending requests
+            {
+                fsrq tr = http::fsend.front();
+
+                for(size_t i = 0; i < http::sqln; i++)
+                {
+                    if(http::shq[i].uid==-1)
+                    {
+                        http::shq[i].uid = tr.uid;
+                        http::shq[i].rngs = tr.rngs;
+                        http::shq[i].rnge = tr.rnge;
+                        http::shq[i].file = tr.file;
+
+                        http::shq[i].state = FSS_Init;
+
+                        http::fsend.pop();
+
+                        nativehttp::server::log("filesender.cpp","Recived request");
+                        break;
+
+                    }
+                }
+
+            }
+            SDL_mutexV(http::mtx_fsnd);
         }
 
         return NULL;

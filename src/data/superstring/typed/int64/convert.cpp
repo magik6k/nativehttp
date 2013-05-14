@@ -28,67 +28,69 @@ freely, subject to the following restrictions:
 
 string nativehttp::data::superstring::str_from_int64(int64_t in)
 {
-	string tmp, ret;
-	if (in < 0)
-	{
-		ret = "-";
-		in = -in;
-	}
-	do
-	{
-		tmp += in % 10 + 48;
-		in -= in % 10;
-	}
-	while (in /= 10);
-	for (unsigned int i = tmp.size() - 1; i >= 0; i--)
-		ret += tmp[i];
+    string tmp, ret;
+    if (in < 0)
+    {
+        ret = "-";
+        in = -in;
+    }
+    do
+    {
+        tmp += in % 10 + 48;
+        in -= in % 10;
+    }
+    while (in /= 10);
+    for (unsigned int i = tmp.size() - 1; i >= 0; i--)
+        ret += tmp[i];
 
-	return ret;
+    return ret;
 }
 
 nativehttp::data::superstring nativehttp::data::superstring::sst_from_int64(int64_t in)
 {
-	string tmp;
-	nativehttp::data::superstring ret;
-	if (in < 0)
-	{
-		ret.str = "-";
-		in = -in;
-	}
-	do
-	{
-		tmp += in % 10 + 48;
-		in -= in % 10;
-	}
-	while (in /= 10);
-	for (unsigned int i = tmp.size() - 1; i >= 0; i--)
-		ret.str += tmp[i];
+    string tmp;
+    nativehttp::data::superstring ret;
+    if (in < 0)
+    {
+        ret.str = "-";
+        in = -in;
+    }
+    do
+    {
+        tmp += in % 10 + 48;
+        in -= in % 10;
+    }
+    while (in /= 10);
+    for (unsigned int i = tmp.size() - 1; i >= 0; i--)
+        ret.str += tmp[i];
 
-	return ret;
+    return ret;
 }
 
 int64_t nativehttp::data::superstring::int64_from_str(string in)
 {
-	int64_t tmp = 0, i = 0;
-     bool m = false;
-     if(in[0] == '-') {
-          m = true;
-          i++;
-     }
-     for(; i < in.size(); i++)
-          tmp = 10 * tmp + in[i] - 48;
-     return m ? -tmp : tmp;
+    int64_t tmp = 0, i = 0;
+    bool m = false;
+    if(in[0] == '-')
+    {
+        m = true;
+        i++;
+    }
+    for(; i < in.size(); i++)
+        tmp = 10 * tmp + in[i] - 48;
+    return m ? -tmp : tmp;
 }
 
 int64_t nativehttp::data::superstring::int64_from_sst(nativehttp::data::superstring in)
 {
-	int64_t tmp = 0, i = 0;
-     bool m = false;
-     if(in.str[0] == '-') {
-          m = true;
-          i++;
-     }
-     for(; i < in.str.size(); i++)
-          tmp = 10 * tmp + in.str[i] - 48;
-     return m ? -tmp : tmp;
+    int64_t tmp = 0, i = 0;
+    bool m = false;
+    if(in.str[0] == '-')
+    {
+        m = true;
+        i++;
+    }
+    for(; i < in.str.size(); i++)
+        tmp = 10 * tmp + in.str[i] - 48;
+    return m ? -tmp : tmp;
 }

@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include "data.h"
 #include "net/net.h"
+#include "filesender.h"
 
 namespace http
 {
@@ -63,9 +64,14 @@ namespace http
 	nativehttp::data::queue<request*>toexec;
 	nativehttp::data::queue<outdata>tosend;
 
+	nativehttp::data::queue<fsrq>fsend;
+	fsrq_run* shq = NULL;
+	size_t sqln = 0;
+
 	SDL_mutex *mtx_exec2 = NULL;
 	SDL_mutex *mtx_exec = NULL;
 	SDL_mutex *mtx_snd = NULL;
+	SDL_mutex *mtx_fsnd = NULL;
 
 	pthread_t *theard_nc = NULL;
 	pthread_t **theard_sd = NULL;

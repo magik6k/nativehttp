@@ -82,9 +82,14 @@ namespace http
 		http::asyncsnd = cfg->get_int("async_send");
 		http::onssl = cfg->get_int("use_ssl");
 
+        http::sqln = 100;
+        http::shq = new fsrq_run[http::sqln];
+        for(size_t i=0;i<http::sqln;i++)http::shq[i].uid=-1;
+
 		http::mtx_exec2 = SDL_CreateMutex();
 		http::mtx_exec = SDL_CreateMutex();
 		http::mtx_snd = SDL_CreateMutex();
+		http::mtx_fsnd = SDL_CreateMutex();
 
 		http::manager::rate = cfg->get_int("managerrate");
 		http::manager::postto = cfg->get_int("posttimeout");
