@@ -101,6 +101,7 @@ namespace http
 		http::error::e400 = http::error::load_error(cfg->get_var("error400"), "400 Bad Request");
 		http::error::e403 = http::error::load_error(cfg->get_var("error403"), "403 Forbidden");
 		http::error::e404 = http::error::load_error(cfg->get_var("error404"), "404 Not Found");
+		http::error::e500 = http::error::load_error(cfg->get_var("error500"), "500 Internal Server Error");
 		http::error::e501 = http::error::load_error(cfg->get_var("error501"), "501 Not Implemented");
 		http::error::e505 = http::error::load_error(cfg->get_var("error505"), "505 HTTP Version Not Supported");
 

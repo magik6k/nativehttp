@@ -100,7 +100,13 @@ namespace http
 
                             if (aio_read(&http::shq[i].aio) == -1)
                             {
-                                #warning TODO error here
+                                http::send(http::shq[i].uid, http::error::e500.size, http::error::e500.data, false);
+                                http::unlockclient(http::shq[i].uid);
+
+                                close(http::shq[i].fd);
+                                delete[] (char*)http::shq[i].buf;
+
+                                http::shq[i].fd = -1;
                                 break;
                             }
 
@@ -114,7 +120,13 @@ namespace http
 
                             if(brd == -1)
                             {
-                                #warning TODO error here
+                                http::send(http::shq[i].uid, http::error::e500.size, http::error::e500.data, false);
+                                http::unlockclient(http::shq[i].uid);
+
+                                close(http::shq[i].fd);
+                                delete[] (char*)http::shq[i].buf;
+
+                                http::shq[i].fd = -1;
                                 break;
                             }
                             char* tdt = new char[brd];
