@@ -35,14 +35,15 @@ namespace http
     {
         prctl(PR_SET_NAME, "nh-fsend", 0, 0, 0);
         nativehttp::server::log("filesender.cpp","fs UP!");
+        int fast = 100000;
         while(1)
         {
-
-
+            if(fast>0)fast--;
             for(size_t i = 0; i<http::sqln; i++)
             {
                 if(http::shq[i].uid!=-1)
                 {
+                    fast = 100000;
                     switch(http::shq[i].state)
                     {
                         case FSS_Init:
@@ -186,8 +187,19 @@ namespace http
             }
             SDL_mutexV(http::mtx_fsnd);
 
-            SDL_Delay(1);
-            #warning TODO optimize
+            if(fast<=0)
+            {
+                SDL_Delay(5);
+            }
+            else
+            {
+                timespec t;
+                t.tv_sec = 0;
+                t.tv_nsec = 1000;//1 microsecond
+                nanosleep(&t,NULL);
+            }
+
+
         }
 
         return NULL;
