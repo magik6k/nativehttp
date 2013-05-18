@@ -36,85 +36,85 @@ size_t lastexecmem = 0;
 
 namespace http
 {
-	namespace rproc
-	{
+    namespace rproc
+    {
 
-		uint8_t ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd, http::rproc::lrqd &ld)
-		{
-			page pid = pmap.by_uri(rd->uri.c_str());
+        uint8_t ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd, http::rproc::lrqd &ld)
+        {
+            page pid = pmap.by_uri(rd->uri.c_str());
 
-			switch (pid.type)
-			{
-				case page_native:
-					{
-						rd->ctype = "text/html;charset=" + charset;
-						rd->response = "200 OK";
+            switch (pid.type)
+            {
+                case page_native:
+                    {
+                        rd->ctype = "text/html;charset=" + charset;
+                        rd->response = "200 OK";
 
-						nativepage *npp = (nativepage*)pid.data;
+                        nativepage *npp = (nativepage*)pid.data;
 #ifdef NHDBG
-						size_t bm = getacmem() + getrsmem();
-						unsigned int pgt = SDL_GetTicks();
+                        size_t bm = getacmem() + getrsmem();
+                        unsigned int pgt = SDL_GetTicks();
 #endif
-						SDL_mutexP(http::mtx_exec2);
-						nativehttp::data::pagedata ts = npp->page(rd);   //<<<execution of page
-						SDL_mutexV(http::mtx_exec2);
+                        SDL_mutexP(http::mtx_exec2);
+                        nativehttp::data::pagedata ts = npp->page(rd);   //<<<execution of page
+                        SDL_mutexV(http::mtx_exec2);
 #ifdef NHDBG
-						unsigned int et = SDL_GetTicks() - pgt;
-						if (!http::extmemstats)
-						{
-							cout << "[DBG:executor.cpp@http]Page execution allcocated: "
-							     << (getacmem() + getrsmem() - bm) / 1024LL << "kb, time: " << et << "ms\n";
-						}
-						else
-						{
-							cout << "-------\n";
-							cout << "[Debug]Native Page execution stats:\n";
-							cout << "File: " << pid.file << endl;
-							cout << "Time of execution: " << et << "ms\n";
+                        unsigned int et = SDL_GetTicks() - pgt;
+                        if (!http::extmemstats)
+                        {
+                            cout << "[DBG:executor.cpp@http]Page execution allcocated: "
+                                 << (getacmem() + getrsmem() - bm) / 1024LL << "kb, time: " << et << "ms\n";
+                        }
+                        else
+                        {
+                            cout << "-------\n";
+                            cout << "[Debug]Native Page execution stats:\n";
+                            cout << "File: " << pid.file << endl;
+                            cout << "Time of execution: " << et << "ms\n";
 
-							cout << "Total Memory: ";
-							utils::memory::printmemsize(getacmem() + getrsmem());
-							cout << endl;
+                            cout << "Total Memory: ";
+                            utils::memory::printmemsize(getacmem() + getrsmem());
+                            cout << endl;
 
-							cout << "Memory allocated by page execution: ";
-							utils::memory::printmemsize(getacmem() + getrsmem() - bm);
-							cout << endl;
+                            cout << "Memory allocated by page execution: ";
+                            utils::memory::printmemsize(getacmem() + getrsmem() - bm);
+                            cout << endl;
 
-							cout << "Memory change since init: ";
-							utils::memory::printmemsize
-							(int64_t(getacmem() + getrsmem()) - int64_t(http::init_memory));
-							cout << endl;
+                            cout << "Memory change since init: ";
+                            utils::memory::printmemsize
+                            (int64_t(getacmem() + getrsmem()) - int64_t(http::init_memory));
+                            cout << endl;
 
-							cout << "Memory change since LPE: ";
-							utils::memory::printmemsize
-							(int64_t(getacmem() + getrsmem()) - int64_t(lastexecmem));
-							cout << endl;
+                            cout << "Memory change since LPE: ";
+                            utils::memory::printmemsize
+                            (int64_t(getacmem() + getrsmem()) - int64_t(lastexecmem));
+                            cout << endl;
 
-							cout << "-------\n";
-						}
+                            cout << "-------\n";
+                        }
 
-						lastexecmem = getacmem() + getrsmem();
+                        lastexecmem = getacmem() + getrsmem();
 #endif
-						string snd = "HTTP/1.1 " + rd->response + "\r\n" + http::headers::standard;
-						snd += http::headers::alive + http::headers::alivetimeout;
-						snd += "Content-Type: " + rd->ctype + "\r\nContent-Length: ";
-						snd += its(ts.size);
-						snd += "\r\n";
-						snd += rd->cookie->gethead();
-						snd += "\r\n";
-						string snd2 = "\r\n";
+                        string snd = "HTTP/1.1 " + rd->response + "\r\n" + http::headers::standard;
+                        snd += http::headers::alive + http::headers::alivetimeout;
+                        snd += "Content-Type: " + rd->ctype + "\r\nContent-Length: ";
+                        snd += its(ts.size);
+                        snd += "\r\n";
+                        snd += rd->cookie->gethead();
+                        snd += "\r\n";
+                        string snd2 = "\r\n";
 
-						pd.size = snd.size() + ts.size + snd2.size();
-						pd.data = new char[pd.size];
-						memcpy(pd.data, snd.c_str(), snd.size());
-						memcpy(pd.data + snd.size(), ts.data, ts.size);
-						memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
-						delete[]ts.data;
-						return 0;
-					}
-					break;
-				case page_file:
-					{
+                        pd.size = snd.size() + ts.size + snd2.size();
+                        pd.data = new char[pd.size];
+                        memcpy(pd.data, snd.c_str(), snd.size());
+                        memcpy(pd.data + snd.size(), ts.data, ts.size);
+                        memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
+                        delete[]ts.data;
+                        return 0;
+                    }
+                    break;
+                case page_file:
+                    {
 
                         fsrq req;
                         req.file = (const char*)pid.data;
@@ -128,14 +128,14 @@ namespace http
 
                         return 2;
 
-					}
-					break;
-				default:
-					return 1;
-			}
-			return 1;
+                    }
+                    break;
+                default:
+                    return 1;
+            }
+            return 1;
 
-		}
+        }
 
-	}//namespace rproc
+    }//namespace rproc
 }//http namespace

@@ -36,69 +36,69 @@ freely, subject to the following restrictions:
 namespace http
 {
 
-	void *executor(void *eid)
-	{
-		http::Sexecutor *exc = (http::Sexecutor*)eid;
+    void *executor(void *eid)
+    {
+        http::Sexecutor *exc = (http::Sexecutor*)eid;
 
-		exc->state = -1;
+        exc->state = -1;
 
-		nativehttp::rdata rd;
-		http::rproc::lrqd ld;
+        nativehttp::rdata rd;
+        http::rproc::lrqd ld;
 
-		prctl(PR_SET_NAME, ("nh-exec-" + nativehttp::data::superstring::str_from_int(exc->id)).c_str(), 0, 0, 0);
+        prctl(PR_SET_NAME, ("nh-exec-" + nativehttp::data::superstring::str_from_int(exc->id)).c_str(), 0, 0, 0);
 
-		while (true)
-		{
+        while (true)
+        {
 
             http::request *process = http::rproc::get_proc(exc);
-			http::statdata::onhit();
+            http::statdata::onhit();
 
-			rd.get = NULL;
-			rd.post = NULL;
-			rd.cookie = NULL;
-			rd.session = NULL;
+            rd.get = NULL;
+            rd.post = NULL;
+            rd.cookie = NULL;
+            rd.session = NULL;
 
-			ld.clen = 0;
-			ld.d501 = 0;
+            ld.clen = 0;
+            ld.d501 = 0;
 
-			http::rproc::line0(process, rd, ld);
+            http::rproc::line0(process, rd, ld);
 
-			switch (process->method)
-			{
-				case 1:
-					http::statdata::onget();
-					break;
-				case 2:
-					http::statdata::onpost();
-					break;
-			}
+            switch (process->method)
+            {
+                case 1:
+                    http::statdata::onget();
+                    break;
+                case 2:
+                    http::statdata::onpost();
+                    break;
+            }
 
-			if (process->method == 0)///unkown method
-			{
+            if (process->method == 0)///unkown method
+            {
 
-				http::send(process->uid, http::error::e400.size, http::error::e400.data, false);
-				http::unlockclient(process->uid);
-				delete[] process->request;
-				continue;
-			}
+                http::send(process->uid, http::error::e400.size, http::error::e400.data, false);
+                http::unlockclient(process->uid);
+                delete[] process->request;
+                continue;
+            }
 
-			if (process->method == 3)///unimplemented method
-			{
-				http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
-				http::unlockclient(process->uid);
-				delete[] process->request;
-				continue;
-			}
-			if (!process->http11)///HTTP/1.1 only
-			{
-				http::send(process->uid, http::error::e505.size, http::error::e505.data, false);
-				http::unlockclient(process->uid);
-				delete[] process->request;
-				delete process;
-				continue;
-			}
+            if (process->method == 3)///unimplemented method
+            {
+                http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
+                http::unlockclient(process->uid);
+                delete[] process->request;
+                continue;
+            }
+            if (!process->http11)///HTTP/1.1 only
+            {
+                http::send(process->uid, http::error::e505.size, http::error::e505.data, false);
+                http::unlockclient(process->uid);
+                delete[] process->request;
+                delete process;
+                continue;
+            }
 
-			http::rproc::header(process, rd, ld);
+            http::rproc::header(process, rd, ld);
 
             if(ld.d501)
             {
@@ -116,137 +116,137 @@ namespace http
                 }
 
                 http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
-				http::unlockclient(process->uid);
-				delete process;
-				process = NULL;
-				continue;
+                http::unlockclient(process->uid);
+                delete process;
+                process = NULL;
+                continue;
             }
 
-			if (!rd.cookie)
-			{
-				rd.cookie = new nativehttp::data::cookiedata("");
-			}
+            if (!rd.cookie)
+            {
+                rd.cookie = new nativehttp::data::cookiedata("");
+            }
 
             ///POST checking begin
-			if (ld.clen > 0 && process->method == 2)
-			{
-				if (ld.clen > http::maxPost)
-				{
-					if (rd.cookie)
-					{
-						delete rd.cookie;
-					}
-					if (rd.get)
-					{
-						delete rd.get;
-					}
-					if (rd.post)
-					{
-						delete rd.post;
-					}
-					exc->fd1 = NULL;
-					exc->fd2 = NULL;
-					exc->state = time(0);
-					exc->in = 3;
-					http::bsd::sendNow(process->uid, http::error::e403.size, http::error::e403.data, false);
-					exc->state = -1;
-					exc->in = 0;
-					http::kickclient(process->uid);
-					delete[] process->request;
-					delete process;
-					continue;
-				}
-				exc->fd1 = rd.cookie;
-				exc->fd2 = rd.get;
-				exc->state = time(0);
-				exc->in = 1;
-				http::rproc::post(rd, process, ld);
-				exc->state = -1;
-				exc->in = 0;
-				if (!rd.post)
-				{
-					delete[] process->request;
-					delete process;
-					process->request = NULL;
-					if (rd.cookie)
-					{
-						delete rd.cookie;
-					}
-					if (rd.get)
-					{
-						delete rd.get;
-					}
-					if (rd.post)
-					{
-						delete rd.post;
-					}
-					http::unlockclient(process->uid);
-					continue;//will be disconnected
-				}
-			}
-			///POST checking end
+            if (ld.clen > 0 && process->method == 2)
+            {
+                if (ld.clen > http::maxPost)
+                {
+                    if (rd.cookie)
+                    {
+                        delete rd.cookie;
+                    }
+                    if (rd.get)
+                    {
+                        delete rd.get;
+                    }
+                    if (rd.post)
+                    {
+                        delete rd.post;
+                    }
+                    exc->fd1 = NULL;
+                    exc->fd2 = NULL;
+                    exc->state = time(0);
+                    exc->in = 3;
+                    http::bsd::sendNow(process->uid, http::error::e403.size, http::error::e403.data, false);
+                    exc->state = -1;
+                    exc->in = 0;
+                    http::kickclient(process->uid);
+                    delete[] process->request;
+                    delete process;
+                    continue;
+                }
+                exc->fd1 = rd.cookie;
+                exc->fd2 = rd.get;
+                exc->state = time(0);
+                exc->in = 1;
+                http::rproc::post(rd, process, ld);
+                exc->state = -1;
+                exc->in = 0;
+                if (!rd.post)
+                {
+                    delete[] process->request;
+                    delete process;
+                    process->request = NULL;
+                    if (rd.cookie)
+                    {
+                        delete rd.cookie;
+                    }
+                    if (rd.get)
+                    {
+                        delete rd.get;
+                    }
+                    if (rd.post)
+                    {
+                        delete rd.post;
+                    }
+                    http::unlockclient(process->uid);
+                    continue;//will be disconnected
+                }
+            }
+            ///POST checking end
 
 
-			delete[] process->request;
-			process->request = NULL;
+            delete[] process->request;
+            process->request = NULL;
 
-			rd.remoteIP = http::client_ips[process->uid];
+            rd.remoteIP = http::client_ips[process->uid];
 
-			if (rd.cookie && http::usesessions)///setup sessions
-			{
-				rd.session = new nativehttp::data::session;
-				rd.session->__init(rd.cookie);
-			}
+            if (rd.cookie && http::usesessions)///setup sessions
+            {
+                rd.session = new nativehttp::data::session;
+                rd.session->__init(rd.cookie);
+            }
 
-			nativehttp::data::pagedata result;
-			exc->fd1 = rd.cookie;
-			exc->fd2 = rd.get;
-			exc->in = 2;
-			exc->state = time(0);
+            nativehttp::data::pagedata result;
+            exc->fd1 = rd.cookie;
+            exc->fd2 = rd.get;
+            exc->in = 2;
+            exc->state = time(0);
 
-			ld.uid = process->uid;
+            ld.uid = process->uid;
 
-			uint8_t exstate = http::rproc::ex(result, &rd, ld);
+            uint8_t exstate = http::rproc::ex(result, &rd, ld);
 
-			///CLEANUP, sending
-			if (exstate == 1)
-			{
-				exc->state = -1;
-				exc->in = 0;
-				if (rd.cookie)
-				{
-					delete rd.cookie;
-				}
-				if (rd.get)
-				{
-					delete rd.get;
-				}
-				if (rd.post)
-				{
-					delete rd.post;
-				}
-				http::send(process->uid, http::error::e404.size, http::error::e404.data, false);
-				http::unlockclient(process->uid);
-				delete process;
-				process = NULL;
-				continue;
-			}
+            ///CLEANUP, sending
+            if (exstate == 1)
+            {
+                exc->state = -1;
+                exc->in = 0;
+                if (rd.cookie)
+                {
+                    delete rd.cookie;
+                }
+                if (rd.get)
+                {
+                    delete rd.get;
+                }
+                if (rd.post)
+                {
+                    delete rd.post;
+                }
+                http::send(process->uid, http::error::e404.size, http::error::e404.data, false);
+                http::unlockclient(process->uid);
+                delete process;
+                process = NULL;
+                continue;
+            }
 
-			exc->state = -1;
-			exc->in = 0;
+            exc->state = -1;
+            exc->in = 0;
 
-			if (rd.cookie)
-			{
-				delete rd.cookie;
-			}
-			if (rd.get)
-			{
-				delete rd.get;
-			}
-			if (rd.post)
-			{
-				delete rd.post;
-			}
+            if (rd.cookie)
+            {
+                delete rd.cookie;
+            }
+            if (rd.get)
+            {
+                delete rd.get;
+            }
+            if (rd.post)
+            {
+                delete rd.post;
+            }
 
             if(exstate != 2)
             {
@@ -256,14 +256,14 @@ namespace http
                 }
 
                 http::unlockclient(process->uid);
-			}
+            }
 
-			delete process;
-			process = NULL;
+            delete process;
+            process = NULL;
 
-			///CLEANUP end
+            ///CLEANUP end
 
-		}
-		return NULL;
-	}
+        }
+        return NULL;
+    }
 }
