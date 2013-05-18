@@ -65,7 +65,6 @@ namespace http
 				switch (pt.id)
 				{
                     case -1:
-						ld.d501 = 1;
 						break;
 					case 1:
 						rd.host = hss.to("\r\n");

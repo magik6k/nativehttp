@@ -42,7 +42,7 @@ namespace http
 {
 	void unlockclient(int i);
 	void kickclient(int i);
-	void send(int uid, unsigned long datasize, char *data, bool free);
+	void send(int uid, unsigned long datasize, const char *data, bool free);
 	namespace bsd
 	{
 		void disconnect(int scid);

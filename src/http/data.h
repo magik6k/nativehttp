@@ -65,7 +65,7 @@ namespace http
 	{
 		int uid;
 		unsigned long size;
-		char *data;
+		const char *data;
 		bool fas;//free after sending
 	};
 
@@ -118,6 +118,7 @@ namespace http
 	extern nativehttp::data::queue<fsrq>fsend;//file sender
 	extern fsrq_run* shq;
 	extern size_t sqln;
+	extern size_t fsnd_fb_size;
 
 	extern SDL_mutex *mtx_exec2;
 	extern SDL_mutex *mtx_exec;

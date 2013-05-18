@@ -16,6 +16,7 @@ LIBS += -lSDL
 LIBS += -lsqlite3
 LIBS += -lssl
 LIBS += -lcrypto
+LIBS += -lrt
 
 TESTLIBS += $(LIBS)
 TESTLIBS += -lSDL_net

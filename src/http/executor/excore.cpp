@@ -127,34 +127,6 @@ namespace http
                         SDL_mutexV(http::mtx_fsnd);
 
                         return 2;
-                        /*
-						FILE *f = fopen((const char*)pid.data, "r");
-						if (f)
-						{
-							fseek(f, 0, SEEK_END);
-							int size = ftell(f);
-							fseek(f, 0, SEEK_SET);
-							rewind(f);
-							string snd("HTTP/1.1 200 OK\r\n");
-							snd += http::headers::standard;
-							snd += http::headers::alive + http::headers::alivetimeout;
-							snd += mime->get_ctype((char*)pid.data);
-							snd += "\r\nContent-Length: ";
-							snd += its(size);
-							snd += "\r\n\r\n";
-							char *b = new char[size];
-							fread(b, 1, size, f);
-							string snd2 = "\r\n";
-							pd.size = size + snd.size() + snd2.size();
-							pd.data = new char[pd.size];
-							memcpy(pd.data, snd.c_str(), snd.size());
-							memcpy(pd.data + snd.size(), b, size);
-							memcpy(pd.data + snd.size() + size, snd2.c_str(), snd2.size());
-							delete[] b;
-							fclose(f);
-
-							return false;
-						}*/
 
 					}
 					break;

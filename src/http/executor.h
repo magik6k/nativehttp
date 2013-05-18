@@ -37,8 +37,8 @@ namespace http
 		{
 			unsigned int clen;
 			char d501;
-			size_t rng_start;
-			size_t rng_end;
+			int64_t rng_start;
+			int64_t rng_end;
 			int uid;
 		};
 

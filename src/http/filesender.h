@@ -22,12 +22,13 @@ freely, subject to the following restrictions:
 */
 #ifndef FILESENDER_H_INCLUDED
 #define FILESENDER_H_INCLUDED
-#include "protocol.h"
+#include <sys/types.h>
 #include <aio.h>
 
 #define FSS_Init 1
-#define FFS_Sending 2
-#define FSS_Done 3
+#define FSS_Sending 2
+#define FSS_Reading 3
+#define FSS_Done 4
 
 namespace http
 {
@@ -38,8 +39,8 @@ namespace http
         int uid;
         const char* file;
 
-        size_t rngs;
-        size_t rnge;
+        int64_t rngs;
+        int64_t rnge;
 	};
 
 	struct fsrq_run
@@ -47,14 +48,17 @@ namespace http
         int uid;
         const char* file;
 
-        size_t rngs;
-        size_t rnge;
+        int64_t rngs;
+        int64_t rnge;
 
         int state;
 
         int fd;
         aiocb aio;
         size_t apos;
+
+        int64_t fsize;
+        void* buf;
 
 	};
 

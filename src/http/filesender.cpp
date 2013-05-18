@@ -21,9 +21,13 @@ freely, subject to the following restrictions:
    distribution.
 */
 
-#include "nativehttp.h"
 #include "filesender.h"
+#include "nativehttp.h"
 #include "data.h"
+#include "protocol.h"
+#include "net/net.h"
+#include <stdio.h>
+
 
 namespace http
 {
@@ -37,7 +41,111 @@ namespace http
 
             for(size_t i = 0; i<http::sqln; i++)
             {
+                if(http::shq[i].uid!=-1)
+                {
+                    switch(http::shq[i].state)
+                    {
+                        case FSS_Init:
+                        {
+                            http::shq[i].fd = open(http::shq[i].file, O_RDONLY, 0);
+                            if(http::shq[i].fd == -1)
+                            {
+                                http::send(http::shq[i].uid, http::error::e404.size, http::error::e404.data, false);
+                                http::unlockclient(http::shq[i].uid);
+                                http::shq[i].fd = -1;
+                                break;
+                            }
+                            http::shq[i].buf = new char[http::fsnd_fb_size];
 
+                            struct stat fst;
+                            fstat(http::shq[i].fd, &fst);
+                            http::shq[i].fsize = fst.st_size;
+
+                            if(http::shq[i].rngs<0)
+                            {
+                                http::shq[i].rngs = http::shq[i].fsize + http::shq[i].rngs;
+                            }
+
+                            if(http::shq[i].rnge == -1)
+                            {
+                                http::shq[i].rnge = http::shq[i].fsize;
+                            }
+
+                            string snd("HTTP/1.1 200 OK\r\n");
+							snd += http::headers::standard;
+							snd += http::headers::alive + http::headers::alivetimeout;
+							snd += mime->get_ctype(http::shq[i].file);
+							snd += "\r\nContent-Length: ";
+							snd += nativehttp::data::superstring::str_from_int64(fst.st_size);
+							snd += "\r\n\r\n";
+
+                            char* hdbuf = new char[snd.size()];
+                            memcpy(hdbuf,snd.c_str(),snd.size());
+
+                            http::send(http::shq[i].uid, snd.size(), hdbuf, true);
+                            http::shq[i].state = FSS_Reading;
+
+                            break;
+                        }
+                        case FSS_Reading:
+                        {
+                            memset(&http::shq[i].aio, 0, sizeof(aiocb));
+
+                            http::shq[i].aio.aio_fildes = http::shq[i].fd;
+                            http::shq[i].aio.aio_buf = http::shq[i].buf;
+                            http::shq[i].state = FSS_Sending;
+
+                            http::shq[i].aio.aio_offset = http::shq[i].rngs;
+                            http::shq[i].aio.aio_nbytes = http::fsnd_fb_size;
+
+                            if (aio_read(&http::shq[i].aio) == -1)
+                            {
+                                #warning TODO error here
+                                break;
+                            }
+
+                            break;
+                        }
+                        case FSS_Sending:
+                        {
+                            if(aio_error(&http::shq[i].aio) == EINPROGRESS) break;
+
+                            int brd = aio_return(&http::shq[i].aio);
+
+                            if(brd == -1)
+                            {
+                                #warning TODO error here
+                                break;
+                            }
+                            char* tdt = new char[brd];
+                            memcpy(tdt,http::shq[i].buf,brd);
+
+                            http::send(http::shq[i].uid,brd,tdt,true);
+                            http::shq[i].state = FSS_Reading;
+
+                            http::shq[i].rngs += brd;
+
+                            if(http::shq[i].rnge<=http::shq[i].rngs)
+                            {
+                                http::shq[i].state = FSS_Done;
+                            }
+                            break;
+                        }
+                        case FSS_Done:
+                        {
+                            http::send(http::shq[i].uid,3,"\r\n",false);
+                            http::unlockclient(http::shq[i].uid);
+
+                            close(http::shq[i].fd);
+                            delete[] (char*)http::shq[i].buf;
+
+                            http::shq[i].uid = -1;
+
+                        }
+
+                    }
+
+                }
             }
 
             SDL_mutexP(http::mtx_fsnd);
@@ -58,7 +166,6 @@ namespace http
 
                         http::fsend.pop();
 
-                        nativehttp::server::log("filesender.cpp","Recived request");
                         break;
 
                     }
@@ -66,6 +173,9 @@ namespace http
 
             }
             SDL_mutexV(http::mtx_fsnd);
+
+            SDL_Delay(1);
+            #warning TODO optimize
         }
 
         return NULL;

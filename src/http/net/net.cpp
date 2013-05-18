@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-	void send(int uid, unsigned long datasize, char *data, bool free)
+	void send(int uid, unsigned long datasize, const char *data, bool free)
 	{
 		outdata t = {uid, datasize, data, free};
 		SDL_mutexP(http::mtx_snd);

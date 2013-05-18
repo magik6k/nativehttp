@@ -85,6 +85,7 @@ namespace http
         http::sqln = 100;
         http::shq = new fsrq_run[http::sqln];
         for(size_t i=0;i<http::sqln;i++)http::shq[i].uid=-1;
+        fsnd_fb_size = cfg->get_int("fsn_frame_buf_size");
 
 		http::mtx_exec2 = SDL_CreateMutex();
 		http::mtx_exec = SDL_CreateMutex();

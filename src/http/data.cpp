@@ -67,6 +67,7 @@ namespace http
 	nativehttp::data::queue<fsrq>fsend;
 	fsrq_run* shq = NULL;
 	size_t sqln = 0;
+	size_t fsnd_fb_size;
 
 	SDL_mutex *mtx_exec2 = NULL;
 	SDL_mutex *mtx_exec = NULL;

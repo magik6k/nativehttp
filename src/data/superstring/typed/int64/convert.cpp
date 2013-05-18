@@ -40,7 +40,7 @@ string nativehttp::data::superstring::str_from_int64(int64_t in)
         in -= in % 10;
     }
     while (in /= 10);
-    for (unsigned int i = tmp.size() - 1; i >= 0; i--)
+    for (int i = tmp.size() - 1; i >= 0; i--)
         ret += tmp[i];
 
     return ret;
@@ -61,7 +61,7 @@ nativehttp::data::superstring nativehttp::data::superstring::sst_from_int64(int6
         in -= in % 10;
     }
     while (in /= 10);
-    for (unsigned int i = tmp.size() - 1; i >= 0; i--)
+    for (int i = tmp.size() - 1; i >= 0; i--)
         ret.str += tmp[i];
 
     return ret;
