@@ -22,92 +22,68 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 #include <string.h>
+#include <iostream>
 
 void nativehttp::data::Ccfg::parse_file(const char *f)
 {
-
-	FILE *fil = fopen(f, "rt");
-
-	if (fil == NULL)
-	{
-		return;
-	}
-
-	cfgfil tmp;
-
-	char c;
-	bool comment = false;
-	bool acmt = false;
-	bool sside = false;
+    nativehttp::data::superstring conf;
+    conf.set_file(f);
 
 
-	do
-	{
 
-		c = fgetc(fil);
+    conf.lock();
 
-		if (c != EOF)
-		{
-			if (c == '/')
-			{
-				if (acmt)
-				{
-					acmt = false;
-					comment = true;
-				}
-				else
-				{
-					acmt = true;
-				}
-			}
-			else
-			{
-				if (!comment)acmt = false;
-			}
-			if (c == '\n' && comment)
-			{
-				comment = false;
-			}
-			if (!comment || !acmt)
-			{
-				if (!sside)
-				{
-					if (c == '=')
-					{
-						sside = true;
-					}
-					else if (c == '\n')
-					{
-						tmp.name = "";
-					}
-					else
-					{
-						tmp.name += c;
-					}
-				}
-				else
-				{
-					if (c == '\n')
-					{
-						fileds.push_back(tmp);
-						tmp.name = "";
-						tmp.cont = "";
-						sside = false;
-					}
-					else if (c != '\r')
-					{
-						tmp.cont += c;
-					}
-				}
-			}
-		}
+    conf.remove("/*","* /");
+    conf.remove("//","\n");
 
+    conf.unlock();
 
-	}
-	while (c != EOF);
+    for(;!conf.atend();)
+    {
+        conf.skip(" \t\n\r");
+        string name = conf.tochar(" \t\n\r=");
+        if(name.empty())
+        {
+            string nr = conf.tochar("\r\n");
+            nativehttp::server::log("parser@cfg.cpp", "[E1] No-name variables not allowed(near '"+nr+"')");
+            continue;
+        }
+        conf.skip(" \t\n\r");
 
-	fclose(fil);
+        if(conf.str[conf.pos]=='\0')
+        {
+            nativehttp::server::log("parser@cfg.cpp", "[E3] Reached unexpected end of file after variable name");
+            continue;
+        }
 
+        if(!conf.check("="))
+        {
+            string nr = conf.tochar("\r\n");
+            nativehttp::server::log("parser@cfg.cpp", "[E2] Expected '=' after variable name(near '"+nr+"', key: '"+name+"'), got '"+conf.str[conf.pos]+"'");
+            continue;
+        }
+        conf.pos++;
+        conf.skip(" \t\n\r");
+        conf.lock();
+        string content;
+        if(nativehttp::data::superstring(conf.tochar("\r\n")).contain("\""))
+        {
+            conf.unlock();
+            conf.to("\"");
+            content = conf.to("\"");
+            conf.tochar("\r\n");
+        }
+        else
+        {
+            conf.unlock();
+            content = conf.tochar("\r\n");
+        }
+
+        cfgfil tmp;
+        tmp.name = name;
+        tmp.cont = content;
+        fileds.push_back(tmp);
+    }
 
 }
 

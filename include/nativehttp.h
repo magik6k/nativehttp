@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <sqlite3.h>
 
-#define NATIVEHTTP_API_VERSION 9
+#define NATIVEHTTP_API_VERSION 10
 #define initated() return -(NATIVEHTTP_API_VERSION)
 #define initerr(_rcode) return ((_rcode>0)?(_rcode):(-(_rcode)))+2
 
@@ -71,6 +71,9 @@ namespace nativehttp
 				void lock(unsigned int lp);
 				void unlock();
 
+				bool atbegin();
+				bool atend();
+
 				size_t length();
 				size_t size();
 
@@ -83,6 +86,11 @@ namespace nativehttp
 				void set(string s);
 				void operator()(string s);
 
+                string skip(string stb);
+                string tochar(string fend);
+                bool contain(string stb);
+                bool contain_not(string stb);
+                bool contain_only(string stb);
 				string to(string fend);
 				string back_to(string fend);
 				string from(string start);
@@ -137,6 +145,8 @@ namespace nativehttp
 				void set_file(string fn);
 				void append_file(string fn);
 		};
+
+		typedef superstring ss;
 
 		struct cfgfil
 		{
@@ -399,5 +409,8 @@ namespace nativehttp
 }//nativehttp namespace
 
 namespace nh = nativehttp;
+namespace nd = nativehttp::data;
+namespace nb = nativehttp::base;
+namespace ns = nativehttp::server;
 
 #endif // NATIVEHTTP_H_INCLUDED

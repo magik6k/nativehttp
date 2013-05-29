@@ -25,6 +25,99 @@ freely, subject to the following restrictions:
 
 #define SSLOCK if(lck)pos=lpos
 
+bool nativehttp::data::superstring::contain(string stb)
+{
+    bool *t=new bool[stb.size()];
+    for(unsigned int i=0;i<stb.size();i++)t[i]=false;
+
+    for(;pos<str.size();pos++)
+    {
+        for(unsigned int i=0;i<stb.size();i++)
+        {
+            if(str[pos]==stb[i])
+                t[i]=true;
+        }
+    }
+    for(unsigned int i=0;i<stb.size();i++)
+    {
+        if(!t[i])
+        {
+            delete[] t;
+            SSLOCK;
+            return false;
+        }
+    }
+    delete[] t;
+    SSLOCK;
+    return true;
+}
+
+bool nativehttp::data::superstring::contain_not(string stb)
+{
+    for(;pos<str.size();pos++)
+    {
+        for(unsigned int i=0;i<stb.size();i++)
+        {
+            if(str[pos]==stb[i])
+                return false;
+        }
+    }
+    SSLOCK;
+    return true;
+}
+
+bool nativehttp::data::superstring::contain_only(string stb)
+{
+    for(;pos<str.size();pos++)
+    {
+        for(unsigned int i=0;i<stb.size();i++)
+        {
+            if(str[pos]!=stb[i])
+                return false;
+        }
+    }
+    SSLOCK;
+    return true;
+}
+
+
+string nativehttp::data::superstring::skip(string stb)
+{
+    string rt;
+    for(;pos<str.size();pos++)
+    {
+        bool r=false;
+        for(unsigned int i=0;i<stb.size();i++)
+        {
+            if(str[pos]==stb[i])r=true;
+        }
+        if(r)rt+=str[pos];
+            else break;
+    }
+    SSLOCK;
+    return rt;
+}
+
+string nativehttp::data::superstring::tochar(string fend)
+{
+    string rt;
+    bool ex=false;
+    for(;pos<str.size();pos++)
+    {
+        for(unsigned int i=0;i<fend.size();i++)
+        {
+            if(str[pos]==fend[i])
+            {
+                ex=true;
+                break;
+            }
+        }
+        if(ex)break;
+            else rt+=str[pos];
+    }
+    SSLOCK;
+    return rt;
+}
 
 string nativehttp::data::superstring::to(string fend)
 {

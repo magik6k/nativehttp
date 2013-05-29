@@ -79,3 +79,14 @@ void nativehttp::data::superstring::clear()
 	for (unsigned int i = 0; i < tokens.size(); i++)tokens[i].s.clear();
 	tokens.clear();
 }
+
+bool nativehttp::data::superstring::atend()
+{
+    return !(pos<str.size());
+}
+
+bool nativehttp::data::superstring::atbegin()
+{
+    return (pos==0);
+}
+

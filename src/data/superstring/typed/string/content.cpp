@@ -66,11 +66,12 @@ void nativehttp::data::superstring::remove(string from, string to)
 		if (!ctg.empty())
 		{
 			out += ctg;
-			if (!rae)
-			{
-				this->to(to);
-			}
-		}
+        }
+        if (!rae)
+        {
+            this->to(to);
+        }
+
 	}
 	lck = ls;
 	str = out;

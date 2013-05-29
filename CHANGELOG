@@ -1,6 +1,16 @@
 NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
+DEV:
+-SuperString - 'skip', 'tochar', contain(_not/_only), atend/atbegin 
+-'ss' Alias of SuperString class(you can now use nd::ss instead nh::data::superstring)
+-Bunch of bugs fixed
+-New Ccfg2 
+-Ccfg2 bug - no way to put '"' beetween '"' and '"'
+-nativehttp::data aliased to 'nd'
+-nativehttp::base aliased to 'nb'
+-nativehttp::server aliased to 'ns'
+
 1805.13:
 -Async file sender
 -NativeStat improvements
