@@ -55,9 +55,17 @@ namespace http
                         size_t bm = getacmem() + getrsmem();
                         unsigned int pgt = SDL_GetTicks();
 #endif
-                        SDL_mutexP(http::mtx_exec2);
-                        nativehttp::data::pagedata ts = npp->page(rd);   //<<<execution of page
-                        SDL_mutexV(http::mtx_exec2);
+                        nativehttp::data::pagedata ts;
+                        if(!http::mtx_exec2)
+                        {
+                            ts = npp->page(rd);   //<<<execution of page
+                        }
+                        else
+                        {
+                            SDL_mutexP(http::mtx_exec2);
+                            ts = npp->page(rd);   //<<<execution of page
+                            SDL_mutexV(http::mtx_exec2);
+                        }
 #ifdef NHDBG
                         unsigned int et = SDL_GetTicks() - pgt;
                         if (!http::extmemstats)

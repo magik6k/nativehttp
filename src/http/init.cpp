@@ -87,7 +87,9 @@ namespace http
         for(size_t i=0;i<http::sqln;i++)http::shq[i].uid=-1;
         fsnd_fb_size = cfg->get_int("fsn_frame_buf_size");
 
-		http::mtx_exec2 = SDL_CreateMutex();
+        if(cfg->get_int("global_pexec_mutex"))
+            http::mtx_exec2 = SDL_CreateMutex();
+
 		http::mtx_exec = SDL_CreateMutex();
 		http::mtx_snd = SDL_CreateMutex();
 		http::mtx_fsnd = SDL_CreateMutex();

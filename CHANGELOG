@@ -1,6 +1,9 @@
 NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
+DEV:
+-Performance options
+
 3005.13:
 -SuperString - 'skip', 'tochar', contain(_not/_only), atend/atbegin 
 -'ss' Alias of SuperString class(you can now use nd::ss instead nh::data::superstring)
