@@ -33,8 +33,10 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 
     conf.lock();
 
-    conf.remove("/*","* /");
+    conf.remove("/*","*/");
     conf.remove("//","\n");
+    conf.remove(";","\n");
+    conf.remove("[","]");
 
     conf.unlock();
 
