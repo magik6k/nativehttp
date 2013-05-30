@@ -50,7 +50,7 @@ namespace http
         while (true)
         {
 
-            http::request *process = http::rproc::get_proc(exc);cout << "RQ:\n"<< process->request<<endl;
+            http::request *process = http::rproc::get_proc(exc);
             http::statdata::onhit();
 
             rd.get = NULL;

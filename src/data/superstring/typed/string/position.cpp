@@ -233,3 +233,25 @@ string nativehttp::data::superstring::back_to(string fend)
 	SSLOCK;
 	return ert;
 }
+
+unsigned int nativehttp::data::superstring::find(string str)
+{
+    unsigned int c = 0;
+	while (pos < str.size())
+	{
+		if (str[pos] == str[c])
+		{
+			c++;
+		}
+		else
+            c = 0;
+		pos++;
+		if (c >= str.size())
+		{
+			break;
+		}
+	}
+	c = pos;
+    SSLOCK;
+    return c<str.size()?c:0;
+}

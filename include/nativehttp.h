@@ -102,6 +102,7 @@ namespace nativehttp
 				string to(string fend);
 				string back_to(string fend);
 				string from(string start);
+				unsigned int find(string str);
 
 				int check(string sch);
 				string get(unsigned int n);

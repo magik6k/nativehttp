@@ -42,7 +42,11 @@ namespace http
 		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld)
 		{
 			nativehttp::data::superstring ars(process->request);
-			ars.str = ars.from("\r\n\r\n");
+			if(ars.find("\r\n\r\n")!=0)
+                ars.str = ars.from("\r\n\r\n");
+                else
+                ars.str = ars.from("\n\n");
+
 			if (ars.str.size() < ld.clen)
 			{
 				unsigned int ltrv = ld.clen - ars.str.size();

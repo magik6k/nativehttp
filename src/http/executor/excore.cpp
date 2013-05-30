@@ -41,7 +41,6 @@ namespace http
 
         uint8_t ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd, http::rproc::lrqd &ld)
         {
-            const char* tr=rd->uri.c_str();
             page pid = pmap.by_uri(rd->uri.c_str());
 
             switch (pid.type)

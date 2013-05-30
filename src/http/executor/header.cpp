@@ -33,6 +33,8 @@ freely, subject to the following restrictions:
 #include "utils/memory.h"
 #endif
 
+#define SS nativehttp::data::superstring
+
 namespace http
 {
 
@@ -43,8 +45,12 @@ namespace http
         {
 
             nativehttp::data::superstring hss(process->request);
-            hss.to("\r\n");
-            hss.str = hss.to("\r\n\r\n");
+            hss.to("\n");
+            if(hss.find("\r\n\r\n"))
+                hss.str = hss.to("\r\n\r\n");
+                else
+                hss.str = hss.to("\n\n");
+
             hss.pos = 0;
 
             ld.rng_start = 0;
@@ -52,6 +58,7 @@ namespace http
 
             hss.add_token(nativehttp::data::token("_%$<Unimplemented>$%_", -1));
             hss.add_token(nativehttp::data::token("\r\n\r\n", 0));
+            hss.add_token(nativehttp::data::token("\n\n", 0));
             hss.add_token(nativehttp::data::token("Host: ", 1));
             hss.add_token(nativehttp::data::token("User-Agent: ", 2));
             hss.add_token(nativehttp::data::token("Referer: ", 3));
@@ -68,22 +75,22 @@ namespace http
                     case -1:
                         break;
                     case 1:
-                        rd.host = hss.to("\r\n");
+                        rd.host = hss.to(SS("\n")).go_end().remove("\r").str;
                         break;
                     case 2:
-                        rd.userAgent = hss.to("\r\n");
+                        rd.userAgent = hss.to(SS("\n")).go_end().remove("\r").str;
                         break;
                     case 3:
-                        rd.referer = hss.to("\r\n");
+                        rd.referer = hss.to(SS("\n")).go_end().remove("\r").str;
                         break;
                     case 4:
-                        rd.cookie = new nativehttp::data::cookiedata(hss.to("\r\n"));
+                        rd.cookie = new nativehttp::data::cookiedata(hss.to(SS("\n")).go_end().remove("\r").str);
                         break;
                     case 5:
-                        ld.clen = strtol(hss.to("\r\n").c_str(), NULL, 10);
+                        ld.clen = strtol(hss.to(SS("\n")).go_end().remove("\r").c_str(), NULL, 10);
                         break;
                     case 6:
-                        nativehttp::data::superstring btr(hss.to("\r\n"));
+                        nativehttp::data::superstring btr(hss.to(SS("\n")).go_end().remove("\r").str);
                         btr(btr.from("bytes="));
                         btr.pos = 0;
                         if(btr.str[0] != '-')
@@ -109,7 +116,7 @@ namespace http
 
         void line0(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld)
         {
-            nativehttp::data::superstring rss(nativehttp::data::superstring(process->request).to("\r\n"));
+            nativehttp::data::superstring rss(nativehttp::data::superstring(process->request).to("\n"));
             rss.add_token(nativehttp::data::token(" ", 0));
             rss.add_token(nativehttp::data::token("GET", 1));
             rss.add_token(nativehttp::data::token("HEAD", 3));
