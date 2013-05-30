@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <sqlite3.h>
 
-#define NATIVEHTTP_API_VERSION 10
+#define NATIVEHTTP_API_VERSION 11
 #define initated() return -(NATIVEHTTP_API_VERSION)
 #define initerr(_rcode) return ((_rcode>0)?(_rcode):(-(_rcode)))+2
 
@@ -80,6 +80,8 @@ namespace nativehttp
 				void clear();
 				const char* c_str();
 
+				char& operator[](unsigned int i);
+
 
 				/** C++ string functions*/
 				superstring(string s);
@@ -100,12 +102,21 @@ namespace nativehttp
 				void remove(string from, string to);
 				void remove(string s);
 
+                static int int_from_str(string in);
 
 				/** SuperString functions*/
 				void set(superstring s);
 				void operator()(superstring s);
 				superstring operator+=(superstring in);
-				static int int_from_str(string in);
+
+                superstring skip(superstring stb);
+                superstring tochar(superstring fend);
+                bool contain(superstring stb);
+                bool contain_not(superstring stb);
+                bool contain_only(superstring stb);
+				superstring to(superstring fend);
+				superstring back_to(superstring fend);
+				superstring from(superstring start);
 
 				/** Integer functions*/
 				void set(int s);

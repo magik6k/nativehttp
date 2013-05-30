@@ -5,6 +5,7 @@ DEV:
 -Performance options
 -Added 2 comment styles in Ccfg2
 -Configuration file clean-up 
+-SuperString position functions for SuperString type
 
 3005.13:
 -SuperString - 'skip', 'tochar', contain(_not/_only), atend/atbegin 

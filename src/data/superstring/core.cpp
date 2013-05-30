@@ -90,3 +90,7 @@ bool nativehttp::data::superstring::atbegin()
     return (pos==0);
 }
 
+char& nativehttp::data::superstring::operator[](unsigned int i)
+{
+    return str[i];
+}

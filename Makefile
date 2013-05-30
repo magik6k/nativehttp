@@ -50,6 +50,7 @@ NHS = \
 	$(NHD)/data/superstring/typed/string/position.cpp \
 	$(NHD)/data/superstring/typed/superstring/core.cpp \
 	$(NHD)/data/superstring/typed/superstring/misc.cpp \
+	$(NHD)/data/superstring/typed/superstring/position.cpp \
 	$(NHD)/data/superstring/core.cpp \
 	$(NHD)/data/superstring/file.cpp \
 	$(NHD)/data/superstring/token.cpp \
