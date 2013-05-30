@@ -2,6 +2,9 @@ NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
 DEV:
+-Thread cleanup
+
+3105.13:
 -Performance options
 -Added 2 comment styles in Ccfg2
 -Configuration file clean-up 
@@ -10,7 +13,7 @@ DEV:
   -go[begin/end/pos]
   -get[begin/end]
 -SuperString - Some functions are now 'stackable'  
-~SOMETHING BROKEN
+-Bug fix in HTTP module
 
 
 3005.13:

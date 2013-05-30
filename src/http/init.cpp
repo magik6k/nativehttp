@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 #include "filesender.h"
 #include "data/session/session.h"
 #include "net/net.h"
+#include "utils/thread.h"
 #ifdef NHDBG
 #include "protocol.h"
 #include <iostream>
@@ -134,18 +135,8 @@ namespace http
 
 			http::execUnits[i].etheard = new pthread_t;
 
-			pthread_attr_t at;
-			if (pthread_attr_init(&at) != 0)
-			{
-				nativehttp::server::log("init.cpp@http", "ERROR: executor attr setup failed");
-			}
-			if (pthread_attr_setstacksize(&at, http::exec_heap_size) != 0)
-			{
-				nativehttp::server::log("init.cpp@http", "ERROR: Setting executor heap size failed");
-			}
-
 			pthread_t *tt = new pthread_t;
-			int tms = pthread_create(tt, &at, http::executor, &(http::execUnits[i]));
+			int tms = utils::create_thread(tt, http::executor, &(http::execUnits[i]),http::exec_heap_size);
 
 			http::execUnits[i].etheard = tt;
 			if (tms != 0)nativehttp::server::logid(i, "init.cpp", "Executor failed to start");
@@ -179,31 +170,21 @@ namespace http
 		size_t bm = getacmem();
 #endif
 
-		pthread_attr_t at;
-		if (pthread_attr_init(&at) != 0)
-		{
-			nativehttp::server::log("init.cpp@http", "ERROR: attr setup failed");
-		}
-		if (pthread_attr_setstacksize(&at, 16 * 1024) != 0)     //16kb is minimal
-		{
-			nativehttp::server::log("init.cpp@http", "ERROR: Setting heap size failed");
-		}
-
 		pthread_t *tt = new pthread_t;
 
 		int tms;
 		if (cfg->get_int("use_ssl"))
 		{
-			tms = pthread_create(tt, &at, http::ssl::listener, NULL);
+            tms = utils::create_thread(tt, http::ssl::listener, NULL, 16 * 1024);
 		}
 		else
 		{
-			tms = pthread_create(tt, &at, http::bsd::listener, NULL);
+			tms = utils::create_thread(tt, http::bsd::listener, NULL, 16 * 1024);
 		}
-
 
 		http::theard_nc = tt;
 		if (tms != 0)nativehttp::server::log("init.cpp", "ANC failed to start");
+
 
 		for (int i = 0; i < http::Nsend; i++)
 		{
@@ -213,36 +194,24 @@ namespace http
 
 			if (cfg->get_int("use_ssl"))
 			{
-				tmks = pthread_create(tmt, &at, http::ssl::sender, new int(i));
+                tmks = utils::create_thread(tmt, http::ssl::sender, new int(i), 16 * 1024);
 			}
 			else
 			{
-				tmks = pthread_create(tmt, &at, http::bsd::sender, new int(i));
+				tmks = utils::create_thread(tmt, http::bsd::sender, new int(i), 16 * 1024);
 			}
-
-
 
 			http::theard_sd[i] = tmt;
 			if (tmks != 0)nativehttp::server::logid(i, "init.cpp", "Sender failed to start");
 		}
 
-
-
-		if (pthread_attr_setstacksize(&at, 256 * 1024) != 0)
-		{
-			nativehttp::server::log("init.cpp@http", "ERROR: Setting manager/file sender heap size failed");
-		}
-
 		tt = new pthread_t;
-		tms = pthread_create(tt, &at, http::fsender, NULL);
-
+		tms = utils::create_thread(tt, http::fsender, NULL, 256 * 1024);
 		http::theard_fs = tt;
 		if (tms != 0)nativehttp::server::log("init.cpp", "File Sender failed to start");
 
-
 		tt = new pthread_t;
-		tms = pthread_create(tt, &at, http::manager::manager, NULL);
-
+		tms = utils::create_thread(tt, http::manager::manager, NULL, 256 * 1024);
 		http::theard_mg = tt;
 		if (tms != 0)nativehttp::server::log("init.cpp", "Manager failed to start");
 

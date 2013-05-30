@@ -28,7 +28,6 @@ STATD = ./nativestat/src
 NHS = \
 	$(NHD)/core/api.cpp \
 	$(NHD)/core/main.cpp \
-	$(NHD)/core/nhp_to_cpp.cpp \
 	$(NHD)/core/system.cpp \
 	$(NHD)/data/cfg.cpp \
 	$(NHD)/data/cookie.cpp \
@@ -92,7 +91,9 @@ NHS = \
 	$(NHD)/pagemap/loaders/file.cpp \
 	$(NHD)/pagemap/reloaders/so.cpp \
 	$(NHD)/pagemap/reloaders/nhp.cpp \
-	$(NHD)/utils/memory.cpp
+	$(NHD)/utils/memory.cpp \
+	$(NHD)/utils/nhp_to_cpp.cpp \
+	$(NHD)/utils/thread.cpp
 
 NHTS = \
 	$(NHTD)/main.cpp

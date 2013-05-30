@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include "stat.h"
 #include "data/session/session.h"
 #include "net/net.h"
+#include "utils/thread.h"
 
 namespace http
 {
@@ -109,18 +110,8 @@ namespace http
 							}
 					}
 
-					pthread_attr_t at;
-					if (pthread_attr_init(&at) != 0)
-					{
-						nativehttp::server::log("manager.cpp@http", "ERROR: attr setup failed");
-					}
 
-					if (pthread_attr_setstacksize(&at, 256 * 1024) != 0)
-					{
-						nativehttp::server::log("manager.cpp@http", "ERROR: Setting manager heap size failed");
-					}
-
-					int tmkm = pthread_create(http::theard_mg, &at, http::manager::manager, NULL);
+                    int tmkm = utils::create_thread(http::theard_mg, http::manager::manager, NULL, 256 * 1024);
 					if (tmkm != 0)nativehttp::server::log("manager.cpp", "Manager failed to restart");
 
 					pthread_cancel(pthread_self());
@@ -143,15 +134,7 @@ namespace http
 						SDL_mutexV(http::mtx_snd);   //may be needed
 						pthread_t *kth = http::theard_sd[i];
 
-						pthread_attr_t at;
-						if (pthread_attr_init(&at) != 0)
-						{
-							nativehttp::server::log("manager.cpp@http", "ERROR: Sender attr setup failed");
-							continue;
-						}
-						pthread_attr_setstacksize(&at, 10 * 1024);   //10kb for sender should enough
-						http::theard_sd[i] = new pthread_t;
-						int tmks = pthread_create(http::theard_sd[i], &at, http::bsd::sender, NULL);
+						int tmks = utils::create_thread(http::theard_sd[i], http::bsd::sender, NULL, 16 * 1024);
 						if (tmks != 0)nativehttp::server::logid(i, "manager.cpp", "Sender failed to start");
 
 						pthread_cancel(*kth);
@@ -172,19 +155,8 @@ namespace http
 
 						pthread_t *kth = http::execUnits[i].etheard;
 
-						pthread_attr_t at;
-						if (pthread_attr_init(&at) != 0)
-						{
-							nativehttp::server::log("manager.cpp@http", "ERROR: executor attr setup failed");
-						}
-						if (pthread_attr_setstacksize(&at, http::exec_heap_size) != 0)
-						{
-							nativehttp::server::log("manager.cpp@http", "ERROR: Setting executor heap size failed");
-						}
-
-
 						pthread_t *tt = new pthread_t;
-						int tms = pthread_create(tt, &at, http::executor, &(http::execUnits[i]));
+                        int tms = utils::create_thread(tt, http::executor, &(http::execUnits[i]), 256 * 1024);
 
 						http::execUnits[i].etheard = tt;
 						if (tms != 0)nativehttp::server::logid(i, "manager.cpp", "Executor failed to start");
