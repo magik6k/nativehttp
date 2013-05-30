@@ -36,9 +36,10 @@ void nativehttp::data::superstring::clear_tokens()
 	tokens.clear();
 }
 
-void nativehttp::data::superstring::add_token(token t)
+nativehttp::data::superstring& nativehttp::data::superstring::add_token(token t)
 {
 	tokens.push_back(t);
+	return *this;
 }
 
 size_t nativehttp::data::superstring::num_tokens()

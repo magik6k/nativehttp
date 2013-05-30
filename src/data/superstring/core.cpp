@@ -78,6 +78,7 @@ void nativehttp::data::superstring::clear()
 	str.clear();
 	for (unsigned int i = 0; i < tokens.size(); i++)tokens[i].s.clear();
 	tokens.clear();
+	pos = 0;
 }
 
 bool nativehttp::data::superstring::atend()
@@ -88,6 +89,36 @@ bool nativehttp::data::superstring::atend()
 bool nativehttp::data::superstring::atbegin()
 {
     return (pos==0);
+}
+
+nativehttp::data::superstring& nativehttp::data::superstring::go_begin()
+{
+    pos = 0;
+    return *this;
+}
+
+nativehttp::data::superstring& nativehttp::data::superstring::go_end()
+{
+    pos = str.size() - 1;
+    return *this;
+}
+
+nativehttp::data::superstring& nativehttp::data::superstring::go_begin(int p)
+{
+    pos = p;
+    return *this;
+}
+
+nativehttp::data::superstring& nativehttp::data::superstring::go_end(int p)
+{
+    pos = str.size()-1-p;
+    return *this;
+}
+
+nativehttp::data::superstring& nativehttp::data::superstring::go_pos(int p)
+{
+    pos = p;
+    return *this;
 }
 
 char& nativehttp::data::superstring::operator[](unsigned int i)

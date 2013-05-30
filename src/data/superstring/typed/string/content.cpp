@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #define SSLOCK if(lck)pos=lpos
 
 
-void nativehttp::data::superstring::change(string from, string to)
+nativehttp::data::superstring& nativehttp::data::superstring::change(string from, string to)
 {
 	string out;
 	bool ls = lck;
@@ -49,11 +49,12 @@ void nativehttp::data::superstring::change(string from, string to)
 	lck = ls;
 	str = out;
 	SSLOCK;
+	return *this;
 }
 
-void nativehttp::data::superstring::remove(string from, string to)
+nativehttp::data::superstring& nativehttp::data::superstring::remove(string from, string to)
 {
-	string out;
+	string out=this->get_begin(pos);
 	bool ls = lck;
 	if (lck)
 	{
@@ -76,11 +77,12 @@ void nativehttp::data::superstring::remove(string from, string to)
 	lck = ls;
 	str = out;
 	SSLOCK;
+	return *this;
 }
 
-void nativehttp::data::superstring::remove(string s)
+nativehttp::data::superstring& nativehttp::data::superstring::remove(string s)
 {
-	string out;
+	string out=this->get_begin(pos);
 	bool ls = lck;
 	if (lck)
 	{
@@ -94,4 +96,5 @@ void nativehttp::data::superstring::remove(string s)
 	lck = ls;
 	str = out;
 	SSLOCK;
+	return *this;
 }

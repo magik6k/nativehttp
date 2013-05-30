@@ -80,6 +80,12 @@ namespace nativehttp
 				void clear();
 				const char* c_str();
 
+				superstring& go_begin();
+				superstring& go_end();
+				superstring& go_begin(int p);
+				superstring& go_end(int p);
+				superstring& go_pos(int p);
+
 				char& operator[](unsigned int i);
 
 
@@ -96,11 +102,15 @@ namespace nativehttp
 				string to(string fend);
 				string back_to(string fend);
 				string from(string start);
-				int check(string sch);
 
-				void change(string from, string to);
-				void remove(string from, string to);
-				void remove(string s);
+				int check(string sch);
+				string get(unsigned int n);
+				string get_begin(unsigned int n);
+				string get_end(unsigned int n);
+
+				superstring& change(string from, string to);
+				superstring& remove(string from, string to);
+				superstring& remove(string s);
 
                 static int int_from_str(string in);
 
@@ -140,7 +150,7 @@ namespace nativehttp
 				static superstring sst_from_double(double in);
 
 				/** Token functions*/
-				void add_token(token t);
+				superstring& add_token(token t);
 				void clear_tokens();
 				token tok();
 				token tok(string &opt);

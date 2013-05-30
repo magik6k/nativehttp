@@ -41,6 +41,7 @@ namespace http
 
         void header(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld)
         {
+
             nativehttp::data::superstring hss(process->request);
             hss.to("\r\n");
             hss.str = hss.to("\r\n\r\n");

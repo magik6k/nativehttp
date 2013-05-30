@@ -5,11 +5,21 @@ DEV:
 -Performance options
 -Added 2 comment styles in Ccfg2
 -Configuration file clean-up 
--SuperString position functions for SuperString type
+-SuperString - Position functions for SuperString type
+-SuperString - New functions:
+  -go[begin/end/pos]
+  -get[begin/end]
+-SuperString - Some functions are now 'stackable'  
+~SOMETHING BROKEN
+
 
 3005.13:
--SuperString - 'skip', 'tochar', contain(_not/_only), atend/atbegin 
--'ss' Alias of SuperString class(you can now use nd::ss instead nh::data::superstring)
+-SuperString - New functions:
+  -skip
+  -tochar
+  -contain[not/only]
+  -atend/atbegin 
+-SueprString - 'ss' Alias of SuperString class(you can now use nd::ss instead nh::data::superstring)
 -Bunch of bugs fixed
 -New Ccfg2 
 -Ccfg2 bug - no way to put '"' beetween '"' and '"'

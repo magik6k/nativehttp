@@ -50,3 +50,24 @@ int nativehttp::data::superstring::check(string sch)
 	}
 	return 0;
 }
+
+string nativehttp::data::superstring::get(unsigned int n)
+{
+    string rt;
+    for(unsigned int i = pos;i<str.size()&&i-pos<n;i++)rt+=str[i];
+    return rt;
+}
+
+string nativehttp::data::superstring::get_begin(unsigned int n)
+{
+    string rt;
+    for(unsigned int i = 0;i<str.size()&&i<n;i++)rt+=str[i];
+    return rt;
+}
+
+string nativehttp::data::superstring::get_end(unsigned int n)
+{
+    string rt;
+    for(unsigned int i = str.size()-n;i<str.size();i++)rt+=str[i];
+    return rt;
+}

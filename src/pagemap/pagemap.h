@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "data/vector.h"
 #include "data/queue.h"
 #include <dirent.h>
+#include <iostream>
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>

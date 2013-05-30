@@ -38,6 +38,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+
 #ifdef NHDBG
 	size_t bim = (getacmem());
 	cout << "[DBG:main.cpp@core]before-init mem: " << bim << "b\n";

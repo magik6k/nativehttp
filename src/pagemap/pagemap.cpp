@@ -61,7 +61,7 @@ page page_mapper::by_uri(const char *u)
 				if (uris[j].u[dn[j]] == u[i] || uris[j].u[dn[j]] == '*')
 				{
 					if (strlen(uris[j].u) == unsigned(dn[j]) + 1 && strlen(uris[j].u) == unsigned(dn[j]) + 1 && strlen(u) == strlen(uris[j].u))
-					{
+					{cout << "FND("<<u<<")!\n";
 						return (*base)[uris[j].sid];
 					}
 					else if (strlen(uris[j].u) == unsigned(dn[j]) + 1 && uris[j].u[dn[j]] == '*')
