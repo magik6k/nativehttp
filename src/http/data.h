@@ -130,6 +130,9 @@ namespace http
 	extern pthread_t *theard_mg;
 	extern pthread_t *theard_fs;
 
+	extern string nhpc_include_dir;
+	extern string nhpc_nativehttph_dest;
+
 	namespace headers
 	{
 		extern string standard;

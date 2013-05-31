@@ -105,7 +105,10 @@ int main(int argc, char *argv[])
 	signal(SIGFPE, http::manager::sig);
 	signal(SIGABRT, http::manager::sig);
 
+    nativehttp::server::log("INIT", "Loading configuration, setting up server");
 	cfg = new nativehttp::data::Ccfg(conf);
+	http::datainit();
+
 	charset = cfg->get_var("charset");
 	default_mime = cfg->get_var("default_content_type");
 	if (cfg->get_int("instantso"))
@@ -119,9 +122,7 @@ int main(int argc, char *argv[])
 	if (dmnz)deamonize();
 	nativehttp::server::log("INIT", "Starting HTTP system");
 
-
 	http::sdlinit();
-	http::datainit();
 	http::executorinit();
 	http::netstart();
 	http::startsystem();

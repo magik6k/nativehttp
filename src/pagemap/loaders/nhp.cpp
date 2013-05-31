@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 
 #include "../pagemap.h"
+#include "http/data.h"
 #include <iostream>
 
 
@@ -55,7 +56,7 @@ string page_mapper::nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf)
 	string pname = pgnam.back_to("/");
 	srand(rand());
 	pname += its(rand());
-	string command = cfg->get_var("cppcmp") + " -shared -fPIC " + cfg->get_var("flags") + " -o /tmp/nativehttp/nhpage_" + pname + ".so /tmp/nativehttp/tmp.cpp";
+	string command = cfg->get_var("cppcmp") + " -shared -fPIC " + cfg->get_var("flags") + " -I"+http::nhpc_include_dir+" -o /tmp/nativehttp/nhpage_" + pname + ".so /tmp/nativehttp/tmp.cpp";
 	bool shw;
 	if (cfg->get_int("cmpout") == 1)
 	{

@@ -79,6 +79,9 @@ namespace http
 	pthread_t *theard_mg = NULL;
 	pthread_t *theard_fs = NULL;
 
+	string nhpc_include_dir;
+	string nhpc_nativehttph_dest;
+
 	namespace headers
 	{
 		string standard = "Allow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";

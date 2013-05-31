@@ -32,6 +32,7 @@ freely, subject to the following restrictions:
 #include "data/session/session.h"
 #include "net/net.h"
 #include "utils/thread.h"
+#include "utils/version.h"
 #ifdef NHDBG
 #include "protocol.h"
 #include <iostream>
@@ -114,6 +115,21 @@ namespace http
 		max_sesions = cfg->get_int("max_sessions");
 		sess_life = cfg->get_int("session_life");
 		sdata::session::storage.prealloc(cfg->get_int("inital_sessions"));
+
+		http::nhpc_include_dir = cfg->get_var("include_dir");
+		http::nhpc_nativehttph_dest = cfg->get_var("nativehttph_dst");
+
+		if(utils::header_version_ok())
+        {
+#ifdef NHDBG
+            nativehttp::server::log("DBG:init.cpp@http","nativehttp.h Versions matches");
+#endif
+        }
+        else
+        {
+            nativehttp::server::log("init.cpp@http","[CRITICAL]nativehttp.h Version mismatch");
+            exit(2);
+        }
 
 		if (!cfg->get_var("log").empty())logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);
 

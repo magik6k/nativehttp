@@ -20,36 +20,30 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
+#include "version.h"
+#include "http/data.h"
 #include "nativehttp.h"
-#include <stdio.h>
 
-#define SSLOCK if(lck)pos=lpos
-
-
-string nativehttp::data::superstring::file(string fn)
+namespace utils
 {
-	FILE *f = fopen(fn.c_str(), "r");
-	if (f)
-	{
-		fseek(f, 0, SEEK_END);
-		int size = ftell(f);
-		rewind(f);
-		string tm;
-		tm.resize(size);
-		fread(&tm[0], 1, size, f);
-		fclose(f);
-		return tm;
-	}
-	return "";
-}
-
-void nativehttp::data::superstring::set_file(string fn)
-{
-	str = this->file(fn);
-	pos = 0;
-}
-
-void nativehttp::data::superstring::append_file(string fn)
-{
-	str += this->file(fn);
+    bool header_version_ok()
+    {
+        nativehttp::data::superstring nhf(http::nhpc_include_dir);
+        nhf.go_end();
+        if(!(nhf.check("/")||nhf.check("\\")))nhf.str+="/";
+        nhf.str+=http::nhpc_nativehttph_dest;
+        nhf.set_file(nhf.str);
+        if(nhf.size()<=0)
+        {
+            nativehttp::server::log("version.cpp@utils","nativehttp.h DOES NOT EXIST");
+        }
+        nhf.to("#define NATIVEHTTP_API_VERSION ");
+        if(nativehttp::data::superstring::int_from_str(nhf.tochar("\r\n"))==NATIVEHTTP_API_VERSION)
+            return true;
+        else
+        {
+            nativehttp::server::log("version.cpp@utils","[ERROR]Version of nativehttp.h INVALID");
+        }
+        return false;
+    }
 }

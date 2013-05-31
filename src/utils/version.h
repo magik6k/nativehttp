@@ -20,36 +20,12 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#include "nativehttp.h"
-#include <stdio.h>
+#ifndef VERSION_H_INCLUDED
+#define VERSION_H_INCLUDED
 
-#define SSLOCK if(lck)pos=lpos
-
-
-string nativehttp::data::superstring::file(string fn)
+namespace utils
 {
-	FILE *f = fopen(fn.c_str(), "r");
-	if (f)
-	{
-		fseek(f, 0, SEEK_END);
-		int size = ftell(f);
-		rewind(f);
-		string tm;
-		tm.resize(size);
-		fread(&tm[0], 1, size, f);
-		fclose(f);
-		return tm;
-	}
-	return "";
+    bool header_version_ok();
 }
 
-void nativehttp::data::superstring::set_file(string fn)
-{
-	str = this->file(fn);
-	pos = 0;
-}
-
-void nativehttp::data::superstring::append_file(string fn)
-{
-	str += this->file(fn);
-}
+#endif // VERSION_H_INCLUDED

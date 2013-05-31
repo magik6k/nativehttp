@@ -3,6 +3,9 @@ For more info visit http://nativehttp.org
 
 DEV:
 -Thread cleanup
+-SuperString - set_file now sets position to 0
+-NHP Parser - Configurble nativehttp.h directory
+-Version checking of installed nativehttp.h
 
 3105.13:
 -Performance options

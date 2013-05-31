@@ -93,7 +93,8 @@ NHS = \
 	$(NHD)/pagemap/reloaders/nhp.cpp \
 	$(NHD)/utils/memory.cpp \
 	$(NHD)/utils/nhp_to_cpp.cpp \
-	$(NHD)/utils/thread.cpp
+	$(NHD)/utils/thread.cpp \
+	$(NHD)/utils/version.cpp
 
 NHTS = \
 	$(NHTD)/main.cpp

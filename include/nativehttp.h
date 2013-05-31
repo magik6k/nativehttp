@@ -23,13 +23,18 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
+#define NATIVEHTTP_API_VERSION 11
+/*
+NOTE, that API version macro MUST be written with following style:
+#define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
+*/
+
 #include <string>
 #include <vector>
 #include <deque>
 #include <stdio.h>
 #include <sqlite3.h>
 
-#define NATIVEHTTP_API_VERSION 11
 #define initated() return -(NATIVEHTTP_API_VERSION)
 #define initerr(_rcode) return ((_rcode>0)?(_rcode):(-(_rcode)))+2
 
