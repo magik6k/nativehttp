@@ -1,6 +1,10 @@
 NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
+WS_Dev:
+-maxClients function
+
+
 0106.13:
 -Thread cleanup
 -SuperString - set_file now sets position to 0

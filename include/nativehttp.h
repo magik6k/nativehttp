@@ -174,6 +174,7 @@ namespace nativehttp
 		};
 
 		typedef superstring ss;
+		typedef int clientid;
 
 		struct cfgfil
 		{
@@ -403,6 +404,9 @@ namespace nativehttp
 		extern "C" string version();
 		extern "C" void log(string lname, string value);
 		extern "C" void logid(int id, string lname, string value);
+
+		extern "C" data::clientid maxClients();
+
 		namespace stat
 		{
 			extern "C" bool stats();

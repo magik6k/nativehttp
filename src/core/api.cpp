@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 #include "protocol.h"
+#include "http/data.h"
 #include <string.h>
 
 ofstream logfile;
@@ -68,5 +69,10 @@ namespace nativehttp
 		if (!deamonized)cout << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
 		if (logfile.is_open())logfile << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
 	}
+
+    extern "C" data::clientid maxClients()
+    {
+        return http::maxConnections;
+    }
 
 }
