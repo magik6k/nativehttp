@@ -1,7 +1,7 @@
 NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
-DEV:
+0106.13:
 -Thread cleanup
 -SuperString - set_file now sets position to 0
 -NHP Parser - Configurble nativehttp.h directory
