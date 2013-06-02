@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 11
+#define NATIVEHTTP_API_VERSION 12
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -435,6 +435,16 @@ namespace nativehttp
 	namespace utils
 	{
 		extern "C" string decode_poststring(string str);
+	}
+
+	namespace websock
+	{
+        typedef void (*cb_onConnect)(nativehttp::data::clientid);
+        typedef void (*cb_onBinFrame)(nativehttp::data::clientid, const void*);
+        typedef void (*cb_onTxtFrame)(nativehttp::data::clientid, const char*);
+
+        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onTxtFrame onTframe, cb_onBinFrame onBFrame);
+
 	}
 
 }//nativehttp namespace

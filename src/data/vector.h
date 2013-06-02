@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 */
 #ifndef VECTOR_H_INCLUDED
 #define VECTOR_H_INCLUDED
-
+#include <stdlib.h>
 
 namespace data
 {

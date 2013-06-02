@@ -94,7 +94,10 @@ NHS = \
 	$(NHD)/utils/memory.cpp \
 	$(NHD)/utils/nhp_to_cpp.cpp \
 	$(NHD)/utils/thread.cpp \
-	$(NHD)/utils/version.cpp
+	$(NHD)/utils/version.cpp \
+	$(NHD)/ws/data.cpp \
+	$(NHD)/ws/init.cpp \
+	$(NHD)/ws/map.cpp 
 
 NHTS = \
 	$(NHTD)/main.cpp
