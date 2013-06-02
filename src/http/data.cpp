@@ -43,6 +43,7 @@ namespace http
 	uint32_t *client_ips = NULL;
 	SOCKET *connected = NULL;
 	SOCKET server = INVALID_SOCKET;
+	uint8_t *client_protocol = NULL;
 
 	SSL **sslsck = NULL;
 	bool onssl = false;

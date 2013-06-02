@@ -94,6 +94,7 @@ namespace http
 	extern SOCKET *connected;
 	extern SOCKET server;
 	extern uint32_t *client_ips;
+	extern uint8_t *client_protocol;
 
 	extern bool onssl;
 	extern SSL **sslsck;

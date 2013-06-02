@@ -33,8 +33,8 @@ freely, subject to the following restrictions:
 #include "net/net.h"
 #include "utils/thread.h"
 #include "utils/version.h"
-#ifdef NHDBG
 #include "protocol.h"
+#ifdef NHDBG
 #include <iostream>
 #endif
 
@@ -65,11 +65,14 @@ namespace http
 		http::ulock = new bool[http::maxConnections];
 		http::client_ips = new uint32_t[http::maxConnections];
 		http::sslsck = new SSL*[http::maxConnections];
+		http::client_protocol = new uint8_t[http::maxConnections];
+
 		for (int i = 0; i < http::maxConnections; i++)
 		{
 			http::connected[i] = INVALID_SOCKET;
 			http::ulock[i] = false;
 			http::sslsck[i] = NULL;
+			http::client_protocol = CLPROT_HTTP;
 		}
 
 		http::Nexec = cfg->get_int("exec_theards");

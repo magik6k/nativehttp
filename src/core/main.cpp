@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "http/manager.h"
 #include "data/queue.h"
 #include "http/net/net.h"
+#include "ws/ws.h"
 #include <sys/prctl.h>
 #include <signal.h>
 
@@ -125,6 +126,7 @@ int main(int argc, char *argv[])
 	http::sdlinit();
 	http::executorinit();
 	http::netstart();
+	ws::init();
 	http::startsystem();
 
 	nativehttp::server::log("INIT", "Ready");

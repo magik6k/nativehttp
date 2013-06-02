@@ -37,6 +37,10 @@ freely, subject to the following restrictions:
 
 using namespace std;
 
+#define CLPROT_HTTP 0
+#define CLPROT_WEBSOCKETS 1
+
+
 void deamonize();
 size_t getacmem();
 size_t getrsmem();

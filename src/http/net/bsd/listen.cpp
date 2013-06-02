@@ -69,6 +69,7 @@ namespace http
 					continue;
 				}
 				http::connected[fs] = tmp;
+				http::client_protocol[fs] = CLPROT_HTTP;
 				http::client_ips[fs] = sock_addr.sin_addr.s_addr;
 
 				http::statdata::onconnect();
