@@ -24,10 +24,14 @@ freely, subject to the following restrictions:
 #define WS_H_INCLUDED
 
 #include "data.h"
+#include "nativehttp.h"
+#include "http/executor.h"
 
 namespace ws
 {
     void init();
+    void handshake(int uid, nativehttp::rdata &rd, http::rproc::lrqd &ld);
+    int find_uri(const char* uri);
 }
 
 #endif // WS_H_INCLUDED

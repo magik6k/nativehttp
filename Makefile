@@ -96,6 +96,7 @@ NHS = \
 	$(NHD)/utils/thread.cpp \
 	$(NHD)/utils/version.cpp \
 	$(NHD)/ws/data.cpp \
+	$(NHD)/ws/handshake.cpp \
 	$(NHD)/ws/init.cpp \
 	$(NHD)/ws/map.cpp 
 

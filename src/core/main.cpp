@@ -108,7 +108,9 @@ int main(int argc, char *argv[])
 
     nativehttp::server::log("INIT", "Loading configuration, setting up server");
 	cfg = new nativehttp::data::Ccfg(conf);
+
 	http::datainit();
+	ws::init();
 
 	charset = cfg->get_var("charset");
 	default_mime = cfg->get_var("default_content_type");
@@ -126,7 +128,6 @@ int main(int argc, char *argv[])
 	http::sdlinit();
 	http::executorinit();
 	http::netstart();
-	ws::init();
 	http::startsystem();
 
 	nativehttp::server::log("INIT", "Ready");

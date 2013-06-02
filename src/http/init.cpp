@@ -72,7 +72,7 @@ namespace http
 			http::connected[i] = INVALID_SOCKET;
 			http::ulock[i] = false;
 			http::sslsck[i] = NULL;
-			http::client_protocol = CLPROT_HTTP;
+			http::client_protocol[i] = CLPROT_HTTP;
 		}
 
 		http::Nexec = cfg->get_int("exec_theards");

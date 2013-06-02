@@ -65,6 +65,11 @@ namespace http
             hss.add_token(nativehttp::data::token("Cookie: ", 4));
             hss.add_token(nativehttp::data::token("Content-Length: ", 5));
             hss.add_token(nativehttp::data::token("Range: ", 6));
+            hss.add_token(nativehttp::data::token("Connection: ", 7));
+            hss.add_token(nativehttp::data::token("Upgrade: ", 8));
+
+            hss.add_token(nativehttp::data::token("Sec-WebSocket-Key: ", 1000));///WebSocket specyfic headers(100x)
+            hss.add_token(nativehttp::data::token("Sec-WebSocket-Protocol: ", 1001));
 
             while (hss.pos < hss.str.size())
             {
@@ -90,6 +95,7 @@ namespace http
                         ld.clen = strtol(hss.to(SS("\n")).go_end().remove("\r").c_str(), NULL, 10);
                         break;
                     case 6:
+                    {
                         nativehttp::data::superstring btr(hss.to(SS("\n")).go_end().remove("\r").str);
                         btr(btr.from("bytes="));
                         btr.pos = 0;
@@ -107,6 +113,28 @@ namespace http
                         {
                             ld.rng_end = nativehttp::data::superstring::int64_from_str(btr.to(","));///handling only 1 range. @TODO 206 here
                         }
+                        break;
+                    }
+                    case 7:
+                        if(hss.to(SS("\n")).go_end().remove("\r").go_begin().check("Upgrade"))
+                        {
+                            ld.upg = true;
+                        }
+                        break;
+                    case 8:
+                        if(hss.to(SS("\n")).go_end().remove("\r").go_begin().check("websocket"))
+                        {
+                            ld.uwebsck = true;
+                        }
+                        break;
+
+
+
+                    case 1000:
+                        ld.ws_acc_key = strdup(hss.to(SS("\n")).go_end().remove("\r").c_str());
+                        break;
+                    case 1001:
+                        ld.ws_prot = strdup(hss.to(SS("\n")).go_end().remove("\r").c_str());
                         break;
                 }
             }

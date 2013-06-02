@@ -31,6 +31,7 @@ namespace ws
     struct ws_ent
     {
         const char* uri;
+        int ulen;
         const char* protocol;
         nativehttp::websock::cb_onConnect on_connect;
         nativehttp::websock::cb_onTxtFrame on_txt_frame;

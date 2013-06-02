@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "../data.h"
 #include "../stat.h"
 #include "../net/net.h"
+#include "ws/ws.h"
 
 #ifdef NHDBG
 #include "utils/memory.h"
@@ -50,7 +51,7 @@ namespace http
         while (true)
         {
 
-            http::request *process = http::rproc::get_proc(exc);
+            http::request *process = http::rproc::get_proc(exc);cout << process->request<<endl;
             http::statdata::onhit();
 
             rd.get = NULL;
@@ -60,6 +61,11 @@ namespace http
 
             ld.clen = 0;
             ld.d501 = 0;
+
+            ld.upg = false;
+            ld.uwebsck = false;
+            ld.ws_acc_key = NULL;
+            ld.ws_prot = NULL;
 
             http::rproc::line0(process, rd, ld);
 
@@ -120,6 +126,31 @@ namespace http
                 delete process;
                 process = NULL;
                 continue;
+            }
+
+            if(ld.upg)
+            {
+                if(ld.uwebsck)
+                {
+
+                    ws::handshake(process->uid, rd, ld);
+
+                    if (rd.cookie)
+                    {
+                        delete rd.cookie;
+                    }
+                    if (rd.get)
+                    {
+                        delete rd.get;
+                    }
+                    if (rd.post)
+                    {
+                        delete rd.post;
+                    }
+                    delete[] process->request;
+                    delete process;
+                    continue;
+                }
             }
 
             if (!rd.cookie)

@@ -35,6 +35,8 @@ namespace nativehttp
             {
                 ws::ws_ent temp;
                 temp.uri = strdup(uri);
+                temp.ulen = strlen(uri);
+
                 temp.protocol = strdup(protocol_name);
 
                 temp.on_connect = onConnect;
@@ -45,5 +47,44 @@ namespace nativehttp
             }
             return ws::enabled?1:0;
         }
+    }
+}
+namespace ws
+{
+    int find_uri(const char* uri)
+    {
+        int msz=ws::units->size();
+
+        int *fnd = new int[msz];
+        for(int i=0;i<msz;i++)
+            fnd[i] = 0;
+
+        int usize = strlen(uri);
+
+        for(int i=0;i<usize;i++)
+        {
+            for(int j=0;j<msz;j++)
+            {
+                if(fnd[j]>-1)
+                {
+                    if((*ws::units)[j].ulen>i)
+                    {
+                        if((*ws::units)[j].uri[i] == uri[i])
+                        {
+                            fnd[j]++;
+                            if(fnd[j]+1 == usize && fnd[j]+1 == (*ws::units)[j].ulen)return j;
+                        }
+                        else
+                            fnd[j]--;
+                    }
+                    else
+                        fnd[j] = -1;
+                }
+
+            }
+        }
+
+        delete[]fnd;
+        return -1;
     }
 }

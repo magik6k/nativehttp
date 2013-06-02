@@ -20,43 +20,15 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef EXECUTOR_H_INCLUDED
-#define EXECUTOR_H_INCLUDED
-#include <SDL/SDL.h>
-#include "nativehttp.h"
-#include "data.h"
+#include "ws.h"
+#include <openssl/sha.h>
 
-namespace http
+namespace ws
 {
-	void *executor(void *eid);
-
-	namespace rproc
-	{
-
-		struct lrqd
-		{
-			unsigned int clen;
-			char d501;
-			int64_t rng_start;
-			int64_t rng_end;
-			int uid;
-
-			bool upg;
-			bool uwebsck;
-
-			char* ws_acc_key;
-			char* ws_prot;
-		};
-
-		http::request* get_proc(http::Sexecutor *exc);
-
-		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld);
-
-		uint8_t ex(nativehttp::data::pagedata &pd, nativehttp::rdata *rd, http::rproc::lrqd &ld);
-
-		void line0(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld);
-		void header(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld);
-	}
+    void handshake(int uid, nativehttp::rdata &rd, http::rproc::lrqd &ld)
+    {
+        cout << "ACC: "<<ld.ws_acc_key<<endl;
+        cout << "PROT: "<<ld.ws_prot<<endl;
+        cout << "URID: "<<find_uri(rd.uri.c_str())<<endl;
+    }
 }
-
-#endif // EXECUTOR_H_INCLUDED
