@@ -4,6 +4,7 @@ For more info visit http://nativehttp.org
 WS_Dev:
 -maxClients function
 -WebSockets base
+-WebSocket handshake
 -Configuration sorted
 
 0106.13:

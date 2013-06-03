@@ -68,7 +68,7 @@ namespace http
             hss.add_token(nativehttp::data::token("Connection: ", 7));
             hss.add_token(nativehttp::data::token("Upgrade: ", 8));
 
-            hss.add_token(nativehttp::data::token("Sec-WebSocket-Key: ", 1000));///WebSocket specyfic headers(100x)
+            hss.add_token(nativehttp::data::token("Sec-WebSocket-Key: ", 1000));///WebSocket specific headers(100x)
             hss.add_token(nativehttp::data::token("Sec-WebSocket-Protocol: ", 1001));
 
             while (hss.pos < hss.str.size())

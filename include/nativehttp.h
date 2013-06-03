@@ -38,6 +38,9 @@ NOTE, that API version macro MUST be written with following style:
 #define initated() return -(NATIVEHTTP_API_VERSION)
 #define initerr(_rcode) return ((_rcode>0)?(_rcode):(-(_rcode)))+2
 
+#define NH_SUCCES 0
+#define NH_ERROR 1
+
 using namespace std;
 
 namespace nativehttp
