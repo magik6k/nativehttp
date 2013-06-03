@@ -30,6 +30,9 @@ namespace http
 	{
 		void reciver()
 		{
+
+            char* rqbuf = NULL;
+
 			while (1)
 			{
 				SOCKET mfd = 0;
@@ -69,13 +72,17 @@ namespace http
 					        !http::ulock[i] &&
 					        FD_ISSET(http::connected[i], &set))
 					{
-						http::request *trq = new http::request();
 
-						trq->request = new char[(HTTP_MAX_USER_HEADER_SIZE + 1)];
-						int ra = recv(http::connected[i], (char *) trq->request, HTTP_MAX_USER_HEADER_SIZE, 0);
+                        if(!rqbuf)rqbuf = new char[(HTTP_MAX_USER_HEADER_SIZE + 1)];
+
+						int ra = recv(http::connected[i], (char *) rqbuf, HTTP_MAX_USER_HEADER_SIZE, 0);
 
 						if (ra > 0)
 						{
+                            http::request *trq = new http::request();
+                            trq->request = rqbuf;
+                            rqbuf = NULL; //Do not ever think about freeing this here
+
 							((char*)trq->request)[ra] = '\0';
 							http::statdata::onrecv(ra);
 
@@ -89,9 +96,6 @@ namespace http
 						}
 						else
 						{
-							delete[] trq->request;
-							delete trq;
-
 							http::bsd::disconnect(i);
 						}
 

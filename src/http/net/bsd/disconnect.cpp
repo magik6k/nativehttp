@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../net.h"
+#include "ws/ws.h"
 
 namespace http
 {
@@ -28,6 +29,14 @@ namespace http
 	{
 		void disconnect(int scid)
 		{
+
+            if(ws::enabled)
+            {
+                if(http::client_protocol[scid] == CLPROT_WEBSOCKETS)
+                    if(((*ws::units)[http::client_prot_data[scid]].on_disconnect))
+                        (*(*ws::units)[http::client_prot_data[scid]].on_disconnect)(scid);
+            }
+
 			if (http::connected[scid] != -1)
 			{
 				close(http::connected[scid]);

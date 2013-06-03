@@ -44,6 +44,7 @@ namespace http
 	SOCKET *connected = NULL;
 	SOCKET server = INVALID_SOCKET;
 	uint8_t *client_protocol = NULL;
+	uint32_t *client_prot_data = NULL;
 
 	SSL **sslsck = NULL;
 	bool onssl = false;

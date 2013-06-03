@@ -443,10 +443,11 @@ namespace nativehttp
 	namespace websock
 	{
         typedef int (*cb_onConnect)(nativehttp::data::clientid);
-        typedef int (*cb_onBinFrame)(nativehttp::data::clientid, const void*);
-        typedef int (*cb_onTxtFrame)(nativehttp::data::clientid, const char*);
+        typedef int (*cb_onDisconnect)(nativehttp::data::clientid);
+        typedef int (*cb_onBinMsg)(nativehttp::data::clientid, const void*);
+        typedef int (*cb_onTxtMsg)(nativehttp::data::clientid, const char*);
 
-        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onTxtFrame onTframe, cb_onBinFrame onBFrame);
+        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onConnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg);
 
 	}
 

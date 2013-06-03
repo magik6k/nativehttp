@@ -34,8 +34,9 @@ namespace ws
         int ulen;
         const char* protocol;
         nativehttp::websock::cb_onConnect on_connect;
-        nativehttp::websock::cb_onTxtFrame on_txt_frame;
-        nativehttp::websock::cb_onBinFrame on_bin_frame;
+        nativehttp::websock::cb_onDisconnect on_disconnect;
+        nativehttp::websock::cb_onTxtMsg on_txt_msg;
+        nativehttp::websock::cb_onBinMsg on_bin_msg;
     };
 
     extern bool enabled;

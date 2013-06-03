@@ -30,6 +30,9 @@ namespace http
 	{
 		void reciver()
 		{
+
+            char* rqbuf = NULL;
+
 			while (1)
 			{
 				SOCKET mfd = 0;
@@ -69,14 +72,19 @@ namespace http
 					        !http::ulock[i] &&
 					        FD_ISSET(http::connected[i], &set))
 					{
-						http::request *trq = new http::request();
 
-						trq->request = new char[(HTTP_MAX_USER_HEADER_SIZE + 1)];
-						int ra = SSL_read(http::sslsck[i], (char *) trq->request, HTTP_MAX_USER_HEADER_SIZE);
+                        if(!rqbuf)rqbuf = new char[(HTTP_MAX_USER_HEADER_SIZE + 1)];
+
+
+						int ra = SSL_read(http::sslsck[i], (char *) rqbuf, HTTP_MAX_USER_HEADER_SIZE);
 						int ra2 = 0;
-						if (ra == 1 && ra > 0)ra2 = SSL_read(http::sslsck[i], (char *) trq->request + 1, HTTP_MAX_USER_HEADER_SIZE - 1);
+						if (ra == 1 && ra > 0)ra2 = SSL_read(http::sslsck[i], (char *) rqbuf + 1, HTTP_MAX_USER_HEADER_SIZE - 1);
 						if (ra > 0 && ra2 > 0)
 						{
+                            http::request *trq = new http::request();
+                            trq->request = rqbuf;
+                            rqbuf = NULL; //Do not ever think about freeing this here
+
 							ra += ra2;
 							((char*)trq->request)[ra] = '\0';
 							http::statdata::onrecv(ra);
@@ -91,9 +99,6 @@ namespace http
 						}
 						else
 						{
-							delete[] trq->request;
-							delete trq;
-
 							http::bsd::disconnect(i);
 						}
 
