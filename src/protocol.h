@@ -39,6 +39,7 @@ using namespace std;
 
 #define CLPROT_HTTP 0
 #define CLPROT_WEBSOCKETS 1
+#define IS_MACHINE_NETWORK_BYTE_ORDERED (!(((union { unsigned x; unsigned char c; }){1}).c))
 
 
 void deamonize();

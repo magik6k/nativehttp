@@ -75,11 +75,13 @@ namespace http
 	SDL_mutex *mtx_exec = NULL;
 	SDL_mutex *mtx_snd = NULL;
 	SDL_mutex *mtx_fsnd = NULL;
+	SDL_mutex *mtx_wsrc = NULL;
 
 	pthread_t *theard_nc = NULL;
 	pthread_t **theard_sd = NULL;
 	pthread_t *theard_mg = NULL;
 	pthread_t *theard_fs = NULL;
+	pthread_t *theard_ws = NULL;
 
 	string nhpc_include_dir;
 	string nhpc_nativehttph_dest;

@@ -126,11 +126,13 @@ namespace http
 	extern SDL_mutex *mtx_exec;
 	extern SDL_mutex *mtx_snd;
 	extern SDL_mutex *mtx_fsnd;
+	extern SDL_mutex *mtx_wsrc;
 
 	extern pthread_t *theard_nc;
 	extern pthread_t **theard_sd;
 	extern pthread_t *theard_mg;
 	extern pthread_t *theard_fs;
+	extern pthread_t *theard_ws;
 
 	extern string nhpc_include_dir;
 	extern string nhpc_nativehttph_dest;

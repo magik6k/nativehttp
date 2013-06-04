@@ -82,7 +82,7 @@ namespace ws
 
                     cout << "OPTAC:"<<B64<<endl;
 
-                    string rtn = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ";
+                    string rtn = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Accept: ";
                     rtn += B64;
                     rtn += "\r\nSec-WebSocket-Protocol: ";
                     rtn += ld.ws_prot;

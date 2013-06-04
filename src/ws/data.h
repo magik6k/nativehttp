@@ -41,6 +41,11 @@ namespace ws
 
     extern bool enabled;
     extern data::vector<ws_ent>* units;
+    extern uint64_t mbufsize;
+
+    extern unsigned char** rbuf;
+    extern uint64_t* rcv_msg_size;
+    extern uint64_t* rcv_frame_left;
 
 }
 

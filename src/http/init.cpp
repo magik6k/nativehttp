@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 #include "utils/thread.h"
 #include "utils/version.h"
 #include "protocol.h"
+#include "ws/ws.h"
 #ifdef NHDBG
 #include <iostream>
 #endif
@@ -83,6 +84,8 @@ namespace http
 		http::execUnits = new http::Sexecutor[http::Nexec];
 		http::theard_sd = new pthread_t*[http::Nsend];
 
+		if(cfg->get_int("ws_enable"))http::theard_ws = new pthread_t[cfg->get_int("ws_fproc_threads")];
+
 		http::headers::alivetimeout = cfg->get_var("normal_keep") + "\r\n";
 		http::mExecQ = cfg->get_int("maxexecutionqueue");
 		http::exec_heap_size = cfg->get_int("exec_heap");
@@ -100,6 +103,7 @@ namespace http
 		http::mtx_exec = SDL_CreateMutex();
 		http::mtx_snd = SDL_CreateMutex();
 		http::mtx_fsnd = SDL_CreateMutex();
+		http::mtx_wsrc = SDL_CreateMutex();
 
 		http::manager::rate = cfg->get_int("managerrate");
 		http::manager::postto = cfg->get_int("posttimeout");
@@ -235,6 +239,16 @@ namespace http
 		tms = utils::create_thread(tt, http::manager::manager, NULL, 256 * 1024);
 		http::theard_mg = tt;
 		if (tms != 0)nativehttp::server::log("init.cpp", "Manager failed to start");
+
+		if(ws::enabled)
+		{
+            int tn = cfg->get_int("ws_fproc_threads");
+            size_t heapsz = cfg->get_int("ws_fproc_heap");
+            for(int i=0;i<tn;i++)
+            {
+                utils::create_thread(&(http::theard_ws[i]), ws::rmsgproc, NULL, heapsz);
+            }
+        }
 
 #ifdef NHDBG
 		SDL_Delay(250);

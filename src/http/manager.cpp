@@ -166,6 +166,10 @@ namespace http
 					}
 				}
 
+
+				//wtf, here?
+				pthread_cancel(pthread_self());
+
 			}
 		}
 

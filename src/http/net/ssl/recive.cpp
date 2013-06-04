@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "../net.h"
 #include "http/stat.h"
+#include "ws/ws.h"
 
 namespace http
 {
@@ -81,21 +82,31 @@ namespace http
 						if (ra == 1 && ra > 0)ra2 = SSL_read(http::sslsck[i], (char *) rqbuf + 1, HTTP_MAX_USER_HEADER_SIZE - 1);
 						if (ra > 0 && ra2 > 0)
 						{
-                            http::request *trq = new http::request();
-                            trq->request = rqbuf;
-                            rqbuf = NULL; //Do not ever think about freeing this here
+                            if(http::client_protocol[i] == CLPROT_HTTP)
+                            {
+                                http::request *trq = new http::request();
+                                trq->request = rqbuf;
+                                rqbuf = NULL; //Do not ever think about freeing this here
 
-							ra += ra2;
-							((char*)trq->request)[ra] = '\0';
-							http::statdata::onrecv(ra);
+                                ra += ra2;
+                                ((char*)trq->request)[ra] = '\0';
+                                http::statdata::onrecv(ra);
 
-							trq->taken = -1;
-							trq->uid = i;
-							trq->sender = http::connected[i];
-							http::ulock[i] = true;
-							SDL_mutexP(http::mtx_exec);
-							http::toexec.push(trq);
-							SDL_mutexV(http::mtx_exec);
+                                trq->taken = -1;
+                                trq->uid = i;
+                                trq->sender = http::connected[i];
+                                http::ulock[i] = true;
+                                SDL_mutexP(http::mtx_exec);
+                                http::toexec.push(trq);
+                                SDL_mutexV(http::mtx_exec);
+							}
+							else
+							{
+                                ra += ra2;
+                                http::statdata::onrecv(ra);
+                                ws::rcv_push((unsigned char*)rqbuf, ra, i);
+                                rqbuf = NULL;
+							}
 						}
 						else
 						{

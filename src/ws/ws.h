@@ -32,6 +32,9 @@ namespace ws
     void init();
     void handshake(int uid, nativehttp::rdata &rd, http::rproc::lrqd &ld);
     int find_uri(const char* uri);
+
+    void *rmsgproc(void *unused);
+    void rcv_push(unsigned char* data, int dlen, int uid);
 }
 
 #endif // WS_H_INCLUDED

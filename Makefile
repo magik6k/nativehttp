@@ -98,7 +98,8 @@ NHS = \
 	$(NHD)/ws/data.cpp \
 	$(NHD)/ws/handshake.cpp \
 	$(NHD)/ws/init.cpp \
-	$(NHD)/ws/map.cpp 
+	$(NHD)/ws/map.cpp \
+	$(NHD)/ws/recive.cpp 
 
 NHTS = \
 	$(NHTD)/main.cpp
