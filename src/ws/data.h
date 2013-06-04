@@ -39,9 +39,27 @@ namespace ws
         nativehttp::websock::cb_onBinMsg on_bin_msg;
     };
 
+    struct framebuf
+    {
+        bool busy;
+
+        uint8_t opcode;
+        bool mask;
+        bool fin;
+
+        uint64_t frame_size;
+        uint32_t mkey;
+
+        uint32_t pos;
+        unsigned char* fdata;
+        uint64_t recived;
+    };
+
     extern bool enabled;
     extern data::vector<ws_ent>* units;
     extern uint64_t mbufsize;
+
+    extern ws::framebuf* frames;
 
     extern unsigned char** rbuf;
     extern uint64_t* rcv_msg_size;

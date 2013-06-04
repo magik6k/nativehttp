@@ -37,7 +37,7 @@ namespace ws
     struct rmsp
     {
         unsigned char* data;
-        int datalen;
+        uint32_t datalen;
         int uid;
     };
 
@@ -71,96 +71,122 @@ namespace ws
             }
             rqueue.pop();
             SDL_mutexV(http::mtx_wsrc);
+            const int uid = proc.uid;
 
-            if(!(0b01110000&proc.data[0]))
+            if(!ws::frames[uid].busy)
             {
-                uint8_t opcode = 0b00001111&proc.data[0];
-
-                bool mask = (0b10000000&proc.data[1])/128;
-                bool fin = (0b10000000&proc.data[0])/128;
-
-                uint64_t frame_size = (0b01111111&proc.data[1]);
-                uint32_t mkey = 0;
-
-                size_t pos = 2;
-
-                unsigned char* fdata = NULL;
-
-                if(frame_size == 126)
+                if(!(0b01110000&proc.data[0]))
                 {
-                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                    ws::frames[uid].busy = true;
+
+                    ws::frames[uid].opcode = 0b00001111&proc.data[0];
+
+                    ws::frames[uid].mask = (0b10000000&proc.data[1])/128;
+                    ws::frames[uid].fin = (0b10000000&proc.data[0])/128;
+
+                    ws::frames[uid].frame_size = (0b01111111&proc.data[1]);
+                    ws::frames[uid].mkey = 0;
+
+                    ws::frames[uid].pos = 2;
+
+                    ws::frames[uid].fdata = NULL;
+
+                    if(ws::frames[uid].frame_size == 126)
                     {
-                        frame_size = *((uint16_t*)(&proc.data[pos]));
+                        if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                        {
+                            ws::frames[uid].frame_size = *((uint16_t*)(&proc.data[ws::frames[uid].pos]));
+                        }
+                        else
+                        {
+                            ws::frames[uid].frame_size = 0;
+                            ((uint8_t*)&ws::frames[uid].frame_size)[1] = (proc.data[ws::frames[uid].pos]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[0] = (proc.data[ws::frames[uid].pos+1]);
+                        }
+                        ws::frames[uid].pos += 2;
                     }
-                    else
+                    else if(ws::frames[uid].frame_size == 127)
                     {
-                        frame_size = 0;
-                        ((uint8_t*)&frame_size)[1] = (proc.data[pos]);
-                        ((uint8_t*)&frame_size)[0] = (proc.data[pos+1]);
+                        if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                        {
+                            ws::frames[uid].frame_size = *((uint64_t*)(&proc.data[ws::frames[uid].pos]));
+                        }
+                        else
+                        {
+                            ws::frames[uid].frame_size = 0;
+                            ((uint8_t*)&ws::frames[uid].frame_size)[7] = (proc.data[ws::frames[uid].pos]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[6] = (proc.data[ws::frames[uid].pos+1]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[5] = (proc.data[ws::frames[uid].pos+2]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[4] = (proc.data[ws::frames[uid].pos+3]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[3] = (proc.data[ws::frames[uid].pos+4]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[2] = (proc.data[ws::frames[uid].pos+5]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[1] = (proc.data[ws::frames[uid].pos+6]);
+                            ((uint8_t*)&ws::frames[uid].frame_size)[0] = (proc.data[ws::frames[uid].pos+7]);
+                        }
+                        ws::frames[uid].pos += 8;
                     }
-                    pos += 2;
+
+                    ws::frames[uid].fdata = new unsigned char[ws::frames[uid].frame_size+1];
+
+
+                    if(ws::frames[uid].mask)
+                    {
+                        if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                        {
+                            ws::frames[uid].mkey = *((uint32_t*)(&proc.data[ws::frames[uid].pos]));
+                        }
+                        else
+                        {
+                            ws::frames[uid].mkey = 0;
+                            ((uint8_t*)&ws::frames[uid].mkey)[3] = (proc.data[ws::frames[uid].pos]);
+                            ((uint8_t*)&ws::frames[uid].mkey)[2] = (proc.data[ws::frames[uid].pos+1]);
+                            ((uint8_t*)&ws::frames[uid].mkey)[1] = (proc.data[ws::frames[uid].pos+2]);
+                            ((uint8_t*)&ws::frames[uid].mkey)[0] = (proc.data[ws::frames[uid].pos+3]);
+                        }
+                        ws::frames[uid].mkey = *((uint32_t*)(&proc.data[ws::frames[uid].pos]));
+                        ws::frames[uid].pos += 4;
+                    }
+
+                    ws::frames[uid].recived = 0;
+
+                    for(uint64_t i = 0;i<ws::frames[uid].frame_size&&ws::frames[uid].pos+i<proc.datalen;i++)
+                    {
+                        ws::frames[uid].fdata[i] = ws::frames[uid].mask?proc.data[ws::frames[uid].pos+i]^(((uint8_t*)&ws::frames[uid].mkey)[i%4]):proc.data[ws::frames[uid].pos+i];
+                        ws::frames[uid].recived++;
+                    }
+                    ws::frames[uid].fdata[ws::frames[uid].recived] = '\0';
+
+                    cout << "Recived frame packet(valid:"<<!(0b01110000&proc.data[0])<<"), op: "<<int(ws::frames[uid].opcode)<<",size: "<<ws::frames[uid].frame_size<<"("<<int(0b01111111&proc.data[1])<<"), end:"<<int(0b10000000&proc.data[0])/128<<", mask: "<<ws::frames[uid].mkey<<"\n";
+
+                    if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
+                    {
+                        ws::frames[uid].busy = false;
+                        cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
+                        delete[] ws::frames[uid].fdata;
+                    }
+                    else cout << "Not complete\n";
+
                 }
-                else if(frame_size == 127)
+                else
                 {
-                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
-                    {
-                        frame_size = *((uint64_t*)(&proc.data[pos]));
-                    }
-                    else
-                    {
-                        frame_size = 0;
-                        ((uint8_t*)&frame_size)[7] = (proc.data[pos]);
-                        ((uint8_t*)&frame_size)[6] = (proc.data[pos+1]);
-                        ((uint8_t*)&frame_size)[5] = (proc.data[pos+2]);
-                        ((uint8_t*)&frame_size)[4] = (proc.data[pos+3]);
-                        ((uint8_t*)&frame_size)[3] = (proc.data[pos+4]);
-                        ((uint8_t*)&frame_size)[2] = (proc.data[pos+5]);
-                        ((uint8_t*)&frame_size)[1] = (proc.data[pos+6]);
-                        ((uint8_t*)&frame_size)[0] = (proc.data[pos+7]);
-                    }
-                    pos += 8;
+                    cout << "invalid frame["<<int(0b00001111&proc.data[0])<<","<<proc.data[0]<<"]("<<int(0b01000000&proc.data[0])<<","<<int(0b00100000&proc.data[0])<<","<<int(0b00010000&proc.data[0])<<")\n";
                 }
-
-                fdata = new unsigned char[frame_size+1];
-
-
-                if(mask)
-                {
-                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
-                    {
-                        mkey = *((uint32_t*)(&proc.data[pos]));
-                    }
-                    else
-                    {
-                        mkey = 0;
-                        ((uint8_t*)&mkey)[3] = (proc.data[pos]);
-                        ((uint8_t*)&mkey)[2] = (proc.data[pos+1]);
-                        ((uint8_t*)&mkey)[1] = (proc.data[pos+2]);
-                        ((uint8_t*)&mkey)[0] = (proc.data[pos+3]);
-                    }
-                    mkey = *((uint32_t*)(&proc.data[pos]));
-                    pos += 4;
-                }
-
-                uint64_t rcvd = 0;
-
-                for(uint64_t i;i<frame_size&&pos+i<proc.datalen;i++)
-                {
-                    fdata[i] = mask?proc.data[pos+i]^(((uint8_t*)&mkey)[i%4]):proc.data[pos+i];rcvd++;
-                }
-                fdata[rcvd] = '\0';
-
-                cout << "Recived frame packet(valid:"<<!(0b01110000&proc.data[0])<<"), op: "<<int(opcode)<<",size: "<<frame_size<<"("<<int(0b01111111&proc.data[1])<<"), end:"<<int(0b10000000&proc.data[0])/128<<", mask: "<<mkey<<"\n";
-                cout << "DATA("<<rcvd<<"):"<<fdata<<"\n";
-
-
-                delete[] fdata;
-
-
             }
             else
             {
-                cout << "invalid frame["<<int(0b00001111&proc.data[0])<<","<<proc.data[0]<<"]("<<int(0b01000000&proc.data[0])<<","<<int(0b00100000&proc.data[0])<<","<<int(0b00010000&proc.data[0])<<")\n";
+                cout << "Recived Data packet, size: "<<proc.datalen<<endl;
+                for(uint64_t i = 0;ws::frames[uid].recived<ws::frames[uid].frame_size&&i<proc.datalen;i++)
+                {
+                    ws::frames[uid].fdata[i] = ws::frames[uid].mask?proc.data[i]^(((uint8_t*)&ws::frames[uid].mkey)[ws::frames[uid].recived%4]):proc.data[i];
+                    ws::frames[uid].recived++;
+                }
+                if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
+                    {
+                        ws::frames[uid].busy = false;
+                        cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
+                        delete[] ws::frames[uid].fdata;
+                    }
+                    else cout << "Not complete\n";
             }
 
 

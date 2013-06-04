@@ -42,11 +42,15 @@ namespace ws
 
             ws::mbufsize = cfg->get_int("ws_in_msg_buf");
 
+            ws::frames = new ws::framebuf[http::maxConnections];
+
             ws::rbuf = new unsigned char*[http::maxConnections];
             ws::rcv_msg_size = new uint64_t[http::maxConnections];
             ws::rcv_frame_left = new uint64_t[http::maxConnections];
             for(int i=0;i<http::maxConnections;i++)
             {
+                ws::frames[i].busy = false;
+
                 ws::rbuf[i] = NULL;
                 ws::rcv_msg_size[i] = 0;
                 ws::rcv_frame_left[i] = 0;

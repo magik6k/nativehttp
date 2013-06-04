@@ -28,6 +28,7 @@ namespace ws
     data::vector<ws_ent>* units = NULL;
     uint64_t mbufsize = 0LL;
 
+    ws::framebuf* frames = NULL;
 
     unsigned char** rbuf;
     uint64_t* rcv_msg_size = NULL;
