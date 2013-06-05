@@ -47,7 +47,80 @@ namespace nativehttp
         {
             if(ws::enabled)
             {
+                if(ws::stream_state[uid] != WS_STREAMSTATE_FREE)return NH_ERROR;
+
                 uint64_t dsize = size;
+                if(dsize > ws::max_sendable)
+                {
+                    return NH_ERROR;
+                }
+
+                unsigned int head_size = 2;
+                if(dsize > 125)head_size+=2;
+                if(dsize > 65535)head_size+=6;//2+6 = 8
+
+                unsigned char* sbuf = new unsigned char[head_size + dsize];
+                sbuf[0] = 0b10000010;
+
+                if(dsize < 126)
+                {
+                    sbuf[1] = (uint8_t)dsize;
+                }
+                else if(dsize < 65536)
+                {
+                    sbuf[1] = uint8_t(126);
+
+                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                    {
+                        *((uint16_t*)(sbuf+2)) = (uint16_t)dsize;
+                    }
+                    else
+                    {
+                        *((uint8_t*)(sbuf+2)) = ((uint8_t*)(&dsize))[1];
+                        *((uint8_t*)(sbuf+3)) = ((uint8_t*)(&dsize))[0];
+                    }
+                }
+                else
+                {
+                    sbuf[1] = uint8_t(127);
+
+                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                    {
+                        *((uint64_t*)(sbuf+2)) = dsize;
+                    }
+                    else
+                    {
+                        *((uint8_t*)(sbuf+2)) = ((uint8_t*)(&dsize))[7];
+                        *((uint8_t*)(sbuf+3)) = ((uint8_t*)(&dsize))[6];
+                        *((uint8_t*)(sbuf+4)) = ((uint8_t*)(&dsize))[5];
+                        *((uint8_t*)(sbuf+5)) = ((uint8_t*)(&dsize))[4];
+                        *((uint8_t*)(sbuf+6)) = ((uint8_t*)(&dsize))[3];
+                        *((uint8_t*)(sbuf+7)) = ((uint8_t*)(&dsize))[2];
+                        *((uint8_t*)(sbuf+8)) = ((uint8_t*)(&dsize))[1];
+                        *((uint8_t*)(sbuf+9)) = ((uint8_t*)(&dsize))[0];
+                    }
+                }
+
+                memcpy(sbuf + head_size, data, dsize);
+
+                ws::chunked_send(uid, sbuf, head_size + dsize);
+                delete[] sbuf;
+
+            }
+            else
+            {
+                return NH_ERROR;
+            }
+            return NH_SUCCES;
+        }
+
+        int sendTxt(nativehttp::data::clientid uid, const char* data)
+        {
+            if(ws::enabled)
+            {
+                if(ws::stream_state[uid] != WS_STREAMSTATE_FREE)return NH_ERROR;
+
+                uint64_t dsize = strlen(data);
                 if(dsize > ws::max_sendable)
                 {
                     return NH_ERROR;
@@ -112,10 +185,96 @@ namespace nativehttp
             return NH_SUCCES;
         }
 
-        int sendTxt(nativehttp::data::clientid uid, const char* data)
+
+
+        int streamBin(nativehttp::data::clientid uid, const void* data, uint64_t size, bool finalize)
         {
             if(ws::enabled)
             {
+                if(ws::stream_state[uid] == WS_STREAMSTATE_TEXT)return NH_ERROR;
+                bool cnt = ws::stream_state[uid] == WS_STREAMSTATE_TEXT;
+
+                if(!finalize)ws::stream_state[uid] = WS_STREAMSTATE_BINARY;
+                    else ws::stream_state[uid] = WS_STREAMSTATE_FREE;
+
+                uint64_t dsize = size;
+                if(dsize > ws::max_sendable)
+                {
+                    return NH_ERROR;
+                }
+
+                unsigned int head_size = 2;
+                if(dsize > 125)head_size+=2;
+                if(dsize > 65535)head_size+=6;//2+6 = 8
+
+                unsigned char* sbuf = new unsigned char[head_size + dsize];
+                if(!cnt)sbuf[0] = 0b00000010;
+                    else sbuf[0] = 0b00000000;
+
+                if(finalize)sbuf[0] += 0b10000000;
+
+                if(dsize < 126)
+                {
+                    sbuf[1] = (uint8_t)dsize;
+                }
+                else if(dsize < 65536)
+                {
+                    sbuf[1] = uint8_t(126);
+
+                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                    {
+                        *((uint16_t*)(sbuf+2)) = (uint16_t)dsize;
+                    }
+                    else
+                    {
+                        *((uint8_t*)(sbuf+2)) = ((uint8_t*)(&dsize))[1];
+                        *((uint8_t*)(sbuf+3)) = ((uint8_t*)(&dsize))[0];
+                    }
+                }
+                else
+                {
+                    sbuf[1] = uint8_t(127);
+
+                    if(IS_MACHINE_NETWORK_BYTE_ORDERED)
+                    {
+                        *((uint64_t*)(sbuf+2)) = dsize;
+                    }
+                    else
+                    {
+                        *((uint8_t*)(sbuf+2)) = ((uint8_t*)(&dsize))[7];
+                        *((uint8_t*)(sbuf+3)) = ((uint8_t*)(&dsize))[6];
+                        *((uint8_t*)(sbuf+4)) = ((uint8_t*)(&dsize))[5];
+                        *((uint8_t*)(sbuf+5)) = ((uint8_t*)(&dsize))[4];
+                        *((uint8_t*)(sbuf+6)) = ((uint8_t*)(&dsize))[3];
+                        *((uint8_t*)(sbuf+7)) = ((uint8_t*)(&dsize))[2];
+                        *((uint8_t*)(sbuf+8)) = ((uint8_t*)(&dsize))[1];
+                        *((uint8_t*)(sbuf+9)) = ((uint8_t*)(&dsize))[0];
+                    }
+                }
+
+                memcpy(sbuf + head_size, data, dsize);
+
+                ws::chunked_send(uid, sbuf, head_size + dsize);
+                delete[] sbuf;
+
+            }
+            else
+            {
+                return NH_ERROR;
+            }
+            return NH_SUCCES;
+        }
+
+        int streamTxt(nativehttp::data::clientid uid, const char* data, bool finalize)
+        {
+            if(ws::enabled)
+            {
+                if(ws::stream_state[uid] == WS_STREAMSTATE_BINARY)return NH_ERROR;
+                bool cnt = ws::stream_state[uid] == WS_STREAMSTATE_TEXT;
+
+                if(!finalize)ws::stream_state[uid] = WS_STREAMSTATE_TEXT;
+                    else ws::stream_state[uid] = WS_STREAMSTATE_FREE;
+
                 uint64_t dsize = strlen(data);
                 if(dsize > ws::max_sendable)
                 {
@@ -127,7 +286,10 @@ namespace nativehttp
                 if(dsize > 65535)head_size+=6;//2+6 = 8
 
                 unsigned char* sbuf = new unsigned char[head_size + dsize];
-                sbuf[0] = 0b10000001;
+                if(!cnt)sbuf[0] = 0b00000001;
+                    else sbuf[0] = 0b00000000;
+
+                if(finalize)sbuf[0] += 0b10000000;
 
                 if(dsize < 126)
                 {

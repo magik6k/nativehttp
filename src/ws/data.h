@@ -31,6 +31,10 @@ freely, subject to the following restrictions:
 #define WS_MTYPE_BIN 2
 #define WS_MTYPE_CONT 3
 
+#define WS_STREAMSTATE_FREE 0
+#define WS_STREAMSTATE_TEXT 1
+#define WS_STREAMSTATE_BINARY 2
+
 namespace ws
 {
     struct ws_ent
@@ -76,6 +80,7 @@ namespace ws
     extern uint64_t max_sendable;
 
     extern int* client_unit;
+    extern uint8_t* stream_state;
 
     extern ws::framebuf* frames;
     extern ws::msgbuf* messages;

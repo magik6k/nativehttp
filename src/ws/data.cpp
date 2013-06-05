@@ -33,6 +33,7 @@ namespace ws
     uint64_t max_sendable = 0ULL;
 
     int* client_unit = NULL;
+    uint8_t* stream_state = NULL;
 
     ws::framebuf* frames = NULL;
     ws::msgbuf* messages = NULL;

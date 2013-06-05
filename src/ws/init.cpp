@@ -44,6 +44,7 @@ namespace ws
             ws::maxmsgsize = cfg->get_int("ws_in_msg_buf");
 
             ws::client_unit = new int[http::maxConnections];
+            ws::stream_state = new uint8_t[http::maxConnections];
 
             ws::max_sender_chunk = cfg->get_int("ws_sender_chunk");
             ws::max_sendable = cfg->get_int("ws_send_max");
@@ -54,6 +55,7 @@ namespace ws
             for(int i=0;i<http::maxConnections;i++)
             {
                 ws::client_unit[i] = -1;
+                ws::stream_state[i] = WS_STREAMSTATE_FREE;
 
                 ws::frames[i].busy = false;
                 ws::frames[i].fdata = NULL;

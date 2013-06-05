@@ -44,6 +44,8 @@ namespace ws
             ws::messages[uid].data = NULL;
         }
 
+        ws::stream_state = WS_STREAMSTATE_FREE;
+
         if((*ws::units)[ws::client_unit[uid]].on_disconnect)
             (*((*ws::units)[ws::client_unit[uid]].on_disconnect))(uid);
     }
