@@ -21,3 +21,19 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "ws.h"
+#include "http/net/net.h"
+
+namespace ws
+{
+    void control(int uid, uint8_t opcode, uint64_t frame_size, unsigned char* data)
+    {
+        if(opcode == 0x9)
+        {
+            unsigned char* tmd = new unsigned char[2 + frame_size];
+            tmd[0] = 0b10001010; //FIN + PONG
+            tmd[1] = (uint8_t)frame_size;
+            memcpy(tmd + 2, data, frame_size);
+            http::send(uid,2 + frame_size, (const char*)tmd, true);
+        }
+    }
+}

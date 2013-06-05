@@ -132,8 +132,14 @@ namespace ws
                         ///---------------------------------------DISCONNECT HERE
                     }
 
-                    ws::frames[uid].fdata = new unsigned char[ws::frames[uid].frame_size+1];
+                    if(ws::frames[uid].opcode >= 0x8 && ws::frames[uid].frame_size > 125)
+                    {
+                        cout << "Control frames must be sized up to 125 bytes!\n";
+                        ///---------------------------------------DISCONNECT HERE
+                    }
 
+                    ws::frames[uid].fdata = new unsigned char[ws::frames[uid].frame_size+1];
+                    ws::frames[uid].recived = 0;
 
                     if(ws::frames[uid].mask)
                     {
@@ -153,8 +159,6 @@ namespace ws
                         ws::frames[uid].pos += 4;
                     }
 
-                    ws::frames[uid].recived = 0;
-
                     for(uint64_t i = 0;i<ws::frames[uid].frame_size&&ws::frames[uid].pos+i<proc.datalen;i++)
                     {
                         ws::frames[uid].fdata[i] = ws::frames[uid].mask?proc.data[ws::frames[uid].pos+i]^(((uint8_t*)&ws::frames[uid].mkey)[i%4]):proc.data[ws::frames[uid].pos+i];
@@ -167,7 +171,15 @@ namespace ws
                     if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
                     {
                         ws::frames[uid].busy = false;
-                        ws::msg_push(uid, ws::frames[uid].opcode, ws::frames[uid].fin, ws::frames[uid].frame_size, ws::frames[uid].fdata);
+                        if(ws::frames[uid].opcode < 0x8)
+                        {
+                            ws::msg_push(uid, ws::frames[uid].opcode, ws::frames[uid].fin, ws::frames[uid].frame_size, ws::frames[uid].fdata);
+                        }
+                        else
+                        {
+                            ws::control(uid, ws::frames[uid].opcode, ws::frames[uid].frame_size, ws::frames[uid].fdata);
+                        }
+
                         cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
                         delete[] ws::frames[uid].fdata;
                     }
@@ -187,12 +199,19 @@ namespace ws
                     ws::frames[uid].recived++;
                 }
                 if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
+                {
+                    ws::frames[uid].busy = false;
+                    if(ws::frames[uid].opcode < 0x8)
                     {
-                        ws::frames[uid].busy = false;
                         ws::msg_push(uid, ws::frames[uid].opcode, ws::frames[uid].fin, ws::frames[uid].frame_size, ws::frames[uid].fdata);
-                        cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
-                        delete[] ws::frames[uid].fdata;
                     }
+                    else
+                    {
+                        ws::control(uid, ws::frames[uid].opcode, ws::frames[uid].frame_size, ws::frames[uid].fdata);
+                    }
+                    cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
+                    delete[] ws::frames[uid].fdata;
+                }
             }
 
 
