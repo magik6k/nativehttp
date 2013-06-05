@@ -72,6 +72,9 @@ namespace ws
     extern uint64_t maxmsgsize;
     extern uint64_t maxframesize;
 
+    extern uint64_t max_sender_chunk;
+    extern uint64_t max_sendable;
+
     extern int* client_unit;
 
     extern ws::framebuf* frames;

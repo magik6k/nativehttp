@@ -45,6 +45,9 @@ namespace ws
 
             ws::client_unit = new int[http::maxConnections];
 
+            ws::max_sender_chunk = cfg->get_int("ws_sender_chunk");
+            ws::max_sendable = cfg->get_int("ws_send_max");
+
             ws::frames = new ws::framebuf[http::maxConnections];
             ws::messages = new ws::msgbuf[http::maxConnections];
 

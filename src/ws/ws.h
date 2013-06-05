@@ -40,6 +40,9 @@ namespace ws
 
     void disconnect(int uid);
     void clean(int uid);
+
+    void chunked_send(int uid, const void* data, uint64_t dsize);
+
 }
 
 #endif // WS_H_INCLUDED

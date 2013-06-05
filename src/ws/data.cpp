@@ -29,6 +29,9 @@ namespace ws
     uint64_t maxmsgsize = 0ULL;
     uint64_t maxframesize = 0ULL;
 
+    uint64_t max_sender_chunk = 0ULL;
+    uint64_t max_sendable = 0ULL;
+
     int* client_unit = NULL;
 
     ws::framebuf* frames = NULL;
