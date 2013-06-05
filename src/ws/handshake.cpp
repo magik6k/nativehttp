@@ -91,6 +91,7 @@ namespace ws
                     http::send(uid, rtn.size(), strdup(rtn.c_str()), true);
 
                     http::client_protocol[uid] = CLPROT_WEBSOCKETS;
+                    ws::client_unit[uid] = fu;
                     http::unlockclient(uid);
 
                     rtn.clear();

@@ -26,12 +26,12 @@ namespace ws
 {
     bool enabled = false;
     data::vector<ws_ent>* units = NULL;
-    uint64_t mbufsize = 0LL;
+    uint64_t maxmsgsize = 0ULL;
+    uint64_t maxframesize = 0ULL;
+
+    int* client_unit = NULL;
 
     ws::framebuf* frames = NULL;
-
-    unsigned char** rbuf;
-    uint64_t* rcv_msg_size = NULL;
-    uint64_t* rcv_frame_left = NULL;
+    ws::msgbuf* messages = NULL;
 
 }

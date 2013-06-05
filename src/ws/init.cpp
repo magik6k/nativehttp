@@ -40,20 +40,21 @@ namespace ws
                 return;
             }
 
-            ws::mbufsize = cfg->get_int("ws_in_msg_buf");
+            ws::maxframesize = cfg->get_int("ws_in_frame_max");
+            ws::maxmsgsize = cfg->get_int("ws_in_msg_buf");
+
+            ws::client_unit = new int[http::maxConnections];
 
             ws::frames = new ws::framebuf[http::maxConnections];
+            ws::messages = new ws::msgbuf[http::maxConnections];
 
-            ws::rbuf = new unsigned char*[http::maxConnections];
-            ws::rcv_msg_size = new uint64_t[http::maxConnections];
-            ws::rcv_frame_left = new uint64_t[http::maxConnections];
             for(int i=0;i<http::maxConnections;i++)
             {
-                ws::frames[i].busy = false;
+                ws::client_unit[i] = -1;
 
-                ws::rbuf[i] = NULL;
-                ws::rcv_msg_size[i] = 0;
-                ws::rcv_frame_left[i] = 0;
+                ws::frames[i].busy = false;
+                ws::messages[i].len = 0;
+                ws::messages[i].type = WS_MTYPE_NONE;
             }
         }
     }

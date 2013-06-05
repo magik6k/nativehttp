@@ -29,7 +29,7 @@ namespace nativehttp
 {
     namespace websock
     {
-        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onConnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg)
+        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onDisconnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg)
         {
             if(ws::enabled)
             {

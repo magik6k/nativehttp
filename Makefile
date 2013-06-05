@@ -95,11 +95,15 @@ NHS = \
 	$(NHD)/utils/nhp_to_cpp.cpp \
 	$(NHD)/utils/thread.cpp \
 	$(NHD)/utils/version.cpp \
+	$(NHD)/ws/control.cpp \
 	$(NHD)/ws/data.cpp \
+	$(NHD)/ws/disconnect.cpp \
 	$(NHD)/ws/handshake.cpp \
 	$(NHD)/ws/init.cpp \
 	$(NHD)/ws/map.cpp \
-	$(NHD)/ws/recive.cpp 
+	$(NHD)/ws/msg_recive.cpp \
+	$(NHD)/ws/recive.cpp \
+	$(NHD)/ws/send.cpp
 
 NHTS = \
 	$(NHTD)/main.cpp

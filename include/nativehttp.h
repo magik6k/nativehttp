@@ -444,10 +444,10 @@ namespace nativehttp
 	{
         typedef int (*cb_onConnect)(nativehttp::data::clientid);
         typedef int (*cb_onDisconnect)(nativehttp::data::clientid);
-        typedef int (*cb_onBinMsg)(nativehttp::data::clientid, const void*);
+        typedef int (*cb_onBinMsg)(nativehttp::data::clientid, const void*, uint64_t);
         typedef int (*cb_onTxtMsg)(nativehttp::data::clientid, const char*);
 
-        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onConnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg);
+        int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onDisconnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg);
 
 	}
 

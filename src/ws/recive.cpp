@@ -126,6 +126,12 @@ namespace ws
                         ws::frames[uid].pos += 8;
                     }
 
+                    if(ws::frames[uid].frame_size > ws::maxframesize)
+                    {
+                        cout << "Oversized frame!\n";
+                        ///---------------------------------------DISCONNECT HERE
+                    }
+
                     ws::frames[uid].fdata = new unsigned char[ws::frames[uid].frame_size+1];
 
 
@@ -161,10 +167,10 @@ namespace ws
                     if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
                     {
                         ws::frames[uid].busy = false;
+                        ws::msg_push(uid, ws::frames[uid].opcode, ws::frames[uid].fin, ws::frames[uid].frame_size, ws::frames[uid].fdata);
                         cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
                         delete[] ws::frames[uid].fdata;
                     }
-                    else cout << "Not complete\n";
 
                 }
                 else
@@ -183,10 +189,10 @@ namespace ws
                 if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
                     {
                         ws::frames[uid].busy = false;
+                        ws::msg_push(uid, ws::frames[uid].opcode, ws::frames[uid].fin, ws::frames[uid].frame_size, ws::frames[uid].fdata);
                         cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
                         delete[] ws::frames[uid].fdata;
                     }
-                    else cout << "Not complete\n";
             }
 
 

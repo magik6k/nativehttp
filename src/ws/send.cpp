@@ -20,22 +20,4 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef WS_H_INCLUDED
-#define WS_H_INCLUDED
-
-#include "data.h"
-#include "nativehttp.h"
-#include "http/executor.h"
-
-namespace ws
-{
-    void init();
-    void handshake(int uid, nativehttp::rdata &rd, http::rproc::lrqd &ld);
-    int find_uri(const char* uri);
-
-    void *rmsgproc(void *unused);
-    void rcv_push(unsigned char* data, int dlen, int uid);
-    void msg_push(int uid, uint8_t opcode, bool fin, uint64_t frame_size, unsigned char* data);
-}
-
-#endif // WS_H_INCLUDED
+#include "ws.h"

@@ -26,6 +26,11 @@ freely, subject to the following restrictions:
 #include "data/vector.h"
 #include "nativehttp.h"
 
+#define WS_MTYPE_NONE 0
+#define WS_MTYPE_TEXT 1
+#define WS_MTYPE_BIN 2
+#define WS_MTYPE_CONT 3
+
 namespace ws
 {
     struct ws_ent
@@ -55,15 +60,23 @@ namespace ws
         uint64_t recived;
     };
 
+    struct msgbuf
+    {
+        uint8_t type;
+        uint64_t len;
+        unsigned char* data;
+    };
+
     extern bool enabled;
     extern data::vector<ws_ent>* units;
-    extern uint64_t mbufsize;
+    extern uint64_t maxmsgsize;
+    extern uint64_t maxframesize;
+
+    extern int* client_unit;
 
     extern ws::framebuf* frames;
+    extern ws::msgbuf* messages;
 
-    extern unsigned char** rbuf;
-    extern uint64_t* rcv_msg_size;
-    extern uint64_t* rcv_frame_left;
 
 }
 
