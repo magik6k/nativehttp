@@ -75,4 +75,9 @@ namespace nativehttp
         return http::maxConnections;
     }
 
+    extern "C" bool server::is_ssl()
+    {
+        return http::onssl;
+    }
+
 }

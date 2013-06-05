@@ -410,6 +410,8 @@ namespace nativehttp
 
 		extern "C" data::clientid maxClients();
 
+		extern "C" bool is_ssl();
+
 		namespace stat
 		{
 			extern "C" bool stats();

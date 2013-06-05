@@ -1,12 +1,13 @@
 NativeHTTP By magik6000
 For more info visit http://nativehttp.org
 
-WS_Dev:
+0506.13:
 -maxClients function
 -WebSockets (RFC6455)! - Full message reciving, sending(Text/Binary, streaming/normal sending), upload chunking
 	automatic ping response, closure process still have to be improved
 -Configuration sorted
 -Small bugfixes around disconecting clients
+-is_ssl function
 
 0106.13:
 -Thread cleanup
