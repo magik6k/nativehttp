@@ -449,6 +449,15 @@ namespace nativehttp
 
         int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onDisconnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg);
 
+        int disconnect(nativehttp::data::clientid uid);
+
+        int sendTxt(nativehttp::data::clientid uid, const char* data);
+        int sendBin(nativehttp::data::clientid uid, const void* data, uint64_t size);
+
+        int streamTxt(nativehttp::data::clientid uid, const char* data, bool finalize);
+        int streamBin(nativehttp::data::clientid uid, const void* data, uint64_t size, bool finalize);
+
+
 	}
 
 }//nativehttp namespace

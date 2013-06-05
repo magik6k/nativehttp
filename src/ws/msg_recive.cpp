@@ -46,6 +46,7 @@ namespace ws
                 if(opcode == 0)
                 {
                     ///Disconnect - this op here is wrong
+                    ws::disconnect(uid);
                     return;
                 }
                 messages[uid].type = opcode;
@@ -59,6 +60,7 @@ namespace ws
             if(opcode != 0)
             {
                     ///Disconnect - this op here is wrong
+                    ws::disconnect(uid);
                     return;
             }
             if(!fin)
@@ -66,6 +68,7 @@ namespace ws
                 if(ws::maxmsgsize <  messages[uid].len + frame_size)
                 {
                     ///Disconnect - too much data
+                    ws::disconnect(uid);
                     return;
                 }
                 unsigned char* newbuf = new unsigned char[messages[uid].len + frame_size];
@@ -82,6 +85,7 @@ namespace ws
                 if(ws::maxmsgsize <  messages[uid].len + frame_size)
                 {
                     ///Disconnect - too much data
+                    ws::disconnect(uid);
                     return;
                 }
                 unsigned char* newbuf = new unsigned char[messages[uid].len + frame_size];
@@ -104,7 +108,8 @@ namespace ws
                         (*((*ws::units)[ws::client_unit[uid]].on_bin_msg))(uid, messages[uid].data, messages[uid].len);
                 }
 
-
+                delete[] messages[uid].data;
+                messages[uid].data = NULL;
                 messages[uid].type = WS_MTYPE_NONE;
             }
 

@@ -129,13 +129,15 @@ namespace ws
                     if(ws::frames[uid].frame_size > ws::maxframesize)
                     {
                         cout << "Oversized frame!\n";
-                        ///---------------------------------------DISCONNECT HERE
+                        ws::disconnect(uid);
+                        continue;
                     }
 
                     if(ws::frames[uid].opcode >= 0x8 && ws::frames[uid].frame_size > 125)
                     {
                         cout << "Control frames must be sized up to 125 bytes!\n";
-                        ///---------------------------------------DISCONNECT HERE
+                        ws::disconnect(uid);
+                        continue;
                     }
 
                     ws::frames[uid].fdata = new unsigned char[ws::frames[uid].frame_size+1];
@@ -180,8 +182,12 @@ namespace ws
                             ws::control(uid, ws::frames[uid].opcode, ws::frames[uid].frame_size, ws::frames[uid].fdata);
                         }
 
-                        cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
-                        delete[] ws::frames[uid].fdata;
+                        if(ws::frames[uid].fdata)cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
+                        if(ws::frames[uid].fdata)
+                        {
+                            delete[] ws::frames[uid].fdata;
+                            ws::frames[uid].fdata = NULL;
+                        }
                     }
 
                 }
@@ -209,8 +215,12 @@ namespace ws
                     {
                         ws::control(uid, ws::frames[uid].opcode, ws::frames[uid].frame_size, ws::frames[uid].fdata);
                     }
-                    cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
-                    delete[] ws::frames[uid].fdata;
+                    if(ws::frames[uid].fdata)cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
+                    if(ws::frames[uid].fdata)
+                    {
+                        delete[] ws::frames[uid].fdata;
+                        ws::frames[uid].fdata = NULL;
+                    }
                 }
             }
 

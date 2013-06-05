@@ -58,6 +58,7 @@ namespace http
 		extern SSL_CTX *ctx;
 
 		void *sender(void *unused);
+		void disconnect(int scid);
 		void reciver();
 		int findfreesock();
 		void *listener(void *unused);

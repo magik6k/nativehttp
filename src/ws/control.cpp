@@ -35,5 +35,10 @@ namespace ws
             memcpy(tmd + 2, data, frame_size);
             http::send(uid,2 + frame_size, (const char*)tmd, true);
         }
+        if(opcode == 0x8)
+        {
+            nativehttp::server::log("control.cpp@ws","Disconnect");
+            disconnect(uid);
+        }
     }
 }

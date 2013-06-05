@@ -21,3 +21,21 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../net.h"
+
+
+namespace http
+{
+	namespace ssl
+	{
+		void disconnect(int scid)
+		{
+            if (http::onssl && http::sslsck[scid])
+            {
+                SSL_shutdown(http::sslsck[scid]);
+                SSL_free(http::sslsck[scid]);
+            }
+            http::bsd::disconnect(scid);
+		}
+    }
+}
+

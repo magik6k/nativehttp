@@ -37,6 +37,9 @@ namespace ws
     void rcv_push(unsigned char* data, int dlen, int uid);
     void msg_push(int uid, uint8_t opcode, bool fin, uint64_t frame_size, unsigned char* data);
     void control(int uid, uint8_t opcode, uint64_t frame_size, unsigned char* data);
+
+    void disconnect(int uid);
+    void clean(int uid);
 }
 
 #endif // WS_H_INCLUDED

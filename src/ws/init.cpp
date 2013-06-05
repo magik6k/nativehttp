@@ -53,6 +53,9 @@ namespace ws
                 ws::client_unit[i] = -1;
 
                 ws::frames[i].busy = false;
+                ws::frames[i].fdata = NULL;
+
+                ws::messages[i].data = NULL;
                 ws::messages[i].len = 0;
                 ws::messages[i].type = WS_MTYPE_NONE;
             }

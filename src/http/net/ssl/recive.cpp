@@ -110,7 +110,7 @@ namespace http
 						}
 						else
 						{
-							http::bsd::disconnect(i);
+							http::ssl::disconnect(i);
 						}
 
 					}

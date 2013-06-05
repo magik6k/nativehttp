@@ -33,8 +33,11 @@ namespace http
             if(ws::enabled)
             {
                 if(http::client_protocol[scid] == CLPROT_WEBSOCKETS)
+                {
                     if(((*ws::units)[http::client_prot_data[scid]].on_disconnect))
                         (*(*ws::units)[http::client_prot_data[scid]].on_disconnect)(scid);
+                    ws::clean(scid);
+                }
             }
 
 			if (http::connected[scid] != -1)

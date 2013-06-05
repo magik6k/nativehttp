@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "net.h"
 #include "http/stat.h"
+#include "ws/ws.h"
 
 namespace http
 {
@@ -45,7 +46,21 @@ namespace http
 			SSL_free(http::sslsck[i]);
 		}
 		http::ulock[i] = false;
-		close(http::connected[i]);
+
+		if(ws::enabled)
+        {
+            if(http::client_protocol[i] == CLPROT_WEBSOCKETS)
+                if(((*ws::units)[http::client_prot_data[i]].on_disconnect))
+                    (*(*ws::units)[http::client_prot_data[i]].on_disconnect)(i);
+        }
+
+        if (http::connected[i] != -1)
+        {
+            close(http::connected[i]);
+            http::connected[i] = -1;
+        }
+        http::client_ips[i] = 0;
+
 	}
 }
 
