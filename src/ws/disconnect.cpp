@@ -27,7 +27,6 @@ namespace ws
 {
     void clean(int uid)
     {
-        cout <<uid<<" - cleaning up\n";
         ws::frames[uid].busy = false;
         if(ws::frames[uid].fdata)
         {
@@ -44,17 +43,17 @@ namespace ws
             ws::messages[uid].data = NULL;
         }
 
-        ws::stream_state = WS_STREAMSTATE_FREE;
+        ws::stream_state[uid] = WS_STREAMSTATE_FREE;
 
         if((*ws::units)[ws::client_unit[uid]].on_disconnect)
             (*((*ws::units)[ws::client_unit[uid]].on_disconnect))(uid);
+
+        http::client_protocol[uid] = CLPROT_HTTP;
     }
 
     void disconnect(int uid)
     {
-        cout << "Disconnecting with "<<uid<<"\n";
         ws::clean(uid);
-        http::client_protocol[uid] = CLPROT_HTTP;
         http::kickclient(uid);
     }
 }

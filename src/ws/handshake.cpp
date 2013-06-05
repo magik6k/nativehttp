@@ -50,20 +50,13 @@ namespace ws
 
     void handshake(int uid, nativehttp::rdata &rd, http::rproc::lrqd &ld)
     {
-        cout << "ACC: "<<ld.ws_acc_key<<endl;
-        cout << "PROT: "<<ld.ws_prot<<endl;
-
 
         int fu = find_uri(rd.uri.c_str());
 
-        cout << "URID: "<<fu<<endl;
-
         if(fu>-1)
         {
-            cout << "PFU OK\n";
             if((*units)[fu].protocol == string(ld.ws_prot))
             {
-                cout << "PROT OK";
                 int ocs = NH_SUCCES;
                 if((*units)[fu].on_connect)
                 {
@@ -79,8 +72,6 @@ namespace ws
                     SHA1((const unsigned char*)th.c_str(), th.size(), shabuf);
                     char *B64 = NULL;
                     Base64E(shabuf,20,&B64);
-
-                    cout << "OPTAC:"<<B64<<endl;
 
                     string rtn = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Accept: ";
                     rtn += B64;

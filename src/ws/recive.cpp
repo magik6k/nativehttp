@@ -128,14 +128,14 @@ namespace ws
 
                     if(ws::frames[uid].frame_size > ws::maxframesize)
                     {
-                        cout << "Oversized frame!\n";
+                        ///Oversized frame
                         ws::disconnect(uid);
                         continue;
                     }
 
                     if(ws::frames[uid].opcode >= 0x8 && ws::frames[uid].frame_size > 125)
                     {
-                        cout << "Control frames must be sized up to 125 bytes!\n";
+                        ///Control frames must be sized up to 125 bytes!
                         ws::disconnect(uid);
                         continue;
                     }
@@ -168,8 +168,6 @@ namespace ws
                     }
                     ws::frames[uid].fdata[ws::frames[uid].recived] = '\0';
 
-                    cout << "Recived frame packet(valid:"<<!(0b01110000&proc.data[0])<<"), op: "<<int(ws::frames[uid].opcode)<<",size: "<<ws::frames[uid].frame_size<<"("<<int(0b01111111&proc.data[1])<<"), end:"<<int(0b10000000&proc.data[0])/128<<", mask: "<<ws::frames[uid].mkey<<"\n";
-
                     if(ws::frames[uid].recived >= ws::frames[uid].frame_size)
                     {
                         ws::frames[uid].busy = false;
@@ -182,7 +180,6 @@ namespace ws
                             ws::control(uid, ws::frames[uid].opcode, ws::frames[uid].frame_size, ws::frames[uid].fdata);
                         }
 
-                        if(ws::frames[uid].fdata)cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
                         if(ws::frames[uid].fdata)
                         {
                             delete[] ws::frames[uid].fdata;
@@ -191,14 +188,13 @@ namespace ws
                     }
 
                 }
-                else
+                /**else
                 {
-                    cout << "invalid frame["<<int(0b00001111&proc.data[0])<<","<<proc.data[0]<<"]("<<int(0b01000000&proc.data[0])<<","<<int(0b00100000&proc.data[0])<<","<<int(0b00010000&proc.data[0])<<")\n";
-                }
+                    INVALID FRAME
+                }*/
             }
             else
             {
-                cout << "Recived Data packet, size: "<<proc.datalen<<endl;
                 for(uint64_t i = 0;ws::frames[uid].recived<ws::frames[uid].frame_size&&i<proc.datalen;i++)
                 {
                     ws::frames[uid].fdata[i] = ws::frames[uid].mask?proc.data[i]^(((uint8_t*)&ws::frames[uid].mkey)[ws::frames[uid].recived%4]):proc.data[i];
@@ -215,7 +211,6 @@ namespace ws
                     {
                         ws::control(uid, ws::frames[uid].opcode, ws::frames[uid].frame_size, ws::frames[uid].fdata);
                     }
-                    if(ws::frames[uid].fdata)cout << "DATA("<<ws::frames[uid].recived<<"):"<<ws::frames[uid].fdata<<"\n";
                     if(ws::frames[uid].fdata)
                     {
                         delete[] ws::frames[uid].fdata;

@@ -37,7 +37,6 @@ namespace ws
         }
         if(opcode == 0x8)
         {
-            nativehttp::server::log("control.cpp@ws","Disconnect");
             disconnect(uid);
         }
     }
