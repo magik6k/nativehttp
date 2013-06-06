@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "../net.h"
 #include "ws/ws.h"
+#include "data/session/session.h"
 
 namespace http
 {
@@ -38,6 +39,11 @@ namespace http
                         (*(*ws::units)[http::client_prot_data[scid]].on_disconnect)(scid);
                     ws::clean(scid);
                 }
+            }
+
+            if(http::usesessions)
+            {
+                data::session::storage.getuid(scid)->__mkinv(scid);
             }
 
 			if (http::connected[scid] != -1)

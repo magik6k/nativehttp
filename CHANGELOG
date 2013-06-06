@@ -1,5 +1,10 @@
-NativeHTTP By magik6000
+NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
+
+DEV:
+-Sessions accessible by UID(so that they are usable with WebSockets)
+-In cookie set function there is "path=/" set by default
+-Small memory leak fixed
 
 0506.13:
 -maxClients function

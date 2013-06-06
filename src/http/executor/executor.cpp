@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include "../stat.h"
 #include "../net/net.h"
 #include "ws/ws.h"
+#include "data/session/session.h"
 
 #ifdef NHDBG
 #include "utils/memory.h"
@@ -128,6 +129,12 @@ namespace http
                 continue;
             }
 
+            if (rd.cookie && http::usesessions)///setup sessions
+            {
+                rd.session = data::session::storage.getuid(process->uid);
+                rd.session->__init(rd.cookie, process->uid);
+            }
+
             if(ld.upg)
             {
                 if(ld.uwebsck)
@@ -222,12 +229,6 @@ namespace http
             process->request = NULL;
 
             rd.remoteIP = http::client_ips[process->uid];
-
-            if (rd.cookie && http::usesessions)///setup sessions
-            {
-                rd.session = new nativehttp::data::session;
-                rd.session->__init(rd.cookie);
-            }
 
             nativehttp::data::pagedata result;
             exc->fd1 = rd.cookie;

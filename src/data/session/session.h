@@ -60,6 +60,8 @@ namespace data
 				session *data;
 				size_t scount;
 
+				nativehttp::data::session** byuid;
+
 				size_t findfreesess(bool &vld);
 				void allocsessions();
 			public:
@@ -69,6 +71,7 @@ namespace data
 				size_t mksess(unsigned int scd);
 				sbmain &gtsess(size_t id);
 				void mng();
+				nativehttp::data::session* getuid(int uid);
 		};
 
 		extern sstg storage;

@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 12
+#define NATIVEHTTP_API_VERSION 13
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -253,9 +253,12 @@ namespace nativehttp
 				unsigned int ssid;
 				bool valid;
 			public:
-				void __init(cookiedata *cd);
+				void __init(cookiedata *cd, nativehttp::data::clientid uid);
+				void __mkinv(nativehttp::data::clientid uid);
 				string get(string name);
 				void set(string name, string value);
+				bool is_valid();
+				static session* by_uid(nativehttp::data::clientid uid);
 		};
 
 	}//data namespace

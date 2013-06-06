@@ -48,7 +48,7 @@ string nativehttp::data::cookiedata::get(string name)
 
 void nativehttp::data::cookiedata::set(string name, string value)
 {
-	sets += "Set-Cookie: " + name + "=" + value + "\r\n";
+	sets += "Set-Cookie: " + name + "=" + value + "; path=/\r\n";
 }
 
 void nativehttp::data::cookiedata::set(string name, string value, string attributes)

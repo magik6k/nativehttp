@@ -67,12 +67,19 @@ namespace data
 		void sstg::prealloc(size_t amnt)
 		{
 			data = new session[amnt];
+			byuid = new nativehttp::data::session*[http::maxConnections];
+
 			if (!data)return;
 
 			for (size_t i = 0; i < amnt; i++)
 			{
 				data[i].started = 0;
 				data[i].svid = 0;
+			}
+
+			for(int i = 0; i < http::maxConnections; i++)
+			{
+                byuid[i] = NULL;
 			}
 		}
 
@@ -116,7 +123,13 @@ namespace data
 			return data[id].data;
 		}
 
+		nativehttp::data::session* sstg::getuid(int uid)
+		{
+            if(!byuid[uid])
+                byuid[uid] = new nativehttp::data::session;
 
+            return byuid[uid];
+		}
 
 	}
 }

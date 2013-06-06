@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 #include "net.h"
 #include "http/stat.h"
 #include "ws/ws.h"
+#include "data/session/session.h"
 
 namespace http
 {
@@ -46,6 +47,11 @@ namespace http
 			SSL_free(http::sslsck[i]);
 		}
 		http::ulock[i] = false;
+
+		if(http::usesessions)
+        {
+            data::session::storage.getuid(i)->__mkinv(i);
+        }
 
 		if(ws::enabled)
         {

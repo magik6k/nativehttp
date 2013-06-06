@@ -27,7 +27,7 @@ namespace nativehttp
 {
 	namespace data
 	{
-		void session::__init(cookiedata *cd)
+		void session::__init(cookiedata *cd, nativehttp::data::clientid uid)
 		{
 			ssid = 0;
 			valid = false;
@@ -79,6 +79,16 @@ namespace nativehttp
 			}
 		}
 
+        void session::__mkinv(nativehttp::data::clientid uid)
+        {
+            valid = false;
+        }
+
+        bool session::is_valid()
+        {
+            return valid;
+        }
+
 		string session::get(string name)
 		{
 			if (valid)
@@ -95,5 +105,22 @@ namespace nativehttp
 				sdata::session::storage.gtsess(ssid).setkey(name, value);
 			}
 		}
+
+		session* session::by_uid(nativehttp::data::clientid uid)
+		{
+            if(http::usesessions)
+            {
+                if(uid<http::maxConnections)
+                {
+                    session *rt = sdata::session::storage.getuid(uid);
+                    if(rt->is_valid())
+                    {
+                        return rt;
+                    }
+                }
+            }
+            return NULL;
+		}
+
 	}
 }
