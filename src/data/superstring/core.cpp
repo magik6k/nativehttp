@@ -40,22 +40,25 @@ nativehttp::data::superstring::superstring()
 	lpos = 0;
 }
 
-void nativehttp::data::superstring::lock()
+nativehttp::data::superstring& nativehttp::data::superstring::lock()
 {
 	lck = true;
 	lpos = pos;
+	return *this;
 }
 
-void nativehttp::data::superstring::lock(unsigned int lp)
+nativehttp::data::superstring& nativehttp::data::superstring::lock(unsigned int lp)
 {
 	lck = true;
 	lpos = lp;
+	return *this;
 }
 
-void nativehttp::data::superstring::unlock()
+nativehttp::data::superstring& nativehttp::data::superstring::unlock()
 {
 	lck = false;
 	lpos = 0;
+	return *this;
 }
 
 const char* nativehttp::data::superstring::c_str()

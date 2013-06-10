@@ -58,6 +58,11 @@ namespace http
 
 		http::extmemstats = cfg->get_int("extended_native_memory_stats");
 
+		http::log_httprep = cfg->get_int("log_httprep");
+		http::log_newline = cfg->get_int("log_newline_visible");
+		http::log_requests = cfg->get_int("log_requests");
+		http::log_sender = cfg->get_int("log_sender");
+
 #endif
 		http::maxConnections = cfg->get_int("maxconnections");
 		http::maxPost = cfg->get_int("max_post");

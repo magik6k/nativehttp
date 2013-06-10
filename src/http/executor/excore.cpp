@@ -117,13 +117,25 @@ namespace http
                         memcpy(pd.data, snd.c_str(), snd.size());
                         memcpy(pd.data + snd.size(), ts.data, ts.size);
                         memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
+
+                        #ifdef NHDBG
+
+                        if(http::log_httprep)
+                        {
+                            nativehttp::server::log("DBG:excore.cpp@http",
+                                ("Response:\n"+(http::log_newline?((nativehttp::data::superstring(pd.data).lock(0).change("\r","\\r").change("\n","\\n\n")).str)
+                                :(string(pd.data)))).c_str());
+                        }
+
+                        #endif
+
                         delete[]ts.data;
                         return 0;
                     }
                     break;
                 case page_file:
                     {
-
+                        pd.data = NULL;
                         fsrq req;
                         req.file = (const char*)pid.data;
                         req.uid = ld.uid;

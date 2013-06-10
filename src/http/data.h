@@ -85,6 +85,11 @@ namespace http
 	extern size_t init_memory;
 	extern bool extmemstats;
 
+	extern bool log_requests;
+	extern bool log_httprep;
+	extern bool log_sender;
+	extern bool log_newline;
+
 #endif
 
 	extern int maxConnections;

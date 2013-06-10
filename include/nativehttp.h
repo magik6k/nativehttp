@@ -75,9 +75,9 @@ namespace nativehttp
 				~superstring();
 				superstring();
 
-				void lock();
-				void lock(unsigned int lp);
-				void unlock();
+				superstring& lock();
+				superstring& lock(unsigned int lp);
+				superstring& unlock();
 
 				bool atbegin();
 				bool atend();

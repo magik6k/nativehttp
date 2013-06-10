@@ -83,6 +83,17 @@ namespace http
                                 char* hdbuf = new char[snd.size()];
                                 memcpy(hdbuf, snd.c_str(), snd.size());
 
+                                #ifdef NHDBG
+
+                                if(http::log_httprep)
+                                {
+                                    nativehttp::server::log("DBG:filesender.cpp@http",
+                                        ("Response(header only):\n"+(http::log_newline?((nativehttp::data::superstring(hdbuf).lock(0).change("\r","\\r").change("\n","\\n\n")).str)
+                                        :(string(hdbuf)))).c_str());
+                                }
+
+                                #endif
+
                                 http::send(http::shq[i].uid, snd.size(), hdbuf, true);
                                 http::shq[i].state = FSS_Reading;
 

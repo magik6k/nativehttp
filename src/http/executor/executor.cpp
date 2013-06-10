@@ -55,6 +55,17 @@ namespace http
             http::request *process = http::rproc::get_proc(exc);
             http::statdata::onhit();
 
+            #ifdef NHDBG
+
+            if(http::log_requests)
+            {
+                nativehttp::server::log("DBG:executor.cpp@http",
+                    ("Request:\n"+(http::log_newline?((nativehttp::data::superstring(process->request).lock(0).change("\r","\\r").change("\n","\\n\n")).str)
+                    :(string(process->request)))).c_str());
+            }
+
+            #endif
+
             rd.get = NULL;
             rd.post = NULL;
             rd.cookie = NULL;

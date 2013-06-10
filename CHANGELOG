@@ -5,6 +5,8 @@ DEV:
 -Sessions accessible by UID(so that they are usable with WebSockets)
 -In cookie set function there is "path=/" set by default
 -Small memory leak fixed
+-[Debug build] Options for logging requests/responses
+-Superstring - lock and unlock stackable
 
 0506.13:
 -maxClients function

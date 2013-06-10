@@ -50,6 +50,23 @@ namespace http
 				http::tosend.pop();
 				SDL_mutexV(http::mtx_snd);
 
+				#ifdef NHDBG
+
+                if(http::log_sender&&proc.data)
+                {
+                    char* td = new char[proc.size+1];
+                    memcpy(td,proc.data,proc.size);
+                    td[proc.size] = '\0';
+
+                    nativehttp::server::log("DBG:sender.cpp@ssl",
+                        ("Sending:\n"+(http::log_newline?((nativehttp::data::superstring(td).lock(0).change("\r","\\r").change("\n","\\n\n")).str)
+                        :(string(td)))).c_str());
+
+                    delete[] td;
+                }
+
+                #endif
+
 				if (http::connected[proc.uid])
 				{
 

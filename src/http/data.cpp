@@ -34,6 +34,12 @@ namespace http
 	size_t init_memory = 0;
 	bool extmemstats = false;
 
+	bool log_requests = false;
+	bool log_httprep = false;
+	bool log_sender = false;
+	bool log_newline = false;
+
+
 #endif
 
 	int maxConnections = 0;
