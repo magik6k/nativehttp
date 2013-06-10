@@ -28,10 +28,10 @@ freely, subject to the following restrictions:
 
 string nativehttp::data::superstring::str_from_double(double in)
 {
-	return std::to_string(in);
+	return std::to_string((long double)in);
 }
 
 nativehttp::data::superstring nativehttp::data::superstring::sst_from_double(double in)
 {
-	return nativehttp::data::superstring(std::to_string(in));
+	return nativehttp::data::superstring(std::to_string((long double)in));
 }
