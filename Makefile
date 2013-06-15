@@ -154,7 +154,9 @@ localdirs:
 	mkdir -p ./local
 	mkdir -p ./local/bin
 	mkdir -p ./local/etc
-	mkdir -p ./local/include
+	mkdir -p ./local/usr
+	mkdir -p ./local/usr/include
+	mkdir -p ./local/usr/include/nativehttp
 	mkdir -p ./local/var
 	mkdir -p ./local/var/www
 	mkdir -p ./local/var/www/error
@@ -165,7 +167,7 @@ local: localdirs perm
 	cp ./files/etc/* ./local/etc
 	cp ./files/var/error/* ./local/var/www/error
 	cp ./bin/nativestat.so ./local/var/www/nativestat.so
-	cp ./include/* ./local/include
+	cp ./include/* ./local/usr/include/nativehttp
 
 perm:
 	chmod +x ./files/bin/* ./files/local/bin/*
