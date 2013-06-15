@@ -50,7 +50,11 @@ namespace http
 
 		void sig(int sig)
 		{
-			nativehttp::server::logid(sig, "manager.cpp", "SIG");
+			if (sig == 2)
+			{
+                nativehttp::server::logid(sig, "manager.cpp", "Quitting");
+                exit(0);
+			}
 			if (sig == 11 || sig == 4 || sig == 8)
 			{
 				/*
@@ -73,7 +77,7 @@ namespace http
 				*/
 				if (pthread_equal(*http::theard_mg, pthread_self()) != 0)
 				{
-					nativehttp::server::log("manager.cpp", "Manager crash");
+					nativehttp::server::log("manager.cpp", "[Warning]Internal crash");
 
 					switch (mstate)
 					{

@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
 	signal(SIGILL, http::manager::sig);
 	signal(SIGFPE, http::manager::sig);
 	signal(SIGABRT, http::manager::sig);
+	signal(SIGINT, http::manager::sig);
 
     nativehttp::server::log("INIT", "Loading configuration, setting up server");
 

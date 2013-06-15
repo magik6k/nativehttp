@@ -44,7 +44,7 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
     {
         conf.skip(" \t\n\r");
         string name = conf.tochar(" \t\n\r=");
-        if(name.empty())
+        if(name.empty()&&conf.pos>conf.size())
         {
             string nr = conf.tochar("\r\n");
             nativehttp::server::log("parser@cfg.cpp", "[E1] No-name variables not allowed(near '"+nr+"')");
