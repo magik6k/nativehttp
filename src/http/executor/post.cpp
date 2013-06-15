@@ -50,6 +50,11 @@ namespace http
 			if (ars.str.size() < ld.clen)
 			{
 				unsigned int ltrv = ld.clen - ars.str.size();
+				#ifdef NHDBG
+				if(http::extmemstats)
+                    nativehttp::server::log("post.cpp@http","Waiting for "+
+                        nativehttp::data::superstring::str_from_size(ltrv) + " of POST Data");
+				#endif
 				char *tv = new char[ltrv + 1];
 				unsigned int ar = 0;
 				while (0 < ltrv)

@@ -32,7 +32,7 @@ string nativehttp::data::superstring::file(string fn)
 	if (f)
 	{
 		fseek(f, 0, SEEK_END);
-		int size = ftell(f);
+		size_t size = ftell(f);
 		rewind(f);
 		string tm;
 		tm.resize(size);
