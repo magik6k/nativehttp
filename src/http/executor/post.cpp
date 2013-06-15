@@ -49,7 +49,7 @@ namespace http
 
 			if (ars.str.size() < ld.clen)
 			{
-				unsigned int ltrv = ld.clen - ars.str.size();
+				unsigned int ltrv = ld.clen - ars.size();
 				#ifdef NHDBG
 				if(http::extmemstats)
                     nativehttp::server::log("post.cpp@http","Waiting for "+
@@ -73,6 +73,7 @@ namespace http
 					{
 						delete[] tv;
 						tv = NULL;
+						kickclient(ld.uid);
 						break;
 					}
 					ar += rv;

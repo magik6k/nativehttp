@@ -139,6 +139,8 @@ namespace http
 		http::nhpc_include_dir = cfg->get_var("include_dir");
 		http::nhpc_nativehttph_dest = cfg->get_var("nativehttph_dst");
 
+		http::logger_colors = cfg->get_int("logger_colors");
+
 		if(utils::header_version_ok())
         {
 #ifdef NHDBG

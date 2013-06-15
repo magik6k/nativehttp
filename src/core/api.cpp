@@ -60,13 +60,25 @@ namespace nativehttp
 
 	extern "C" void server::log(string lname, string value)
 	{
-		if (!deamonized)cout << "[" << lname.c_str() << "]" << value.c_str() << endl;
+		if (!deamonized)
+		{
+            if(http::logger_colors)
+                cout << "[\x1b[36m" << lname.c_str() << "\x1b[0m]" << value.c_str() << endl;
+                else
+                cout << "[" << lname.c_str() << "]" << value.c_str() << endl;
+		}
 		if (logfile.is_open())logfile << "[" << lname.c_str() << "]" << value.c_str() << endl;
 	}
 
 	extern "C" void server::logid(int id, string lname, string value)
 	{
-		if (!deamonized)cout << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
+		if (!deamonized)
+		{
+            if(http::logger_colors)
+                cout << "[\x1b[36m" << lname.c_str() << "\x1b[0m](" << id << ")" << value.c_str() << endl;
+                else
+                cout << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
+		}
 		if (logfile.is_open())logfile << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
 	}
 

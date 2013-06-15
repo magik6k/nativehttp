@@ -142,6 +142,8 @@ namespace http
 	extern string nhpc_include_dir;
 	extern string nhpc_nativehttph_dest;
 
+	extern bool logger_colors;
+
 	namespace headers
 	{
 		extern string standard;

@@ -92,6 +92,8 @@ namespace http
 	string nhpc_include_dir;
 	string nhpc_nativehttph_dest;
 
+    bool logger_colors;
+
 	namespace headers
 	{
 		string standard = "Allow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";
