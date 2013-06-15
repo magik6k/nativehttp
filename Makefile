@@ -154,6 +154,7 @@ localdirs:
 	mkdir -p ./local
 	mkdir -p ./local/bin
 	mkdir -p ./local/etc
+	mkdir -p ./local/etc/nativehttp
 	mkdir -p ./local/usr
 	mkdir -p ./local/usr/include
 	mkdir -p ./local/usr/include/nativehttp
@@ -164,7 +165,7 @@ localdirs:
 local: localdirs perm
 	cp ./bin/nativehttp ./local/bin/nativehttp-bin
 	cp ./files/local/bin/* ./local/bin
-	cp ./files/etc/* ./local/etc
+	cp ./files/etc/* ./local/etc/nativehttp
 	cp ./files/var/error/* ./local/var/www/error
 	cp ./bin/nativestat.so ./local/var/www/nativestat.so
 	cp ./include/* ./local/usr/include/nativehttp
