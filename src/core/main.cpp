@@ -107,7 +107,16 @@ int main(int argc, char *argv[])
 	signal(SIGABRT, http::manager::sig);
 
     nativehttp::server::log("INIT", "Loading configuration, setting up server");
-	cfg = new nativehttp::data::Ccfg(conf);
+
+    if(access(conf.c_str(), F_OK) == 0)
+    {
+        cfg = new nativehttp::data::Ccfg(conf);
+    }
+    else
+    {
+        nativehttp::server::log("INIT","[ERROR]Configuration file does not exist");
+        exit(1);
+    }
 
 	http::datainit();
 	ws::init();

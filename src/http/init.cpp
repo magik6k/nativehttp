@@ -64,6 +64,12 @@ namespace http
 		http::log_sender = cfg->get_int("log_sender");
 
 #endif
+
+        if (!cfg->get_var("log").empty())
+        {
+            logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);
+            nativehttp::server::log("INIT","Openning logger file");
+        }
 		http::maxConnections = cfg->get_int("maxconnections");
 		http::maxPost = cfg->get_int("max_post");
 
@@ -144,8 +150,6 @@ namespace http
             nativehttp::server::log("init.cpp@http","[CRITICAL]nativehttp.h Version mismatch");
             exit(2);
         }
-
-		if (!cfg->get_var("log").empty())logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);
 
 #ifdef NHDBG
 		cout << "[DBG:init.cpp@http]Server data mem: " << (getrsmem() - bm) / 1024.f << "kb\n";
