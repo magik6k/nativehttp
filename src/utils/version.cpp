@@ -32,6 +32,7 @@ namespace utils
         nhf.go_end();
         if(!(nhf.check("/")||nhf.check("\\")))nhf.str+="/";
         nhf.str+=http::nhpc_nativehttph_dest;
+        string tnfile = nhf.str;
         nhf.set_file(nhf.str);
         if(nhf.size()<=0)
         {
@@ -45,6 +46,7 @@ namespace utils
             nativehttp::server::log("version.cpp@utils","[ERROR]Version of nativehttp.h INVALID("+
                 nhf.tochar("\r\n")+"!="+
                 nativehttp::data::superstring::str_from_int(NATIVEHTTP_API_VERSION)+")");
+            nativehttp::server::log("version.cpp@utils","[NOTE]The header file is set to: "+tnfile);
         }
         return false;
     }
