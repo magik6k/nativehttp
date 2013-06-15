@@ -42,10 +42,10 @@ namespace http
 		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld)
 		{
 			nativehttp::data::superstring ars(process->request);
-			if(ars.find("\r\n\r\n")!=0)
-                ars.str = ars.from("\r\n\r\n");
+			if(ars.lock(0).find("\r\n\r\n")!=0)
+                ars.str = ars.unlock().from("\r\n\r\n");
                 else
-                ars.str = ars.from("\n\n");
+                ars.str = ars.unlock().from("\n\n");
 
 			if (ars.str.size() < ld.clen)
 			{

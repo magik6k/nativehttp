@@ -52,7 +52,7 @@ namespace http
 		{
 			if (sig == 2)
 			{
-                nativehttp::server::logid(sig, "manager.cpp", "Quitting");
+                nativehttp::server::log("manager.cpp", "Quitting");
                 exit(0);
 			}
 			if (sig == 11 || sig == 4 || sig == 8)
