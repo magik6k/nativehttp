@@ -29,7 +29,7 @@ nativehttp::data::postgetdata::postgetdata(string dstr)
 	{
 		cfil ctm;
 		ctm.name = cke.to("=");
-		ctm.value = cke.to("&");cout << "REG::::"<<ctm.name<<"="<<ctm.value<<endl;
+		ctm.value = cke.to("&");
 		data.push_back(ctm);
 	}
 }

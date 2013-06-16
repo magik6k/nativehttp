@@ -165,14 +165,14 @@ localdirs:
 
 local: localdirs perm
 	cp ./bin/nativehttp ./local/bin/nativehttp-bin
-	cp ./files/local/bin/* ./local/bin
-	cp ./files/etc/* ./local/etc/nativehttp
-	cp ./files/var/error/* ./local/var/www/error
+	cp -v ./files/local/bin/* ./local/bin
+	cp -v ./files/etc/* ./local/etc/nativehttp
+	cp -v ./files/var/error/* ./local/var/www/error
 	cp ./bin/nativestat.so ./local/var/www/nativestat.so
-	cp ./include/* ./local/usr/include/nativehttp
+	cp -v ./include/* ./local/usr/include/nativehttp
 
 perm:
-	chmod +x ./files/bin/* ./files/local/bin/*
+	chmod -v +x ./files/bin/* ./files/local/bin/*
 
 remove:
 	rm -rf /etc/nativehttp
