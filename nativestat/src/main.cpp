@@ -105,7 +105,7 @@ extern "C"
 					for (unsigned long i = 0; i < 4; i++)
 					{
 						diag += "<line x1=\"0\" x2=\"100%\" y1=\"" + nh::data::superstring::str_from_double((i + 1) * 20) + "%\" y2=\"" + nh::data::superstring::str_from_double((i + 1) * 20) + "%\" style=\"stroke:rgb(50,50,50);stroke-width:0.5px\" />";
-						diag += "<text x=\"90%\"  y=\"" + nh::data::superstring::str_from_double((i + 1) * 20) + "%\"> " + nh::data::superstring::str_from_size(mxt / (i + 2)) + "</text>";
+						diag += "<text x=\"90%\"  y=\"" + nh::data::superstring::str_from_double((i + 1) * 20) + "%\"> " + nh::data::superstring::str_from_size((mxt / 5) * (4 - i)) + "</text>";
 					}
 					for (double i = 1.f; i < nh::server::stat::hourly_length(); i++)
 					{

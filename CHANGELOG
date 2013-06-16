@@ -13,6 +13,8 @@ For more info visit http://nativehttp.org
 -Ccfg not showing errors when parsing is done
 -Fixed POST data reciving
 -Colored terminal output
+-Fixed Transfer scale in NativeStat
+-Added few integer SuperString functions
 
 0506.13:
 -maxClients function
