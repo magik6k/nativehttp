@@ -151,7 +151,19 @@ namespace http
                 if(ld.uwebsck)
                 {
 
-                    ws::handshake(process->uid, rd, ld);
+                    if(ws::enabled)ws::handshake(process->uid, rd, ld);
+                    else
+                    {
+
+                        http::bsd::sendNow(process->uid, http::error::e403.size, http::error::e403.data, false);
+                        exc->state = -1;
+                        exc->in = 0;
+                        http::kickclient(process->uid);
+                        delete[] process->request;
+                        delete process;
+                        continue;
+
+                    }
 
                     if (rd.cookie)
                     {
