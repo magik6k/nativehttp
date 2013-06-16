@@ -79,7 +79,7 @@ namespace ws
                     rtn += ld.ws_prot;
                     rtn += "\r\n";
                     rtn += rd.cookie->gethead();
-                    rtn += "\r\n\r\n";
+                    rtn += "\r\n";
 
                     http::send(uid, rtn.size(), strdup(rtn.c_str()), true);
 
