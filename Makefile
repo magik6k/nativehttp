@@ -40,6 +40,7 @@ NHS = \
 	$(NHD)/data/superstring/typed/int32/convert.cpp \
 	$(NHD)/data/superstring/typed/int32/core.cpp \
 	$(NHD)/data/superstring/typed/int32/misc.cpp \
+	$(NHD)/data/superstring/typed/int32/position.cpp \
 	$(NHD)/data/superstring/typed/int64/convert.cpp \
 	$(NHD)/data/superstring/typed/size/convert.cpp \
 	$(NHD)/data/superstring/typed/string/content.cpp \

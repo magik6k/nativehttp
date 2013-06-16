@@ -56,7 +56,7 @@ namespace http
             ld.rng_start = 0;
             ld.rng_end = -1;
 
-            hss.add_token(nativehttp::data::token("_%$<Unimplemented>$%_", -1));
+            hss.add_token(nativehttp::data::token("_%$<Unimple\t;mented\r\n\n\r>$%_", -1));
             hss.add_token(nativehttp::data::token("\r\n\r\n", 0));
             hss.add_token(nativehttp::data::token("\n\n", 0));
             hss.add_token(nativehttp::data::token("Host: ", 1));

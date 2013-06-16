@@ -141,8 +141,12 @@ namespace nativehttp
 				void set(int s);
 				void operator()(int s);
 				superstring operator*=(unsigned int rc);
+
 				static string str_from_int(int in);
 				static superstring sst_from_int(int in);
+
+				string from(unsigned int sp);
+				string to(unsigned int ep);
 
 				/** 64bit integer functions */
                 static string str_from_int64(int64_t in);

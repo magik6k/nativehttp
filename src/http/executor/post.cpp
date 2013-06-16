@@ -42,12 +42,21 @@ namespace http
 		void post(nativehttp::rdata &rd, http::request *process, http::rproc::lrqd &ld)
 		{
 			nativehttp::data::superstring ars(process->request);
-			if(ars.lock(0).find("\r\n\r\n")!=0)
-                ars.str = ars.unlock().from("\r\n\r\n");
-                else
-                ars.str = ars.unlock().from("\n\n");
 
-			if (ars.str.size() < ld.clen)
+
+			ars.add_token(nativehttp::data::token("_%$<Unimple\t;mented\r\n\n\r>$%_", -1));
+			ars.add_token(nativehttp::data::token("\r\n\r\n", 1));
+			ars.add_token(nativehttp::data::token("\n\n", 1));
+
+			if(ars.tok().id == 1)
+			{
+                ars.str = ars.from(ars.pos);
+			}
+
+            //#error TODO
+                ///ars.str = post data
+
+			if (ars.size() < ld.clen)
 			{
 				unsigned int ltrv = ld.clen - ars.size();
 				#ifdef NHDBG

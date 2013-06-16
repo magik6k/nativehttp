@@ -21,50 +21,32 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
-#include <iostream>
-nativehttp::data::postgetdata::postgetdata(string dstr)
+#include <stdio.h>
+
+#define SSLOCK if(lck)pos=lpos
+
+
+string nativehttp::data::superstring::from(unsigned int sp)
 {
-	nativehttp::data::superstring cke(dstr);
-	while (cke.pos < cke.str.size())
+    string rt;
+    pos = sp;
+    while (pos < str.size())
 	{
-		cfil ctm;
-		ctm.name = cke.to("=");
-		ctm.value = cke.to("&");cout << "REG::::"<<ctm.name<<"="<<ctm.value<<endl;
-		data.push_back(ctm);
+		rt += str[pos];
+		pos++;
 	}
+	SSLOCK;
+	return rt;
 }
 
-string nativehttp::data::postgetdata::get(string name)
+string nativehttp::data::superstring::to(unsigned int ep)
 {
-	for (unsigned int i = 0; i < data.size(); i++)
+    string rt;
+    while (pos < str.size() && pos < ep)
 	{
-		if (data[i].name == name)
-		{
-			return data[i].value;
-		}
+		rt += str[pos];
+		pos++;
 	}
-	return "";
-}
-
-extern "C" string nativehttp::utils::decode_poststring(string str)
-{
-	string o;
-	nativehttp::data::superstring s(str);
-	s.change("+", " ");
-	s.pos = 0;
-	while (s.pos < s.str.size())
-	{
-		o += s.to("%");
-		s.pos += 2;
-		if (s.pos <= s.str.size())
-		{
-			char t[3] = {0, 0, 0};
-			t[0] = s.str[s.pos - 2];
-			t[1] = s.str[s.pos - 1];
-			unsigned int op = 0;
-			sscanf(t, "%x", &op);
-			o += (char)op;
-		}
-	}
-	return o;
+	SSLOCK;
+	return rt;
 }

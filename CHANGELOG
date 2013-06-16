@@ -7,6 +7,12 @@ DEV:
 -Small memory leak fixed
 -[Debug build] Options for logging requests/responses
 -Superstring - lock and unlock stackable
+-Checking for existance of configuration file
+-Some Makefile fixes
+-Catching SIGINT
+-Ccfg not showing errors when parsing is done
+-Fixed POST data reciving
+-Colored terminal output
 
 0506.13:
 -maxClients function
