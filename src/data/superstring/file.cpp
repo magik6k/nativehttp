@@ -53,3 +53,42 @@ void nativehttp::data::superstring::append_file(string fn)
 {
 	str += this->file(fn);
 }
+
+int nativehttp::data::superstring::file(string fn, string content)
+{
+    FILE *f = fopen(fn.c_str(), "w");
+	if (f)
+	{
+		fwrite(content.c_str(), 1, content.size(), f);
+		fclose(f);
+		return NH_SUCCES;
+	}
+	return NH_ERROR;
+}
+
+int nativehttp::data::superstring::str_to_file(string fn, string content)
+{
+	return nativehttp::data::superstring::file(fn,content);
+}
+
+int nativehttp::data::superstring::sst_to_file(string fn, nativehttp::data::superstring content)
+{
+	return nativehttp::data::superstring::file(fn,content.str);
+}
+
+int nativehttp::data::superstring::append_str_file(string fn, string append)
+{
+	FILE *f = fopen(fn.c_str(), "a");
+	if (f)
+	{
+		fwrite(append.c_str(), 1, append.size(), f);
+		fclose(f);
+		return NH_SUCCES;
+	}
+	return NH_ERROR;
+}
+
+int nativehttp::data::superstring::append_sst_file(string fn, nativehttp::data::superstring append)
+{
+	return nativehttp::data::superstring::append_str_file(fn,append.str);
+}

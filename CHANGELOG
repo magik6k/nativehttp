@@ -1,6 +1,9 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
+DEV:
+-Superstring - New file functions
+
 1606.13:
 -Sessions accessible by UID(so that they are usable with WebSockets)
 -In cookie set function there is "path=/" set by default

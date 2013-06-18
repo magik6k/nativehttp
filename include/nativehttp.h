@@ -178,6 +178,13 @@ namespace nativehttp
 				static string file(string fn);
 				void set_file(string fn);
 				void append_file(string fn);
+
+                static int file(string fn, string content);
+                static int str_to_file(string fn, string content);
+                static int sst_to_file(string fn, superstring content);
+                static int append_str_file(string fn, string append);
+                static int append_sst_file(string fn, superstring append);
+
 		};
 
 		typedef superstring ss;
