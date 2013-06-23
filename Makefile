@@ -126,12 +126,11 @@ all: prepare nativehttp btest nativestat
 	$(CXX) $(FLAGS) $(NHTO) $(TESTLIBS) -o $(TOUT)
 	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
 
-prepare:
-	mkdir -p bin
-
-debug: nativehttp_dbg
+debug: prepare nativehttp_dbg
 	$(CXX) $(DBGFLAGS) $(NHOD) $(LIBS) -o $(OUT)
 
+prepare:
+	mkdir -p bin
 
 directories:
 	mkdir -p /etc/nativehttp
