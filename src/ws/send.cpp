@@ -49,6 +49,8 @@ namespace nativehttp
             {
                 if(ws::stream_state[uid] != WS_STREAMSTATE_FREE)return NH_ERROR;
 
+                if(http::client_protocol[uid] != CLPROT_WEBSOCKETS)return NH_ERROR;
+
                 uint64_t dsize = size;
                 if(dsize > ws::max_sendable)
                 {
@@ -119,6 +121,8 @@ namespace nativehttp
             if(ws::enabled)
             {
                 if(ws::stream_state[uid] != WS_STREAMSTATE_FREE)return NH_ERROR;
+
+                if(http::client_protocol[uid] != CLPROT_WEBSOCKETS)return NH_ERROR;
 
                 uint64_t dsize = strlen(data);
                 if(dsize > ws::max_sendable)
@@ -192,6 +196,9 @@ namespace nativehttp
             if(ws::enabled)
             {
                 if(ws::stream_state[uid] == WS_STREAMSTATE_TEXT)return NH_ERROR;
+
+                if(http::client_protocol[uid] != CLPROT_WEBSOCKETS)return NH_ERROR;
+
                 bool cnt = ws::stream_state[uid] == WS_STREAMSTATE_TEXT;
 
                 if(!finalize)ws::stream_state[uid] = WS_STREAMSTATE_BINARY;
@@ -270,6 +277,9 @@ namespace nativehttp
             if(ws::enabled)
             {
                 if(ws::stream_state[uid] == WS_STREAMSTATE_BINARY)return NH_ERROR;
+
+                if(http::client_protocol[uid] != CLPROT_WEBSOCKETS)return NH_ERROR;
+
                 bool cnt = ws::stream_state[uid] == WS_STREAMSTATE_TEXT;
 
                 if(!finalize)ws::stream_state[uid] = WS_STREAMSTATE_TEXT;

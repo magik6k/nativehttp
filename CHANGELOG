@@ -1,8 +1,10 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-DEV:
+2306.13:
 -Superstring - New file functions
+-Namespace 'nativehttp::websock' aliased to 'nw'
+-WebSocket sending functions - Checkig client protocol
 
 1606.13:
 -Sessions accessible by UID(so that they are usable with WebSockets)

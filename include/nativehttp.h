@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 13
+#define NATIVEHTTP_API_VERSION 14
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -482,5 +482,6 @@ namespace nh = nativehttp;
 namespace nd = nativehttp::data;
 namespace nb = nativehttp::base;
 namespace ns = nativehttp::server;
+namespace nw = nativehttp::websock;
 
 #endif // NATIVEHTTP_H_INCLUDED
