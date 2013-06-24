@@ -140,6 +140,11 @@ namespace http
                 continue;
             }
 
+            if (!rd.cookie)
+            {
+                rd.cookie = new nativehttp::data::cookiedata("");
+            }
+
             if (rd.cookie && http::usesessions)///setup sessions
             {
                 rd.session = data::session::storage.getuid(process->uid);
@@ -181,11 +186,6 @@ namespace http
                     delete process;
                     continue;
                 }
-            }
-
-            if (!rd.cookie)
-            {
-                rd.cookie = new nativehttp::data::cookiedata("");
             }
 
             ///POST checking begin

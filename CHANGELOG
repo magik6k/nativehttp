@@ -4,7 +4,8 @@ For more info visit http://nativehttp.org
 2306.13:
 -Superstring - New file functions
 -Namespace 'nativehttp::websock' aliased to 'nw'
--WebSocket sending functions - Checkig client protocol
+-WebSocket Sending functions - Checkig client protocol
+-Sessions - Fixed bug causing NULL session pointer with no-cokie request
 
 1606.13:
 -Sessions accessible by UID(so that they are usable with WebSockets)
