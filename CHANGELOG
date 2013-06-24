@@ -1,6 +1,9 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
+DEV:
+-New makefile target for building only NativeStat - 'stat'
+
 2306.13:
 -Superstring - New file functions
 -Namespace 'nativehttp::websock' aliased to 'nw'

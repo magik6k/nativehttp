@@ -129,6 +129,9 @@ all: prepare nativehttp btest nativestat
 debug: prepare nativehttp_dbg
 	$(CXX) $(DBGFLAGS) $(NHOD) $(LIBS) -o $(OUT)
 
+stat: prepare nativestat
+	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
+
 prepare:
 	mkdir -p bin
 
