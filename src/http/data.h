@@ -67,6 +67,7 @@ namespace http
 		unsigned long size;
 		const char *data;
 		bool fas;//free after sending
+		uint64_t pktid;
 	};
 
 	struct Sexecutor
@@ -101,6 +102,8 @@ namespace http
 	extern uint32_t *client_ips;
 	extern uint8_t *client_protocol;
 	extern uint32_t *client_prot_data;
+	extern uint64_t *packets_sent;
+    extern uint64_t *packets_to_send;
 
 	extern bool onssl;
 	extern SSL **sslsck;

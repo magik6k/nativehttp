@@ -51,6 +51,9 @@ namespace http
 	SOCKET server = INVALID_SOCKET;
 	uint8_t *client_protocol = NULL;
 	uint32_t *client_prot_data = NULL;
+    uint64_t *packets_sent = NULL;
+    uint64_t *packets_to_send = NULL;
+
 
 	SSL **sslsck = NULL;
 	bool onssl = false;

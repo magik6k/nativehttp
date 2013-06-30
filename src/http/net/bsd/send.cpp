@@ -70,6 +70,12 @@ namespace http
 					SDL_mutexV(http::mtx_snd);
 					continue;
 				}
+				if(proc.pktid!=http::packets_sent[proc.uid])
+				{
+                    http::tosend.front2back();
+                    SDL_mutexV(http::mtx_snd);
+					continue;
+				}
 				http::tosend.pop();
 				SDL_mutexV(http::mtx_snd);
 
@@ -81,7 +87,7 @@ namespace http
                     memcpy(td,proc.data,proc.size);
                     td[proc.size] = '\0';
 
-                    nativehttp::server::log("DBG:sender.cpp@bsd",
+                    nativehttp::server::log("DBG:sender.cpp["+nativehttp::data::superstring::str_from_int(*(char*)unused)+"]@bsd",
                         ("Sending:\n"+(http::log_newline?((nativehttp::data::superstring(td).lock(0).change("\r","\\r").change("\n","\\n\n")).str)
                         :(string(td)))).c_str());
 
@@ -94,6 +100,7 @@ namespace http
 				{
 
 					nhSend(http::connected[proc.uid], proc.data, proc.size);
+					http::packets_sent[proc.uid]++;
 					http::statdata::onsend(proc.size);
 				}
 

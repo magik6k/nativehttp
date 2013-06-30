@@ -29,7 +29,9 @@ namespace http
 {
 	void send(int uid, unsigned long datasize, const char *data, bool free)
 	{
-		outdata t = {uid, datasize, data, free};
+		outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
+		http::packets_to_send[uid]++;
+
 		SDL_mutexP(http::mtx_snd);
 		http::tosend.push(t);
 		SDL_mutexV(http::mtx_snd);

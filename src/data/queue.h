@@ -51,6 +51,8 @@ namespace nativehttp
 				int push(T tp);
 				int pop();
 
+				int front2back();
+
 				size_t size();
 				int empty();
 
@@ -104,6 +106,25 @@ namespace nativehttp
 				return 0;
 			}
 			return 1;
+		}
+
+		template<class T>int queue<T>::front2back()
+		{
+            if(oldest)
+            {
+                if(oldest == newest)return 0;
+                qelm<T>* te = oldest;//virtual pop
+                oldest = te->newer;
+                if(oldest)oldest->older = NULL;
+
+                te->newer = NULL;//virtual push
+                te->older = newest;
+                if(newest)newest->newer = te;
+                newest = te;
+
+                return 0;
+            }
+            return 1;
 		}
 
 		template<class T>T &queue<T>::front()

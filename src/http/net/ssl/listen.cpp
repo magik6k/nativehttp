@@ -91,6 +91,8 @@ namespace http
 
 				http::connected[fs] = tmp;
 				http::client_ips[fs] = sock_addr.sin_addr.s_addr;
+				http::packets_sent[fs] = 0LL;
+                http::packets_to_send[fs] = 0LL;
 
 				http::statdata::onconnect();
 

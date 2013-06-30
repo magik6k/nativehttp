@@ -79,6 +79,8 @@ namespace http
 		http::sslsck = new SSL*[http::maxConnections];
 		http::client_protocol = new uint8_t[http::maxConnections];
 		http::client_prot_data = new uint32_t[http::maxConnections];
+		http::packets_sent = new uint64_t[http::maxConnections];
+		http::packets_to_send = new uint64_t[http::maxConnections];
 
 		for (int i = 0; i < http::maxConnections; i++)
 		{
@@ -87,6 +89,8 @@ namespace http
 			http::sslsck[i] = NULL;
 			http::client_protocol[i] = CLPROT_HTTP;
 			http::client_prot_data[i] = 0;
+			http::packets_sent[i] = 0LL;
+			http::packets_to_send[i] = 0LL;
 		}
 
 		http::Nexec = cfg->get_int("exec_theards");
