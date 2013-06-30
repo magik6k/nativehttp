@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 	cout << "pre-init\n";
 
 	prctl(PR_SET_NAME, "nativehttp", 0, 0, 0);
+	srand(time(0));
 
 	bool dmnz = false;
 	bool gr = true;

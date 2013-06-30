@@ -5,6 +5,7 @@ DEV:
 -New makefile target for building only NativeStat - 'stat'
 -Fixed some WebSocket connecting issues
 -Fixed bad packet sending order
+-Fixed session security issue that might occur in some extreme cases
 
 2306.13:
 -Superstring - New file functions
