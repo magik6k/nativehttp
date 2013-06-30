@@ -6,6 +6,7 @@ DEV:
 -Fixed some WebSocket connecting issues
 -Fixed bad packet sending order
 -Fixed session security issue that might occur in some extreme cases
+-WebSockets - Messages can now be sent from onConnect callback
 
 2306.13:
 -Superstring - New file functions

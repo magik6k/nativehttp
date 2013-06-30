@@ -57,40 +57,42 @@ namespace ws
         {
             if((*units)[fu].protocol == string(ld.ws_prot))
             {
+                unsigned char shabuf[20];
+
+                string th = ((string)ld.ws_acc_key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+
+                SHA1((const unsigned char*)th.c_str(), th.size(), shabuf);
+                char *B64 = NULL;
+                Base64E(shabuf,20,&B64);
+
+                string rtn = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Accept: ";
+                rtn += B64;
+                rtn += "\r\nSec-WebSocket-Protocol: ";
+                rtn += ld.ws_prot;
+                rtn += "\r\n";
+                rtn += rd.cookie->gethead();
+                rtn += "\r\n";
+
+                http::send(uid, rtn.size(), strdup(rtn.c_str()), true);
+
+                http::client_protocol[uid] = CLPROT_WEBSOCKETS;
+                ws::client_unit[uid] = fu;
+                http::unlockclient(uid);
+
+                rtn.clear();
+                delete[] B64;
+
                 int ocs = NH_SUCCES;
                 if((*units)[fu].on_connect)
                 {
                     ocs = (*(*units)[fu].on_connect)(uid);
                 }
 
-                if(ocs == NH_SUCCES)
+                if(ocs != NH_SUCCES)
                 {
-                    unsigned char shabuf[20];
-
-                    string th = ((string)ld.ws_acc_key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
-
-                    SHA1((const unsigned char*)th.c_str(), th.size(), shabuf);
-                    char *B64 = NULL;
-                    Base64E(shabuf,20,&B64);
-
-                    string rtn = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Accept: ";
-                    rtn += B64;
-                    rtn += "\r\nSec-WebSocket-Protocol: ";
-                    rtn += ld.ws_prot;
-                    rtn += "\r\n";
-                    rtn += rd.cookie->gethead();
-                    rtn += "\r\n";
-
-                    http::send(uid, rtn.size(), strdup(rtn.c_str()), true);
-
-                    http::client_protocol[uid] = CLPROT_WEBSOCKETS;
-                    ws::client_unit[uid] = fu;
-                    http::unlockclient(uid);
-
-                    rtn.clear();
-
-                    delete[] B64;
+                    http::kickclient(uid);
                 }
+
             }
         }
 
