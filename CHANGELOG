@@ -1,7 +1,7 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-DEV:
+0107.13:
 -New makefile target for building only NativeStat - 'stat'
 -Fixed some WebSocket connecting issues
 -Fixed bad packet sending order
