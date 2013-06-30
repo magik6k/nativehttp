@@ -116,7 +116,7 @@ namespace http
                         break;
                     }
                     case 7:
-                        if(hss.to(SS("\n")).go_end().remove("\r").go_begin().check("Upgrade"))
+                        if(hss.to(SS("\n")).go_end().remove("\r").go_begin().contain("Upgrade"))
                         {
                             ld.upg = true;
                         }
