@@ -45,8 +45,9 @@ namespace nativehttp
                 temp.on_bin_msg = onBMsg;
 
                 ws::units->push_back(temp);
+                return ws::units->size()-1;
             }
-            return ws::enabled?1:0;
+            return ws::enabled?-1:-2;
         }
     }
 }

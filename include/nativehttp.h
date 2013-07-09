@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 14
+#define NATIVEHTTP_API_VERSION 15
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -269,6 +269,7 @@ namespace nativehttp
 				string get(string name);
 				void set(string name, string value);
 				bool is_valid();
+                unsigned int get_ssid();
 				static session* by_uid(nativehttp::data::clientid uid);
 		};
 
@@ -463,6 +464,7 @@ namespace nativehttp
         typedef int (*cb_onBinMsg)(nativehttp::data::clientid, const void*, uint64_t);
         typedef int (*cb_onTxtMsg)(nativehttp::data::clientid, const char*);
 
+        ///'add' function is returning AppID
         int add(const char* uri, const char* protocol_name, cb_onConnect onConnect, cb_onDisconnect onDisconnect, cb_onTxtMsg onTMsg, cb_onBinMsg onBMsg);
 
         int disconnect(nativehttp::data::clientid uid);
@@ -473,6 +475,11 @@ namespace nativehttp
         int streamTxt(nativehttp::data::clientid uid, const char* data, bool finalize);
         int streamBin(nativehttp::data::clientid uid, const void* data, uint64_t size, bool finalize);
 
+        ///AppID functions
+        int onConnect(int appid, cb_onConnect onConnect);
+        int onDisconnect(int appid, cb_onDisconnect onDisconnect);
+        int onText(int appid, cb_onTxtMsg onTMsg);
+        int onBinary(int appid, cb_onBinMsg onBMsg);
 
 	}
 

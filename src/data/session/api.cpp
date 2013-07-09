@@ -106,6 +106,11 @@ namespace nativehttp
 			}
 		}
 
+		unsigned int session::get_ssid()
+		{
+            return ssid;
+		}
+
 		session* session::by_uid(nativehttp::data::clientid uid)
 		{
             if(http::usesessions)

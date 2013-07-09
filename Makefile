@@ -96,6 +96,7 @@ NHS = \
 	$(NHD)/utils/nhp_to_cpp.cpp \
 	$(NHD)/utils/thread.cpp \
 	$(NHD)/utils/version.cpp \
+	$(NHD)/ws/api.cpp \
 	$(NHD)/ws/control.cpp \
 	$(NHD)/ws/data.cpp \
 	$(NHD)/ws/disconnect.cpp \
