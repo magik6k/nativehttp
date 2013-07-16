@@ -12,7 +12,6 @@ DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
 LIBS += -rdynamic
 LIBS += -lpthread
 LIBS += -ldl
-LIBS += -lSDL
 LIBS += -lsqlite3
 LIBS += -lssl
 LIBS += -lcrypto
