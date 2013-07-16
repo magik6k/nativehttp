@@ -1,9 +1,6 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-DEV-ACTUAL:
--Some kind of serious bug(505 HTTP...)
-
 DEV:
 -WebSockets - Changing callbacks at runtime
 -Sessions - option to get SessionID

@@ -50,8 +50,10 @@ page page_mapper::bscpageset(char *f)
 
 page page_mapper::by_uri(const char *u)
 {
+    page t = { -1, NULL};
+    if(!u)return t;
+
 	vector<int>dn(uris.size(), 0);
-	page t = { -1, NULL};
 	for (unsigned int i = 0; i < strlen(u); i++)
 	{
 		for (unsigned int j = 0; j < dn.size(); j++)

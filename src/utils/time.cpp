@@ -39,7 +39,7 @@ namespace utils
         struct timeval tmp;
         gettimeofday(&tmp,NULL);
 
-        return (uint64_t(tmp.tv_sec)*1000LL)+(uint64_t(tmp.tv_usec)/1000LL);
+        return ((uint64_t(tmp.tv_sec)*1000LL)+(uint64_t(tmp.tv_usec)/1000LL))-((uint64_t(start.tv_sec)*1000LL)+(uint64_t(start.tv_usec)/1000LL));
     }
     void sleep(int t)
     {
