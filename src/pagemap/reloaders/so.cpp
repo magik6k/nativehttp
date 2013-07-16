@@ -28,8 +28,8 @@ freely, subject to the following restrictions:
 
 void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 {
-	SDL_mutexP(http::mtx_exec);
-	SDL_mutexP(http::mtx_exec2);
+	pthread_mutex_lock(http::mtx_exec);
+	pthread_mutex_lock(http::mtx_exec2);
 
 	dlclose(((nativepage*)(*base)[pgi].data)->handle);
 	for (unsigned int i = 0; i < uris.size(); i++)
@@ -97,6 +97,6 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 
 	}
 
-	SDL_mutexV(http::mtx_exec);
-	SDL_mutexV(http::mtx_exec2);
+	pthread_mutex_unlock(http::mtx_exec);
+	pthread_mutex_unlock(http::mtx_exec2);
 }

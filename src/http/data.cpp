@@ -80,11 +80,11 @@ namespace http
 	size_t sqln = 0;
 	size_t fsnd_fb_size;
 
-	SDL_mutex *mtx_exec2 = NULL;
-	SDL_mutex *mtx_exec = NULL;
-	SDL_mutex *mtx_snd = NULL;
-	SDL_mutex *mtx_fsnd = NULL;
-	SDL_mutex *mtx_wsrc = NULL;
+	pthread_mutex_t *mtx_exec2 = NULL;
+	pthread_mutex_t *mtx_exec = NULL;
+	pthread_mutex_t *mtx_snd = NULL;
+	pthread_mutex_t *mtx_fsnd = NULL;
+	pthread_mutex_t *mtx_wsrc = NULL;
 
 	pthread_t *theard_nc = NULL;
 	pthread_t **theard_sd = NULL;

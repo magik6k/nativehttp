@@ -30,11 +30,6 @@ freely, subject to the following restrictions:
 #include <sys/types.h>
 #include <netinet/tcp.h>
 #define SOCKET	int
-extern "C"
-{
-	extern DECLSPEC void SDLCALL SDLNet_SetLastError(int err);
-	extern DECLSPEC int SDLCALL SDLNet_GetLastError(void);
-}
 
 bool deamonized = false;
 

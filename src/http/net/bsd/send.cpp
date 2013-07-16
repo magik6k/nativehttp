@@ -58,26 +58,26 @@ namespace http
 			{
 				if (http::tosend.empty())
 				{
-					SDL_Delay(1);
+					utils::sleep(1);
 					continue;
 				}
 
-				SDL_mutexP(http::mtx_snd);
+				 pthread_mutex_lock(http::mtx_snd);
 
 				outdata proc = http::tosend.front(ts);
 				if (ts == 1)
 				{
-					SDL_mutexV(http::mtx_snd);
+					 pthread_mutex_unlock(http::mtx_snd);
 					continue;
 				}
 				if(proc.pktid!=http::packets_sent[proc.uid])
 				{
                     http::tosend.front2back();
-                    SDL_mutexV(http::mtx_snd);
+                     pthread_mutex_unlock(http::mtx_snd);
 					continue;
 				}
 				http::tosend.pop();
-				SDL_mutexV(http::mtx_snd);
+				 pthread_mutex_unlock(http::mtx_snd);
 
 				#ifdef NHDBG
 

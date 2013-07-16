@@ -171,8 +171,7 @@ namespace http
 
                 }
             }
-
-            SDL_mutexP(http::mtx_fsnd);
+            pthread_mutex_lock(http::mtx_fsnd);
             if(http::fsend.size() > 0) ///Recive new sending requests
             {
                 fsrq tr = http::fsend.front();
@@ -196,11 +195,11 @@ namespace http
                 }
 
             }
-            SDL_mutexV(http::mtx_fsnd);
+            pthread_mutex_unlock(http::mtx_fsnd);
 
             if(fast <= 0)
             {
-                SDL_Delay(5);
+                utils::sleep(5);
             }
             else
             {

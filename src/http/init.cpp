@@ -41,16 +41,6 @@ freely, subject to the following restrictions:
 
 namespace http
 {
-	void sdlinit()
-	{
-#ifdef NHDBG
-		size_t bm = getacmem();
-#endif
-		SDL_Init(SDL_INIT_TIMER);
-#ifdef NHDBG
-		cout << "[DBG:init.cpp@http]SDL init mem: " << ((getacmem()) - bm) / 1024.f << "kb\n";
-#endif
-	}
 	void datainit()
 	{
 #ifdef NHDBG
@@ -113,12 +103,12 @@ namespace http
         fsnd_fb_size = cfg->get_int("fsn_frame_buf_size");
 
         if(cfg->get_int("global_pexec_mutex"))
-            http::mtx_exec2 = SDL_CreateMutex();
+            http::mtx_exec2 = utils::create_mutex();
 
-		http::mtx_exec = SDL_CreateMutex();
-		http::mtx_snd = SDL_CreateMutex();
-		http::mtx_fsnd = SDL_CreateMutex();
-		http::mtx_wsrc = SDL_CreateMutex();
+		http::mtx_exec = utils::create_mutex();
+		http::mtx_snd = utils::create_mutex();
+		http::mtx_fsnd = utils::create_mutex();
+		http::mtx_wsrc = utils::create_mutex();
 
 		http::manager::rate = cfg->get_int("managerrate");
 		http::manager::postto = cfg->get_int("posttimeout");
@@ -182,7 +172,7 @@ namespace http
 			if (tms != 0)nativehttp::server::logid(i, "init.cpp", "Executor failed to start");
 		}
 #ifdef NHDBG
-		SDL_Delay(250);
+		utils::sleep(250);
 		cout << "[DBG:init.cpp@http]executors mem: " << (getacmem() - abm) / 1024.f << "kb\n";
 #endif
 	}
@@ -198,7 +188,7 @@ namespace http
 		}
 		http::bsd::init();
 #ifdef NHDBG
-		SDL_Delay(250);
+		utils::sleep(250);
 		cout << "[DBG:init.cpp@http]net init mem: " << ((getrsmem() - bm) / 1024.f) + ((getacmem() - abm) / 1024.f) << "kb\n";
 #endif
 	}
@@ -266,7 +256,7 @@ namespace http
         }
 
 #ifdef NHDBG
-		SDL_Delay(250);
+		utils::sleep(250);
 		cout << "[DBG:init.cpp@http]System init mem: "
 		     << (getacmem() - bm) / 1024LL << "kb\n";
 		cout << "[DBG:init.cpp@http]Total init mem: "

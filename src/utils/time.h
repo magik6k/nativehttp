@@ -20,16 +20,17 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef HTTPINIT_H_INCLUDED
-#define HTTPINIT_H_INCLUDED
+#ifndef TIME_H_INCLUDED
+#define TIME_H_INCLUDED
 
-namespace http
+#include <inttypes.h>
+
+
+namespace utils
 {
-	void datainit();
-	void executorinit();
-	void netstart();
-	void initstat();
-	void startsystem();
+    void init_time();
+    uint64_t get_time();
+    void sleep(int t);
 }
 
-#endif // HTTPINIT_H_INCLUDED
+#endif // TIME_H_INCLUDED

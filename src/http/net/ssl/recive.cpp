@@ -96,9 +96,9 @@ namespace http
                                 trq->uid = i;
                                 trq->sender = http::connected[i];
                                 http::ulock[i] = true;
-                                SDL_mutexP(http::mtx_exec);
+                                pthread_mutex_lock(http::mtx_exec);
                                 http::toexec.push(trq);
-                                SDL_mutexV(http::mtx_exec);
+                                pthread_mutex_unlock(http::mtx_exec);
 							}
 							else
 							{
@@ -115,7 +115,7 @@ namespace http
 
 					}
 				}
-				SDL_Delay(1);
+				utils::sleep(1);
 			}
 		}
 	}

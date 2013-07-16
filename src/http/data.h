@@ -23,7 +23,6 @@ freely, subject to the following restrictions:
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
-#include <SDL/SDL.h>
 #include "nativehttp.h"
 #include "protocol.h"
 #include "filesender.h"
@@ -130,11 +129,11 @@ namespace http
 	extern size_t sqln;
 	extern size_t fsnd_fb_size;
 
-	extern SDL_mutex *mtx_exec2;
-	extern SDL_mutex *mtx_exec;
-	extern SDL_mutex *mtx_snd;
-	extern SDL_mutex *mtx_fsnd;
-	extern SDL_mutex *mtx_wsrc;
+	extern pthread_mutex_t *mtx_exec2;
+	extern pthread_mutex_t *mtx_exec;
+	extern pthread_mutex_t *mtx_snd;
+	extern pthread_mutex_t *mtx_fsnd;
+	extern pthread_mutex_t *mtx_wsrc;
 
 	extern pthread_t *theard_nc;
 	extern pthread_t **theard_sd;

@@ -31,14 +31,23 @@ namespace utils
         if (pthread_attr_init(&at) != 0)
         {
             nativehttp::server::log("thread.cpp@utils", "ERROR: attr setup failed");
-            return 1;
+            return -1;
         }
         if (pthread_attr_setstacksize(&at, heap) != 0)
         {
             nativehttp::server::log("thread.cpp@utils", "ERROR: Setting heap size failed");
-            return 1;
+            return -1;
         }
 
         return pthread_create(thr, &at, fn, fnarg);
+    }
+    pthread_mutex_t* create_mutex()
+    {
+        pthread_mutex_t* tmp = new pthread_mutex_t;
+
+        if(tmp)
+            pthread_mutex_init(tmp, NULL);
+
+        return tmp;
     }
 }

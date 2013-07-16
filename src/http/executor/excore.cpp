@@ -53,7 +53,7 @@ namespace http
                         nativepage *npp = (nativepage*)pid.data;
 #ifdef NHDBG
                         size_t bm = getacmem() + getrsmem();
-                        unsigned int pgt = SDL_GetTicks();
+                        unsigned int pgt = utils::get_time();
 #endif
                         nativehttp::data::pagedata ts;
                         if(!http::mtx_exec2)
@@ -62,12 +62,12 @@ namespace http
                         }
                         else
                         {
-                            SDL_mutexP(http::mtx_exec2);
+                            pthread_mutex_lock(http::mtx_exec2);
                             ts = npp->page(rd);   //<<<execution of page
-                            SDL_mutexV(http::mtx_exec2);
+                            pthread_mutex_unlock(http::mtx_exec2);
                         }
 #ifdef NHDBG
-                        unsigned int et = SDL_GetTicks() - pgt;
+                        unsigned int et = utils::get_time() - pgt;
                         if (!http::extmemstats)
                         {
                             cout << "[DBG:executor.cpp@http]Page execution allcocated: "
@@ -142,9 +142,9 @@ namespace http
                         req.rngs = ld.rng_start;
                         req.rnge = ld.rng_end;
 
-                        SDL_mutexP(http::mtx_fsnd);
+                        pthread_mutex_lock(http::mtx_fsnd);
                         http::fsend.push(req);
-                        SDL_mutexV(http::mtx_fsnd);
+                        pthread_mutex_unlock(http::mtx_fsnd);
 
                         return 2;
 

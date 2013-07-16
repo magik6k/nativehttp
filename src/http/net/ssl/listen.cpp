@@ -53,7 +53,7 @@ namespace http
 
 				if (tmp == -1)
 				{
-					SDL_Delay(1);
+					utils::sleep(1);
 					continue;
 				}
 
@@ -64,7 +64,7 @@ namespace http
 				if (fs == -1)
 				{
 					close(tmp);
-					SDL_Delay(10);
+					utils::sleep(10);
 					continue;
 				}
 
@@ -73,7 +73,7 @@ namespace http
 				if (!http::sslsck[fs])
 				{
 					close(tmp);
-					SDL_Delay(1);
+					utils::sleep(1);
 					continue;
 				}
 
@@ -85,7 +85,7 @@ namespace http
 					http::sslsck[fs] = NULL;
 
 					close(tmp);
-					SDL_Delay(1);
+					utils::sleep(1);
 					continue;
 				}
 

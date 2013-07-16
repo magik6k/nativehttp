@@ -43,37 +43,37 @@ namespace http
         {
             while(1)
             {
-                SDL_mutexP(http::mtx_exec);
+                pthread_mutex_lock(http::mtx_exec);
                 if (http::toexec.size() <= 0)
                 {
-                    SDL_mutexV(http::mtx_exec);
-                    SDL_Delay(1);
+                    pthread_mutex_unlock(http::mtx_exec);
+                    utils::sleep(1);
                     continue;
                 }
                 if (http::toexec.front(ts)->taken > 0)
                 {
-                    SDL_mutexV(http::mtx_exec);
-                    SDL_Delay(1);
+                    pthread_mutex_unlock(http::mtx_exec);
+                    utils::sleep(1);
                     continue;
                 }
                 if (ts == 1)
                 {
-                    SDL_mutexV(http::mtx_exec);
-                    SDL_Delay(1);
+                    pthread_mutex_unlock(http::mtx_exec);
+                    utils::sleep(1);
                     continue;
                 }
                 http::toexec.front()->taken = exc->id;
                 http::request *process = http::toexec.front(ts);
                 if (ts == 1)
                 {
-                    SDL_mutexV(http::mtx_exec);
-                    SDL_Delay(1);
+                    pthread_mutex_unlock(http::mtx_exec);
+                    utils::sleep(1);
                     continue;
                 }
                 http::toexec.pop();
-                SDL_mutexV(http::mtx_exec);
+                pthread_mutex_unlock(http::mtx_exec);
                 if(process)return process;
-                SDL_Delay(1);
+                utils::sleep(1);
 			}
         }
 	}

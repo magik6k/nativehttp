@@ -23,13 +23,13 @@ freely, subject to the following restrictions:
 #ifndef PROTOCOL_H_INCLUDED
 #define PROTOCOL_H_INCLUDED
 
-#include <SDL/SDL.h>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <deque>
 #include <map>
 #include <fstream>
+#include "utils/time.h"
 #include "data/vector.h"
 #include "nativehttp.h"
 #include "pagemap/pagemap.h"

@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 namespace utils
 {
     int create_thread(pthread_t* thr, void *(*fn) (void *), void* fnarg, unsigned int heap);
+    pthread_mutex_t* create_mutex();
 }
 
 #endif // THREAD_H_INCLUDED

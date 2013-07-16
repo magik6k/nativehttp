@@ -20,16 +20,31 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#ifndef HTTPINIT_H_INCLUDED
-#define HTTPINIT_H_INCLUDED
+#include <sys/time.h>
+#include <stdlib.h>
+#include <chrono>
+#include <thread>
+#include "time.h"
 
-namespace http
+struct timeval start;
+
+namespace utils
 {
-	void datainit();
-	void executorinit();
-	void netstart();
-	void initstat();
-	void startsystem();
+    void init_time()
+    {
+        gettimeofday(&start,NULL);
+    }
+    uint64_t get_time()
+    {
+        struct timeval tmp;
+        gettimeofday(&tmp,NULL);
+
+        return (uint64_t(tmp.tv_sec)*1000LL)+(uint64_t(tmp.tv_usec)/1000LL);
+    }
+    void sleep(int t)
+    {
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(t));
+    }
 }
 
-#endif // HTTPINIT_H_INCLUDED

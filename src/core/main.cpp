@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 
 	prctl(PR_SET_NAME, "nativehttp", 0, 0, 0);
 	srand(time(0));
+	utils::init_time();
 
 	bool dmnz = false;
 	bool gr = true;
@@ -136,12 +137,11 @@ int main(int argc, char *argv[])
 	if (dmnz)deamonize();
 	nativehttp::server::log("INIT", "Starting HTTP system");
 
-	http::sdlinit();
 	http::executorinit();
 	http::netstart();
 	http::startsystem();
 
-	nativehttp::server::log("INIT", "Ready");
+	nativehttp::server::log("INIT", "Ready in "+nativehttp::data::superstring::str_from_int64(utils::get_time()/1000LL)+"s");
 
 	if (cfg->get_int("use_ssl"))
 	{

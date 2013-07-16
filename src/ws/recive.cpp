@@ -58,19 +58,19 @@ namespace ws
                 proc.data = NULL;
             }
 
-            SDL_mutexP(http::mtx_wsrc);
+            pthread_mutex_lock(http::mtx_wsrc);
             if(!rqueue.empty())
             {
                 proc = rqueue.front();
             }
             else
             {
-                SDL_mutexV(http::mtx_wsrc);
-                SDL_Delay(1);
+                pthread_mutex_unlock(http::mtx_wsrc);
+                utils::sleep(1);
                 continue;
             }
             rqueue.pop();
-            SDL_mutexV(http::mtx_wsrc);
+            pthread_mutex_unlock(http::mtx_wsrc);
             const int uid = proc.uid;
 
             if(!ws::frames[uid].busy)
@@ -231,9 +231,9 @@ namespace ws
         tmp.data=data;
         tmp.datalen=dlen;
         tmp.uid=uid;
-        SDL_mutexP(http::mtx_wsrc);
+        pthread_mutex_lock(http::mtx_wsrc);
         rqueue.push(tmp);
-        SDL_mutexV(http::mtx_wsrc);
+        pthread_mutex_unlock(http::mtx_wsrc);
     }
 
 }

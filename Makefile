@@ -95,6 +95,7 @@ NHS = \
 	$(NHD)/utils/memory.cpp \
 	$(NHD)/utils/nhp_to_cpp.cpp \
 	$(NHD)/utils/thread.cpp \
+	$(NHD)/utils/time.cpp \
 	$(NHD)/utils/version.cpp \
 	$(NHD)/ws/api.cpp \
 	$(NHD)/ws/control.cpp \

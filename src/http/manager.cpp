@@ -135,7 +135,8 @@ namespace http
 					if (pthread_equal(*(http::theard_sd[i]), pthread_self()) != 0)
 					{
 						nativehttp::server::log("WARNING", "Sender theard crashed, rescuing");
-						SDL_mutexV(http::mtx_snd);   //may be needed
+						pthread_mutex_unlock(http::mtx_snd);   //may be needed
+
 						pthread_t *kth = http::theard_sd[i];
 
 						int tmks = utils::create_thread(http::theard_sd[i], http::bsd::sender, NULL, 16 * 1024);
@@ -154,8 +155,8 @@ namespace http
 						nativehttp::server::logid(i, "WARNING", "Execution theard crashed, rescuing");
 						http::execUnits[i].state = -1;
 						http::execUnits[i].in = 0;
-						SDL_mutexV(http::mtx_exec2);
-						SDL_mutexV(http::mtx_exec);
+						pthread_mutex_unlock(http::mtx_exec2);
+						pthread_mutex_unlock(http::mtx_exec);
 
 						pthread_t *kth = http::execUnits[i].etheard;
 
@@ -254,7 +255,7 @@ namespace http
 		}
 		void wait()
 		{
-			SDL_Delay(http::manager::rate * 1000);
+			utils::sleep(http::manager::rate * 1000);
 		}
 
 	}

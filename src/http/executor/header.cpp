@@ -144,6 +144,7 @@ namespace http
 
         void line0(http::request *process, nativehttp::rdata &rd, http::rproc::lrqd &ld)
         {
+
             nativehttp::data::superstring rss(nativehttp::data::superstring(process->request).to("\n"));
             rss.add_token(nativehttp::data::token(" ", 0));
             rss.add_token(nativehttp::data::token("GET", 1));
@@ -158,7 +159,8 @@ namespace http
 
             rss.clear_tokens();
             rss.pos++;
-            nativehttp::data::superstring rawuri(rss.to(" "));
+            nativehttp::data::superstring rawuri(rss.tochar(" \t"));
+            rss.skip(" \t");
             process->http11 = rss.check("HTTP/1.1");
 
             rd.uri = rawuri.to("?");

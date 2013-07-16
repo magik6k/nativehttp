@@ -32,9 +32,9 @@ namespace http
 		outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
 		http::packets_to_send[uid]++;
 
-		SDL_mutexP(http::mtx_snd);
+		pthread_mutex_lock(http::mtx_snd);
 		http::tosend.push(t);
-		SDL_mutexV(http::mtx_snd);
+		 pthread_mutex_unlock(http::mtx_snd);
 	}
 	void unlockclient(int i)
 	{
