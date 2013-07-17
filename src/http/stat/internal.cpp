@@ -30,45 +30,45 @@ namespace http
 
 		void onrecv(unsigned long dlen)
 		{
-			if (toggle && transfer)
+			if (info::toggle && info::transfer)
 			{
-				dlbytes += dlen;
-				hrl_dl[0] += dlen;
+				transfer::dlbytes += dlen;
+				transfer::hrl_dl[0] += dlen;
 			}
 		}
 		void onsend(unsigned long ulen)
 		{
-			if (toggle && transfer)
+			if (info::toggle && info::transfer)
 			{
-				ulbytes += ulen;
-				hrl_ul[0] += ulen;
+				transfer::ulbytes += ulen;
+				transfer::hrl_ul[0] += ulen;
 			}
 		}
 		void onconnect()
 		{
-			if (toggle)
+			if (info::toggle)
 			{
-				connections++;
-				hrl_connections[0]++;
+				activity::connections++;
+				activity::hrl_connections[0]++;
 			}
 		}
 
 		void onpost()
 		{
-			if (toggle && method)
-				post++;
+			if (info::toggle && info::method)
+				method::post++;
 		}
 		void onget()
 		{
-			if (toggle && method)
-				get++;
+			if (info::toggle && info::method)
+				method::get++;
 		}
 		void onhit()
 		{
-			if (toggle && hitlog)
+			if (info::toggle && info::hitlog)
 			{
-				hits++;
-				hrl_hits[0]++;
+				activity::hits++;
+				activity::hrl_hits[0]++;
 			}
 		}
 	}

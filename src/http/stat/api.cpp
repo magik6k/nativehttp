@@ -29,81 +29,81 @@ namespace nativehttp
 	{
 		extern "C" bool stats()
 		{
-			return http::statdata::toggle;
+			return http::statdata::info::toggle;
 		}
 		extern "C" bool transfer_stats()
 		{
-			return http::statdata::transfer;
+			return http::statdata::info::transfer;
 		}
 		extern "C" bool hit_stats()
 		{
-			return http::statdata::hitlog;
+			return http::statdata::info::hitlog;
 		}
 		extern "C" bool method_stats()
 		{
-			return http::statdata::method;
+			return http::statdata::info::method;
 		}
 
 		extern "C" unsigned long long hits()
 		{
-			return http::statdata::hits;
+			return http::statdata::activity::hits;
 		}
 		extern "C" unsigned long long connections()
 		{
-			return http::statdata::connections;
+			return http::statdata::activity::connections;
 		}
 		extern "C" unsigned long long uploaded()
 		{
-			return http::statdata::ulbytes;
+			return http::statdata::transfer::ulbytes;
 		}
 		extern "C" unsigned long long downloaded()
 		{
-			return http::statdata::dlbytes;
+			return http::statdata::transfer::dlbytes;
 		}
 
 		extern "C" unsigned long long get_requests()
 		{
-			return http::statdata::get;
+			return http::statdata::method::get;
 		}
 		extern "C" unsigned long long post_requests()
 		{
-			return http::statdata::post;
+			return http::statdata::method::post;
 		}
 
 		extern "C" unsigned long long hourly_length()
 		{
-			return http::statdata::hourlylen;
+			return http::statdata::info::hourlylen;
 		}
 
 		extern "C" unsigned long long hour_hits(unsigned long hid)
 		{
-			if (hid < http::statdata::hourlylen)
+			if (hid < http::statdata::info::hourlylen)
 			{
-				return http::statdata::hrl_hits[hid];
+				return http::statdata::activity::hrl_hits[hid];
 			}
 			return 0;
 		}
 		extern "C" unsigned long long hour_connections(unsigned long hid)
 		{
-			if (hid < http::statdata::hourlylen)
+			if (hid < http::statdata::info::hourlylen)
 			{
-				return http::statdata::hrl_connections[hid];
+				return http::statdata::activity::hrl_connections[hid];
 			}
 			return 0;
 		}
 		extern "C" unsigned long long hour_upload(unsigned long hid)
 		{
-			if (hid < http::statdata::hourlylen)
+			if (hid < http::statdata::info::hourlylen)
 			{
-				return http::statdata::hrl_ul[hid];
+				return http::statdata::transfer::hrl_ul[hid];
 			}
 			return 0;
 		}
 		extern "C" unsigned long long hour_download(unsigned long hid)
 		{
-			if (hid < http::statdata::hourlylen)
+			if (hid < http::statdata::info::hourlylen)
 			{
-				return http::statdata::hrl_dl[hid];
+				return http::statdata::transfer::hrl_dl[hid];
 			}
 			return 0;
 		}

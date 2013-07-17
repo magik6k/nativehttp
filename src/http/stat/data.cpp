@@ -29,26 +29,40 @@ namespace http
 	namespace statdata
 	{
 
-		bool toggle;
-		bool transfer;
-		bool hitlog;
-		bool method;
+        namespace info
+        {
+            bool toggle;
+            bool transfer;
+            bool hitlog;
+            bool method;
 
-		long long hourlylen;
+            long long hourlylen;
+		}
 
-		unsigned long long hits;
-		unsigned long long connections;
+        namespace transfer
+        {
+            unsigned long long ulbytes;
+            unsigned long long dlbytes;
 
-		unsigned long long ulbytes;
-		unsigned long long dlbytes;
+            unsigned long long *hrl_ul;
+            unsigned long long *hrl_dl;
+        }
 
-		unsigned long long get;
-		unsigned long long post;
+        namespace activity
+        {
+            unsigned long long hits;
+            unsigned long long connections;
 
-		unsigned long long *hrl_hits;
-		unsigned long long *hrl_connections;
-		unsigned long long *hrl_ul;
-		unsigned long long *hrl_dl;
+            unsigned long long *hrl_hits;
+            unsigned long long *hrl_connections;
+        }
+
+
+		namespace method
+		{
+            unsigned long long get;
+            unsigned long long post;
+		}
 
 		time_t lastHrlFlp;
 		time_t lastSave;
@@ -61,22 +75,22 @@ namespace http
 
 		void manage()
 		{
-			if (toggle && managersafe)
+			if (info::toggle && managersafe)
 			{
 				if (time(0) - lastHrlFlp >= 3600)
 				{
 					lastHrlFlp += 3600;
-					for (long long i = hourlylen - 2LL; i >= 0; i--)
+					for (long long i = info::hourlylen - 2LL; i >= 0; i--)
 					{
-						hrl_hits[i + 1] = hrl_hits[i];
-						hrl_connections[i + 1] = hrl_connections[i];
-						hrl_ul[i + 1] = hrl_ul[i];
-						hrl_dl[i + 1] = hrl_dl[i];
+						activity::hrl_hits[i + 1] = activity::hrl_hits[i];
+						activity::hrl_connections[i + 1] = activity::hrl_connections[i];
+						transfer::hrl_ul[i + 1] = transfer::hrl_ul[i];
+						transfer::hrl_dl[i + 1] = transfer::hrl_dl[i];
 					}
-					hrl_hits[0] = 0;
-					hrl_connections[0] = 0;
-					hrl_ul[0] = 0;
-					hrl_dl[0] = 0;
+					activity::hrl_hits[0] = 0;
+					activity::hrl_connections[0] = 0;
+					transfer::hrl_ul[0] = 0;
+					transfer::hrl_dl[0] = 0;
 				}
 				if (time(0) - lastSave >= save_rate)
 				{
@@ -98,25 +112,25 @@ namespace http
 				}
 				fwrite("NSF", 1, 3, stf);
 				fwrite(&filever, 2, 1, stf);
-				fwrite(&hourlylen, sizeof(long long), 1, stf);
+				fwrite(&info::hourlylen, sizeof(long long), 1, stf);
 
-				fwrite(&get, sizeof(unsigned long long), 1, stf);
-				fwrite(&post, sizeof(unsigned long long), 1, stf);
+				fwrite(&method::get, sizeof(unsigned long long), 1, stf);
+				fwrite(&method::post, sizeof(unsigned long long), 1, stf);
 
 				stunit sd = {0, 0, 0, 0};
-				sd.hits = hits;
-				sd.connections = connections;
-				sd.ulbytes = ulbytes;
-				sd.dlbytes = dlbytes;
+				sd.hits = activity::hits;
+				sd.connections = activity::connections;
+				sd.ulbytes = transfer::ulbytes;
+				sd.dlbytes = transfer::dlbytes;
 
 				fwrite(&sd, sizeof(stunit), 1, stf);
 
-				for (long long i = 0LL; i < hourlylen; i++)
+				for (long long i = 0LL; i < info::hourlylen; i++)
 				{
-					sd.hits = hrl_hits[i];
-					sd.connections = hrl_connections[i];
-					sd.ulbytes = hrl_ul[i];
-					sd.dlbytes = hrl_dl[i];
+					sd.hits = activity::hrl_hits[i];
+					sd.connections = activity::hrl_connections[i];
+					sd.ulbytes = transfer::hrl_ul[i];
+					sd.dlbytes = transfer::hrl_dl[i];
 					fwrite(&sd, sizeof(stunit), 1, stf);
 				}
 

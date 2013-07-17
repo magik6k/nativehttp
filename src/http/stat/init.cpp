@@ -34,36 +34,36 @@ namespace http
 #ifdef NHDBG
 			size_t bm = getrsmem();
 #endif
-			http::statdata::toggle = cfg->get_int("statson");
-			http::statdata::transfer = cfg->get_int("transfer_stats");
-			http::statdata::hitlog = cfg->get_int("hits_stat");
-			http::statdata::hourlylen = cfg->get_int("hourly_length");
-			http::statdata::method = cfg->get_int("method_stats");
+			http::statdata::info::toggle = cfg->get_int("statson");
+			http::statdata::info::transfer = cfg->get_int("transfer_stats");
+			http::statdata::info::hitlog = cfg->get_int("hits_stat");
+			http::statdata::info::hourlylen = cfg->get_int("hourly_length");
+			http::statdata::info::method = cfg->get_int("method_stats");
 
 			http::statdata::lastHrlFlp = time(0) + 5;
 			http::statdata::lastSave = time(0) + 30;
 
 			http::statdata::save_rate = cfg->get_int("stat_save_rate") * 60;
 
-			http::statdata::hrl_hits = new unsigned long long[http::statdata::hourlylen];
-			http::statdata::hrl_connections = new unsigned long long[http::statdata::hourlylen];
-			http::statdata::hrl_dl = new unsigned long long[http::statdata::hourlylen];
-			http::statdata::hrl_ul = new unsigned long long[http::statdata::hourlylen];
+			http::statdata::activity::hrl_hits = new unsigned long long[http::statdata::info::hourlylen];
+			http::statdata::activity::hrl_connections = new unsigned long long[http::statdata::info::hourlylen];
+			http::statdata::transfer::hrl_dl = new unsigned long long[http::statdata::info::hourlylen];
+			http::statdata::transfer::hrl_ul = new unsigned long long[http::statdata::info::hourlylen];
 
-			for (size_t i = 0; i < http::statdata::hourlylen; i++)
+			for (size_t i = 0; i < http::statdata::info::hourlylen; i++)
 			{
-				http::statdata::hrl_hits[i] = 0u;
-				http::statdata::hrl_connections[i] = 0u;
-				http::statdata::hrl_dl[i] = 0u;
-				http::statdata::hrl_ul[i] = 0u;
+				http::statdata::activity::hrl_hits[i] = 0u;
+				http::statdata::activity::hrl_connections[i] = 0u;
+				http::statdata::transfer::hrl_dl[i] = 0u;
+				http::statdata::transfer::hrl_ul[i] = 0u;
 			}
 
-			http::statdata::hits = 0u;
-			http::statdata::connections = 0u;
-			http::statdata::dlbytes = 0u;
-			http::statdata::ulbytes = 0u;
-			http::statdata::get = 0u;
-			http::statdata::post = 0u;
+			http::statdata::activity::hits = 0u;
+			http::statdata::activity::connections = 0u;
+			http::statdata::transfer::dlbytes = 0u;
+			http::statdata::transfer::ulbytes = 0u;
+			http::statdata::method::get = 0u;
+			http::statdata::method::post = 0u;
 
 			if (!cfg->get_var("statfile").empty())
 			{
@@ -90,40 +90,40 @@ namespace http
 
 				long long thl = 0;
 				fread(&thl, sizeof(long long), 1, stf);
-				if (thl > hourlylen)thl = hourlylen;
+				if (thl > info::hourlylen)thl = info::hourlylen;
 
-				fread(&get, sizeof(unsigned long long), 1, stf);
-				fread(&post, sizeof(unsigned long long), 1, stf);
+				fread(&method::get, sizeof(unsigned long long), 1, stf);
+				fread(&method::post, sizeof(unsigned long long), 1, stf);
 
 				stunit sd = {0, 0, 0, 0};
 
 				fread(&sd, sizeof(stunit), 1, stf);
 
-				hits = sd.hits;
-				connections = sd.connections;
-				ulbytes = sd.ulbytes;
-				dlbytes = sd.dlbytes;
+				activity::hits = sd.hits;
+				activity::connections = sd.connections;
+				transfer::ulbytes = sd.ulbytes;
+				transfer::dlbytes = sd.dlbytes;
 
 				for (long long i = 0; i < thl; i++)
 				{
 					fread(&sd, sizeof(stunit), 1, stf);
-					hrl_hits[i] = sd.hits;
-					hrl_connections[i] = sd.connections;
-					hrl_ul[i] = sd.ulbytes;
-					hrl_dl[i] = sd.dlbytes;
+					activity::hrl_hits[i] = sd.hits;
+					activity::hrl_connections[i] = sd.connections;
+					transfer::hrl_ul[i] = sd.ulbytes;
+					transfer::hrl_dl[i] = sd.dlbytes;
 				}
 
-				for (long long i = hourlylen - 2; i >= 0; i--)
+				for (long long i = info::hourlylen - 2; i >= 0; i--)
 				{
-					hrl_hits[i + 1] = hrl_hits[i];
-					hrl_connections[i + 1] = hrl_connections[i];
-					hrl_ul[i + 1] = hrl_ul[i];
-					hrl_dl[i + 1] = hrl_dl[i];
+					activity::hrl_hits[i + 1] = activity::hrl_hits[i];
+					activity::hrl_connections[i + 1] = activity::hrl_connections[i];
+					transfer::hrl_ul[i + 1] = transfer::hrl_ul[i];
+					transfer::hrl_dl[i + 1] = transfer::hrl_dl[i];
 				}
-				hrl_hits[0] = 0;
-				hrl_connections[0] = 0;
-				hrl_ul[0] = 0;
-				hrl_dl[0] = 0;
+				activity::hrl_hits[0] = 0;
+				activity::hrl_connections[0] = 0;
+				transfer::hrl_ul[0] = 0;
+				transfer::hrl_dl[0] = 0;
 
 				fclose(stf);
 			}

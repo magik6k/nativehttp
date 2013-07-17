@@ -30,26 +30,41 @@ namespace http
 {
 	namespace statdata
 	{
-		extern bool toggle;
-		extern bool transfer;
-		extern bool hitlog;
-		extern bool method;
 
-		extern long long hourlylen;
+        namespace info
+        {
+            extern bool toggle;
+            extern bool transfer;
+            extern bool hitlog;
+            extern bool method;
 
-		extern unsigned long long hits;
-		extern unsigned long long connections;
+            extern long long hourlylen;
+        }
 
-		extern unsigned long long ulbytes;
-		extern unsigned long long dlbytes;
+        namespace transfer
+        {
+            extern unsigned long long ulbytes;
+            extern unsigned long long dlbytes;
 
-		extern unsigned long long get;
-		extern unsigned long long post;
+            extern unsigned long long *hrl_ul;
+            extern unsigned long long *hrl_dl;
+        }
 
-		extern unsigned long long *hrl_hits;
-		extern unsigned long long *hrl_connections;
-		extern unsigned long long *hrl_ul;
-		extern unsigned long long *hrl_dl;
+        namespace activity
+        {
+            extern unsigned long long hits;
+            extern unsigned long long connections;
+
+            extern unsigned long long *hrl_hits;
+            extern unsigned long long *hrl_connections;
+		}
+
+		namespace method
+		{
+            extern unsigned long long get;
+            extern unsigned long long post;
+        }
+
 
 		extern time_t lastHrlFlp;
 		extern time_t lastSave;
