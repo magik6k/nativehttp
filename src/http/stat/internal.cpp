@@ -28,7 +28,7 @@ namespace http
 	namespace statdata
 	{
 
-		void onrecv(unsigned long dlen)
+		void onrecv(uint32_t dlen)
 		{
 			if (info::toggle && info::transfer)
 			{
@@ -36,7 +36,7 @@ namespace http
 				transfer::hrl_dl[0] += dlen;
 			}
 		}
-		void onsend(unsigned long ulen)
+		void onsend(uint32_t ulen)
 		{
 			if (info::toggle && info::transfer)
 			{

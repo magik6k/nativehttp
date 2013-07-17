@@ -45,10 +45,10 @@ namespace http
 
 			http::statdata::save_rate = cfg->get_int("stat_save_rate") * 60;
 
-			http::statdata::activity::hrl_hits = new unsigned long long[http::statdata::info::hourlylen];
-			http::statdata::activity::hrl_connections = new unsigned long long[http::statdata::info::hourlylen];
-			http::statdata::transfer::hrl_dl = new unsigned long long[http::statdata::info::hourlylen];
-			http::statdata::transfer::hrl_ul = new unsigned long long[http::statdata::info::hourlylen];
+			http::statdata::activity::hrl_hits = new uint64_t[http::statdata::info::hourlylen];
+			http::statdata::activity::hrl_connections = new uint64_t[http::statdata::info::hourlylen];
+			http::statdata::transfer::hrl_dl = new uint64_t[http::statdata::info::hourlylen];
+			http::statdata::transfer::hrl_ul = new uint64_t[http::statdata::info::hourlylen];
 
 			for (size_t i = 0; i < http::statdata::info::hourlylen; i++)
 			{
@@ -88,12 +88,12 @@ namespace http
 					return;
 				}
 
-				long long thl = 0;
-				fread(&thl, sizeof(long long), 1, stf);
+				int64_t thl = 0;
+				fread(&thl, sizeof(int64_t), 1, stf);
 				if (thl > info::hourlylen)thl = info::hourlylen;
 
-				fread(&method::get, sizeof(unsigned long long), 1, stf);
-				fread(&method::post, sizeof(unsigned long long), 1, stf);
+				fread(&method::get, sizeof(uint64_t), 1, stf);
+				fread(&method::post, sizeof(uint64_t), 1, stf);
 
 				stunit sd = {0, 0, 0, 0};
 
@@ -104,7 +104,7 @@ namespace http
 				transfer::ulbytes = sd.ulbytes;
 				transfer::dlbytes = sd.dlbytes;
 
-				for (long long i = 0; i < thl; i++)
+				for (int64_t i = 0; i < thl; i++)
 				{
 					fread(&sd, sizeof(stunit), 1, stf);
 					activity::hrl_hits[i] = sd.hits;
@@ -113,7 +113,7 @@ namespace http
 					transfer::hrl_dl[i] = sd.dlbytes;
 				}
 
-				for (long long i = info::hourlylen - 2; i >= 0; i--)
+				for (int64_t i = info::hourlylen - 2; i >= 0; i--)
 				{
 					activity::hrl_hits[i + 1] = activity::hrl_hits[i];
 					activity::hrl_connections[i + 1] = activity::hrl_connections[i];

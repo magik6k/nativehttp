@@ -36,32 +36,32 @@ namespace http
             bool hitlog;
             bool method;
 
-            long long hourlylen;
+            int64_t hourlylen;
 		}
 
         namespace transfer
         {
-            unsigned long long ulbytes;
-            unsigned long long dlbytes;
+            uint64_t ulbytes;
+            uint64_t dlbytes;
 
-            unsigned long long *hrl_ul;
-            unsigned long long *hrl_dl;
+            uint64_t *hrl_ul;
+            uint64_t *hrl_dl;
         }
 
         namespace activity
         {
-            unsigned long long hits;
-            unsigned long long connections;
+            uint64_t hits;
+            uint64_t connections;
 
-            unsigned long long *hrl_hits;
-            unsigned long long *hrl_connections;
+            uint64_t *hrl_hits;
+            uint64_t *hrl_connections;
         }
 
 
 		namespace method
 		{
-            unsigned long long get;
-            unsigned long long post;
+            uint64_t get;
+            uint64_t post;
 		}
 
 		time_t lastHrlFlp;
@@ -80,7 +80,7 @@ namespace http
 				if (time(0) - lastHrlFlp >= 3600)
 				{
 					lastHrlFlp += 3600;
-					for (long long i = info::hourlylen - 2LL; i >= 0; i--)
+					for (int64_t i = info::hourlylen - 2LL; i >= 0; i--)
 					{
 						activity::hrl_hits[i + 1] = activity::hrl_hits[i];
 						activity::hrl_connections[i + 1] = activity::hrl_connections[i];
@@ -112,10 +112,10 @@ namespace http
 				}
 				fwrite("NSF", 1, 3, stf);
 				fwrite(&filever, 2, 1, stf);
-				fwrite(&info::hourlylen, sizeof(long long), 1, stf);
+				fwrite(&info::hourlylen, sizeof(int64_t), 1, stf);
 
-				fwrite(&method::get, sizeof(unsigned long long), 1, stf);
-				fwrite(&method::post, sizeof(unsigned long long), 1, stf);
+				fwrite(&method::get, sizeof(uint64_t), 1, stf);
+				fwrite(&method::post, sizeof(uint64_t), 1, stf);
 
 				stunit sd = {0, 0, 0, 0};
 				sd.hits = activity::hits;
@@ -125,7 +125,7 @@ namespace http
 
 				fwrite(&sd, sizeof(stunit), 1, stf);
 
-				for (long long i = 0LL; i < info::hourlylen; i++)
+				for (int64_t i = 0LL; i < info::hourlylen; i++)
 				{
 					sd.hits = activity::hrl_hits[i];
 					sd.connections = activity::hrl_connections[i];

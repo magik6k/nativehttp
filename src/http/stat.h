@@ -38,31 +38,31 @@ namespace http
             extern bool hitlog;
             extern bool method;
 
-            extern long long hourlylen;
+            extern int64_t hourlylen;
         }
 
         namespace transfer
         {
-            extern unsigned long long ulbytes;
-            extern unsigned long long dlbytes;
+            extern uint64_t ulbytes;
+            extern uint64_t dlbytes;
 
-            extern unsigned long long *hrl_ul;
-            extern unsigned long long *hrl_dl;
+            extern uint64_t *hrl_ul;
+            extern uint64_t *hrl_dl;
         }
 
         namespace activity
         {
-            extern unsigned long long hits;
-            extern unsigned long long connections;
+            extern uint64_t hits;
+            extern uint64_t connections;
 
-            extern unsigned long long *hrl_hits;
-            extern unsigned long long *hrl_connections;
+            extern uint64_t *hrl_hits;
+            extern uint64_t *hrl_connections;
 		}
 
 		namespace method
 		{
-            extern unsigned long long get;
-            extern unsigned long long post;
+            extern uint64_t get;
+            extern uint64_t post;
         }
 
 
@@ -77,19 +77,19 @@ namespace http
 
 		struct stunit
 		{
-			unsigned long long hits;
-			unsigned long long connections;
+			uint64_t hits;
+			uint64_t connections;
 
-			unsigned long long ulbytes;
-			unsigned long long dlbytes;
+			uint64_t ulbytes;
+			uint64_t dlbytes;
 		};
 
 		void manage();
 		void init();
 		void save();
 
-		void onrecv(unsigned long dlen);
-		void onsend(unsigned long ulen);
+		void onrecv(uint32_t dlen);
+		void onsend(uint32_t ulen);
 		void onconnect();
 		void onhit();
 
