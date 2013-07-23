@@ -78,6 +78,8 @@ NHS = \
 	$(NHD)/http/net/ssl/recive.cpp \
 	$(NHD)/http/net/ssl/send.cpp \
 	$(NHD)/http/net/ssl/start.cpp \
+	$(NHD)/http/stat/compability/0x0002.cpp \
+	$(NHD)/http/stat/compability/detect.cpp \
 	$(NHD)/http/stat/api.cpp \
 	$(NHD)/http/stat/data.cpp \
 	$(NHD)/http/stat/init.cpp \

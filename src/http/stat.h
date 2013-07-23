@@ -34,11 +34,10 @@ namespace http
         namespace info
         {
             extern bool toggle;
-            extern bool transfer;
-            extern bool hitlog;
-            extern bool method;
 
             extern int64_t hourlylen;
+            extern int64_t dailylen;
+            extern int64_t weeklylen;
         }
 
         namespace transfer
@@ -48,6 +47,12 @@ namespace http
 
             extern uint64_t *hrl_ul;
             extern uint64_t *hrl_dl;
+
+            extern uint64_t *dly_ul;
+            extern uint64_t *dly_dl;
+
+            extern uint64_t *wkl_ul;
+            extern uint64_t *wkl_dl;
         }
 
         namespace activity
@@ -57,6 +62,12 @@ namespace http
 
             extern uint64_t *hrl_hits;
             extern uint64_t *hrl_connections;
+
+            extern uint64_t *dly_hits;
+            extern uint64_t *dly_connections;
+
+            extern uint64_t *wkl_hits;
+            extern uint64_t *wkl_connections;
 		}
 
 		namespace method
@@ -65,8 +76,62 @@ namespace http
             extern uint64_t post;
         }
 
+        namespace websocket
+		{
+            extern uint64_t frames_recvd;
+            extern uint64_t msgs_recvd;
+
+            extern uint64_t frames_sent;
+            extern uint64_t msgs_sent;
+
+            extern uint64_t upload;
+            extern uint64_t download;
+
+            extern uint64_t connections;
+
+            extern uint64_t* dly_connections;
+
+            extern uint64_t* dly_upload;
+            extern uint64_t* dly_download;
+
+
+            extern uint64_t* hrl_msgs_sent;
+            extern uint64_t* hrl_msgs_recv;
+
+            extern uint64_t* dly_msgs_sent;
+            extern uint64_t* dly_msgs_recv;
+
+            extern uint64_t* wkl_msgs_sent;
+            extern uint64_t* wkl_msgs_recv;
+		}
+
+		namespace shttp
+		{
+            extern uint64_t recv_header_size;
+            extern uint64_t sent_header_size;
+
+            extern uint64_t postdata_size;
+
+            extern uint64_t* dly_postdata;
+
+            extern uint64_t* dly_recv_header_size;
+            extern uint64_t* dly_sent_header_size;
+		}
+
+		namespace session
+		{
+            extern uint64_t sessions_created;
+
+            extern uint64_t* dly_sessions_created;
+            extern uint64_t* wkl_sessions_created;
+
+            extern uint64_t* hrl_max_existing;
+		}
+
 
 		extern time_t lastHrlFlp;
+		extern time_t lastDlyFlp;
+		extern time_t lastWklFlp;
 		extern time_t lastSave;
 
 		extern time_t save_rate;
@@ -75,14 +140,95 @@ namespace http
 		extern string stfn;
 		extern bool managersafe;
 
-		struct stunit
+		namespace file
 		{
-			uint64_t hits;
-			uint64_t connections;
+            struct head
+            {
+                int64_t hourlylen;
+                int64_t dailylen;
+                int64_t weeklylen;
+            };
 
-			uint64_t ulbytes;
-			uint64_t dlbytes;
-		};
+            struct totals
+            {
+                uint64_t upload;
+                uint64_t download;
+
+                uint64_t hits;
+                uint64_t connections;
+
+                uint64_t req_get;
+                uint64_t req_post;
+
+                uint64_t ws_frames_rec;
+                uint64_t ws_frames_snt;
+
+                uint64_t ws_msgs_rec;
+                uint64_t ws_msgd_snd;
+
+                uint64_t ws_upload;
+                uint64_t ws_download;
+
+                uint64_t ws_connections;
+
+                uint64_t http_rec_head_size;
+                uint64_t http_snd_head_size;
+
+                uint64_t http_post_size;
+
+                uint64_t sess_created;
+            };
+
+            struct hourly
+            {
+                uint64_t upload;
+                uint64_t download;
+
+                uint64_t hits;
+                uint64_t connections;
+
+                uint64_t ws_msgs_recv;
+                uint64_t ws_msgs_sent;
+
+                uint64_t max_sessions;
+            };
+
+            struct daily
+            {
+                uint64_t upload;
+                uint64_t download;
+
+                uint64_t hits;
+                uint64_t connections;
+
+                uint64_t ws_connections;
+                uint64_t ws_upload;
+                uint64_t ws_download;
+                uint64_t ws_msgs_recv;
+                uint64_t ws_msgs_sent;
+
+                uint64_t postdata_size;
+                uint64_t http_recv_header_size;
+                uint64_t http_sent_header_size;
+
+                uint64_t sessions_created;
+
+            };
+
+            struct weekly
+            {
+                uint64_t upload;
+                uint64_t download;
+
+                uint64_t hits;
+                uint64_t connections;
+
+                uint64_t ws_msgs_recv;
+                uint64_t ws_msgs_sent;
+
+                uint64_t sessions_created;
+            };
+		}
 
 		void manage();
 		void init();

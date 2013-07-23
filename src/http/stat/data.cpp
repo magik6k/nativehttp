@@ -32,11 +32,11 @@ namespace http
         namespace info
         {
             bool toggle;
-            bool transfer;
-            bool hitlog;
-            bool method;
 
             int64_t hourlylen;
+            int64_t dailylen;
+            int64_t weeklylen;
+
 		}
 
         namespace transfer
@@ -46,6 +46,12 @@ namespace http
 
             uint64_t *hrl_ul;
             uint64_t *hrl_dl;
+
+            uint64_t *dly_ul;
+            uint64_t *dly_dl;
+
+            uint64_t *wkl_ul;
+            uint64_t *wkl_dl;
         }
 
         namespace activity
@@ -55,6 +61,12 @@ namespace http
 
             uint64_t *hrl_hits;
             uint64_t *hrl_connections;
+
+            uint64_t *dly_hits;
+            uint64_t *dly_connections;
+
+            uint64_t *wkl_hits;
+            uint64_t *wkl_connections;
         }
 
 
@@ -64,12 +76,66 @@ namespace http
             uint64_t post;
 		}
 
+		namespace websocket
+		{
+            uint64_t frames_recvd;
+            uint64_t msgs_recvd;
+
+            uint64_t frames_sent;
+            uint64_t msgs_sent;
+
+            uint64_t upload;
+            uint64_t download;
+
+            uint64_t connections;
+
+            uint64_t* dly_connections;
+
+            uint64_t* dly_upload;
+            uint64_t* dly_download;
+
+
+            uint64_t* hrl_msgs_sent;
+            uint64_t* hrl_msgs_recv;
+
+            uint64_t* dly_msgs_sent;
+            uint64_t* dly_msgs_recv;
+
+            uint64_t* wkl_msgs_sent;
+            uint64_t* wkl_msgs_recv;
+		}
+
+		namespace shttp
+		{
+            uint64_t recv_header_size;
+            uint64_t sent_header_size;
+
+            uint64_t postdata_size;
+
+            uint64_t* dly_postdata;
+
+            uint64_t* dly_recv_header_size;
+            uint64_t* dly_sent_header_size;
+		}
+
+		namespace session
+		{
+            uint64_t sessions_created;
+
+            uint64_t* dly_sessions_created;
+            uint64_t* wkl_sessions_created;
+
+            uint64_t* hrl_max_existing;
+		}
+
 		time_t lastHrlFlp;
+		time_t lastDlyFlp;
+		time_t lastWklFlp;
 		time_t lastSave;
 
 		time_t save_rate;
 
-		uint16_t filever = 0x0002;
+		uint16_t filever = 0x0003;
 		bool managersafe = true;
 		string stfn;
 
@@ -95,7 +161,7 @@ namespace http
 				if (time(0) - lastSave >= save_rate)
 				{
 					lastSave += save_rate;
-					http::statdata::save();
+					save();
 				}
 			}
 		}
@@ -112,26 +178,102 @@ namespace http
 				}
 				fwrite("NSF", 1, 3, stf);
 				fwrite(&filever, 2, 1, stf);
-				fwrite(&info::hourlylen, sizeof(int64_t), 1, stf);
 
-				fwrite(&method::get, sizeof(uint64_t), 1, stf);
-				fwrite(&method::post, sizeof(uint64_t), 1, stf);
+				{
+                    file::head head;
+                    head.hourlylen = info::hourlylen;
+                    head.dailylen = info::dailylen;
+                    head.weeklylen = info::weeklylen;
+                    fwrite(&head, sizeof(head), 1, stf);
+				}
 
-				stunit sd = {0, 0, 0, 0};
-				sd.hits = activity::hits;
-				sd.connections = activity::connections;
-				sd.ulbytes = transfer::ulbytes;
-				sd.dlbytes = transfer::dlbytes;
+                {
+                    file::totals total;
 
-				fwrite(&sd, sizeof(stunit), 1, stf);
+                    total.upload = transfer::ulbytes;
+                    total.download = transfer::dlbytes;
+
+                    total.hits = activity::hits;
+                    total.connections = activity::hits;
+
+                    total.req_get = method::get;
+                    total.req_post = method::post;
+
+                    total.ws_frames_rec = websocket::frames_recvd;
+                    total.ws_frames_snt = websocket::frames_sent;
+                    total.ws_msgs_rec = websocket::msgs_recvd;
+                    total.ws_msgd_snd = websocket::msgs_sent;
+                    total.ws_upload = websocket::upload;
+                    total.ws_download = websocket::download;
+                    total.ws_connections = websocket::connections;
+
+                    total.http_rec_head_size = shttp::recv_header_size;
+                    total.http_snd_head_size = shttp::sent_header_size;
+                    total.http_post_size = shttp::postdata_size;
+
+                    total.sess_created = session::sessions_created;
+
+                    fwrite(&total, sizeof(total), 1, stf);
+                }
+
 
 				for (int64_t i = 0LL; i < info::hourlylen; i++)
 				{
-					sd.hits = activity::hrl_hits[i];
-					sd.connections = activity::hrl_connections[i];
-					sd.ulbytes = transfer::hrl_ul[i];
-					sd.dlbytes = transfer::hrl_dl[i];
-					fwrite(&sd, sizeof(stunit), 1, stf);
+					file::hourly hour;
+					hour.upload = transfer::hrl_ul[i];
+					hour.download = transfer::hrl_dl[i];
+
+					hour.hits = activity::hrl_hits[i];
+					hour.connections = activity::hrl_connections[i];
+
+					hour.ws_msgs_recv = websocket::hrl_msgs_recv[i];
+					hour.ws_msgs_sent = websocket::hrl_msgs_sent[i];
+
+					hour.max_sessions = session::hrl_max_existing[i];
+
+					fwrite(&hour, sizeof(hour), 1, stf);
+				}
+
+				for (int64_t i = 0LL; i < info::dailylen; i++)
+				{
+					file::daily day;
+
+					day.upload = transfer::dly_ul[i];
+					day.download = transfer::dly_dl[i];
+
+					day.hits = activity::dly_hits[i];
+					day.connections = activity::dly_connections[i];
+
+                    day.ws_connections = websocket::dly_connections[i];
+                    day.ws_upload = websocket::dly_upload[i];
+                    day.ws_download = websocket::dly_download[i];
+					day.ws_msgs_recv = websocket::dly_msgs_recv[i];
+					day.ws_msgs_sent = websocket::dly_msgs_sent[i];
+
+					day.postdata_size = shttp::dly_postdata[i];
+					day.http_recv_header_size = shttp::dly_recv_header_size[i];
+					day.http_sent_header_size = shttp::dly_sent_header_size[i];
+
+					day.sessions_created = session::dly_sessions_created[i];
+
+					fwrite(&day, sizeof(day), 1, stf);
+				}
+
+				for (int64_t i = 0LL; i < info::weeklylen; i++)
+				{
+					file::weekly week;
+					week.upload = transfer::wkl_ul[i];
+					week.download = transfer::wkl_dl[i];
+
+					week.hits = activity::wkl_hits[i];
+					week.connections = activity::wkl_connections[i];
+
+					week.ws_msgs_recv = websocket::wkl_msgs_recv[i];
+					week.ws_msgs_sent = websocket::wkl_msgs_sent[i];
+
+					week.sessions_created = session::wkl_sessions_created[i];
+
+					fwrite(&week, sizeof(week), 1, stf);
 				}
 
 				fclose(stf);

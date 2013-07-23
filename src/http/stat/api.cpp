@@ -33,15 +33,15 @@ namespace nativehttp
 		}
 		extern "C" bool transfer_stats()
 		{
-			return http::statdata::info::transfer;
+			return http::statdata::info::toggle;//compability
 		}
 		extern "C" bool hit_stats()
 		{
-			return http::statdata::info::hitlog;
+			return http::statdata::info::toggle;//compability
 		}
 		extern "C" bool method_stats()
 		{
-			return http::statdata::info::method;
+			return http::statdata::info::toggle;//compability
 		}
 
 		extern "C" unsigned long long hits()

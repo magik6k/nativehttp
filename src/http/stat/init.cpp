@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "../stat.h"
+#include "compability/compability.h"
 #include "nativehttp.h"
 #include "protocol.h"
 
@@ -35,20 +36,56 @@ namespace http
 			size_t bm = getrsmem();
 #endif
 			http::statdata::info::toggle = cfg->get_int("statson");
-			http::statdata::info::transfer = cfg->get_int("transfer_stats");
-			http::statdata::info::hitlog = cfg->get_int("hits_stat");
+            if(!http::statdata::info::toggle)return;
+
 			http::statdata::info::hourlylen = cfg->get_int("hourly_length");
-			http::statdata::info::method = cfg->get_int("method_stats");
+			http::statdata::info::dailylen = cfg->get_int("daily_length");
+            http::statdata::info::weeklylen = cfg->get_int("weekly_length");
 
 			http::statdata::lastHrlFlp = time(0) + 5;
+			http::statdata::lastDlyFlp = time(0) + 5;
+			http::statdata::lastWklFlp = time(0) + 5;
 			http::statdata::lastSave = time(0) + 30;
 
 			http::statdata::save_rate = cfg->get_int("stat_save_rate") * 60;
 
+
 			http::statdata::activity::hrl_hits = new uint64_t[http::statdata::info::hourlylen];
 			http::statdata::activity::hrl_connections = new uint64_t[http::statdata::info::hourlylen];
+			http::statdata::activity::dly_hits = new uint64_t[http::statdata::info::dailylen];
+			http::statdata::activity::dly_connections = new uint64_t[http::statdata::info::dailylen];
+			http::statdata::activity::wkl_hits = new uint64_t[http::statdata::info::weeklylen];
+			http::statdata::activity::wkl_connections = new uint64_t[http::statdata::info::weeklylen];
+
+
 			http::statdata::transfer::hrl_dl = new uint64_t[http::statdata::info::hourlylen];
 			http::statdata::transfer::hrl_ul = new uint64_t[http::statdata::info::hourlylen];
+            http::statdata::transfer::dly_dl = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::transfer::dly_ul = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::transfer::wkl_dl = new uint64_t[http::statdata::info::weeklylen];
+            http::statdata::transfer::wkl_ul = new uint64_t[http::statdata::info::weeklylen];
+
+
+            http::statdata::websocket::dly_connections = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::websocket::dly_upload = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::websocket::dly_download = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::websocket::dly_msgs_sent = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::websocket::dly_msgs_recv = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::websocket::hrl_msgs_sent = new uint64_t[http::statdata::info::hourlylen];
+            http::statdata::websocket::hrl_msgs_recv = new uint64_t[http::statdata::info::hourlylen];
+            http::statdata::websocket::wkl_msgs_sent = new uint64_t[http::statdata::info::weeklylen];
+            http::statdata::websocket::wkl_msgs_recv = new uint64_t[http::statdata::info::weeklylen];
+
+
+            http::statdata::shttp::dly_postdata = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::shttp::dly_recv_header_size = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::shttp::dly_sent_header_size = new uint64_t[http::statdata::info::dailylen];
+
+
+            http::statdata::session::hrl_max_existing = new uint64_t[http::statdata::info::hourlylen];
+            http::statdata::session::dly_sessions_created = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::session::wkl_sessions_created = new uint64_t[http::statdata::info::weeklylen];
+
 
 			for (size_t i = 0; i < http::statdata::info::hourlylen; i++)
 			{
@@ -56,14 +93,65 @@ namespace http
 				http::statdata::activity::hrl_connections[i] = 0u;
 				http::statdata::transfer::hrl_dl[i] = 0u;
 				http::statdata::transfer::hrl_ul[i] = 0u;
+
+				http::statdata::websocket::hrl_msgs_sent[i] = 0u;
+				http::statdata::websocket::hrl_msgs_recv[i] = 0u;
+
+				http::statdata::session::hrl_max_existing[i] = 0u;
+			}
+
+			for (size_t i = 0; i < http::statdata::info::dailylen; i++)
+			{
+                http::statdata::activity::dly_hits[i] = 0u;
+                http::statdata::activity::dly_connections[i] = 0u;
+
+                http::statdata::transfer::dly_dl[i] = 0u;
+                http::statdata::transfer::dly_ul[i] = 0u;
+
+                http::statdata::websocket::dly_connections[i] = 0u;
+                http::statdata::websocket::dly_upload[i] = 0u;
+                http::statdata::websocket::dly_download[i] = 0u;
+                http::statdata::websocket::dly_msgs_sent[i] = 0u;
+                http::statdata::websocket::dly_msgs_recv[i] = 0u;
+
+                http::statdata::shttp::dly_postdata[i] = 0u;
+                http::statdata::shttp::dly_recv_header_size[i] = 0u;
+                http::statdata::shttp::dly_sent_header_size[i] = 0u;
+
+                http::statdata::session::dly_sessions_created[i] = 0u;
+			}
+
+			for (size_t i = 0; i < http::statdata::info::weeklylen; i++)
+			{
+                http::statdata::activity::wkl_hits[i] = 0u;
+                http::statdata::activity::wkl_connections[i] = 0u;
+
+                http::statdata::transfer::wkl_dl[i] = 0u;
+                http::statdata::transfer::wkl_ul[i] = 0u;
+
+                http::statdata::websocket::wkl_msgs_sent[i] = 0u;
+                http::statdata::websocket::wkl_msgs_recv[i] = 0u;
+
+                http::statdata::session::wkl_sessions_created[i] = 0u;
 			}
 
 			http::statdata::activity::hits = 0u;
 			http::statdata::activity::connections = 0u;
+
 			http::statdata::transfer::dlbytes = 0u;
 			http::statdata::transfer::ulbytes = 0u;
+
 			http::statdata::method::get = 0u;
 			http::statdata::method::post = 0u;
+
+			http::statdata::websocket::frames_recvd = 0u;
+			http::statdata::websocket::msgs_recvd = 0u;
+			http::statdata::websocket::frames_sent = 0u;
+			http::statdata::websocket::msgs_sent = 0u;
+			http::statdata::websocket::upload = 0u;
+			http::statdata::websocket::download = 0u;
+			http::statdata::websocket::connections = 0u;
+
 
 			if (!cfg->get_var("statfile").empty())
 			{
@@ -83,47 +171,100 @@ namespace http
 				fread(&tfv, 2, 1, stf);
 				if (tfv != filever)
 				{
-					nativehttp::server::log("init.cpp@stat", "Could not load stats due to old file format");
-					fclose(stf);
+					nativehttp::server::log("init.cpp@stat", "Trying to load stat file through compability module");
+					if(!compability::tryload(stf))
+                        nativehttp::server::log("init.cpp@stat", "Stat loading failed - new stat file will be generated!");
+                        else nativehttp::server::log("init.cpp@stat", "Old stat file loaded succesfully");
 					return;
 				}
 
-				int64_t thl = 0;
-				fread(&thl, sizeof(int64_t), 1, stf);
-				if (thl > info::hourlylen)thl = info::hourlylen;
+				file::head head;
+				file::totals total;
 
-				fread(&method::get, sizeof(uint64_t), 1, stf);
-				fread(&method::post, sizeof(uint64_t), 1, stf);
+				fread(&head,sizeof(head),1,stf);
+				fread(&total,sizeof(total),1,stf);
 
-				stunit sd = {0, 0, 0, 0};
+				transfer::ulbytes = total.upload;
+                transfer::dlbytes = total.download;
 
-				fread(&sd, sizeof(stunit), 1, stf);
+                activity::hits = total.hits;
+                activity::hits = total.connections;
 
-				activity::hits = sd.hits;
-				activity::connections = sd.connections;
-				transfer::ulbytes = sd.ulbytes;
-				transfer::dlbytes = sd.dlbytes;
+                method::get = total.req_get;
+                method::post = total.req_post;
 
-				for (int64_t i = 0; i < thl; i++)
+                websocket::frames_recvd = total.ws_frames_rec;
+                websocket::frames_sent = total.ws_frames_snt;
+                websocket::msgs_recvd = total.ws_msgs_rec;
+                websocket::msgs_sent = total.ws_msgd_snd;
+                websocket::upload = total.ws_upload;
+                websocket::download = total.ws_download;
+                websocket::connections = total.ws_connections;
+
+                shttp::recv_header_size = total.http_rec_head_size;
+                shttp::sent_header_size = total.http_snd_head_size;
+                shttp::postdata_size = total.http_post_size;
+
+                session::sessions_created = total.sess_created;
+
+
+				for(int64_t i=0;i<head.hourlylen&&i<info::hourlylen;i++)
 				{
-					fread(&sd, sizeof(stunit), 1, stf);
-					activity::hrl_hits[i] = sd.hits;
-					activity::hrl_connections[i] = sd.connections;
-					transfer::hrl_ul[i] = sd.ulbytes;
-					transfer::hrl_dl[i] = sd.dlbytes;
+                    file::hourly hour;
+                    fread(&hour,sizeof(hour),1,stf);
+
+                    transfer::hrl_ul[i] = hour.upload;
+					transfer::hrl_dl[i] = hour.download;
+
+					activity::hrl_hits[i] = hour.hits;
+					activity::hrl_connections[i] = hour.connections;
+
+					websocket::hrl_msgs_recv[i] = hour.ws_msgs_recv;
+					websocket::hrl_msgs_sent[i] = hour.ws_msgs_sent;
+
+					session::hrl_max_existing[i] = hour.max_sessions;
 				}
 
-				for (int64_t i = info::hourlylen - 2; i >= 0; i--)
+				for(int64_t i=0;i<head.dailylen&&i<info::dailylen;i++)
 				{
-					activity::hrl_hits[i + 1] = activity::hrl_hits[i];
-					activity::hrl_connections[i + 1] = activity::hrl_connections[i];
-					transfer::hrl_ul[i + 1] = transfer::hrl_ul[i];
-					transfer::hrl_dl[i + 1] = transfer::hrl_dl[i];
+                    file::daily day;
+                    fread(&day,sizeof(day),1,stf);
+
+                    transfer::dly_ul[i] = day.upload;
+					transfer::dly_dl[i] = day.download;
+
+					activity::dly_hits[i] = day.hits;
+					activity::dly_connections[i] = day.connections;
+
+                    websocket::dly_connections[i] = day.ws_connections;
+                    websocket::dly_upload[i] = day.ws_upload;
+                    websocket::dly_download[i] = day.ws_download;
+					websocket::dly_msgs_recv[i] = day.ws_msgs_recv;
+					websocket::dly_msgs_sent[i] = day.ws_msgs_sent;
+
+					shttp::dly_postdata[i] = day.postdata_size;
+					shttp::dly_recv_header_size[i] = day.http_recv_header_size;
+					shttp::dly_sent_header_size[i] = day.http_sent_header_size;
+
+					session::dly_sessions_created[i] = day.sessions_created;
 				}
-				activity::hrl_hits[0] = 0;
-				activity::hrl_connections[0] = 0;
-				transfer::hrl_ul[0] = 0;
-				transfer::hrl_dl[0] = 0;
+
+				for(int64_t i=0;i<head.weeklylen&&i<info::weeklylen;i++)
+				{
+                    file::weekly week;
+                    fread(&week,sizeof(week),1,stf);
+
+                    transfer::wkl_ul[i] = week.upload;
+					transfer::wkl_dl[i] = week.download;
+
+					activity::wkl_hits[i] = week.hits;
+					activity::wkl_connections[i] = week.connections ;
+
+					websocket::wkl_msgs_recv[i] = week.ws_msgs_recv;
+					websocket::wkl_msgs_sent[i] = week.ws_msgs_sent;
+
+					session::wkl_sessions_created[i] = week.sessions_created;
+				}
 
 				fclose(stf);
 			}

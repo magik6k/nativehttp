@@ -20,56 +20,32 @@ freely, subject to the following restrictions:
    3. This notice may not be removed or altered from any source
    distribution.
 */
-#include "../stat.h"
-#include "nativehttp.h"
+#ifndef COMPABILITY_H_INCLUDED
+#define COMPABILITY_H_INCLUDED
+#include "../../stat.h"
 
 namespace http
 {
 	namespace statdata
 	{
+        namespace compability
+        {
+            struct stunit
+            {
+                uint64_t hits;
+                uint64_t connections;
 
-		void onrecv(uint32_t dlen)
-		{
-			if (info::toggle)
-			{
-				transfer::dlbytes += dlen;
-				transfer::hrl_dl[0] += dlen;
-			}
-		}
-		void onsend(uint32_t ulen)
-		{
-			if (info::toggle)
-			{
-				transfer::ulbytes += ulen;
-				transfer::hrl_ul[0] += ulen;
-			}
-		}
-		void onconnect()
-		{
-			if (info::toggle)
-			{
-				activity::connections++;
-				activity::hrl_connections[0]++;
-			}
-		}
+                uint64_t ulbytes;
+                uint64_t dlbytes;
+            };
 
-		void onpost()
-		{
-			if (info::toggle)
-				method::post++;
-		}
-		void onget()
-		{
-			if (info::toggle)
-				method::get++;
-		}
-		void onhit()
-		{
-			if (info::toggle)
-			{
-				activity::hits++;
-				activity::hrl_hits[0]++;
-			}
-		}
+            bool tryload(FILE *sd);
+
+            bool load_0x0002(FILE *stf);
+        }
+
 	}
+
 }
+
+#endif //COMPABILITY_H_INCLUDED
