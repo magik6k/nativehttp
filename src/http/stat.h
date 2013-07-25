@@ -147,6 +147,8 @@ namespace http
                 int64_t hourlylen;
                 int64_t dailylen;
                 int64_t weeklylen;
+
+                int64_t reserved;
             };
 
             struct totals

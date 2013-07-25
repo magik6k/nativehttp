@@ -55,6 +55,21 @@ namespace http
 					activity::hrl_connections[i] = sd.connections;
 					transfer::hrl_ul[i] = sd.ulbytes;
 					transfer::hrl_dl[i] = sd.dlbytes;
+
+					if(thl/24 < info::dailylen)
+					{
+                        activity::dly_hits[i] += sd.hits;
+                        activity::dly_connections[i] += sd.connections;
+                        transfer::dly_ul[i] += sd.ulbytes;
+                        transfer::dly_dl[i] += sd.dlbytes;
+					}
+					if(thl/(24*7) < info::weeklylen)
+					{
+                        activity::wkl_hits[i] += sd.hits;
+                        activity::wkl_connections[i] += sd.connections;
+                        transfer::wkl_ul[i] += sd.ulbytes;
+                        transfer::wkl_dl[i] += sd.dlbytes;
+					}
 				}
 
 				for (int64_t i = info::hourlylen - 2; i >= 0; i--)
@@ -63,6 +78,22 @@ namespace http
 					activity::hrl_connections[i + 1] = activity::hrl_connections[i];
 					transfer::hrl_ul[i + 1] = transfer::hrl_ul[i];
 					transfer::hrl_dl[i + 1] = transfer::hrl_dl[i];
+				}
+
+				for (int64_t i = info::dailylen - 2; i >= 0; i--)
+				{
+					activity::dly_hits[i + 1] = activity::dly_hits[i];
+					activity::dly_connections[i + 1] = activity::dly_connections[i];
+					transfer::dly_ul[i + 1] = transfer::dly_ul[i];
+					transfer::dly_dl[i + 1] = transfer::dly_dl[i];
+				}
+
+				for (int64_t i = info::weeklylen - 2; i >= 0; i--)
+				{
+					activity::wkl_hits[i + 1] = activity::wkl_hits[i];
+					activity::wkl_connections[i + 1] = activity::wkl_connections[i];
+					transfer::wkl_ul[i + 1] = transfer::wkl_ul[i];
+					transfer::wkl_dl[i + 1] = transfer::wkl_dl[i];
 				}
 				activity::hrl_hits[0] = 0;
 				activity::hrl_connections[0] = 0;

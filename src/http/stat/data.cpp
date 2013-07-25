@@ -28,7 +28,6 @@ namespace http
 {
 	namespace statdata
 	{
-
         namespace info
         {
             bool toggle;
