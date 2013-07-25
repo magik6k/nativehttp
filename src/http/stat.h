@@ -148,7 +148,7 @@ namespace http
                 int64_t dailylen;
                 int64_t weeklylen;
 
-                int64_t reserved;
+                int64_t timesaved;
             };
 
             struct totals
@@ -235,6 +235,7 @@ namespace http
 		void manage();
 		void init();
 		void save();
+		void load();
 
 		void onrecv(uint32_t dlen);
 		void onsend(uint32_t ulen);

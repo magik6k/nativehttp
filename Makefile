@@ -84,6 +84,9 @@ NHS = \
 	$(NHD)/http/stat/data.cpp \
 	$(NHD)/http/stat/init.cpp \
 	$(NHD)/http/stat/internal.cpp \
+	$(NHD)/http/stat/load.cpp \
+	$(NHD)/http/stat/manage.cpp \
+	$(NHD)/http/stat/save.cpp \
 	$(NHD)/pagemap/pagemap.cpp \
 	$(NHD)/pagemap/init.cpp \
 	$(NHD)/pagemap/reload.cpp \
