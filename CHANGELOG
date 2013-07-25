@@ -5,6 +5,7 @@ DEV:
 -WebSockets - Changing callbacks at runtime
 -Sessions - option to get SessionID
 -SDL not needed anymore
+-NativeTest removed
 -Stat 3.0
 
 0107.13:

@@ -3,7 +3,6 @@
 #For more please visit nativehttp.org
 
 OUT = ./bin/nativehttp
-TOUT = ./bin/httptest
 STATOUT = ./bin/nativestat.so
 
 FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native
@@ -17,11 +16,7 @@ LIBS += -lssl
 LIBS += -lcrypto
 LIBS += -lrt
 
-TESTLIBS += $(LIBS)
-TESTLIBS += -lSDL_net
-
 NHD = ./src
-NHTD = ./testsrc
 STATD = ./nativestat/src
 
 NHS = \
@@ -111,9 +106,6 @@ NHS = \
 	$(NHD)/ws/msg_recive.cpp \
 	$(NHD)/ws/recive.cpp \
 	$(NHD)/ws/send.cpp
-
-NHTS = \
-	$(NHTD)/main.cpp
 STATS = \
 	$(STATD)/assets.cpp \
 	$(STATD)/dtg.cpp \
@@ -127,9 +119,8 @@ NHTO = $(NHTS:%.cpp=%.o)
 STATO = $(STATS:%.cpp=%.o)
 
 
-all: prepare nativehttp btest nativestat
+all: prepare nativehttp nativestat
 	$(CXX) $(FLAGS) $(NHO) $(LIBS) -o $(OUT)
-	$(CXX) $(FLAGS) $(NHTO) $(TESTLIBS) -o $(TOUT)
 	$(CXX) $(FLAGS) -shared -fPIC $(STATO) -o $(STATOUT)
 
 debug: prepare nativehttp_dbg
@@ -195,8 +186,6 @@ nativehttp_dbg: $(NHOD)
 
 nativehttp_fst: $(NHOF)
 
-btest: $(NHTO)
-
 nativestat: $(STATO)
 
 %.dbg.o: %.cpp
@@ -206,6 +195,6 @@ nativestat: $(STATO)
 	$(CXX) $(FLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(NHO) $(NHOD) $(NHOF) $(OUT) $(NHTO) $(TOUT) $(STATO) $(STATOUT) 
+	rm -f $(NHO) $(NHOD) $(NHOF) $(OUT) $(STATO) $(STATOUT) 
 	rm -rfv ./local
 
