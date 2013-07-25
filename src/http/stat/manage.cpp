@@ -28,11 +28,11 @@ namespace http
 	{
         void manage()
 		{
-			if (info::toggle && managersafe)
+			if (info::toggle && internal::managersafe)
 			{
-				if (time(0) - lastHrlFlp >= 3600)
+				if (time(0) - internal::lastHrlFlp >= 3600)
 				{
-					lastHrlFlp += 3600;
+					internal::lastHrlFlp += 3600;
 					for (int64_t i = info::hourlylen - 2LL; i >= 0; i--)
 					{
 						activity::hrl_hits[i + 1] = activity::hrl_hits[i];
@@ -60,9 +60,9 @@ namespace http
 					session::hrl_max_existing[0] = 0;
 				}
 
-				if (time(0) - lastDlyFlp >= 3600 * 24)
+				if (time(0) - internal::lastDlyFlp >= 3600 * 24)
 				{
-					lastDlyFlp += 3600 * 24;
+					internal::lastDlyFlp += 3600 * 24;
 					for (int64_t i = info::dailylen - 2LL; i >= 0; i--)
 					{
 						activity::dly_hits[i + 1] = activity::dly_hits[i];
@@ -106,9 +106,9 @@ namespace http
 					session::dly_sessions_created[0] = 0;
 				}
 
-				if (time(0) - lastWklFlp >= 3600 * 24 * 7)
+				if (time(0) - internal::lastWklFlp >= 3600 * 24 * 7)
 				{
-					lastWklFlp += 3600 * 24 * 7;
+					internal::lastWklFlp += 3600 * 24 * 7;
 					for (int64_t i = info::weeklylen - 2LL; i >= 0; i--)
 					{
 						activity::wkl_hits[i + 1] = activity::wkl_hits[i];
@@ -135,9 +135,9 @@ namespace http
                     session::wkl_sessions_created[0] = 0;
 				}
 
-				if (time(0) - lastSave >= save_rate)
+				if (time(0) - internal::lastSave >= internal::save_rate)
 				{
-					lastSave += save_rate;
+					internal::lastSave += internal::save_rate;
 					save();
 				}
 			}

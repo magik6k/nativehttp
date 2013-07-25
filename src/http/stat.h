@@ -128,17 +128,19 @@ namespace http
             extern uint64_t* hrl_max_existing;
 		}
 
+        namespace internal
+        {
+            extern time_t lastHrlFlp;
+            extern time_t lastDlyFlp;
+            extern time_t lastWklFlp;
+            extern time_t lastSave;
 
-		extern time_t lastHrlFlp;
-		extern time_t lastDlyFlp;
-		extern time_t lastWklFlp;
-		extern time_t lastSave;
+            extern time_t save_rate;
 
-		extern time_t save_rate;
-
-		extern uint16_t filever;
-		extern string stfn;
-		extern bool managersafe;
+            extern uint16_t filever;
+            extern string stfn;
+            extern bool managersafe;
+        }
 
 		namespace file
 		{

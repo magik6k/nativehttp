@@ -33,7 +33,7 @@ namespace http
         {
             if (!cfg->get_var("statfile").empty())
 			{
-				stfn = cfg->get_var("statfile");
+				internal::stfn = cfg->get_var("statfile");
 
 				FILE *stf = fopen(cfg->get_var("statfile").c_str(), "r");
 				if (!stf)return;
@@ -47,7 +47,7 @@ namespace http
 				}
 				uint16_t tfv = 0x0000;
 				fread(&tfv, 2, 1, stf);
-				if (tfv != filever)
+				if (tfv != internal::filever)
 				{
 					nativehttp::server::log("init.cpp@stat", "Trying to load stat file through compability module");
 					if(!compability::tryload(stf))

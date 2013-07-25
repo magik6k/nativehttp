@@ -127,17 +127,19 @@ namespace http
             uint64_t* hrl_max_existing;
 		}
 
-		time_t lastHrlFlp;
-		time_t lastDlyFlp;
-		time_t lastWklFlp;
-		time_t lastSave;
+        namespace internal
+        {
+            time_t lastHrlFlp;
+            time_t lastDlyFlp;
+            time_t lastWklFlp;
+            time_t lastSave;
 
-		time_t save_rate;
+            time_t save_rate;
 
-		uint16_t filever = 0x0003;
-		bool managersafe = true;
-		string stfn;
-
+            uint16_t filever = 0x0003;
+            bool managersafe = true;
+            string stfn;
+        }
 	}
 
 }

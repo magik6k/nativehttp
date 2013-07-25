@@ -28,16 +28,16 @@ namespace http
 	{
         void save()
 		{
-			if (!stfn.empty())
+			if (!internal::stfn.empty())
 			{
-				FILE *stf = fopen(stfn.c_str(), "w");
+				FILE *stf = fopen(internal::stfn.c_str(), "w");
 				if (!stf)
 				{
-					stfn.clear();
+					internal::stfn.clear();
 					return;
 				}
 				fwrite("NSF", 1, 3, stf);
-				fwrite(&filever, 2, 1, stf);
+				fwrite(&internal::filever, 2, 1, stf);
 
 				{
                     file::head head;

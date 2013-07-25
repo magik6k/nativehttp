@@ -39,12 +39,12 @@ namespace http
 			http::statdata::info::dailylen = cfg->get_int("daily_length");
             http::statdata::info::weeklylen = cfg->get_int("weekly_length");
 
-			http::statdata::lastHrlFlp = time(0) + 5;
-			http::statdata::lastDlyFlp = time(0) + 5;
-			http::statdata::lastWklFlp = time(0) + 5;
-			http::statdata::lastSave = time(0) + 30;
+			http::statdata::internal::lastHrlFlp = time(0) + 5;
+			http::statdata::internal::lastDlyFlp = time(0) + 5;
+			http::statdata::internal::lastWklFlp = time(0) + 5;
+			http::statdata::internal::lastSave = time(0) + 30;
 
-			http::statdata::save_rate = cfg->get_int("stat_save_rate") * 60;
+			http::statdata::internal::save_rate = cfg->get_int("stat_save_rate") * 60;
 
 
 			http::statdata::activity::hrl_hits = new uint64_t[http::statdata::info::hourlylen];

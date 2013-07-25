@@ -97,7 +97,7 @@ namespace http
 						case mgr_stat:
 							{
 								nativehttp::server::log("manager.cpp", "Disabling manager module Stat");
-								http::statdata::managersafe = false;
+								http::statdata::internal::managersafe = false;
 								break;
 							}
 						case mgr_sessions:
