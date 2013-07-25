@@ -58,8 +58,83 @@ namespace http
 					websocket::hrl_msgs_sent[0] = 0;
 
 					session::hrl_max_existing[0] = 0;
-
 				}
+
+				if (time(0) - lastDlyFlp >= 3600 * 24)
+				{
+					lastDlyFlp += 3600 * 24;
+					for (int64_t i = info::dailylen - 2LL; i >= 0; i--)
+					{
+						activity::dly_hits[i + 1] = activity::dly_hits[i];
+						activity::dly_connections[i + 1] = activity::dly_connections[i];
+
+						transfer::dly_ul[i + 1] = transfer::dly_ul[i];
+						transfer::dly_dl[i + 1] = transfer::dly_dl[i];
+
+						websocket::dly_msgs_recv[i + 1] = websocket::dly_msgs_recv[i];
+						websocket::dly_msgs_sent[i + 1] = websocket::dly_msgs_sent[i];
+
+						websocket::dly_connections[i + 1] = websocket::dly_connections[i];
+						websocket::dly_upload[i + 1] = websocket::dly_upload[i];
+						websocket::dly_download[i + 1] = websocket::dly_download[i];
+
+						shttp::dly_postdata[i + 1] = shttp::dly_postdata[i];
+                        shttp::dly_recv_header_size[i + 1] = shttp::dly_recv_header_size[i];
+                        shttp::dly_sent_header_size[i + 1] = shttp::dly_sent_header_size[i];
+
+						session::dly_sessions_created[i + 1] = session::dly_sessions_created[i];
+
+					}
+
+					activity::dly_hits[0] = 0;
+					activity::dly_connections[0] = 0;
+
+					transfer::dly_ul[0] = 0;
+					transfer::dly_dl[0] = 0;
+
+					websocket::dly_msgs_recv[0] = 0;
+					websocket::dly_msgs_sent[0] = 0;
+
+					websocket::dly_connections[0] = 0;
+					websocket::dly_upload[0] = 0;
+					websocket::dly_download[0] = 0;
+
+					shttp::dly_postdata[0] = 0;
+					shttp::dly_recv_header_size[0] = 0;
+					shttp::dly_sent_header_size[0] = 0;
+
+					session::dly_sessions_created[0] = 0;
+				}
+
+				if (time(0) - lastWklFlp >= 3600 * 24 * 7)
+				{
+					lastWklFlp += 3600 * 24 * 7;
+					for (int64_t i = info::weeklylen - 2LL; i >= 0; i--)
+					{
+						activity::wkl_hits[i + 1] = activity::wkl_hits[i];
+						activity::wkl_connections[i + 1] = activity::wkl_connections[i];
+
+						transfer::wkl_ul[i + 1] = transfer::wkl_ul[i];
+						transfer::wkl_dl[i + 1] = transfer::wkl_dl[i];
+
+						websocket::wkl_msgs_recv[i + 1] = websocket::wkl_msgs_recv[i];
+						websocket::wkl_msgs_sent[i + 1] = websocket::wkl_msgs_sent[i];
+
+						session::wkl_sessions_created[i + 1] = session::wkl_sessions_created[i];
+					}
+
+					activity::wkl_hits[0] = 0;
+					activity::wkl_connections[0] = 0;
+
+                    transfer::wkl_ul[0] = 0;
+                    transfer::wkl_dl[0] = 0;
+
+                    websocket::wkl_msgs_recv[0] = 0;
+                    websocket::wkl_msgs_sent[0] = 0;
+
+                    session::wkl_sessions_created[0] = 0;
+				}
+
 				if (time(0) - lastSave >= save_rate)
 				{
 					lastSave += save_rate;
