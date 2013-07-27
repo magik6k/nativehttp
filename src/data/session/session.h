@@ -59,6 +59,7 @@ namespace data
 			private:
 				session *data;
 				size_t scount;
+				size_t active;
 
 				nativehttp::data::session** byuid;
 

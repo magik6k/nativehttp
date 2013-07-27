@@ -34,6 +34,7 @@ void sdata::session::sstg::mng()
 				data[i].started = 0;
 				data[i].svid = 0;
 				data[i].data.free();
+				active--;
 			}
 		}
 	}

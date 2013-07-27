@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "ws.h"
 #include "http/net/net.h"
+#include "http/stat.h"
 #include <openssl/sha.h>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
@@ -91,6 +92,10 @@ namespace ws
                 if(ocs != NH_SUCCES)
                 {
                     http::kickclient(uid);
+                }
+                else
+                {
+                    http::statdata::on_ws_connect();
                 }
 
             }

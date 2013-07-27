@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "session.h"
 #include "http/data.h"
+#include "http/stat.h"
 
 namespace data
 {
@@ -107,6 +108,8 @@ namespace data
 			{
 				data[si].svid = scd;
 				data[si].started = time(0);
+				active++;
+				http::statdata::on_new_session(active);
 			}
 			else
 			{

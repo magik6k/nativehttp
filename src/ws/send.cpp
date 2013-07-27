@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "ws.h"
 #include "http/net/net.h"
+#include "http/stat.h"
 
 namespace ws
 {
@@ -105,6 +106,9 @@ namespace nativehttp
 
                 memcpy(sbuf + head_size, data, dsize);
 
+                http::statdata::on_ws_frame_send(dsize);
+                http::statdata::on_ws_msg_send();
+
                 ws::chunked_send(uid, sbuf, head_size + dsize);
                 delete[] sbuf;
 
@@ -180,6 +184,9 @@ namespace nativehttp
 
                 ws::chunked_send(uid, sbuf, head_size + dsize);
                 delete[] sbuf;
+
+                http::statdata::on_ws_frame_send(dsize);
+                http::statdata::on_ws_msg_send();
 
             }
             else
@@ -264,6 +271,9 @@ namespace nativehttp
                 ws::chunked_send(uid, sbuf, head_size + dsize);
                 delete[] sbuf;
 
+                http::statdata::on_ws_frame_send(dsize);
+                if(finalize)http::statdata::on_ws_msg_send();
+
             }
             else
             {
@@ -344,6 +354,9 @@ namespace nativehttp
 
                 ws::chunked_send(uid, sbuf, head_size + dsize);
                 delete[] sbuf;
+
+                http::statdata::on_ws_frame_send(dsize);
+                if(finalize)http::statdata::on_ws_msg_send();
 
             }
             else

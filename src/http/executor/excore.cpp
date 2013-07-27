@@ -112,6 +112,8 @@ namespace http
                         snd += "\r\n";
                         string snd2 = "\r\n";
 
+                        statdata::onhttpsend(snd.size());
+
                         pd.size = snd.size() + ts.size + snd2.size();
                         pd.data = new char[pd.size];
                         memcpy(pd.data, snd.c_str(), snd.size());

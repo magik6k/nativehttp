@@ -21,15 +21,18 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "ws.h"
+#include "http/stat.h"
 
 namespace ws
 {
     void msg_push(int uid, uint8_t opcode, bool fin, uint64_t frame_size, unsigned char* data)
     {
+        http::statdata::on_ws_frame_recv(frame_size);
         if(messages[uid].type == WS_MTYPE_NONE)
         {
             if(fin)
             {
+                http::statdata::on_ws_msg_recv();
                 if(opcode == 0x1)
                 {
                     if((*ws::units)[ws::client_unit[uid]].on_txt_msg)
@@ -96,6 +99,8 @@ namespace ws
                 messages[uid].len += frame_size;
                 delete[] messages[uid].data;
                 messages[uid].data = newbuf;
+
+                http::statdata::on_ws_msg_recv();
 
                 if(opcode == 0x1)
                 {
