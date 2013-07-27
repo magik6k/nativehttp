@@ -33,7 +33,9 @@ namespace http
 			if (info::toggle)
 			{
 				transfer::dlbytes += dlen;
-				transfer::hrl_dl[0] += dlen;
+				if(info::hourlylen)transfer::hrl_dl[0] += dlen;
+				if(info::dailylen)transfer::dly_dl[0] += dlen;
+				if(info::weeklylen)transfer::wkl_dl[0] += dlen;
 			}
 		}
 		void onsend(uint32_t ulen)
@@ -41,7 +43,9 @@ namespace http
 			if (info::toggle)
 			{
 				transfer::ulbytes += ulen;
-				transfer::hrl_ul[0] += ulen;
+				if(info::hourlylen)transfer::hrl_ul[0] += ulen;
+				if(info::dailylen)transfer::dly_ul[0] += ulen;
+				if(info::weeklylen)transfer::wkl_ul[0] += ulen;
 			}
 		}
 		void onconnect()
@@ -49,27 +53,117 @@ namespace http
 			if (info::toggle)
 			{
 				activity::connections++;
-				activity::hrl_connections[0]++;
+				if(info::hourlylen)activity::hrl_connections[0]++;
+				if(info::dailylen)activity::dly_connections[0]++;
+				if(info::weeklylen)activity::wkl_connections[0]++;
 			}
 		}
 
-		void onpost()
-		{
-			if (info::toggle)
-				method::post++;
-		}
-		void onget()
-		{
-			if (info::toggle)
-				method::get++;
-		}
-		void onhit()
+        void onhit(uint32_t headsize)
 		{
 			if (info::toggle)
 			{
 				activity::hits++;
-				activity::hrl_hits[0]++;
+				shttp::recv_header_size+=headsize;
+				if(info::dailylen)shttp::dly_recv_header_size+=headsize;
+
+				if(info::hourlylen)activity::hrl_hits[0]++;
+				if(info::dailylen)activity::dly_hits[0]++;
+				if(info::weeklylen)activity::dly_hits[0]++;
 			}
 		}
+
+		void onpost(uint32_t datasize)
+		{
+			if (info::toggle)
+			{
+				method::post++;
+
+                shttp::postdata_size+=datasize;
+                if(info::dailylen)shttp::dly_postdata[0]+=datasize;
+            }
+		}
+
+		void onget()
+		{
+			if (info::toggle)
+			{
+                method::get++;
+			}
+		}
+
+        void onhttpsend(uint32_t headsize)
+        {
+            if(info::toggle)
+            {
+                shttp::sent_header_size+=headsize;
+                if(info::dailylen)shttp::dly_sent_header_size[0]+=headsize;
+            }
+        }
+
+        void on_ws_frame_recv(uint32_t size)
+        {
+            if(info::toggle)
+            {
+                websocket::frames_recvd++;
+                websocket::download+=size;
+                if(info::dailylen)websocket::dly_download[0]+=size;
+            }
+        }
+
+        void on_ws_frame_send(uint32_t size)
+        {
+            if(info::toggle)
+            {
+                websocket::frames_sent++;
+                websocket::upload+=size;
+                if(info::dailylen)websocket::dly_upload[0]+=size;
+            }
+        }
+
+        void on_ws_connect()
+        {
+            if(info::toggle)
+            {
+                websocket::connections++;
+                if(info::dailylen)websocket::dly_connections[0]++;
+            }
+        }
+
+        void on_ws_msg_send()
+        {
+            if(info::toggle)
+            {
+                websocket::msgs_sent++;
+                if(info::hourlylen)websocket::hrl_msgs_sent[0]++;
+                if(info::dailylen)websocket::dly_msgs_sent[0]++;
+                if(info::weeklylen)websocket::wkl_msgs_sent[0]++;
+            }
+        }
+
+        void on_ws_msg_recv()
+        {
+            if(info::toggle)
+            {
+                websocket::msgs_recvd++;
+                if(info::hourlylen)websocket::hrl_msgs_recv[0]++;
+                if(info::dailylen)websocket::dly_msgs_recv[0]++;
+                if(info::weeklylen)websocket::wkl_msgs_recv[0]++;
+            }
+        }
+
+        void on_new_session(uint64_t active)
+        {
+            if(info::toggle)
+            {
+                session::sessions_created++;
+                if(info::dailylen)session::dly_sessions_created[0]++;
+                if(info::weeklylen)session::wkl_sessions_created[0]++;
+                if(info::hourlylen)
+                    if(session::hrl_max_existing[0]<active)
+                        session::hrl_max_existing[0] = active;
+            }
+        }
+
 	}
 }

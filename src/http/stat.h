@@ -241,11 +241,21 @@ namespace http
 
 		void onrecv(uint32_t dlen);
 		void onsend(uint32_t ulen);
-		void onconnect();
-		void onhit();
 
-		void onpost();
+		void onconnect();
+		void onhit(uint32_t headsize);
+		void onhttpsend(uint32_t headsize);
+
+		void onpost(uint32_t datasize);
 		void onget();
+
+		void on_ws_frame_recv(uint32_t size);
+		void on_ws_frame_send(uint32_t size);
+		void on_ws_connect();
+		void on_ws_msg_send();
+		void on_ws_msg_recv();
+
+		void on_new_session(uint64_t active);
 
 	}
 }

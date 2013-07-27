@@ -75,6 +75,7 @@ namespace http
             {
                 nativehttp::data::token pt = hss.tok();
                 if (pt.id == 0)break;
+
                 switch (pt.id)
                 {
                     case -1:
@@ -139,6 +140,7 @@ namespace http
                 }
             }
 
+            http::statdata::onhit(hss.pos);
             hss.str.clear();
         }
 

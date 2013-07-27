@@ -53,7 +53,6 @@ namespace http
         {
 
             http::request *process = http::rproc::get_proc(exc);
-            http::statdata::onhit();
 
             #ifdef NHDBG
 
@@ -85,9 +84,6 @@ namespace http
             {
                 case 1:
                     http::statdata::onget();
-                    break;
-                case 2:
-                    http::statdata::onpost();
                     break;
             }
 
@@ -217,6 +213,9 @@ namespace http
                     delete process;
                     continue;
                 }
+
+                http::statdata::onpost(ld.clen);
+
                 exc->fd1 = rd.cookie;
                 exc->fd2 = rd.get;
                 exc->state = time(0);
