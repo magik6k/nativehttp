@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 15
+#define NATIVEHTTP_API_VERSION 16
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -429,25 +429,68 @@ namespace nativehttp
 
 		namespace stat
 		{
-			extern "C" bool stats();
-			extern "C" bool transfer_stats();
-			extern "C" bool hit_stats();
-			extern "C" bool method_stats();
 
-			extern "C" unsigned long long hits();
-			extern "C" unsigned long long connections();
-			extern "C" unsigned long long uploaded();
-			extern "C" unsigned long long downloaded();
+#define NH_STAT_YES     1
+#define NH_STAT_NO      0
+#define NH_STAT_ERROR   18446744073709551615ULL //2^64-1
+			bool enabled();
 
-			extern "C" unsigned long long get_requests();
-			extern "C" unsigned long long post_requests();
+            enum unit
+            {
+                len_hourly = 0,
+                len_daily,
+                len_weekly,
 
-			extern "C" unsigned long long hourly_length();
+                upload,
+                download,
+                upload_hourly,
+                download_hourly,
+                upload_daily,
+                download_daily,
+                upload_weekly,
+                download_weekly,
 
-			extern "C" unsigned long long hour_hits(unsigned long hid);
-			extern "C" unsigned long long hour_connections(unsigned long hid);
-			extern "C" unsigned long long hour_upload(unsigned long hid);
-			extern "C" unsigned long long hour_download(unsigned long hid);
+                requests,
+                connections,
+                requests_hourly,
+                connections_hourly,
+                requests_daily,
+                connections_daily,
+                requests_weekly,
+                connections_weekly,
+
+                requests_get,
+                requests_post,
+
+                ws_upload,
+                ws_download,
+                ws_handshakes,
+                ws_frames_received,
+                ws_frames_sent,
+                ws_messages_received,
+                ws_messages_sent,
+                ws_messages_received_hourly,
+                ws_messages_sent_hourly,
+                ws_messages_received_daily,
+                ws_messages_sent_daily,
+                ws_messages_received_weekly,
+                ws_messages_sent_weekly,
+
+                http_head_size_received,
+                http_head_size_sent,
+                http_postdata_size,
+                http_postdata_size_daily,
+                http_head_size_received_daily,
+                http_head_size_sent_daily,
+
+                sessions_created,
+                sessions_created_daily,
+                sessions_created_weekly,
+                sessions_max_existing_hourly
+            };
+
+			uint64_t get(unit value);
+            uint64_t get(unit value, int column);
 
 		}
 	}
