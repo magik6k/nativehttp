@@ -28,7 +28,6 @@ freely, subject to the following restrictions:
 #include <iostream>
 #endif
 
-
 void page_mapper::page_mapper_init(string d)
 {
 	mapdir(d);
@@ -60,6 +59,11 @@ void page_mapper::page_mapper_init(string d)
 		{
 			load_file(tmp, files[i], d);
 		}
+	}
+	if(abort)
+	{
+        nativehttp::server::err("init.cpp@pagemap","Stopping due to loading errors");
+        exit(1);
 	}
 }
 

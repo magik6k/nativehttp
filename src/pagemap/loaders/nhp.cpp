@@ -77,14 +77,21 @@ string page_mapper::nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf)
 		cerr << "CAN'T OPEN " << cfg->get_var("cppcmp").c_str() << endl;
 	}
 	char b[256];
+	string cmout;
 	while (fgets(b, 256, cmp) != NULL)
 	{
+        cmout+=b;
 		if (shw)
 		{
 			cout << b;
 		}
 	}
-	pclose(cmp);
+	if(pclose(cmp)!=0)
+	{
+        nativehttp::server::err("nhp.cpp@pagemap","NHP compilation failed: "+string(f)+", output above");
+        abort = true;
+	}
+	cmout.clear();
 	return ("/tmp/nativehttp/nhpage_" + pname + ".so");
 
 }

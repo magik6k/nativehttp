@@ -92,6 +92,7 @@ class page_mapper
 		bool nhp_prepare_env(const char *f, FILE*& nhpf, FILE*& tmf);
 		string nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf);
 
+		bool abort;
 
 	public:
 		void preinit();

@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 void page_mapper::preinit()
 {
 	base = new data::vector<page>(cfg->get_int("pagebase_max"));
+	abort = false;
 }
 
 page page_mapper::bscpageset(char *f)
@@ -37,7 +38,7 @@ page page_mapper::bscpageset(char *f)
 	int rst = stat(f, &tst);
 	if (rst != 0)
 	{
-		nativehttp::server::log("pagemap.cpp:init", "stat error");
+		nativehttp::server::err("pagemap.cpp@pagemap", "stat error");
 		tmp.type = -1;
 		return tmp;
 	}

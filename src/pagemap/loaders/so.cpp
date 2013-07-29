@@ -54,23 +54,25 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 			{
 				if (initstate != -NATIVEHTTP_API_VERSION)
 				{
-					nativehttp::server::log("SO.loader@pagemap", "API version invalid: " + (nhp ? string(nhp) : string(f)));
+					nativehttp::server::err("SO.loader@pagemap", "API version invalid: " + (nhp ? string(nhp) : string(f)));
 					dlclose(ntm->handle);
 					delete ntm;
+					abort = true;
 				}
 			}
 			else if (initstate == 1)
 			{
-#ifdef NHDBG
-				nativehttp::server::log("SO.loader@pagemap", "page loaded, but no API info were provided: " + (nhp ? string(nhp) : string(f)));
-#endif
-				initstate = -NATIVEHTTP_API_VERSION;
+                nativehttp::server::err("SO.loader@pagemap", "No API version info: " + (nhp ? string(nhp) : string(f)));
+                dlclose(ntm->handle);
+                delete ntm;
+                abort = true;
 			}
 			else
 			{
-				nativehttp::server::log("SO.loader@pagemap", "Page loading error(" + nativehttp::data::superstring::str_from_int(initstate - 2) + "): " + (nhp ? string(nhp) : string(f)));
+				nativehttp::server::err("SO.loader@pagemap", "Page loading error(" + nativehttp::data::superstring::str_from_int(initstate - 2) + "): " + (nhp ? string(nhp) : string(f)));
 				dlclose(ntm->handle);
 				delete ntm;
+				abort = true;
 			}
 
 			if (initstate == -NATIVEHTTP_API_VERSION)
