@@ -75,7 +75,7 @@ namespace nativehttp
 		if (!deamonized)
 		{
             if(http::logger_colors)
-                cerr << "[\x1b[31m" << lname.c_str() << "\x1b[0m]\x1b[35m" << value.c_str() << "\x1b[30m\n";
+                cerr << "[\x1b[31m" << lname.c_str() << "\x1b[0m]\x1b[35m" << value.c_str() << "\x1b[0m\n";
             else
                 cerr << "[" << lname.c_str() << "]" << value.c_str() << endl;
 		}

@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 #ifndef MEMORY_H_INCLUDED
 #define MEMORY_H_INCLUDED
 #include <sys/types.h>
+#include "nativehttp.h"
 namespace utils
 {
 	namespace memory
@@ -31,6 +32,22 @@ namespace utils
 #ifdef NHDBG
 		void printmemsize(int64_t mem);
 #endif
+
+        template<class T>T* alloc(size_t amount)
+        {
+            if(amount<=0)
+            {
+                nativehttp::server::err("alloc@memory.h","Could not allocate 0 or less elements");
+                exit(1);
+            }
+            T* tmptr = new T[amount];
+            if(!tmptr)
+            {
+                nativehttp::server::err("alloc@memory.h","Allocation failed(out of memory?)");
+                exit(1);
+            }
+            return tmptr;
+        }
 	}
 }
 

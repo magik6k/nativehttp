@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "ws.h"
 #include "protocol.h"
+#include "utils/memory.h"
 
 namespace ws
 {
@@ -43,14 +44,14 @@ namespace ws
             ws::maxframesize = cfg->get_int("ws_in_frame_max");
             ws::maxmsgsize = cfg->get_int("ws_in_msg_buf");
 
-            ws::client_unit = new int[http::maxConnections];
-            ws::stream_state = new uint8_t[http::maxConnections];
+            ws::client_unit = utils::memory::alloc<int>(http::maxConnections);
+            ws::stream_state = utils::memory::alloc<uint8_t>(http::maxConnections);
 
             ws::max_sender_chunk = cfg->get_int("ws_sender_chunk");
             ws::max_sendable = cfg->get_int("ws_send_max");
 
-            ws::frames = new ws::framebuf[http::maxConnections];
-            ws::messages = new ws::msgbuf[http::maxConnections];
+            ws::frames = utils::memory::alloc<ws::framebuf>(http::maxConnections);
+            ws::messages = utils::memory::alloc<ws::msgbuf>(http::maxConnections);
 
             for(int i=0;i<http::maxConnections;i++)
             {

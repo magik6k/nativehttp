@@ -36,14 +36,14 @@ namespace utils
         nhf.set_file(nhf.str);
         if(nhf.size()<=0)
         {
-            nativehttp::server::log("version.cpp@utils","nativehttp.h DOES NOT EXIST");
+            nativehttp::server::err("version.cpp@utils","nativehttp.h DOES NOT EXIST");
         }
         nhf.to("#define NATIVEHTTP_API_VERSION ");
         if(nativehttp::data::superstring::int_from_str(nhf.lock().tochar("\r\n"))==NATIVEHTTP_API_VERSION)
             return true;
         else
         {
-            nativehttp::server::log("version.cpp@utils","[ERROR]Version of nativehttp.h INVALID("+
+            nativehttp::server::err("version.cpp@utils","[ERROR]Version of nativehttp.h INVALID("+
                 nhf.tochar("\r\n")+"!="+
                 nativehttp::data::superstring::str_from_int(NATIVEHTTP_API_VERSION)+")");
             nativehttp::server::log("version.cpp@utils","[NOTE]The header file is set to: "+tnfile);

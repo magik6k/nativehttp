@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "ws.h"
 #include "data/queue.h"
+#include "utils/memory.h"
 
 #define WOP_CNT 0
 #define WOP_TXT 1
@@ -140,7 +141,7 @@ namespace ws
                         continue;
                     }
 
-                    ws::frames[uid].fdata = new unsigned char[ws::frames[uid].frame_size+1];
+                    ws::frames[uid].fdata = utils::memory::alloc<unsigned char>(ws::frames[uid].frame_size+1);
                     ws::frames[uid].recived = 0;
 
                     if(ws::frames[uid].mask)

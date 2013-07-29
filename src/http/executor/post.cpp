@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "../data.h"
 #include "../stat.h"
 #include "../net/net.h"
+#include "utils/memory.h"
 
 #ifdef NHDBG
 #include "utils/memory.h"
@@ -64,7 +65,7 @@ namespace http
                     nativehttp::server::log("post.cpp@http","Waiting for "+
                         nativehttp::data::superstring::str_from_size(ltrv) + " of POST Data");
 				#endif
-				char *tv = new char[ltrv + 1];
+				char *tv = utils::memory::alloc<char>(ltrv + 1);
 				unsigned int ar = 0;
 				while (0 < ltrv)
 				{

@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include "net/net.h"
 #include <stdio.h>
-
+#include "utils/memory.h"
 
 namespace http
 {
@@ -56,7 +56,7 @@ namespace http
                                     http::shq[i].fd = -1;
                                     break;
                                 }
-                                http::shq[i].buf = new char[http::fsnd_fb_size];
+                                http::shq[i].buf = utils::memory::alloc<char>(http::fsnd_fb_size);
 
                                 struct stat fst;
                                 fstat(http::shq[i].fd, &fst);
@@ -80,7 +80,7 @@ namespace http
                                 snd += nativehttp::data::superstring::str_from_int64(fst.st_size);
                                 snd += "\r\n\r\n";
 
-                                char* hdbuf = new char[snd.size()];
+                                char* hdbuf = utils::memory::alloc<char>(snd.size());
                                 memcpy(hdbuf, snd.c_str(), snd.size());
 
                                 #ifdef NHDBG
@@ -141,7 +141,7 @@ namespace http
                                     http::shq[i].fd = -1;
                                     break;
                                 }
-                                char* tdt = new char[brd];
+                                char* tdt = utils::memory::alloc<char>(brd);
                                 memcpy(tdt, http::shq[i].buf, brd);
 
                                 http::send(http::shq[i].uid, brd, tdt, true);

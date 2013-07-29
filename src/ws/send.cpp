@@ -23,6 +23,9 @@ freely, subject to the following restrictions:
 #include "ws.h"
 #include "http/net/net.h"
 #include "http/stat.h"
+#include "utils/memory.h"
+
+namespace mutl = utils::memory;
 
 namespace ws
 {
@@ -32,7 +35,7 @@ namespace ws
         {
             uint64_t sna = dsize - i;
             if(sna > ws::max_sender_chunk)sna = ws::max_sender_chunk;
-            unsigned char* stmp = new unsigned char[sna];
+            unsigned char* stmp = utils::memory::alloc<unsigned char>(sna);
             memcpy(stmp, data, sna);
             http::send(uid, sna, (const char*)stmp, true);
         }
@@ -62,7 +65,7 @@ namespace nativehttp
                 if(dsize > 125)head_size+=2;
                 if(dsize > 65535)head_size+=6;//2+6 = 8
 
-                unsigned char* sbuf = new unsigned char[head_size + dsize];
+                unsigned char* sbuf = mutl::alloc<unsigned char>(head_size + dsize);
                 sbuf[0] = 0b10000010;
 
                 if(dsize < 126)
@@ -138,7 +141,7 @@ namespace nativehttp
                 if(dsize > 125)head_size+=2;
                 if(dsize > 65535)head_size+=6;//2+6 = 8
 
-                unsigned char* sbuf = new unsigned char[head_size + dsize];
+                unsigned char* sbuf = mutl::alloc<unsigned char>(head_size + dsize);
                 sbuf[0] = 0b10000001;
 
                 if(dsize < 126)
@@ -221,7 +224,7 @@ namespace nativehttp
                 if(dsize > 125)head_size+=2;
                 if(dsize > 65535)head_size+=6;//2+6 = 8
 
-                unsigned char* sbuf = new unsigned char[head_size + dsize];
+                unsigned char* sbuf = mutl::alloc<unsigned char>(head_size + dsize);
                 if(!cnt)sbuf[0] = 0b00000010;
                     else sbuf[0] = 0b00000000;
 
@@ -305,7 +308,7 @@ namespace nativehttp
                 if(dsize > 125)head_size+=2;
                 if(dsize > 65535)head_size+=6;//2+6 = 8
 
-                unsigned char* sbuf = new unsigned char[head_size + dsize];
+                unsigned char* sbuf = mutl::alloc<unsigned char>(head_size + dsize);
                 if(!cnt)sbuf[0] = 0b00000001;
                     else sbuf[0] = 0b00000000;
 

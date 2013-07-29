@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "ws.h"
 #include "http/stat.h"
+#include "utils/memory.h"
 
 namespace ws
 {
@@ -54,7 +55,7 @@ namespace ws
                 }
                 messages[uid].type = opcode;
                 messages[uid].len = frame_size;
-                messages[uid].data = new unsigned char[frame_size];
+                messages[uid].data = utils::memory::alloc<unsigned char>(frame_size);
                 memcpy(messages[uid].data,data,frame_size);
             }
         }
@@ -74,7 +75,7 @@ namespace ws
                     ws::disconnect(uid);
                     return;
                 }
-                unsigned char* newbuf = new unsigned char[messages[uid].len + frame_size];
+                unsigned char* newbuf = utils::memory::alloc<unsigned char>(messages[uid].len + frame_size);
 
                 memcpy(newbuf, messages[uid].data, messages[uid].len);
                 memcpy(newbuf + messages[uid].len, data, frame_size);
@@ -91,7 +92,7 @@ namespace ws
                     ws::disconnect(uid);
                     return;
                 }
-                unsigned char* newbuf = new unsigned char[messages[uid].len + frame_size];
+                unsigned char* newbuf = utils::memory::alloc<unsigned char>(messages[uid].len + frame_size);
 
                 memcpy(newbuf, messages[uid].data, messages[uid].len);
                 memcpy(newbuf + messages[uid].len, data, frame_size);

@@ -21,7 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "error.h"
-
+#include "utils/memory.h"
 
 namespace http
 {
@@ -41,7 +41,7 @@ namespace http
 				epc += "\r\n\r\n";
 				unsigned int rs = rt.size;
 				rt.size += epc.size() + 3; //3 = "\r\n\0"
-				rt.data = new char[rt.size];
+				rt.data = utils::memory::alloc<char>(rt.size);
 				memcpy(rt.data, epc.c_str(), epc.size());
 				fread(rt.data + epc.size(), 1, rs, f);
 				rt.data[rt.size - 3] = '\r';

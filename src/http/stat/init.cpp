@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "../stat.h"
 #include "protocol.h"
+#include "utils/memory.h"
 
 namespace http
 {
@@ -47,41 +48,41 @@ namespace http
 			http::statdata::internal::save_rate = cfg->get_int("stat_save_rate") * 60;
 
 
-			http::statdata::activity::hrl_hits = new uint64_t[http::statdata::info::hourlylen];
-			http::statdata::activity::hrl_connections = new uint64_t[http::statdata::info::hourlylen];
-			http::statdata::activity::dly_hits = new uint64_t[http::statdata::info::dailylen];
-			http::statdata::activity::dly_connections = new uint64_t[http::statdata::info::dailylen];
-			http::statdata::activity::wkl_hits = new uint64_t[http::statdata::info::weeklylen];
-			http::statdata::activity::wkl_connections = new uint64_t[http::statdata::info::weeklylen];
+			http::statdata::activity::hrl_hits = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+			http::statdata::activity::hrl_connections = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+			http::statdata::activity::dly_hits = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+			http::statdata::activity::dly_connections = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+			http::statdata::activity::wkl_hits = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
+			http::statdata::activity::wkl_connections = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
 
 
-			http::statdata::transfer::hrl_dl = new uint64_t[http::statdata::info::hourlylen];
-			http::statdata::transfer::hrl_ul = new uint64_t[http::statdata::info::hourlylen];
-            http::statdata::transfer::dly_dl = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::transfer::dly_ul = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::transfer::wkl_dl = new uint64_t[http::statdata::info::weeklylen];
-            http::statdata::transfer::wkl_ul = new uint64_t[http::statdata::info::weeklylen];
+			http::statdata::transfer::hrl_dl = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+			http::statdata::transfer::hrl_ul = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+            http::statdata::transfer::dly_dl = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::transfer::dly_ul = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::transfer::wkl_dl = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
+            http::statdata::transfer::wkl_ul = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
 
 
-            http::statdata::websocket::dly_connections = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::websocket::dly_upload = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::websocket::dly_download = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::websocket::dly_msgs_sent = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::websocket::dly_msgs_recv = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::websocket::hrl_msgs_sent = new uint64_t[http::statdata::info::hourlylen];
-            http::statdata::websocket::hrl_msgs_recv = new uint64_t[http::statdata::info::hourlylen];
-            http::statdata::websocket::wkl_msgs_sent = new uint64_t[http::statdata::info::weeklylen];
-            http::statdata::websocket::wkl_msgs_recv = new uint64_t[http::statdata::info::weeklylen];
+            http::statdata::websocket::dly_connections = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::websocket::dly_upload = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::websocket::dly_download = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::websocket::dly_msgs_sent = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::websocket::dly_msgs_recv = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::websocket::hrl_msgs_sent = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+            http::statdata::websocket::hrl_msgs_recv = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+            http::statdata::websocket::wkl_msgs_sent = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
+            http::statdata::websocket::wkl_msgs_recv = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
 
 
-            http::statdata::shttp::dly_postdata = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::shttp::dly_recv_header_size = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::shttp::dly_sent_header_size = new uint64_t[http::statdata::info::dailylen];
+            http::statdata::shttp::dly_postdata = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::shttp::dly_recv_header_size = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::shttp::dly_sent_header_size = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
 
 
-            http::statdata::session::hrl_max_existing = new uint64_t[http::statdata::info::hourlylen];
-            http::statdata::session::dly_sessions_created = new uint64_t[http::statdata::info::dailylen];
-            http::statdata::session::wkl_sessions_created = new uint64_t[http::statdata::info::weeklylen];
+            http::statdata::session::hrl_max_existing = utils::memory::alloc<uint64_t>(http::statdata::info::hourlylen);
+            http::statdata::session::dly_sessions_created = utils::memory::alloc<uint64_t>(http::statdata::info::dailylen);
+            http::statdata::session::wkl_sessions_created = utils::memory::alloc<uint64_t>(http::statdata::info::weeklylen);
 
 
 			for (size_t i = 0; i < http::statdata::info::hourlylen; i++)

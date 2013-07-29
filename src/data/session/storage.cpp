@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 #include "session.h"
 #include "http/data.h"
 #include "http/stat.h"
+#include "utils/memory.h"
 
 namespace data
 {
@@ -46,7 +47,7 @@ namespace data
 		void sstg::allocsessions()
 		{
 			size_t nsize = scount + 3;
-			session *tsp = new session[nsize];
+			session *tsp = utils::memory::alloc<session>(nsize);
 			if (!tsp)return;
 			size_t i;
 			for (i = 0; i < scount; i++)
@@ -67,8 +68,8 @@ namespace data
 
 		void sstg::prealloc(size_t amnt)
 		{
-			data = new session[amnt];
-			byuid = new nativehttp::data::session*[http::maxConnections];
+			data = utils::memory::alloc<session>(amnt);
+			byuid = utils::memory::alloc<nativehttp::data::session*>(http::maxConnections);
 
 			if (!data)return;
 

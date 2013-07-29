@@ -35,6 +35,7 @@ freely, subject to the following restrictions:
 #include "utils/version.h"
 #include "protocol.h"
 #include "ws/ws.h"
+#include "utils/memory.h"
 #ifdef NHDBG
 #include <iostream>
 #endif
@@ -63,33 +64,35 @@ namespace http
 		http::maxConnections = cfg->get_int("maxconnections");
 		http::maxPost = cfg->get_int("max_post");
 
-		http::connected = new SOCKET[http::maxConnections];
-		http::ulock = new bool[http::maxConnections];
-		http::client_ips = new uint32_t[http::maxConnections];
-		http::sslsck = new SSL*[http::maxConnections];
-		http::client_protocol = new uint8_t[http::maxConnections];
-		http::client_prot_data = new uint32_t[http::maxConnections];
-		http::packets_sent = new uint64_t[http::maxConnections];
-		http::packets_to_send = new uint64_t[http::maxConnections];
+		http::connected = utils::memory::alloc<SOCKET>(http::maxConnections);
+		http::ulock = utils::memory::alloc<bool>(http::maxConnections);
+		http::client_ips = utils::memory::alloc<uint32_t>(http::maxConnections);
+		http::client_protocol = utils::memory::alloc<uint8_t>(http::maxConnections);
+		http::client_prot_data = utils::memory::alloc<uint32_t>(http::maxConnections);
+		http::packets_sent = utils::memory::alloc<uint64_t>(http::maxConnections);
+		http::packets_to_send = utils::memory::alloc<uint64_t>(http::maxConnections);
+
+		if (cfg->get_int("use_ssl"))http::sslsck = utils::memory::alloc<SSL*>(http::maxConnections);
 
 		for (int i = 0; i < http::maxConnections; i++)
 		{
 			http::connected[i] = INVALID_SOCKET;
 			http::ulock[i] = false;
-			http::sslsck[i] = NULL;
 			http::client_protocol[i] = CLPROT_HTTP;
 			http::client_prot_data[i] = 0;
 			http::packets_sent[i] = 0LL;
 			http::packets_to_send[i] = 0LL;
+
+			if (cfg->get_int("use_ssl"))http::sslsck[i] = NULL;
 		}
 
 		http::Nexec = cfg->get_int("exec_theards");
 		http::Nsend = cfg->get_int("send_theards");
 
-		http::execUnits = new http::Sexecutor[http::Nexec];
-		http::theard_sd = new pthread_t*[http::Nsend];
+		http::execUnits = utils::memory::alloc<http::Sexecutor>(http::Nexec);
+		http::theard_sd = utils::memory::alloc<pthread_t*>(http::Nsend);
 
-		if(cfg->get_int("ws_enable"))http::theard_ws = new pthread_t[cfg->get_int("ws_fproc_threads")];
+		if(cfg->get_int("ws_enable"))http::theard_ws = utils::memory::alloc<pthread_t>(cfg->get_int("ws_fproc_threads"));
 
 		http::headers::alivetimeout = cfg->get_var("normal_keep") + "\r\n";
 		http::mExecQ = cfg->get_int("maxexecutionqueue");
@@ -98,7 +101,7 @@ namespace http
 		http::onssl = cfg->get_int("use_ssl");
 
         http::sqln = 100;
-        http::shq = new fsrq_run[http::sqln];
+        http::shq = utils::memory::alloc<fsrq_run>(http::sqln);
         for(size_t i=0;i<http::sqln;i++)http::shq[i].uid=-1;
         fsnd_fb_size = cfg->get_int("fsn_frame_buf_size");
 

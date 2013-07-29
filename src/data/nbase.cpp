@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
+#include "utils/memory.h"
 
 struct nbfhead
 {
@@ -28,6 +29,8 @@ struct nbfhead
 	int v;
 	unsigned int tables;
 };
+
+namespace mutl = utils::memory;
 
 ///nbase class
 
@@ -76,7 +79,7 @@ nativehttp::base::nbase::nbase(string file)
 				tabname.readstr(bf);
 				int cln = 0;
 				fread(&cln, sizeof(int), 1, bf);
-				string *fcols = new string[cln];
+				string *fcols = mutl::alloc<string>(cln);
 				if (fcols)
 				{
 					for (int j = 0; j < cln; j++)
@@ -238,7 +241,7 @@ nativehttp::base::nbtable::nbtable(string n, string *cl, int cnb)
 {
 	name = n;
 	cn = cnb;
-	cols = new string[cnb];
+	cols = mutl::alloc<string>(cnb);
 	for (int i = 0; i < cnb; i++)cols[i] = cl[i];
 }
 
@@ -253,7 +256,7 @@ nativehttp::base::nbtable::~nbtable()
 int nativehttp::base::nbtable::ins(string *in)
 {
 	nbrow *trow = new nativehttp::base::nbrow;
-	trow->data = new string[cn];
+	trow->data = mutl::alloc<string>(cn);
 	for (int i = 0; i < cn; i++)
 	{
 		trow->data[i].resize(in[i].size());
