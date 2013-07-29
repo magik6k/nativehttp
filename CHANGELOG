@@ -7,6 +7,7 @@ DEV:
 -SDL not needed anymore
 -NativeTest removed
 -Stat 3.0
+-Added 'err' function for error logging
 
 0107.13:
 -New makefile target for building only NativeStat - 'stat'

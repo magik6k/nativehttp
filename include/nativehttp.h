@@ -421,6 +421,7 @@ namespace nativehttp
 	{
 		extern "C" string version();
 		extern "C" void log(string lname, string value);
+		extern "C" void err(string lname, string value);
 		extern "C" void logid(int id, string lname, string value);
 
 		extern "C" data::clientid maxClients();

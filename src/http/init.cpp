@@ -143,7 +143,7 @@ namespace http
         }
         else
         {
-            nativehttp::server::log("init.cpp@http","[CRITICAL]nativehttp.h Version mismatch");
+            nativehttp::server::err("init.cpp@http","[CRITICAL]nativehttp.h Version mismatch");
             exit(2);
         }
 
