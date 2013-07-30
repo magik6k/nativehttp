@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	cout << "[DBG:main.cpp@core]before-init mem: " << bim << "b\n";
 #endif
 
-	cout << "NativeHTTP DEV\nBy magik6000\nfor more info visit nativehttp.org\n";
+	cout << "NativeHTTP DEV(API "<<NATIVEHTTP_API_VERSION<<")\nBy Lukasz Magiera\nfor more info visit nativehttp.org\n";
 	cout << "pre-init\n";
 
 	prctl(PR_SET_NAME, "nativehttp", 0, 0, 0);
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 	http::netstart();
 	http::startsystem();
 
-	nativehttp::server::log("INIT", "Ready in "+nativehttp::data::superstring::str_from_int64(utils::get_time()/1000LL)+"s");
+	nativehttp::server::log("INIT", "Ready in "+nativehttp::data::superstring::str_from_double((utils::get_time())/1000.f)+"s");
 
 	if (cfg->get_int("use_ssl"))
 	{

@@ -1,13 +1,14 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-DEV:
+3007.13:
 -WebSockets - Changing callbacks at runtime
 -Sessions - option to get SessionID
 -SDL not needed anymore
 -NativeTest removed
 -Stat 3.0
 -Added 'err' function for error logging
+-NativeStat disabled for a while
 
 0107.13:
 -New makefile target for building only NativeStat - 'stat'

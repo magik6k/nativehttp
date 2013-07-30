@@ -30,8 +30,6 @@ extern string page_style;
 
 extern string ddbase;
 
-extern string basic_content;
-
 extern string html_off;
 extern string html_on;
 
