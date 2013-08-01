@@ -31,7 +31,7 @@ namespace nativehttp
     {
         namespace stat
         {
-            bool stats()
+            bool enabled()
             {
                 return http::statdata::info::toggle;
             }
@@ -125,7 +125,7 @@ namespace nativehttp
                     case connections:
                     {
                         if(column>=0)return NH_STAT_ERROR;
-                        return st::activity::hits;
+                        return st::activity::connections;
                         break;
                     }
                     case requests_hourly:

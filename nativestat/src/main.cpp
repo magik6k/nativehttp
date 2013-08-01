@@ -73,10 +73,89 @@ extern "C"
 			}
 		}
 
+		if(!ns::stat::enabled())
+		{
+            page.change("[[content]]", "Stats disabled on this server");
+            return nativehttp::data::pagedata(page.str);
+		}
+
+        string pg = "<h2>NativeStat</h2><hr/><b>Logging status:</b><br/>Hourly logging: ";
+        if(ns::stat::get(ns::stat::unit::len_hourly)!=0)
+        {
+            pg += "<span style='color: #0a0'>"+nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_hourly))+" hours</span>";
+        }
+        else
+        {
+            pg += html_off;
+        }
+
+        pg += "<br/>Daily logging: ";
+
+        if(ns::stat::get(ns::stat::unit::len_daily)!=0)
+        {
+            pg += "<span style='color: #0a0'>"+nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_daily))+" days</span>";
+        }
+        else
+        {
+            pg += html_off;
+        }
+
+        pg += "<br/>Weekly logging: ";
+
+        if(ns::stat::get(ns::stat::unit::len_weekly)!=0)
+        {
+            pg += "<span style='color: #0a0'>"+nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_weekly))+" weeks</span>";
+        }
+        else
+        {
+            pg += html_off;
+        }
+
+        pg += "<hr/><h3>All-Time Statistics</h3><b>Network usage:</b><br/>Upload &#8593; - ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::upload));
+        pg += " (HTTP headers: ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::http_head_size_sent));
+
+        pg += ")<br/>Download &#8595; - ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::download));
+        pg += " (HTTP headers: ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::http_head_size_received));
+
+        pg += ")<br/>Total - ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::download)+ns::stat::get(ns::stat::unit::upload));
+        pg += "(HTTP headers: ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::http_head_size_received)+ns::stat::get(ns::stat::unit::http_head_size_sent));
+
+        pg += ")<br/>POST data size - ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::http_postdata_size));
+
+
+        pg += "<br/></br><b>Acitvity:</b><br/>TCP Connections - ";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::connections));
+        pg += "<br/>HTTP Requests -";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::requests));
+        pg += "<br/>Sessions created(Visits) - ";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::sessions_created));
+        if(ns::stat::get(ns::stat::unit::len_hourly)!=0)pg += "<br/>This hour max online - ";
+        if(ns::stat::get(ns::stat::unit::len_hourly)!=0)pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::sessions_max_existing_hourly,0));
+
+
+        pg += "<br/><br/><b>WebSockets:</b><br/>Upload &#8593; - ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::ws_upload));
+        pg += "<br/>Download &#8595; - ";
+        pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::ws_download));
+        pg += "<br/>Messages/Frames sent - ";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_messages_sent));
+        pg += "/";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_frames_sent));
+        pg += "<br/>Messages/Frames received - ";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_messages_received));
+        pg += "/";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_frames_received));
 
 
 
-		page.change("[[content]]", "W-I-P");
+		page.change("[[content]]", pg);
 
 		return nativehttp::data::pagedata(page.str);
 	}

@@ -75,11 +75,11 @@ namespace nativehttp
 		if (!deamonized)
 		{
             if(http::logger_colors)
-                cerr << "[\x1b[31m" << lname.c_str() << "\x1b[0m]\x1b[35m" << value.c_str() << "\x1b[0m\n";
+                cerr << "[\x1b[31mERR\x1b[0m][\x1b[31m" << lname.c_str() << "\x1b[0m]\x1b[35m" << value.c_str() << "\x1b[0m\n";
             else
-                cerr << "[" << lname.c_str() << "]" << value.c_str() << endl;
+                cerr << "[ERR][" << lname.c_str() << "]" << value.c_str() << endl;
 		}
-		if (logfile.is_open())logfile << "[" << lname.c_str() << "]" << value.c_str() << endl;
+		if (logfile.is_open())logfile << "[ERR][" << lname.c_str() << "]" << value.c_str() << endl;
 	}
 
 	extern "C" void server::logid(int id, string lname, string value)

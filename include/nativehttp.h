@@ -155,8 +155,8 @@ namespace nativehttp
                 static int64_t int64_from_str(string in);
 
 				/** Size functions */
-				static string str_from_size(size_t in);
-				static superstring sst_from_size(size_t in);
+				static string str_from_size(int64_t in);
+				static superstring sst_from_size(int64_t in);
 
 				/** Double precission functions */
 				static string str_from_double(double in);

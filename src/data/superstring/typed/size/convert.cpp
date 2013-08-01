@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #define SSLOCK if(lck)pos=lpos
 
 
-string nativehttp::data::superstring::str_from_size(size_t in)
+string nativehttp::data::superstring::str_from_size(int64_t in)
 {
 	float tcn = 0;
 	string end;
@@ -56,18 +56,18 @@ string nativehttp::data::superstring::str_from_size(size_t in)
 		end = " B";
 	}
 
-	string ret = nativehttp::data::superstring::str_from_int(tcn);
+	string ret = nativehttp::data::superstring::str_from_int64(tcn);
 	if (int(10.f * (tcn - float(int(tcn)))))
 	{
 		ret += ".";
-		ret += nativehttp::data::superstring::str_from_int(int(10.f * (tcn - float(int(tcn)))));
+		ret += nativehttp::data::superstring::str_from_int64(int(10.f * (tcn - float(int(tcn)))));
 	}
 	ret += end;
 
 	return ret;
 }
 
-nativehttp::data::superstring nativehttp::data::superstring::sst_from_size(size_t in)
+nativehttp::data::superstring nativehttp::data::superstring::sst_from_size(int64_t in)
 {
 	return nativehttp::data::superstring(nativehttp::data::superstring::str_from_size(in));
 }

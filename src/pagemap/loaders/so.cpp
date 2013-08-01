@@ -33,8 +33,9 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 	ntm->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
 	if (!ntm->handle)
 	{
-		cout << "can't open shared file: " << f << ": " << dlerror() << endl;
+		nativehttp::server::err("SO.loader@pagemap", "can't open shared file: " + string(f) + ":\n" + string(dlerror()));
 		delete ntm;
+		abort = true;
 	}
 	else
 	{
@@ -42,9 +43,11 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 		ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle, "page");
 		if (!ntm->onload || !ntm->page)
 		{
+            nativehttp::server::err("SO.loader@pagemap", "error loading native symbols: " + string(f));
 			cout << "error loading native symbols: " << f << endl;
 			dlclose(ntm->handle);
 			delete ntm;
+			abort = true;
 		}
 		else
 		{

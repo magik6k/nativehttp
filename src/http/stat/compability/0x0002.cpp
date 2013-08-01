@@ -95,10 +95,30 @@ namespace http
 					transfer::wkl_ul[i + 1] = transfer::wkl_ul[i];
 					transfer::wkl_dl[i + 1] = transfer::wkl_dl[i];
 				}
-				activity::hrl_hits[0] = 0;
-				activity::hrl_connections[0] = 0;
-				transfer::hrl_ul[0] = 0;
-				transfer::hrl_dl[0] = 0;
+
+				if(info::hourlylen)
+				{
+                    activity::hrl_hits[0] = 0;
+                    activity::hrl_connections[0] = 0;
+                    transfer::hrl_ul[0] = 0;
+                    transfer::hrl_dl[0] = 0;
+				}
+
+				if(info::dailylen)
+				{
+                    activity::dly_hits[0] = 0;
+                    activity::dly_connections[0] = 0;
+                    transfer::dly_ul[0] = 0;
+                    transfer::dly_dl[0] = 0;
+				}
+
+				if(info::weeklylen)
+				{
+                    activity::wkl_hits[0] = 0;
+                    activity::wkl_connections[0] = 0;
+                    transfer::wkl_ul[0] = 0;
+                    transfer::wkl_dl[0] = 0;
+                }
 
 				fclose(stf);
                 return true;

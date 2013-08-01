@@ -1,6 +1,11 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
+DEV:
+-Bugfixes - Stats stability
+-Basic NativeStat
+-SuperString - from size conversion is now up to 8388608 TiB
+
 3007.13:
 -WebSockets - Changing callbacks at runtime
 -Sessions - option to get SessionID
