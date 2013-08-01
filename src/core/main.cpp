@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include "protocol.h"
 #include "http/init.h"
-#include "http/manager.h"
+#include "manager.h"
 #include "data/queue.h"
 #include "http/net/net.h"
 #include "ws/ws.h"
@@ -103,11 +103,13 @@ int main(int argc, char *argv[])
 
 	if (gr)goroot();
 
-	signal(SIGSEGV, http::manager::sig);
-	signal(SIGILL, http::manager::sig);
-	signal(SIGFPE, http::manager::sig);
-	signal(SIGABRT, http::manager::sig);
-	signal(SIGINT, http::manager::sig);
+	signal(SIGSEGV, manager::sig);
+	signal(SIGILL, manager::sig);
+	signal(SIGFPE, manager::sig);
+	signal(SIGABRT, manager::sig);
+
+	signal(SIGINT, manager::quit);
+    signal(SIGTERM, manager::quit);
 
     nativehttp::server::log("INIT", "Loading configuration, setting up server");
 

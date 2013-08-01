@@ -22,6 +22,8 @@ STATD = ./nativestat/src
 NHS = \
 	$(NHD)/core/api.cpp \
 	$(NHD)/core/main.cpp \
+	$(NHD)/core/manger.cpp \
+	$(NHD)/core/signal.cpp \
 	$(NHD)/core/system.cpp \
 	$(NHD)/data/cfg.cpp \
 	$(NHD)/data/cookie.cpp \
@@ -61,7 +63,6 @@ NHS = \
 	$(NHD)/http/executor/queue.cpp \
 	$(NHD)/http/filesender.cpp \
 	$(NHD)/http/init.cpp \
-	$(NHD)/http/manager.cpp \
 	$(NHD)/http/net/net.cpp \
 	$(NHD)/http/net/bsd/disconnect.cpp \
 	$(NHD)/http/net/bsd/listen.cpp \

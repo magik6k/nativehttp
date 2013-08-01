@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "data.h"
 #include "executor.h"
 #include "error.h"
-#include "manager.h"
+#include "core/manager.h"
 #include "stat.h"
 #include "filesender.h"
 #include "data/session/session.h"
@@ -39,6 +39,8 @@ freely, subject to the following restrictions:
 #ifdef NHDBG
 #include <iostream>
 #endif
+
+namespace mgr = manager;
 
 namespace http
 {
@@ -244,7 +246,7 @@ namespace http
 		if (tms != 0)nativehttp::server::log("init.cpp", "File Sender failed to start");
 
 		tt = new pthread_t;
-		tms = utils::create_thread(tt, http::manager::manager, NULL, 256 * 1024);
+		tms = utils::create_thread(tt, mgr::manager, NULL, 256 * 1024);
 		http::theard_mg = tt;
 		if (tms != 0)nativehttp::server::log("init.cpp", "Manager failed to start");
 

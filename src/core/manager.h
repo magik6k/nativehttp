@@ -23,16 +23,26 @@ freely, subject to the following restrictions:
 #ifndef MANAGER_H_INCLUDED
 #define MANAGER_H_INCLUDED
 
-namespace http
+namespace manager
 {
-	namespace manager
-	{
-		void sig(int sig);
-		void timeouts();
-		void wait();
-		void *manager(void *unused);
-		void fsrefresh();
-	}
+    enum managestate
+    {
+        mgr_timeouts,
+        mgr_fsref,
+        mgr_stat,
+        mgr_sessions,
+        mgr_wait
+    };
+
+    extern managestate mstate;
+    extern bool mgrsess;
+
+    void quit(int sig);
+    void sig(int sig);
+    void timeouts();
+    void wait();
+    void *manager(void *unused);
+    void fsrefresh();
 }
 
 #endif // MANAGER_H_INCLUDED
