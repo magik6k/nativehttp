@@ -30,24 +30,32 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
     conf.set_file(f);
 
 
-
-    conf.lock();
-
-    conf.remove("/*","*/");
-    conf.remove("//","\n");
-    conf.remove(";","\n");
-    conf.remove("[","]");
-
-    conf.unlock();
-
     for(;!conf.atend();)
     {
         conf.skip(" \t\n\r");
+
+        if(conf.check("//")||conf.check("#")|conf.check(";"))
+        {
+            conf.to("\n");
+            continue;
+        }
+        if(conf.check("/*"))
+        {
+            conf.to("*/");
+            continue;
+        }
+        if(conf.check("["))
+        {
+            conf.to("]");
+            continue;
+        }
+
         string name = conf.tochar(" \t\n\r=");
         if(name.empty()&&!conf.atend())
         {
-            string nr = conf.tochar("\r\n");
-            nativehttp::server::log("parser@cfg.cpp", "[E1] No-name variables not allowed(near '"+nr+"')");
+            int line = nativehttp::data::superstring(conf.lock().to(0)).count('\n');
+            string nr = conf.unlock().tochar("\r\n");
+            nativehttp::server::err("parser@cfg.cpp", "[E1] No-name variables not allowed(near '"+nr+"', line: "+nativehttp::data::superstring::str_from_int(line)+")");
             continue;
         }
         else if(name.empty())
@@ -60,30 +68,30 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 
         if(conf.str[conf.pos]=='\0')
         {
-            nativehttp::server::log("parser@cfg.cpp", "[E3] Reached unexpected end of file after variable name");
+            nativehttp::server::err("parser@cfg.cpp", "[E3] Reached unexpected end of file after variable name");
             continue;
         }
 
         if(!conf.check("="))
         {
-            string nr = conf.tochar("\r\n");
-            nativehttp::server::log("parser@cfg.cpp", "[E2] Expected '=' after variable name(near '"+nr+"', key: '"+name+"'), got '"+conf.str[conf.pos]+"'");
+            int line = nativehttp::data::superstring(conf.lock().to(0)).count('\n');
+            string nr = conf.unlock().tochar("\r\n");
+            nativehttp::server::err("parser@cfg.cpp", "[E2] Expected '=' after variable name(near '"+nr+"', key: '"+name+
+                "', line: "+nativehttp::data::superstring::str_from_int(line)+"), got '"+conf.str[conf.pos]+"'");
             continue;
         }
         conf.pos++;
         conf.skip(" \t\n\r");
-        conf.lock();
+
         string content;
-        if(nativehttp::data::superstring(conf.tochar("\r\n")).contain("\""))
+        if(conf.check("\""))
         {
-            conf.unlock();
             conf.to("\"");
             content = conf.to("\"");
             conf.tochar("\r\n");
         }
         else
         {
-            conf.unlock();
             content = conf.tochar("\r\n");
         }
 

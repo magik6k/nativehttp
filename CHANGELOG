@@ -1,10 +1,13 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-DEV:
--Bugfixes - Stats stability
--Basic NativeStat
+0108.13::
+-Stats - Multiple bugs fixed
+-NativeStat for Stat 3.0 module
 -SuperString - from size conversion is now up to 8388608 TiB
+-SuperString - 'to(uint)' function can now jump backwards
+-CCfg - Fixed multiple bugs
+-CCfg - Some errors now show line number
 
 3007.13:
 -WebSockets - Changing callbacks at runtime

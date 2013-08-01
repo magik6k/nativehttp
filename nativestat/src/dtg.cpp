@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 string mkdtd(unsigned long v1, unsigned long v2, string s1, string s2, string col1, string col2)
 {
 	if (v1 + v2 == 0)v1++;
-	nh::data::superstring rt(ddbase);
+	nh::data::superstring rt("x");
 	rt.lock();
 	rt.change("[[c1]]", s1);
 	rt.change("[[c2]]", s2);

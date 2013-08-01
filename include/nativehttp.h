@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 16
+#define NATIVEHTTP_API_VERSION 17
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -470,6 +470,9 @@ namespace nativehttp
                 ws_frames_sent,
                 ws_messages_received,
                 ws_messages_sent,
+                ws_upload_daily,
+                ws_download_daily,
+                ws_handshakes_daily,
                 ws_messages_received_hourly,
                 ws_messages_sent_hourly,
                 ws_messages_received_daily,

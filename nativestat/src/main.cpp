@@ -27,28 +27,82 @@ freely, subject to the following restrictions:
 #define config "./etc/nativehttp/nstat.cfg"
 
 string pass = "root";
+nativehttp::data::pagedata ajax(nativehttp::rdata* request);
+
 
 extern "C"
 {
 	int onload()
 	{
-		nh::data::superstring htmss(html_top);
+		nativehttp::data::Ccfg cfg(config);
+		pass = cfg.get_var("pass");
+
+		html_on = cfg.get_var("on");
+		html_off = cfg.get_var("off");
+		html_top = cfg.get_var("lay");
+		logform = cfg.get_var("login_form");
+		logformbad = cfg.get_var("badlogin_form");
+		page_style = cfg.get_var("style");
+		diagram_controls = cfg.get_var("diagram_controls");
+		script = cfg.get_var("script");
+
+        nh::data::superstring scrss(script);
+        scrss.lock();
+        scrss.change("[[hl]]",nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_hourly)));
+		scrss.change("[[dl]]",nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_daily)));
+		scrss.change("[[wl]]",nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_weekly)));
+        script = scrss.str;
+
+		nh::data::superstring htmss(html_top);//layout setup
 		htmss.lock();
 		htmss.change("[[srvVer]]", nh::server::version());
 		htmss.change("[[style]]", page_style);
 		page_style.clear();
 		html_top = htmss.str;
-		nativehttp::data::Ccfg cfg(config);
-		pass = cfg.get_var("pass");
+
+		nh::data::superstring dcont(diagram_controls);//diagram controls setup
+		dcont.lock().change("[[hl]]",nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_hourly)));
+		dcont.change("[[dl]]",nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_daily)));
+		dcont.change("[[wl]]",nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::len_weekly)));
+        if(ns::stat::get(ns::stat::unit::len_hourly)>0)
+        {
+            dcont.remove("[[dhl]");
+            dcont.remove("[dhl]]");
+        }
+        else dcont.remove("[[dhl]","[dhl]]");
+        if(ns::stat::get(ns::stat::unit::len_daily)>0)
+        {
+            dcont.remove("[[ddl]");
+            dcont.remove("[ddl]]");
+        }
+        else dcont.remove("[[ddl]","[ddl]]");
+        if(ns::stat::get(ns::stat::unit::len_weekly)>0)
+        {
+            dcont.remove("[[dwl]");
+            dcont.remove("[dwl]]");
+        }
+        else dcont.remove("[[dwl]","[dwl]]");
+        diagram_controls = dcont.str;
+
 		initated();
 	}
+
 	nativehttp::data::pagedata page(nativehttp::rdata* request)
 	{
+        if(request->get)
+        {
+            if(!request->get->get("ajax").empty())
+            {
+                return ajax(request);
+            }
+        }
 		nh::data::superstring page(html_top);
+		page.lock();
 
 		if (!request->session)
 		{
 			page.change("[[content]]", "NativeStat needs Session module enabled!<br/>");
+			page.change("[[script]]", "");
 			return nativehttp::data::pagedata(page.str);
 		}
 
@@ -57,6 +111,7 @@ extern "C"
 			if (!request->post)
 			{
 				page.change("[[content]]", logform);
+				page.change("[[script]]", "");
 				return nativehttp::data::pagedata(page.str);
 			}
 			else
@@ -68,6 +123,7 @@ extern "C"
 				else
 				{
 					page.change("[[content]]", logformbad);
+					page.change("[[script]]", "");
 					return nativehttp::data::pagedata(page.str);
 				}
 			}
@@ -76,8 +132,11 @@ extern "C"
 		if(!ns::stat::enabled())
 		{
             page.change("[[content]]", "Stats disabled on this server");
+            page.change("[[script]]", "");
             return nativehttp::data::pagedata(page.str);
 		}
+
+        page.change("[[script]]", script);
 
         string pg = "<h2>NativeStat</h2><hr/><b>Logging status:</b><br/>Hourly logging: ";
         if(ns::stat::get(ns::stat::unit::len_hourly)!=0)
@@ -144,6 +203,8 @@ extern "C"
         pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::ws_upload));
         pg += "<br/>Download &#8595; - ";
         pg += nd::ss::str_from_size(ns::stat::get(ns::stat::unit::ws_download));
+        pg += "<br/>Handshakes - ";
+        pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_handshakes));
         pg += "<br/>Messages/Frames sent - ";
         pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_messages_sent));
         pg += "/";
@@ -153,7 +214,9 @@ extern "C"
         pg += "/";
         pg += nd::ss::str_from_int64(ns::stat::get(ns::stat::unit::ws_frames_received));
 
-
+        pg += "<br/><hr/><h4>Diagram settings</h4>";
+        pg += diagram_controls;
+        pg += "<br/><hr/><b>Diagram:</b> <span id='disp'>None</span><br/><div id='display'></div>";
 
 		page.change("[[content]]", pg);
 

@@ -65,7 +65,7 @@ namespace http
 			{
 				activity::hits++;
 				shttp::recv_header_size+=headsize;
-				if(info::dailylen)shttp::dly_recv_header_size+=headsize;
+				if(info::dailylen)shttp::dly_recv_header_size[0]+=headsize;
 
 				if(info::hourlylen)activity::hrl_hits[0]++;
 				if(info::dailylen)activity::dly_hits[0]++;

@@ -66,7 +66,7 @@ namespace http
                 transfer::dlbytes = total.download;
 
                 activity::hits = total.hits;
-                activity::hits = total.connections;
+                activity::connections = total.connections;
 
                 method::get = total.req_get;
                 method::post = total.req_post;

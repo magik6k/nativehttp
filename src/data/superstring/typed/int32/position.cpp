@@ -42,10 +42,29 @@ string nativehttp::data::superstring::from(unsigned int sp)
 string nativehttp::data::superstring::to(unsigned int ep)
 {
     string rt;
-    while (pos < str.size() && pos < ep)
+    if(ep>=pos)
+    {
+        while (pos < str.size() && pos < ep)
+        {
+            rt += str[pos];
+            pos++;
+        }
+	}
+	else
 	{
-		rt += str[pos];
-		pos++;
+        string trt;
+        while(pos >= 0 && pos >= ep && pos != 4294967295)
+        {
+            trt += str[pos];
+            pos--;
+        }
+        if(pos<0)pos=0;
+        rt.reserve(trt.size());
+        for(unsigned int i=0;i<trt.size();i++)
+        {
+            rt += trt[trt.size()-i-1];
+        }
+        trt.clear();
 	}
 	SSLOCK;
 	return rt;

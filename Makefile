@@ -22,7 +22,7 @@ STATD = ./nativestat/src
 NHS = \
 	$(NHD)/core/api.cpp \
 	$(NHD)/core/main.cpp \
-	$(NHD)/core/manger.cpp \
+	$(NHD)/core/manager.cpp \
 	$(NHD)/core/signal.cpp \
 	$(NHD)/core/system.cpp \
 	$(NHD)/data/cfg.cpp \
@@ -108,6 +108,7 @@ NHS = \
 	$(NHD)/ws/recive.cpp \
 	$(NHD)/ws/send.cpp
 STATS = \
+	$(STATD)/ajax.cpp \
 	$(STATD)/assets.cpp \
 	$(STATD)/dtg.cpp \
 	$(STATD)/main.cpp

@@ -222,6 +222,24 @@ namespace nativehttp
                         return st::websocket::msgs_sent;
                         break;
                     }
+                    case ws_upload_daily:
+                    {
+                        if(column<0||column>=st::info::dailylen)return NH_STAT_ERROR;
+                        return st::websocket::dly_upload[column];
+                        break;
+                    }
+                    case ws_download_daily:
+                    {
+                        if(column<0||column>=st::info::dailylen)return NH_STAT_ERROR;
+                        return st::websocket::dly_download[column];
+                        break;
+                    }
+                    case ws_handshakes_daily:
+                    {
+                        if(column<0||column>=st::info::dailylen)return NH_STAT_ERROR;
+                        return st::websocket::dly_connections[column];
+                        break;
+                    }
                     case ws_messages_received_hourly:
                     {
                         if(column<0||column>=st::info::hourlylen)return NH_STAT_ERROR;

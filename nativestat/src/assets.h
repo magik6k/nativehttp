@@ -27,6 +27,7 @@ using namespace std;
 
 extern string html_top;
 extern string page_style;
+extern string script;
 
 extern string ddbase;
 
@@ -35,5 +36,6 @@ extern string html_on;
 
 extern string logform;
 extern string logformbad;
+extern string diagram_controls;
 
 #endif // ASSETS_H_INCLUDED

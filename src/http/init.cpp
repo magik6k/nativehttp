@@ -140,6 +140,8 @@ namespace http
 
 		http::logger_colors = cfg->get_int("logger_colors");
 
+		http::statdata::init();
+
 		if(utils::header_version_ok())
         {
 #ifdef NHDBG
@@ -199,7 +201,6 @@ namespace http
 	}
 	void startsystem()
 	{
-		http::statdata::init();
 
 #ifdef NHDBG
 		size_t bm = getacmem();
