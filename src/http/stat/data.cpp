@@ -136,7 +136,7 @@ namespace http
 
             time_t save_rate;
 
-            uint16_t filever = 0x0003;
+            uint16_t filever = 0x0004;
             bool managersafe = true;
             string stfn;
         }

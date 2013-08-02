@@ -47,7 +47,7 @@ namespace http
 				}
 				uint16_t tfv = 0x0000;
 				fread(&tfv, 2, 1, stf);
-				if (tfv != internal::filever)
+				if (tfv != internal::filever && tfv != 0x0003)
 				{
 					nativehttp::server::log("init.cpp@stat", "Trying to load stat file through compability module");
 					if(!compability::tryload(stf))
@@ -56,10 +56,19 @@ namespace http
 					return;
 				}
 
+
+
 				file::head head;
 				file::totals total;
+                file::time_head tsmp;
 
 				fread(&head,sizeof(head),1,stf);
+
+				if(tfv != 0x0003)
+				{
+                    fread(&tsmp,sizeof(tsmp),1,stf);
+				}
+
 				fread(&total,sizeof(total),1,stf);
 
 				transfer::ulbytes = total.upload;
@@ -142,6 +151,15 @@ namespace http
 					websocket::wkl_msgs_sent[i] = week.ws_msgs_sent;
 
 					session::wkl_sessions_created[i] = week.sessions_created;
+				}
+
+				if(tfv != 0x0003)
+				{
+                    internal::lastHrlFlp = tsmp.lastHrl;
+                    internal::lastDlyFlp = tsmp.lastDly;
+                    internal::lastWklFlp = tsmp.lastWkl;
+
+                    statdata::manage();
 				}
 
 				fclose(stf);

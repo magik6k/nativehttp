@@ -153,6 +153,13 @@ namespace http
                 int64_t timesaved;
             };
 
+            struct time_head
+            {
+                int64_t lastHrl;
+                int64_t lastDly;
+                int64_t lastWkl;
+            };
+
             struct totals
             {
                 uint64_t upload;

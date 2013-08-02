@@ -30,6 +30,7 @@ namespace http
 		{
 			if (info::toggle && internal::managersafe)
 			{
+check_flip:
 				if (time(0) - internal::lastHrlFlp >= 3600)
 				{
 					internal::lastHrlFlp += 3600;
@@ -58,6 +59,8 @@ namespace http
 					websocket::hrl_msgs_sent[0] = 0;
 
 					session::hrl_max_existing[0] = 0;
+
+					goto check_flip;
 				}
 
 				if (time(0) - internal::lastDlyFlp >= 3600 * 24)
@@ -104,6 +107,8 @@ namespace http
 					shttp::dly_sent_header_size[0] = 0;
 
 					session::dly_sessions_created[0] = 0;
+
+					goto check_flip;
 				}
 
 				if (time(0) - internal::lastWklFlp >= 3600 * 24 * 7)
@@ -133,6 +138,8 @@ namespace http
                     websocket::wkl_msgs_sent[0] = 0;
 
                     session::wkl_sessions_created[0] = 0;
+
+                    goto check_flip;
 				}
 
 				if (time(0) - internal::lastSave >= internal::save_rate)

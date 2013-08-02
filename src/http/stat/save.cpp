@@ -47,6 +47,14 @@ namespace http
                     fwrite(&head, sizeof(head), 1, stf);
 				}
 
+				{
+                    file::time_head thead;
+                    thead.lastHrl = internal::lastHrlFlp;
+                    thead.lastDly = internal::lastDlyFlp;
+                    thead.lastWkl = internal::lastWklFlp;
+                    fwrite(&thead, sizeof(thead), 1, stf);
+				}
+
                 {
                     file::totals total;
 

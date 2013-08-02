@@ -58,17 +58,17 @@ namespace http
 
 					if(thl/24 < info::dailylen)
 					{
-                        activity::dly_hits[i] += sd.hits;
-                        activity::dly_connections[i] += sd.connections;
-                        transfer::dly_ul[i] += sd.ulbytes;
-                        transfer::dly_dl[i] += sd.dlbytes;
+                        activity::dly_hits[i/24] += sd.hits;
+                        activity::dly_connections[i/24] += sd.connections;
+                        transfer::dly_ul[i/24] += sd.ulbytes;
+                        transfer::dly_dl[i/24] += sd.dlbytes;
 					}
 					if(thl/(24*7) < info::weeklylen)
 					{
-                        activity::wkl_hits[i] += sd.hits;
-                        activity::wkl_connections[i] += sd.connections;
-                        transfer::wkl_ul[i] += sd.ulbytes;
-                        transfer::wkl_dl[i] += sd.dlbytes;
+                        activity::wkl_hits[i/168] += sd.hits;
+                        activity::wkl_connections[i/168] += sd.connections;
+                        transfer::wkl_ul[i/168] += sd.ulbytes;
+                        transfer::wkl_dl[i/168] += sd.dlbytes;
 					}
 				}
 
