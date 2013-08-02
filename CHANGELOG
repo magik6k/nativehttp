@@ -1,7 +1,10 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-0108.13::
+DEV: 
+-NativeStat - more info on diagrams
+
+0108.13:
 -Stats - Multiple bugs fixed
 -NativeStat for Stat 3.0 module
 -SuperString - from size conversion is now up to 8388608 TiB

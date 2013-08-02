@@ -55,6 +55,14 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
     string out = "{\"status\":\"ok\",";
 
     uint64_t mx=0;
+    /**
+
+    TYPES:
+    0 - size: KiB
+    1 - size: B
+    2 - integer
+
+    **/
 
     switch(pre)
     {
@@ -66,6 +74,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//UL, DL, TOTAL
+                    out += "\"type\": 0,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Download\",\"color\":\"#b00\"},";
@@ -95,6 +104,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":2,";//CON, REQ
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"TCP Connections\",\"color\":\"#b00\"},";
@@ -124,6 +134,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":1,";//MX OL
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Max online users\",\"color\":\"#bb0\"}";
@@ -149,6 +160,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//RC, ST
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Messages Sent\",\"color\":\"#b00\"},";
@@ -185,6 +197,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//UL, DL, TOTAL
+                    out += "\"type\": 0,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Download\",\"color\":\"#b00\"},";
@@ -214,6 +227,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//CON, REQ, SES C
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"TCP Connections\",\"color\":\"#b00\"},";
@@ -247,6 +261,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":1,";//RC, ST
+                    out += "\"type\": 1,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"POST data size\",\"color\":\"#b00\"}";
@@ -272,6 +287,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//RC, ST
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Messages Sent\",\"color\":\"#b00\"},";
@@ -301,6 +317,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//RC, ST
+                    out += "\"type\": 1,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"WebSocket Upload\",\"color\":\"#0b0\"},";
@@ -330,6 +347,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":1,";//RC, ST
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"WebSocket Connections\",\"color\":\"#b00\"}";
@@ -363,6 +381,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//UL, DL, TOTAL
+                    out += "\"type\": 0,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Download\",\"color\":\"#b00\"},";
@@ -392,6 +411,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//CON, REQ, SES C
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"TCP Connections\",\"color\":\"#b00\"},";
@@ -425,6 +445,7 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
                 {
                     out += "\"head\":{";
                     out += "\"lines\":3,";//RC, ST
+                    out += "\"type\": 2,";
                     out += "\"len\":"+nd::ss::str_from_int(len);
                     out += ",\"ldesc\":[";
                     out += "{\"name\":\"Messages Sent\",\"color\":\"#b00\"},";
