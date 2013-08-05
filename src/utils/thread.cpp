@@ -21,6 +21,7 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
+#include "thread.h"
 #include <pthread.h>
 
 namespace utils
@@ -50,4 +51,44 @@ namespace utils
 
         return tmp;
     }
+
+    int condex_init(condex* cdx)
+    {
+        if(cdx == NULL)return EINVAL;
+        cdx->mtx = PTHREAD_MUTEX_INITIALIZER;
+        cdx->cnd = PTHREAD_COND_INITIALIZER;
+        return 0;
+    }
+
+    int condex_send_begin(condex* cdx)
+    {
+        if(cdx == NULL)return EINVAL;
+        return pthread_mutex_lock(&cdx->mtx);
+    }
+
+    int condex_send_end(condex* cdx)
+    {
+        if(cdx == NULL)return EINVAL;
+        int e = pthread_cond_signal(&cdx->cnd);
+        if(e!=0)return e;
+        return pthread_mutex_unlock(&cdx->mtx);
+    }
+
+
+    int condex_recv_begin(condex* cdx)
+    {
+        if(cdx == NULL)return EINVAL;
+        int e = pthread_mutex_lock(&cdx->mtx);
+        if(e!=0)return e;
+        e = pthread_cond_wait(&cdx->cnd, &cdx->mtx);
+        while (e != 0) e = pthread_cond_wait(&cdx->cnd, &cdx->mtx);
+        return 0;
+    }
+
+    int condex_recv_end(condex* cdx)
+    {
+        if(cdx == NULL)return EINVAL;
+        return pthread_mutex_unlock(&cdx->mtx);
+    }
+
 }

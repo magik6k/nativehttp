@@ -27,8 +27,24 @@ freely, subject to the following restrictions:
 
 namespace utils
 {
+    struct condex
+    {
+        pthread_mutex_t mtx;
+        pthread_cond_t cnd;
+    };
+
+    int condex_init(condex* cdx);
+
+    int condex_send_begin(condex* cdx);
+    int condex_send_end(condex* cdx);
+
+    int condex_recv_begin(condex* cdx);
+    int condex_recv_end(condex* cdx);
+
     int create_thread(pthread_t* thr, void *(*fn) (void *), void* fnarg, unsigned int heap);
     pthread_mutex_t* create_mutex();
+
+
 }
 
 #endif // THREAD_H_INCLUDED

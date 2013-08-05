@@ -5,7 +5,7 @@
 OUT = ./bin/nativehttp
 STATOUT = ./bin/nativestat.so
 
-FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc -march=native
+FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc
 DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
 
 LIBS += -rdynamic

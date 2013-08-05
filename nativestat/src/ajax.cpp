@@ -24,7 +24,6 @@ freely, subject to the following restrictions:
 
 nativehttp::data::pagedata ajax(nativehttp::rdata* request)
 {
-    ns::log("ajax.cpp@nativestat", "Request: "+request->get->get("ajax"));
 
     if (request->session->get("@__NtStS#") != "l")
     {
@@ -479,6 +478,5 @@ nativehttp::data::pagedata ajax(nativehttp::rdata* request)
 
     out+="}";
 
-    ns::log("ajax.cpp@nativestat", "Output: "+out);
     return nd::pagedata(out);
 }
