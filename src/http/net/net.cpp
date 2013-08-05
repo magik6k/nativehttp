@@ -32,9 +32,9 @@ namespace http
 		outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
 		http::packets_to_send[uid]++;
 
-		pthread_mutex_lock(http::mtx_snd);
+		utils::condex_send_begin(http::cdx_snd);
 		http::tosend.push(t);
-        pthread_mutex_unlock(http::mtx_snd);
+        utils::condex_send_end(http::cdx_snd);
 	}
 	void unlockclient(int i)
 	{

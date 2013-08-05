@@ -34,7 +34,6 @@ namespace http
     void *fsender(void *unused)
     {
         prctl(PR_SET_NAME, "nh-fsend", 0, 0, 0);
-        nativehttp::server::log("filesender.cpp", "fs UP!");
         int fast = 100000;
         while(1)
         {

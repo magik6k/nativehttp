@@ -33,22 +33,20 @@ namespace http
 			int ts = 0;
 			while (1)
 			{
-				if (http::tosend.empty())
+				if(utils::condex_recv_begin(http::cdx_snd))
 				{
-					utils::sleep(1);
-					continue;
+                    nativehttp::server::err("error@senderS", "Condex error");
+                    utils::sleep(250);
+                    continue;
 				}
-
-				pthread_mutex_lock(http::mtx_snd);
 
 				outdata proc = http::tosend.front(ts);
 				if (ts == 1)
 				{
-					pthread_mutex_unlock(http::mtx_snd);
 					continue;
 				}
 				http::tosend.pop();
-				pthread_mutex_unlock(http::mtx_snd);
+				utils::condex_recv_end(http::cdx_snd);
 
 				#ifdef NHDBG
 

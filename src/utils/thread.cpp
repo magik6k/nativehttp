@@ -49,13 +49,30 @@ namespace utils
         if(tmp)
             pthread_mutex_init(tmp, NULL);
 
+        if(!tmp)
+        {
+            nativehttp::server::err("thread.cpp@utils", "ERROR: Creating mutex failed(Out of memory?)");
+        }
+
         return tmp;
+    }
+
+    condex* create_condex()
+    {
+        condex* cdx = new condex;
+
+        if(condex_init(cdx))
+        {
+            nativehttp::server::err("thread.cpp@utils", "ERROR: Creating condex failed(Out of memory?)");
+        }
+        return cdx;
     }
 
     int condex_init(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
         cdx->mtx = PTHREAD_MUTEX_INITIALIZER;
+        cdx->smtx = PTHREAD_MUTEX_INITIALIZER;
         cdx->cnd = PTHREAD_COND_INITIALIZER;
         return 0;
     }
@@ -77,17 +94,38 @@ namespace utils
 
     int condex_recv_begin(condex* cdx)
     {
-        if(cdx == NULL)return EINVAL;
+        if(cdx == NULL)
+        {
+#ifdef NHDBG
+            nativehttp::server::err("DBG:condex@thread.cpp","NULL Condex");
+#endif
+            return EINVAL;
+        }
         int e = pthread_mutex_lock(&cdx->mtx);
-        if(e!=0)return e;
+        if(e!=0)
+        {
+#ifdef NHDBG
+            nativehttp::server::err("DBG:condex@thread.cpp","Mutex lock fail: "+nativehttp::data::superstring::str_from_int(e));
+#endif
+            return e;
+        }
+rewait:
         e = pthread_cond_wait(&cdx->cnd, &cdx->mtx);
-        while (e != 0) e = pthread_cond_wait(&cdx->cnd, &cdx->mtx);
-        return 0;
+        if(e)
+        {
+#ifdef NHDBG
+            nativehttp::server::err("DBG:condex@thread.cpp","Cond wait fail fail: "+nativehttp::data::superstring::str_from_int(e));
+#endif
+            return e;
+        }
+        if(!pthread_mutex_trylock(&cdx->smtx))return 0;
+        goto rewait;
     }
 
     int condex_recv_end(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
+        pthread_mutex_unlock(&cdx->smtx);
         return pthread_mutex_unlock(&cdx->mtx);
     }
 

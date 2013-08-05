@@ -108,7 +108,7 @@ namespace manager
                 if (pthread_equal(*(http::theard_sd[i]), pthread_self()) != 0)
                 {
                     nativehttp::server::err("WARNING", "Sender theard crashed, rescuing");
-                    pthread_mutex_unlock(http::mtx_snd);   //may be needed
+                    utils::condex_recv_end(http::cdx_snd);   //may be needed
 
                     pthread_t *kth = http::theard_sd[i];
 

@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "protocol.h"
 #include "filesender.h"
 #include "data/queue.h"
+#include "utils/thread.h"
 
 #include <pthread.h>
 
@@ -131,9 +132,10 @@ namespace http
 
 	extern pthread_mutex_t *mtx_exec2;
 	extern pthread_mutex_t *mtx_exec;
-	extern pthread_mutex_t *mtx_snd;
 	extern pthread_mutex_t *mtx_fsnd;
 	extern pthread_mutex_t *mtx_wsrc;
+
+	extern utils::condex *cdx_snd;
 
 	extern pthread_t *theard_nc;
 	extern pthread_t **theard_sd;

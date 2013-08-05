@@ -30,6 +30,7 @@ namespace utils
     struct condex
     {
         pthread_mutex_t mtx;
+        pthread_mutex_t smtx;
         pthread_cond_t cnd;
     };
 
@@ -43,6 +44,7 @@ namespace utils
 
     int create_thread(pthread_t* thr, void *(*fn) (void *), void* fnarg, unsigned int heap);
     pthread_mutex_t* create_mutex();
+    condex* create_condex();
 
 
 }

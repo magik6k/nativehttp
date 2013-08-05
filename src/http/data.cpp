@@ -82,9 +82,10 @@ namespace http
 
 	pthread_mutex_t *mtx_exec2 = NULL;
 	pthread_mutex_t *mtx_exec = NULL;
-	pthread_mutex_t *mtx_snd = NULL;
 	pthread_mutex_t *mtx_fsnd = NULL;
 	pthread_mutex_t *mtx_wsrc = NULL;
+
+	utils::condex *cdx_snd = NULL;
 
 	pthread_t *theard_nc = NULL;
 	pthread_t **theard_sd = NULL;
