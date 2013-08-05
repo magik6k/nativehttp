@@ -7,6 +7,7 @@ STATOUT = ./bin/nativestat.so
 
 FLAGS = -std=c++0x -O2 -w -Iinclude -Isrc
 DBGFLAGS = -std=c++0x -g -Iinclude -Isrc -DNHDBG
+STATFLAGS = -fPIC
 
 LIBS += -rdynamic
 LIBS += -lpthread
@@ -118,7 +119,7 @@ NHOD = $(NHS:%.cpp=%.dbg.o)
 
 NHTO = $(NHTS:%.cpp=%.o)
 
-STATO = $(STATS:%.cpp=%.o)
+STATO = $(STATS:%.cpp=%.stat.o)
 
 
 all: prepare nativehttp nativestat
@@ -192,6 +193,9 @@ nativestat: $(STATO)
 
 %.dbg.o: %.cpp
 	$(CXX) $(DBGFLAGS) -c -o $@ $<
+
+%.stat.o: %.cpp
+	$(CXX) $(FLAGS) $(STATFLAGS) -c -o $@ $<
 
 %.o: %.cpp
 	$(CXX) $(FLAGS) -c -o $@ $<
