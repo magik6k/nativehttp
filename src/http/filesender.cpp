@@ -197,13 +197,15 @@ namespace http
             if(http::fsend.size() > 0) ///Recive new sending requests
             {
                 fsrq tr = http::fsend.front();
-
+#ifdef NHDBG
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Recivied file request, user = "+nativehttp::data::superstring::str_from_int(tr.uid)+"; file = "+tr.file);
+#endif
                 for(size_t i = 0; i < http::sqln; i++)
                 {
                     if(http::shq[i].uid == -1)
                     {
 #ifdef NHDBG
-                        if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Recivied file request, user = "+nativehttp::data::superstring::str_from_int(tr.uid)+"; file = "+tr.file);
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Allocated request in table, user = "+nativehttp::data::superstring::str_from_int(tr.uid)+"; file = "+tr.file);
 #endif
                         http::shq[i].uid = tr.uid;
                         http::shq[i].rngs = tr.rngs;
@@ -230,7 +232,7 @@ namespace http
             {
                 timespec t;
                 t.tv_sec = 0;
-                t.tv_nsec = 1000;//1 microsecond
+                t.tv_nsec = 3000;//3 microseconds
                 nanosleep(&t, NULL);
             }
 

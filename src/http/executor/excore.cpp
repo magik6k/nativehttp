@@ -48,7 +48,7 @@ namespace http
                 case page_native:
                     {
 #ifdef NHDBG
-                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: NativePage; user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: NativePage("+string(pid.file)+"); user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
 #endif
 
                         rd->ctype = "text/html;charset=" + charset;
@@ -142,7 +142,7 @@ namespace http
                 case page_file:
                     {
 #ifdef NHDBG
-                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: FILE; user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: FILE("+string((const char*)pid.data)+"); user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
 #endif
                         pd.data = NULL;
                         fsrq req;

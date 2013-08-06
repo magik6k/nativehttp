@@ -82,7 +82,7 @@ namespace http
 
 #ifdef NHDBG
             if(http::log_detailed)nativehttp::server::log("DETAIL@executor","Request type; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+"; type = "+nativehttp::data::superstring::str_from_int(process->method)+";");
+                +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+"; type = "+nativehttp::data::superstring::str_from_int(process->method)+";");
 #endif
             switch (process->method)
             {
@@ -95,7 +95,7 @@ namespace http
             {
 #ifdef NHDBG
                 if(http::log_detailed)nativehttp::server::log("DETAIL@executor","UNKNOWN METHOD; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                    +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                    +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                 http::send(process->uid, http::error::e400.size, http::error::e400.data, false);
                 http::unlockclient(process->uid);
@@ -107,7 +107,7 @@ namespace http
             {
 #ifdef NHDBG
                 if(http::log_detailed)nativehttp::server::log("DETAIL@executor","UNIMPLEMENTED METHOD; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                    +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                    +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                 http::send(process->uid, http::error::e501.size, http::error::e501.data, false);
                 http::unlockclient(process->uid);
@@ -118,7 +118,7 @@ namespace http
             {
 #ifdef NHDBG
                 if(http::log_detailed)nativehttp::server::log("DETAIL@executor","Not HTTP/1.1; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                    +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                    +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                 http::send(process->uid, http::error::e505.size, http::error::e505.data, false);
                 http::unlockclient(process->uid);
@@ -133,7 +133,7 @@ namespace http
             {
 #ifdef NHDBG
                 if(http::log_detailed)nativehttp::server::log("DETAIL@executor","501; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                    +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                    +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                 if (rd.cookie)
                 {
@@ -176,7 +176,7 @@ namespace http
 
 #ifdef NHDBG
                         if(http::log_detailed)nativehttp::server::log("DETAIL@executor","Upgrading to WebSocket; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                            +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                            +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
 
                         ws::handshake(process->uid, rd, ld);
@@ -186,7 +186,7 @@ namespace http
                     {
 #ifdef NHDBG
                         if(http::log_detailed)nativehttp::server::log("DETAIL@executor","WebSocket upgrade failed - websockets disabled on server; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                            +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                            +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                         http::bsd::sendNow(process->uid, http::error::e403.size, http::error::e403.data, false);
                         exc->state = -1;
@@ -223,7 +223,7 @@ namespace http
                 {
 #ifdef NHDBG
                     if(http::log_detailed)nativehttp::server::log("DETAIL@executor","POST data too long; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                        +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                        +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                     if (rd.cookie)
                     {
@@ -263,7 +263,7 @@ namespace http
                 {
 #ifdef NHDBG
                     if(http::log_detailed)nativehttp::server::log("DETAIL@executor","POST fail; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                        +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                        +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
                     delete[] process->request;
                     delete process;
@@ -304,7 +304,7 @@ namespace http
 
 #ifdef NHDBG
             if(http::log_detailed)nativehttp::server::log("DETAIL@executor","Execution done; user = "+nativehttp::data::superstring::str_from_int(process->uid)
-                +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+                +"; executor = "+nativehttp::data::superstring::str_from_int(exc->id)+";");
 #endif
 
             ///CLEANUP, sending
