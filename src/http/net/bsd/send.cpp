@@ -80,6 +80,9 @@ namespace http
 
 				#ifdef NHDBG
 
+                 if(http::log_detailed)nativehttp::server::log("DETAIL@sender.cpp","Sending data; user = "+nativehttp::data::superstring::str_from_int(proc.uid)+"; datasize = "+
+                        nativehttp::data::superstring::str_from_int(proc.size)+";");
+
                 if(http::log_sender&&proc.data)
                 {
                     char* td = new char[proc.size+1];

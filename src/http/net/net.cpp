@@ -33,11 +33,12 @@ namespace http
 #ifdef NHDBG
         if(http::log_detailed)nativehttp::server::log("DETAIL@net","Sending data to client; user = "+nativehttp::data::superstring::str_from_int(uid)+";");
 #endif
-		outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
-		http::packets_to_send[uid]++;
+
                                 nativehttp::server::log("DEVELOPMENT-!!!!!@net","PT");
 		utils::condex_send_begin(http::cdx_snd);
                                 nativehttp::server::log("DEVELOPMENT-!!!!!@net","PT");
+        outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
+		http::packets_to_send[uid]++;
 		http::tosend.push(t);
                                 nativehttp::server::log("DEVELOPMENT-!!!!!@net","PT");
         utils::condex_send_end(http::cdx_snd);
