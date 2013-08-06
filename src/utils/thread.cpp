@@ -97,20 +97,26 @@ namespace utils
 
     int condex_send_begin(condex* cdx)
     {
+                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
         if(cdx == NULL)return EINVAL;
+                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
         int e = pthread_mutex_trylock(&cdx->mtx);
+                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
         if(e == 0) return 0;
-
+                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
 
             int LIMIT = 15;
 
 
-        while(e != 0&&LIMIT)
+        while(e != 0&&LIMIT>0)
         {
             if(e == EBUSY)
             {
+                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-T 0");
                 utils::sleep(100);
+                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-T 1");
                 --LIMIT;
+                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-T 2");
             }
             else if(e == EINVAL||e == EAGAIN)
             {
@@ -119,9 +125,12 @@ namespace utils
             }
             else if(e == EDEADLK)
             {
+                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-DDL");
                 return 0;
             }
+            nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-RT 0");
             e = pthread_mutex_trylock(&cdx->mtx);
+            nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-RT 1");
         }
 
 #ifdef NHDBG
