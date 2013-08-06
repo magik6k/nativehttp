@@ -144,7 +144,31 @@ namespace http
                             }
                         case FSS_Sending:
                             {
-                                if(aio_error(&http::shq[i].aio) == EINPROGRESS) break;
+                                int e = aio_error(&http::shq[i].aio);
+                                if(e == EINPROGRESS)
+                                {
+#ifdef NHDBG
+                                    if(http::log_detailed)
+                                    {
+
+                                        nativehttp::server::log("DETAIL@FileSender","Read Progress, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+
+                                            "; requesIDt = "+nativehttp::data::superstring::str_from_int(i)+";");
+                                        utils::sleep(100);
+                                    }
+#endif
+                                    break;
+                                }
+                                else if(e == ECANCELED)
+                                {
+                                    nativehttp::server::err("filesender.cpp@http","File sending canceled");
+                                    http::kickclient(http::shq[i].uid);
+
+                                    close(http::shq[i].fd);
+                                    delete[] (char*)http::shq[i].buf;
+
+                                    http::shq[i].fd = -1;
+                                    break;
+                                }
 
                                 int brd = aio_return(&http::shq[i].aio);
 
@@ -200,7 +224,7 @@ namespace http
                             }
                         default:
                             {
-                                if(http::log_detailed)nativehttp::server::err("DETAIL@FileSender","Invalid FS OP-code, something went wrong");
+                                nativehttp::server::err("err@FileSender","Invalid FS OP-code, something went wrong");
                                 utils::sleep(250);
                                 exit(1);
                             }
