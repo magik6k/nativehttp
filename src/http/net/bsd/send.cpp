@@ -56,32 +56,47 @@ namespace http
 			int ts = 0;
 			while (1)
 			{
+                bool from_cond = false;
+
+                if(!http::tosend.empty())
+                {
+                    if(!pthread_mutex_trylock(&cdx_snd->smtx))
+                    {
+                        goto sndSkipCond;
+                    }
+                }
+
 				if(utils::condex_recv_begin(http::cdx_snd))
 				{
                     nativehttp::server::err("error@senderB", "Condex error");
                     utils::sleep(250);
                     continue;
 				}
+				from_cond = true;
 
+sndSkipCond:
 				outdata proc = http::tosend.front(ts);
 				if (ts == 1)
 				{
-                    utils::condex_recv_end(http::cdx_snd);
+                    if(from_cond)utils::condex_recv_end(http::cdx_snd);
+                        else pthread_mutex_unlock(&cdx_snd->smtx);
 					continue;
 				}
 				if(proc.pktid!=http::packets_sent[proc.uid])
 				{
                     http::tosend.front2back();
-                    utils::condex_recv_end(http::cdx_snd);
+                    if(from_cond)utils::condex_recv_end(http::cdx_snd);
+                        else pthread_mutex_unlock(&cdx_snd->smtx);
 					continue;
 				}
 				http::tosend.pop();
-                utils::condex_recv_end(http::cdx_snd);
+                if(from_cond)utils::condex_recv_end(http::cdx_snd);
+                    else pthread_mutex_unlock(&cdx_snd->smtx);
 
 				#ifdef NHDBG
 
                  if(http::log_detailed)nativehttp::server::log("DETAIL@sender.cpp","Sending data; user = "+nativehttp::data::superstring::str_from_int(proc.uid)+"; datasize = "+
-                        nativehttp::data::superstring::str_from_int(proc.size)+";");
+                        nativehttp::data::superstring::str_from_size(proc.size)+";");
 
                 if(http::log_sender&&proc.data)
                 {
