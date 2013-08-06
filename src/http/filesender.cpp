@@ -220,6 +220,10 @@ namespace http
                                 {
                                     http::shq[i].state = FSS_Done;
                                 }
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Chunk sent, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+
+                                    "; requestID = "+nativehttp::data::superstring::str_from_int(i)+";");
+#endif
                                 break;
                             }
                         case FSS_Done:
