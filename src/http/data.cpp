@@ -39,6 +39,8 @@ namespace http
 	bool log_sender = false;
 	bool log_newline = false;
 
+	bool log_detailed = false;
+
 
 #endif
 

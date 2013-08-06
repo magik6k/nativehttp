@@ -47,9 +47,15 @@ namespace http
                     {
                         case FSS_Init:
                             {
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Openning file, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
                                 http::shq[i].fd = open(http::shq[i].file, O_RDONLY, 0);
                                 if(http::shq[i].fd == -1)
                                 {
+#ifdef NHDBG
+                                    if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","File not found/IO error, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
                                     http::send(http::shq[i].uid, http::error::e404.size, http::error::e404.data, false);
                                     http::unlockclient(http::shq[i].uid);
                                     http::shq[i].fd = -1;
@@ -81,8 +87,9 @@ namespace http
 
                                 char* hdbuf = utils::memory::alloc<char>(snd.size());
                                 memcpy(hdbuf, snd.c_str(), snd.size());
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Sending header, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
 
-                                #ifdef NHDBG
 
                                 if(http::log_httprep)
                                 {
@@ -91,7 +98,7 @@ namespace http
                                         :(string(hdbuf)))).c_str());
                                 }
 
-                                #endif
+#endif
 
                                 http::send(http::shq[i].uid, snd.size(), hdbuf, true);
                                 http::shq[i].state = FSS_Reading;
@@ -100,6 +107,9 @@ namespace http
                             }
                         case FSS_Reading:
                             {
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Requesting async file read, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
                                 memset(&http::shq[i].aio, 0, sizeof(aiocb));
 
                                 http::shq[i].aio.aio_fildes = http::shq[i].fd;
@@ -111,6 +121,9 @@ namespace http
 
                                 if (aio_read(&http::shq[i].aio) == -1)
                                 {
+#ifdef NHDBG
+                                    if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Request failed, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
                                     http::send(http::shq[i].uid, http::error::e500.size, http::error::e500.data, false);
                                     http::unlockclient(http::shq[i].uid);
 
@@ -127,10 +140,17 @@ namespace http
                             {
                                 if(aio_error(&http::shq[i].aio) == EINPROGRESS) break;
 
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Reading chunk, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
+
                                 int brd = aio_return(&http::shq[i].aio);
 
                                 if(brd == -1)
                                 {
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Chunk read failed, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
                                     http::send(http::shq[i].uid, http::error::e500.size, http::error::e500.data, false);
                                     http::unlockclient(http::shq[i].uid);
 
@@ -156,6 +176,9 @@ namespace http
                             }
                         case FSS_Done:
                             {
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","File sending done, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+";");
+#endif
                                 http::send(http::shq[i].uid, 3, "\r\n", false);
                                 http::unlockclient(http::shq[i].uid);
 
@@ -179,6 +202,9 @@ namespace http
                 {
                     if(http::shq[i].uid == -1)
                     {
+#ifdef NHDBG
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Recivied file request, user = "+nativehttp::data::superstring::str_from_int(tr.uid)+"; file = "+tr.file);
+#endif
                         http::shq[i].uid = tr.uid;
                         http::shq[i].rngs = tr.rngs;
                         http::shq[i].rnge = tr.rnge;

@@ -63,6 +63,9 @@ namespace http
 				int fs = http::bsd::findfreesock();
 				if (fs == -1)
 				{
+#ifdef NHDBG
+                    if(http::log_detailed)nativehttp::server::log("DETAIL@sslListen","Could not assing user to id");
+#endif
 					close(tmp);
 					utils::sleep(10);
 					continue;
@@ -89,6 +92,9 @@ namespace http
 					continue;
 				}
 
+#ifdef NHDBG
+                    if(http::log_detailed)nativehttp::server::log("DETAIL@sslListen","New connection, assigned to "+nativehttp::data::superstring::str_from_int(fs));
+#endif
 				http::connected[fs] = tmp;
 				http::client_ips[fs] = sock_addr.sin_addr.s_addr;
 				http::packets_sent[fs] = 0LL;

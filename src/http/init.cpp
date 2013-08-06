@@ -56,6 +56,8 @@ namespace http
 		http::log_requests = cfg->get_int("log_requests");
 		http::log_sender = cfg->get_int("log_sender");
 
+		http::log_detailed = cfg->get_int("detailed_log");
+
 #endif
 
         if (!cfg->get_var("log").empty())

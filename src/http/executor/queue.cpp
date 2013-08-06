@@ -72,6 +72,12 @@ namespace http
                 }
                 http::toexec.pop();
                 pthread_mutex_unlock(http::mtx_exec);
+
+#ifdef NHDBG
+                if(http::log_detailed)nativehttp::server::log("DETAIL@execQ","Got request; user = "+nativehttp::data::superstring::str_from_int(process->uid)
+                    +"; executor ="+nativehttp::data::superstring::str_from_int(exc->id)+";");
+#endif
+
                 if(process)return process;
                 utils::sleep(1);
 			}

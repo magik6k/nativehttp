@@ -85,6 +85,9 @@ namespace http
 						{
                             if(http::client_protocol[i] == CLPROT_HTTP)
                             {
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@sslRecv","Recieved data for HTTP module: "+nativehttp::data::superstring::str_from_int(i));
+#endif
                                 http::request *trq = new http::request();
                                 trq->request = rqbuf;
                                 rqbuf = NULL; //Do not ever think about freeing this here
@@ -104,6 +107,9 @@ namespace http
 							}
 							else
 							{
+#ifdef NHDBG
+                                if(http::log_detailed)nativehttp::server::log("DETAIL@sslRecv","Recieved data for WebSocket module: "+nativehttp::data::superstring::str_from_int(i));
+#endif
                                 ra += ra2;
                                 http::statdata::onrecv(ra);
                                 ws::rcv_push((unsigned char*)rqbuf, ra, i);
@@ -112,6 +118,9 @@ namespace http
 						}
 						else
 						{
+#ifdef NHDBG
+                            if(http::log_detailed)nativehttp::server::log("DETAIL@sslRecv","User disconnected: "+nativehttp::data::superstring::str_from_int(i));
+#endif
 							http::ssl::disconnect(i);
 						}
 

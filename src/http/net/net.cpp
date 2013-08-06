@@ -29,6 +29,9 @@ namespace http
 {
 	void send(int uid, unsigned long datasize, const char *data, bool free)
 	{
+#ifdef NHDBG
+        if(http::log_detailed)nativehttp::server::log("DETAIL@net","Sending data to client; user = "+nativehttp::data::superstring::str_from_int(uid)+";");
+#endif
 		outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
 		http::packets_to_send[uid]++;
 
@@ -38,11 +41,17 @@ namespace http
 	}
 	void unlockclient(int i)
 	{
+#ifdef NHDBG
+        if(http::log_detailed)nativehttp::server::log("DETAIL@net","Unlocking client; user = "+nativehttp::data::superstring::str_from_int(i)+";");
+#endif
 		http::ulock[i] = false;
 	}
 
 	void kickclient(int i)
 	{
+#ifdef NHDBG
+        if(http::log_detailed)nativehttp::server::log("DETAIL@net","Kicking client; user = "+nativehttp::data::superstring::str_from_int(i)+";");
+#endif
 		if (http::onssl && http::sslsck[i])
 		{
 			SSL_shutdown(http::sslsck[i]);

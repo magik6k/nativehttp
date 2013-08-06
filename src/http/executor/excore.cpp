@@ -47,6 +47,10 @@ namespace http
             {
                 case page_native:
                     {
+#ifdef NHDBG
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: NativePage; user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
+#endif
+
                         rd->ctype = "text/html;charset=" + charset;
                         rd->response = "200 OK";
 
@@ -137,6 +141,9 @@ namespace http
                     break;
                 case page_file:
                     {
+#ifdef NHDBG
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: FILE; user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
+#endif
                         pd.data = NULL;
                         fsrq req;
                         req.file = (const char*)pid.data;
@@ -153,7 +160,12 @@ namespace http
                     }
                     break;
                 default:
-                    return 1;
+                    {
+#ifdef NHDBG
+                        if(http::log_detailed)nativehttp::server::log("DETAIL@execCore","Requested: 404; user = "+nativehttp::data::superstring::str_from_int(ld.uid)+";");
+#endif
+                        return 1;
+                    }
             }
             return 1;
 

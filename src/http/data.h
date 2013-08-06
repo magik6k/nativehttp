@@ -91,6 +91,8 @@ namespace http
 	extern bool log_sender;
 	extern bool log_newline;
 
+	extern bool log_detailed;
+
 #endif
 
 	extern int maxConnections;
