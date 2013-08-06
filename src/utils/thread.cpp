@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 #include "thread.h"
+#include "time.h"
 #include <pthread.h>
 
 namespace utils
@@ -97,7 +98,37 @@ namespace utils
     int condex_send_begin(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
-        return pthread_mutex_lock(&cdx->mtx);
+        int e = pthread_mutex_trylock(&cdx->mtx);
+        if(e == 0) return 0;
+
+
+            int LIMIT = 15;
+
+
+        while(e != 0&&LIMIT)
+        {
+            if(e == EBUSY)
+            {
+                utils::sleep(100);
+                --LIMIT;
+            }
+            else if(e == EINVAL||e == EAGAIN)
+            {
+                nativehttp::server::err("DBG:send_begin@condex@thread.cpp","Invalid Condex");
+                return EINVAL;
+            }
+            else if(e == EDEADLK)
+            {
+                return 0;
+            }
+            e = pthread_mutex_trylock(&cdx->mtx);
+        }
+
+#ifdef NHDBG
+        nativehttp::server::err("DBG:send_begin@condex@thread.cpp","Condex timed out");
+#endif
+
+        return e;
     }
 
     int condex_send_end(condex* cdx)
