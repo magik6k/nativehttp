@@ -43,6 +43,11 @@ namespace http
                 if(http::shq[i].uid != -1)
                 {
                     fast = 100000;
+#ifdef NHDBG
+                    if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","");
+                    if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","FSEND for user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+
+                        "; requestID = "+nativehttp::data::superstring::str_from_int(i)+";");
+#endif
                     switch(http::shq[i].state)
                     {
                         case FSS_Init:
@@ -63,15 +68,25 @@ namespace http
                                     http::shq[i].fd = -1;
                                     break;
                                 }
-                                http::shq[i].buf = utils::memory::alloc<char>(http::fsnd_fb_size);
 
                                 struct stat fst;
-                                fstat(http::shq[i].fd, &fst);
+                                if(fstat(http::shq[i].fd, &fst)<0)
+                                {
+                                    nativehttp::server::err("filesender.cpp@http","fstat error");
+
+                                    http::send(http::shq[i].uid, http::error::e500.size, http::error::e500.data, false);
+                                    http::unlockclient(http::shq[i].uid);
+                                    http::shq[i].fd = -1;
+                                    break;
+                                }
                                 http::shq[i].fsize = fst.st_size;
+
+
+                                http::shq[i].buf = utils::memory::alloc<char>(http::fsnd_fb_size);
 
                                 if(http::shq[i].rngs < 0)
                                 {
-                                    http::shq[i].rngs = http::shq[i].fsize + http::shq[i].rngs;
+                                    http::shq[i].rngs = http::shq[i].fsize - http::shq[i].rngs;
                                 }
 
                                 if(http::shq[i].rnge == -1)
@@ -239,7 +254,7 @@ namespace http
                 if(http::log_detailed)nativehttp::server::err("DETAIL@FileSender","Could not lock request queue");
                 utils::sleep(250);
 #endif
-                utils::sleep(5);
+                utils::sleep(1);
                 continue;
             }
             if(http::fsend.size() > 0) ///Recive new sending requests
