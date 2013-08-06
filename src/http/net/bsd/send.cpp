@@ -66,11 +66,13 @@ namespace http
 				outdata proc = http::tosend.front(ts);
 				if (ts == 1)
 				{
+                    utils::condex_recv_end(http::cdx_snd);
 					continue;
 				}
 				if(proc.pktid!=http::packets_sent[proc.uid])
 				{
                     http::tosend.front2back();
+                    utils::condex_recv_end(http::cdx_snd);
 					continue;
 				}
 				http::tosend.pop();
