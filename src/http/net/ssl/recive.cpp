@@ -100,7 +100,10 @@ namespace http
                                 http::ulock[i] = true;
 
                                 utils::condex_send_begin(http::cdx_exec);
-                                http::toexec.push(trq);
+                                if(http::toexec.push(trq))
+                                {
+                                    nativehttp::server::err("recive.cpp@bsd","Request push error");
+                                }
                                 utils::condex_send_end(http::cdx_exec);
 							}
 							else

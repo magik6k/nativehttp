@@ -233,7 +233,10 @@ namespace ws
         tmp.datalen=dlen;
         tmp.uid=uid;
         pthread_mutex_lock(http::mtx_wsrc);
-        rqueue.push(tmp);
+        if(rqueue.push(tmp))
+        {
+            nativehttp::server::err("recive.cpp@websock","Request push error");
+        }
         pthread_mutex_unlock(http::mtx_wsrc);
     }
 

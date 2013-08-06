@@ -193,7 +193,15 @@ namespace http
 
                 }
             }
-            pthread_mutex_lock(http::mtx_fsnd);
+            if(pthread_mutex_trylock(http::mtx_fsnd))
+            {
+#ifdef NHDBG
+                if(http::log_detailed)nativehttp::server::err("DETAIL@FileSender","Could not lock request queue");
+                utils::sleep(250);
+#endif
+                utils::sleep(5);
+                continue;
+            }
             if(http::fsend.size() > 0) ///Recive new sending requests
             {
                 fsrq tr = http::fsend.front();
