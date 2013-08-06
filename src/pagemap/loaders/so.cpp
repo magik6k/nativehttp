@@ -30,7 +30,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 {
 	tmp.type = page_native;
 	nativepage *ntm = new nativepage;
-	ntm->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
+	ntm->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
 	if (!ntm->handle)
 	{
 		nativehttp::server::err("SO.loader@pagemap", "can't open shared file: " + string(f) + ":\n" + string(dlerror()));

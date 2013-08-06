@@ -114,15 +114,13 @@ namespace http
                         snd += "\r\n";
                         snd += rd->cookie->gethead();
                         snd += "\r\n";
-                        string snd2 = "\r\n";
 
                         statdata::onhttpsend(snd.size());
 
-                        pd.size = snd.size() + ts.size + snd2.size();
+                        pd.size = snd.size() + ts.size;
                         pd.data = new char[pd.size];
                         memcpy(pd.data, snd.c_str(), snd.size());
                         memcpy(pd.data + snd.size(), ts.data, ts.size);
-                        memcpy(pd.data + snd.size() + ts.size, snd2.c_str(), snd2.size());
 
                         #ifdef NHDBG
 
