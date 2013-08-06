@@ -34,10 +34,13 @@ namespace http
 #endif
 		outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
 		http::packets_to_send[uid]++;
-
+        cout << ".";
 		utils::condex_send_begin(http::cdx_snd);
+		cout << ".";
 		http::tosend.push(t);
+		cout << ".";
         utils::condex_send_end(http::cdx_snd);
+        cout << ".\n";
 	}
 	void unlockclient(int i)
 	{
