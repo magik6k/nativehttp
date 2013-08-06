@@ -26,6 +26,21 @@ freely, subject to the following restrictions:
 
 namespace utils
 {
+
+    struct thr_t
+    {
+        void* data;
+        void *(*fn) (void *);
+    };
+
+    void* thread_runner(void* fn)
+    {
+        void* rt = (((thr_t*)fn)->fn)(((thr_t*)fn)->data);
+        delete (thr_t*)fn;
+        nativehttp::server::log("thread.cpp@utils","A thread has quit");
+        return rt;
+    }
+
     int create_thread(pthread_t* thr, void *(*fn) (void *), void* fnarg, unsigned int heap)
     {
         pthread_attr_t at;
@@ -39,8 +54,10 @@ namespace utils
             nativehttp::server::log("thread.cpp@utils", "ERROR: Setting heap size failed");
             return -1;
         }
-
-        return pthread_create(thr, &at, fn, fnarg);
+        thr_t* dp = new thr_t;
+        dp->fn = fn;
+        dp->data = fnarg;
+        return pthread_create(thr, &at, thread_runner, (void*)dp);
     }
     pthread_mutex_t* create_mutex()
     {
