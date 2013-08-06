@@ -97,13 +97,9 @@ namespace utils
 
     int condex_send_begin(condex* cdx)
     {
-                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
         if(cdx == NULL)return EINVAL;
-                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
         int e = pthread_mutex_trylock(&cdx->mtx);
-                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
         if(e == 0) return 0;
-                                    nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE");
 
             int LIMIT = 15;
 
@@ -112,11 +108,8 @@ namespace utils
         {
             if(e == EBUSY)
             {
-                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-T 0");
                 utils::sleep(100);
-                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-T 1");
                 --LIMIT;
-                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-T 2");
             }
             else if(e == EINVAL||e == EAGAIN)
             {
@@ -125,12 +118,9 @@ namespace utils
             }
             else if(e == EDEADLK)
             {
-                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-DDL");
                 return 0;
             }
-            nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-RT 0");
             e = pthread_mutex_trylock(&cdx->mtx);
-            nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CDE-RT 1");
         }
 
 #ifdef NHDBG
@@ -151,7 +141,6 @@ namespace utils
 
     int condex_recv_begin(condex* cdx)
     {
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 1");
         if(cdx == NULL)
         {
 #ifdef NHDBG
@@ -159,9 +148,7 @@ namespace utils
 #endif
             return EINVAL;
         }
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 2");
         int e = pthread_mutex_lock(&cdx->mtx);
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 3");
         if(e!=0)
         {
 #ifdef NHDBG
@@ -170,20 +157,17 @@ namespace utils
             return e;
         }
 rewait:
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 4");
         e = pthread_cond_wait(&cdx->cnd, &cdx->mtx);
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 5");
         if(e)
         {
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 6-1");
+
 #ifdef NHDBG
             nativehttp::server::err("DBG:condex@thread.cpp","Cond wait fail fail: "+nativehttp::data::superstring::str_from_int(e));
 #endif
             return e;
         }
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 6-2");
+
         if(!pthread_mutex_trylock(&cdx->smtx))return 0;
-                                                nativehttp::server::log("DEVELOPMENT-!!!!!@cd","CRB 7");
         pthread_mutex_unlock(&cdx->mtx);
         goto rewait;
     }

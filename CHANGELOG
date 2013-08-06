@@ -6,6 +6,9 @@ DEV:
 -Better thearding
 -Makefile repaired
 -Detailed logging option
+-Tons of bugfixes
+-FileSender Bugfixed
+-Many things may still behave strangely
 
 0108.13:
 -Stats - Multiple bugs fixed
