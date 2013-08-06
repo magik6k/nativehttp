@@ -33,8 +33,6 @@ freely, subject to the following restrictions:
 #include "utils/memory.h"
 #endif
 
-int ts = 0;
-
 namespace http
 {
     namespace rproc
@@ -43,35 +41,19 @@ namespace http
         {
             while(1)
             {
-                pthread_mutex_lock(http::mtx_exec);
-                if (http::toexec.size() <= 0)
-                {
-                    pthread_mutex_unlock(http::mtx_exec);
-                    utils::sleep(1);
-                    continue;
-                }
-                if (http::toexec.front(ts)->taken > 0)
-                {
-                    pthread_mutex_unlock(http::mtx_exec);
-                    utils::sleep(1);
-                    continue;
-                }
-                if (ts == 1)
-                {
-                    pthread_mutex_unlock(http::mtx_exec);
-                    utils::sleep(1);
-                    continue;
-                }
-                http::toexec.front()->taken = exc->id;
+                utils::condex_recv_begin(http::cdx_exec);
+
+                int ts = 0;
                 http::request *process = http::toexec.front(ts);
                 if (ts == 1)
                 {
-                    pthread_mutex_unlock(http::mtx_exec);
+                    utils::condex_recv_end(http::cdx_exec);
                     utils::sleep(1);
                     continue;
                 }
                 http::toexec.pop();
-                pthread_mutex_unlock(http::mtx_exec);
+
+                utils::condex_recv_end(http::cdx_exec);
 
 #ifdef NHDBG
                 if(http::log_detailed)nativehttp::server::log("DETAIL@execQ","Got request; user = "+nativehttp::data::superstring::str_from_int(process->uid)

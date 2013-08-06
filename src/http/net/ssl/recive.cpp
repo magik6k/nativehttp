@@ -33,7 +33,6 @@ namespace http
 		{
 
             char* rqbuf = NULL;
-            bool own_exec_mtx=false;
 
 			while (1)
 			{
@@ -96,14 +95,13 @@ namespace http
                                 ((char*)trq->request)[ra] = '\0';
                                 http::statdata::onrecv(ra);
 
-                                trq->taken = -1;
                                 trq->uid = i;
                                 trq->sender = http::connected[i];
                                 http::ulock[i] = true;
-                                if(!own_exec_mtx)pthread_mutex_lock(http::mtx_exec);
-                                own_exec_mtx = false;
+
+                                utils::condex_send_begin(http::cdx_exec);
                                 http::toexec.push(trq);
-                                pthread_mutex_unlock(http::mtx_exec);
+                                utils::condex_send_end(http::cdx_exec);
 							}
 							else
 							{
@@ -127,12 +125,6 @@ namespace http
 					}
 				}
 				utils::sleep(1);
-
-				if(http::toexec.size() <= 0 && !own_exec_mtx)
-				{
-                    pthread_mutex_lock(http::mtx_exec);
-                    own_exec_mtx = true;
-				}
 			}
 		}
 	}

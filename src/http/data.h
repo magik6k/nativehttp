@@ -51,7 +51,6 @@ namespace http
 	{
 		SOCKET sender;
 		const char *request;
-		int taken;
 		int uid;
 
 		int method;
@@ -133,11 +132,11 @@ namespace http
 	extern size_t fsnd_fb_size;
 
 	extern pthread_mutex_t *mtx_exec2;
-	extern pthread_mutex_t *mtx_exec;
 	extern pthread_mutex_t *mtx_fsnd;
 	extern pthread_mutex_t *mtx_wsrc;
 
 	extern utils::condex *cdx_snd;
+	extern utils::condex *cdx_exec;
 
 	extern pthread_t *theard_nc;
 	extern pthread_t **theard_sd;

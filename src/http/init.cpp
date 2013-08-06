@@ -112,11 +112,11 @@ namespace http
         if(cfg->get_int("global_pexec_mutex"))
             http::mtx_exec2 = utils::create_mutex();
 
-		http::mtx_exec = utils::create_mutex();
 		http::mtx_fsnd = utils::create_mutex();
 		http::mtx_wsrc = utils::create_mutex();
 
 		http::cdx_snd = utils::create_condex();
+		http::cdx_exec = utils::create_condex();
 
 		http::manager::rate = cfg->get_int("managerrate");
 		http::manager::postto = cfg->get_int("posttimeout");

@@ -129,7 +129,7 @@ namespace manager
                     http::execUnits[i].state = -1;
                     http::execUnits[i].in = 0;
                     pthread_mutex_unlock(http::mtx_exec2);
-                    pthread_mutex_unlock(http::mtx_exec);
+                    utils::condex_recv_end(http::cdx_exec);
 
                     pthread_t *kth = http::execUnits[i].etheard;
 

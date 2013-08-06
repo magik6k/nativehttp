@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 
 void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 {
-	pthread_mutex_lock(http::mtx_exec);
+	//pthread_mutex_lock(http::mtx_exec); - any idea how to repair this?
 	pthread_mutex_lock(http::mtx_exec2);
 
 	dlclose(((nativepage*)(*base)[pgi].data)->handle);
@@ -97,6 +97,6 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 
 	}
 
-	pthread_mutex_unlock(http::mtx_exec);
+	//pthread_mutex_unlock(http::mtx_exec);
 	pthread_mutex_unlock(http::mtx_exec2);
 }

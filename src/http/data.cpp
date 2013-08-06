@@ -83,11 +83,11 @@ namespace http
 	size_t fsnd_fb_size;
 
 	pthread_mutex_t *mtx_exec2 = NULL;
-	pthread_mutex_t *mtx_exec = NULL;
 	pthread_mutex_t *mtx_fsnd = NULL;
 	pthread_mutex_t *mtx_wsrc = NULL;
 
 	utils::condex *cdx_snd = NULL;
+	utils::condex *cdx_exec = NULL;
 
 	pthread_t *theard_nc = NULL;
 	pthread_t **theard_sd = NULL;
