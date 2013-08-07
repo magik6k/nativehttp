@@ -56,7 +56,6 @@ namespace http
 			int ts = 0;
 			while (1)
 			{
-                nativehttp::server::err("nsen","Q="+nd::ss::str_from_int(http::tosend.size())+"; C="+nd::ss::str_from_int(http::cdx_snd->elems));
 				if(utils::condex_recv_begin(http::cdx_snd))
 				{
                     nativehttp::server::err("error@senderB", "Condex error");
