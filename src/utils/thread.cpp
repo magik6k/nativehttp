@@ -99,7 +99,8 @@ namespace utils
     int condex_send_begin(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
-        return pthread_mutex_lock(&cdx->mtx);
+        while(pthread_mutex_lock(&cdx->mtx));
+        return 0;
     }
 
     int condex_send_end(condex* cdx)
@@ -125,6 +126,7 @@ recheck:
             cdx->elems--;
             return 0;
         }
+        if(!e)pthread_mutex_unlock(&cdx->mtx);
         else goto recheck;
     }
 
