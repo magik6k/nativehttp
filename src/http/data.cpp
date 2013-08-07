@@ -100,6 +100,8 @@ namespace http
 
     bool logger_colors;
 
+    tms s_cdx_wakeup;
+
 	namespace headers
 	{
 		string standard = "Allow: GET, POST\r\nServer: NativeHTTP/0.1.1\r\n";

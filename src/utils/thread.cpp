@@ -23,6 +23,8 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include "thread.h"
 #include "time.h"
+#include "protocol.h"
+#include "http/data.h"
 #include <pthread.h>
 
 namespace utils
@@ -90,92 +92,45 @@ namespace utils
     {
         if(cdx == NULL)return EINVAL;
         cdx->mtx = PTHREAD_MUTEX_INITIALIZER;
-        cdx->smtx = PTHREAD_MUTEX_INITIALIZER;
-        cdx->cnd = PTHREAD_COND_INITIALIZER;
+        cdx->elems = 0;
         return 0;
     }
 
     int condex_send_begin(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
-        int e = pthread_mutex_trylock(&cdx->mtx);
-        if(e == 0) return 0;
-
-            int LIMIT = 15;
-
-
-        while(e != 0&&LIMIT>0)
-        {
-            if(e == EBUSY)
-            {
-                utils::sleep(100);
-                --LIMIT;
-            }
-            else if(e == EINVAL||e == EAGAIN)
-            {
-                nativehttp::server::err("DBG:send_begin@condex@thread.cpp","Invalid Condex");
-                return EINVAL;
-            }
-            else if(e == EDEADLK)
-            {
-                return 0;
-            }
-            e = pthread_mutex_trylock(&cdx->mtx);
-        }
-
-#ifdef NHDBG
-        nativehttp::server::err("DBG:send_begin@condex@thread.cpp","Condex timed out");
-#endif
-
-        return e;
+        return pthread_mutex_lock(&cdx->mtx);
     }
 
     int condex_send_end(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
-        int e = pthread_cond_signal(&cdx->cnd);
-        if(e!=0)return e;
+        cdx->elems++;
         return pthread_mutex_unlock(&cdx->mtx);
     }
 
 
     int condex_recv_begin(condex* cdx)
     {
-        if(cdx == NULL)
+        if(cdx == NULL)return EINVAL;
+recheck:
+        if(cdx->elems <= 0)
         {
-#ifdef NHDBG
-            nativehttp::server::err("DBG:condex@thread.cpp","NULL Condex");
-#endif
-            return EINVAL;
+            nanosleep((timespec*)(&http::s_cdx_wakeup),NULL);
+            goto recheck;
         }
         int e = pthread_mutex_lock(&cdx->mtx);
-        if(e!=0)
+        if(cdx->elems > 0 && !e)
         {
-#ifdef NHDBG
-            nativehttp::server::err("DBG:condex@thread.cpp","Mutex lock fail: "+nativehttp::data::superstring::str_from_int(e));
-#endif
-            return e;
+            cdx->elems--;
+            return 0;
         }
-rewait:
-        e = pthread_cond_wait(&cdx->cnd, &cdx->mtx);
-        if(e)
-        {
-
-#ifdef NHDBG
-            nativehttp::server::err("DBG:condex@thread.cpp","Cond wait fail fail: "+nativehttp::data::superstring::str_from_int(e));
-#endif
-            return e;
-        }
-
-        if(!pthread_mutex_trylock(&cdx->smtx))return 0;
-        pthread_mutex_unlock(&cdx->mtx);
-        goto rewait;
+        else goto recheck;
     }
 
     int condex_recv_end(condex* cdx)
     {
         if(cdx == NULL)return EINVAL;
-        pthread_mutex_unlock(&cdx->smtx);
         return pthread_mutex_unlock(&cdx->mtx);
     }
 

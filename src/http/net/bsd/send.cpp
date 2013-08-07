@@ -56,46 +56,39 @@ namespace http
 			int ts = 0;
 			while (1)
 			{
-                bool from_cond = false;
-
-                if(!http::tosend.empty())
-                {
-                    if(!pthread_mutex_trylock(&cdx_snd->smtx))
-                    {
-                        goto sndSkipCond;
-                    }
-                }
-
+                nativehttp::server::err("nsen","Q="+nd::ss::str_from_int(http::tosend.size())+"; C="+nd::ss::str_from_int(http::cdx_snd->elems));
 				if(utils::condex_recv_begin(http::cdx_snd))
 				{
                     nativehttp::server::err("error@senderB", "Condex error");
                     utils::sleep(250);
                     continue;
 				}
-				from_cond = true;
 
-sndSkipCond:
 				outdata proc = http::tosend.front(ts);
 				if (ts == 1)
 				{
-                    if(from_cond)utils::condex_recv_end(http::cdx_snd);
-                        else pthread_mutex_unlock(&cdx_snd->smtx);
+#ifdef NHDBG
+                    if(http::log_detailed)nativehttp::server::err("DETAIL@sender.cpp","data recv error; user = "+nativehttp::data::superstring::str_from_int(proc.uid)+";");
+#endif
+                    utils::condex_recv_end(http::cdx_snd);
 					continue;
 				}
 				if(proc.pktid!=http::packets_sent[proc.uid])
 				{
+                    utils::condex_recv_end(http::cdx_snd);
+
+                    utils::condex_send_begin(http::cdx_snd);
                     http::tosend.front2back();
-                    if(from_cond)utils::condex_recv_end(http::cdx_snd);
-                        else pthread_mutex_unlock(&cdx_snd->smtx);
+                    utils::condex_send_end(http::cdx_snd);
+
 					continue;
 				}
 				http::tosend.pop();
-                if(from_cond)utils::condex_recv_end(http::cdx_snd);
-                    else pthread_mutex_unlock(&cdx_snd->smtx);
+                utils::condex_recv_end(http::cdx_snd);
 
 				#ifdef NHDBG
 
-                 if(http::log_detailed)nativehttp::server::log("DETAIL@sender.cpp","Sending data; user = "+nativehttp::data::superstring::str_from_int(proc.uid)+"; datasize = "+
+                 if(http::log_detailed)nativehttp::server::log("DETAIL@sender.cpp>>>","Sending data; user = "+nativehttp::data::superstring::str_from_int(proc.uid)+"; datasize = "+
                         nativehttp::data::superstring::str_from_size(proc.size)+";");
 
                 if(http::log_sender&&proc.data)

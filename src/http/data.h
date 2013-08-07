@@ -33,6 +33,7 @@ freely, subject to the following restrictions:
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #include <openssl/ssl.h>
 
@@ -43,6 +44,12 @@ freely, subject to the following restrictions:
 using namespace std;
 
 #define HTTP_MAX_USER_HEADER_SIZE 8194 //orginal 2^13+2
+
+struct tms
+{
+    time_t tv_sec; /* seconds */
+    long tv_nsec; /* nanoseconds */
+};
 
 namespace http
 {
@@ -148,6 +155,8 @@ namespace http
 	extern string nhpc_nativehttph_dest;
 
 	extern bool logger_colors;
+
+	extern tms s_cdx_wakeup;
 
 	namespace headers
 	{

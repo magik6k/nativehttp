@@ -30,8 +30,7 @@ namespace utils
     struct condex
     {
         pthread_mutex_t mtx;
-        pthread_mutex_t smtx;
-        pthread_cond_t cnd;
+        int elems;
     };
 
     int condex_init(condex* cdx);

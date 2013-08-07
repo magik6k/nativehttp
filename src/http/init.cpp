@@ -143,6 +143,9 @@ namespace http
 
 		http::logger_colors = cfg->get_int("logger_colors");
 
+		http::s_cdx_wakeup.tv_nsec = cfg->get_int("cdx_sleep")%1000000000L;
+		http::s_cdx_wakeup.tv_sec = cfg->get_int("cdx_sleep")/1000000000L;
+
 		http::statdata::init();
 
 		if(utils::header_version_ok())
