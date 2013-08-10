@@ -56,6 +56,14 @@ namespace http
 #ifdef NHDBG
         if(http::log_detailed)nativehttp::server::log("DETAIL@net","Kicking client; user = "+nativehttp::data::superstring::str_from_int(i)+";");
 #endif
+
+        if(ws::enabled)
+        {
+            if(http::client_protocol[i] == CLPROT_WEBSOCKETS)
+                if(((*ws::units)[http::client_prot_data[i]].on_disconnect))
+                    (*(*ws::units)[http::client_prot_data[i]].on_disconnect)(i);
+        }
+
 		if (http::onssl && http::sslsck[i])
 		{
 			SSL_shutdown(http::sslsck[i]);
@@ -66,13 +74,6 @@ namespace http
 		if(http::usesessions)
         {
             data::session::storage.getuid(i)->__mkinv(i);
-        }
-
-		if(ws::enabled)
-        {
-            if(http::client_protocol[i] == CLPROT_WEBSOCKETS)
-                if(((*ws::units)[http::client_prot_data[i]].on_disconnect))
-                    (*(*ws::units)[http::client_prot_data[i]].on_disconnect)(i);
         }
 
         if (http::connected[i] != -1)
