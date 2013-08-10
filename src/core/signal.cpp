@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "http/data.h"
 #include "http/stat.h"
 #include "utils/thread.h"
+#include "utils/backtrace.h"
 #include "http/net/net.h"
 #include "http/executor.h"
 
@@ -48,40 +49,43 @@ namespace manager
     {
         if (sig == 11 || sig == 4 || sig == 8)
         {
+
+            utils::debug::print_bt();
+
             if (pthread_equal(*http::theard_mg, pthread_self()) != 0)
             {
-                nativehttp::server::err("manager.cpp", "[Warning]Internal crash");
+                nativehttp::server::err("signal.cpp", "[Warning]Internal crash");
 
                 switch (mstate)
                 {
                     case mgr_timeouts:
                         {
-                            nativehttp::server::log("manager.cpp", "Disabling manager module Timeout");
+                            nativehttp::server::log("signal.cpp", "Disabling manager module Timeout");
                             http::manager::postto = -1;
                             http::manager::execto = -1;
                             break;
                         }
                     case mgr_fsref:
                         {
-                            nativehttp::server::log("manager.cpp", "Disabling manager module APR");   //automatical page reloader - APR
+                            nativehttp::server::log("signal.cpp", "Disabling manager module APR");   //automatical page reloader - APR
                             http::manager::apr = false;
                             break;
                         }
                     case mgr_stat:
                         {
-                            nativehttp::server::log("manager.cpp", "Disabling manager module Stat");
+                            nativehttp::server::log("signal.cpp", "Disabling manager module Stat");
                             http::statdata::internal::managersafe = false;
                             break;
                         }
                     case mgr_sessions:
                         {
-                            nativehttp::server::log("manager.cpp", "Disabling manager module Session");
+                            nativehttp::server::log("signal.cpp", "Disabling manager module Session");
                             mgrsess = false;
                             break;
                         }
                     case mgr_wait:
                         {
-                            nativehttp::server::log("manager.cpp", "Disabling manager");
+                            nativehttp::server::log("signal.cpp", "Disabling manager");
                             pthread_cancel(pthread_self());
                             return;
                         }
@@ -89,18 +93,23 @@ namespace manager
 
 
                 int tmkm = utils::create_thread(http::theard_mg, manager::manager, NULL, 256 * 1024);
-                if (tmkm != 0)nativehttp::server::err("manager.cpp", "Manager failed to restart");
+                if (tmkm != 0)nativehttp::server::err("signal.cpp", "Manager failed to restart");
 
                 pthread_cancel(pthread_self());
             }
             if (pthread_equal(*http::theard_nc, pthread_self()) != 0)
             {
-                nativehttp::server::err("manager.cpp", "ANC module crash");
+                nativehttp::server::err("signal.cpp", "ANC module crash");
                 pthread_cancel(pthread_self());
             }
             if (pthread_equal(*http::theard_fs, pthread_self()) != 0)
             {
-                nativehttp::server::err("manager.cpp", "File sender module crash");
+                nativehttp::server::err("signal.cpp", "File sender module crash");
+                pthread_cancel(pthread_self());
+            }
+            if(pthread_equal(*http::theard_ws, pthread_self()) != 0)
+            {
+                nativehttp::server::err("signal.cpp", "WebSocket module crashed");
                 pthread_cancel(pthread_self());
             }
             for (int i = 0; i < http::Nsend; i++)
@@ -113,7 +122,7 @@ namespace manager
                     pthread_t *kth = http::theard_sd[i];
 
                     int tmks = utils::create_thread(http::theard_sd[i], http::bsd::sender, NULL, 16 * 1024);
-                    if (tmks != 0)nativehttp::server::err("manager.cpp", "Sender failed to start");
+                    if (tmks != 0)nativehttp::server::err("signal.cpp", "Sender failed to start");
 
                     pthread_cancel(*kth);
                     delete kth;
@@ -137,12 +146,14 @@ namespace manager
                     int tms = utils::create_thread(tt, http::executor, &(http::execUnits[i]), 256 * 1024);
 
                     http::execUnits[i].etheard = tt;
-                    if (tms != 0)nativehttp::server::err("manager.cpp", "Executor failed to start");
+                    if (tms != 0)nativehttp::server::err("signal.cpp", "Executor failed to start");
 
                     pthread_cancel(*kth);
                     delete kth;//this will never happen
                 }
             }
+
+
 
 
             //wtf, here?

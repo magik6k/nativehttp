@@ -9,6 +9,7 @@ DEV:
 -Tons of bugfixes
 -FileSender Bugfixed
 -Many things may still behave strangely
+-Added on-thread-crash backtrace printing option
 
 0108.13:
 -Stats - Multiple bugs fixed

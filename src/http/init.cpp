@@ -60,6 +60,8 @@ namespace http
 
 #endif
 
+        http::backtrace_len = cfg->get_int("backtrace_len");
+
         if (!cfg->get_var("log").empty())
         {
             logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);

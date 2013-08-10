@@ -101,6 +101,8 @@ namespace http
 
 #endif
 
+    extern int backtrace_len;
+
 	extern int maxConnections;
 	extern unsigned int maxPost;
 

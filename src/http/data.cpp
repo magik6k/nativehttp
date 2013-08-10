@@ -41,8 +41,9 @@ namespace http
 
 	bool log_detailed = false;
 
-
 #endif
+
+    int backtrace_len;
 
 	int maxConnections = 0;
 	unsigned int maxPost = 0;

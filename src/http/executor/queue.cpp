@@ -42,7 +42,6 @@ namespace http
             while(1)
             {
                 utils::condex_recv_begin(http::cdx_exec);
-                utils::condex& c = *cdx_exec;
                 int ts = 0;
                 http::request *process = http::toexec.front(ts);
 

@@ -93,6 +93,7 @@ NHS = \
 	$(NHD)/pagemap/loaders/file.cpp \
 	$(NHD)/pagemap/reloaders/so.cpp \
 	$(NHD)/pagemap/reloaders/nhp.cpp \
+	$(NHD)/utils/backtrace.cpp \
 	$(NHD)/utils/memory.cpp \
 	$(NHD)/utils/nhp_to_cpp.cpp \
 	$(NHD)/utils/thread.cpp \
