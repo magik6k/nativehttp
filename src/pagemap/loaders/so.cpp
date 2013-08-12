@@ -30,6 +30,11 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 {
 	tmp.type = page_native;
 	nativepage *ntm = new nativepage;
+
+#ifdef NHDBG
+    if(http::log_detailed)nativehttp::server::log("DETAIL@SO.loader","Openning shared lib: "+string(f));
+#endif
+
 	ntm->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
 	if (!ntm->handle)
 	{
@@ -39,6 +44,11 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 	}
 	else
 	{
+
+#ifdef NHDBG
+        if(http::log_detailed)nativehttp::server::log("DETAIL@SO.loader","Loading symbols");
+#endif
+
 		ntm->onload = (nativehttp::data::Tonload) dlsym(ntm->handle, "onload");
 		ntm->page = (nativehttp::data::Tpage) dlsym(ntm->handle, "page");
 		if (!ntm->onload || !ntm->page)
@@ -52,7 +62,13 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 		else
 		{
 			acp = base->size();
+
+#ifdef NHDBG
+        if(http::log_detailed)nativehttp::server::log("DETAIL@SO.loader","Initating");
+#endif
+
 			int initstate = (*ntm->onload)();
+
 			if (initstate < 0)
 			{
 				if (initstate != -NATIVEHTTP_API_VERSION)
@@ -80,6 +96,11 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 
 			if (initstate == -NATIVEHTTP_API_VERSION)
 			{
+
+#ifdef NHDBG
+                if(http::log_detailed)nativehttp::server::log("DETAIL@SO.loader","Adding do page list");
+#endif
+
 				tmp.data = ntm;
 				base->push_back(tmp);
 

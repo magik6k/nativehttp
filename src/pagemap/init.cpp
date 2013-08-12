@@ -23,6 +23,8 @@ freely, subject to the following restrictions:
 
 #include "pagemap.h"
 #include <string.h>
+#include "nativehttp.h"
+#include "http/data.h"
 #ifdef NHDBG
 #include "protocol.h"
 #include <iostream>
@@ -33,6 +35,10 @@ void page_mapper::page_mapper_init(string d)
 	mapdir(d);
 	for (unsigned int i = 0; i < files.size(); i++)
 	{
+#ifdef NHDBG
+        if(http::log_detailed)nativehttp::server::log("DETAIL@PageMap",string("File: ")+files[i]);
+#endif
+
 		page tmp = bscpageset(files[i]);
 		if (tmp.type == -1)continue;
 

@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 17
+#define NATIVEHTTP_API_VERSION 18
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -414,19 +414,19 @@ namespace nativehttp
 
 	namespace init
 	{
-		extern "C" void attach_uri(string uri, bool top);
+		void attach_uri(string uri, bool top);
 	}
 
 	namespace server
 	{
-		extern "C" string version();
-		extern "C" void log(string lname, string value);
-		extern "C" void err(string lname, string value);
-		extern "C" void logid(int id, string lname, string value);
+		string version();
+		void log(string lname, string value);
+		void err(string lname, string value);
+		void logid(int id, string lname, string value);
 
-		extern "C" data::clientid maxClients();
+		data::clientid maxClients();
 
-		extern "C" bool is_ssl();
+		bool is_ssl();
 
 		namespace stat
 		{

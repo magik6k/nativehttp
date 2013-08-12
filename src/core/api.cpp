@@ -48,17 +48,17 @@ namespace nativehttp
 		size = 0;
 	}
 
-	extern "C" void init::attach_uri(string uri, bool top)
+	void init::attach_uri(string uri, bool top)
 	{
 		pmap.adduri(uri, top);
 	}
 
-	extern "C" string server::version()
+	string server::version()
 	{
 		return "NativeHTTP Alpha " + data::superstring::str_from_int(NATIVEHTTP_API_VERSION);
 	}
 
-	extern "C" void server::log(string lname, string value)
+	void server::log(string lname, string value)
 	{
 		if (!deamonized)
 		{
@@ -70,7 +70,7 @@ namespace nativehttp
 		if (logfile.is_open())logfile << "[" << lname.c_str() << "]" << value.c_str() << endl;
 	}
 
-	extern "C" void server::err(string lname, string value)
+	void server::err(string lname, string value)
 	{
 		if (!deamonized)
 		{
@@ -82,7 +82,7 @@ namespace nativehttp
 		if (logfile.is_open())logfile << "[ERR][" << lname.c_str() << "]" << value.c_str() << endl;
 	}
 
-	extern "C" void server::logid(int id, string lname, string value)
+	void server::logid(int id, string lname, string value)
 	{
 		if (!deamonized)
 		{
@@ -94,12 +94,12 @@ namespace nativehttp
 		if (logfile.is_open())logfile << "[" << lname.c_str() << "](" << id << ")" << value.c_str() << endl;
 	}
 
-    extern "C" data::clientid maxClients()
+    data::clientid server::maxClients()
     {
         return http::maxConnections;
     }
 
-    extern "C" bool server::is_ssl()
+    bool server::is_ssl()
     {
         return http::onssl;
     }

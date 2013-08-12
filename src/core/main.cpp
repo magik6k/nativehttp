@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "data/queue.h"
 #include "http/net/net.h"
 #include "ws/ws.h"
+#include "utils/backtrace.h"
 #include <sys/prctl.h>
 #include <signal.h>
 
@@ -89,8 +90,33 @@ int main(int argc, char *argv[])
 				case 'k':
 					gr = false;
 					break;
+                case 'w':
+                    if (i + 1 < argc)
+					{
+                        gr = false;
+                        if ((chdir(argv[i+1])) < 0)
+                        {
+                            cout << "ERROR: " << "Wrong directory name: " << argv[i + 1] << "\n";
+							exit(1);
+                        }
+                        i++;
+					}
+					else
+					{
+						cout << "ERROR: " << "No directory specified\n";
+						exit(1);
+					}
+                    break;
+                case 'h':
+                    cout << " -h - Display this help" << endl;
+                    cout << " -c [file] - Change configuration file" << endl;
+                    cout << " -d - Deamonize after startup" << endl;
+                    cout << " -w [file] - Change workind directory(triggers -k)" << endl;
+                    cout << " -k - Do not 'cd' to root directory" << endl;
+                    break;
 				default:
-					cout << "ERROR: " << "Unknown option: " << argv[i] << endl;;
+					cout << "ERROR: " << "Unknown option: " << argv[i] << endl;
+					cout << "ERROR: " << argv[0] << " -h to get help" << endl;
 					exit(1);
 			}
 		}
@@ -102,6 +128,8 @@ int main(int argc, char *argv[])
 	}
 
 	if (gr)goroot();
+
+
 
 	signal(SIGSEGV, manager::sig);
 	signal(SIGILL, manager::sig);
@@ -142,6 +170,15 @@ int main(int argc, char *argv[])
 	http::executorinit();
 	http::netstart();
 	http::startsystem();
+
+#ifdef NHDBG
+    if(http::log_detailed)
+        atexit([]()
+        {
+            nativehttp::server::log("Detail@core", "PROCESS EXIT DETECTED");
+            utils::debug::print_bt();
+        });
+#endif
 
 	nativehttp::server::log("INIT", "Ready in "+nativehttp::data::superstring::str_from_double((utils::get_time())/1000.f)+"s");
 
