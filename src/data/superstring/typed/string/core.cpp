@@ -36,6 +36,12 @@ void nativehttp::data::superstring::operator()(string s)
 	this->set(s);
 }
 
+nativehttp::data::superstring& nativehttp::data::superstring::operator+=(string in)
+{
+    str += in;
+    return *this;
+}
+
 nativehttp::data::superstring::superstring(string s)
 {
 	this->set(s);

@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 #include <stdio.h>
+#include <cstring>
 
 #define SSLOCK if(lck)pos=lpos
 
@@ -53,12 +54,11 @@ string nativehttp::data::superstring::to(unsigned int ep)
 	else
 	{
         string trt;
-        while(pos >= 0 && pos >= ep && pos != 4294967295)
+        while(pos >= ep && pos != 4294967295)
         {
             trt += str[pos];
             pos--;
         }
-        if(pos<0)pos=0;
         rt.reserve(trt.size());
         for(unsigned int i=0;i<trt.size();i++)
         {
@@ -68,4 +68,16 @@ string nativehttp::data::superstring::to(unsigned int ep)
 	}
 	SSLOCK;
 	return rt;
+}
+
+nativehttp::data::superstring& nativehttp::data::superstring::remove(unsigned int from, unsigned int to)
+{
+    char *out = new char[str.size()-(to-from)];
+    out[str.size()-(to-from+1)]='\0';
+    memcpy(out,str.c_str(),from);
+    if(to < str.size())memcpy(out+from,str.c_str()+to,str.size()-to);
+    str = out;
+    delete[] out;
+    if(pos > str.size())pos = str.size();
+    return *this;
 }

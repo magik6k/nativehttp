@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 18
+#define NATIVEHTTP_API_VERSION 19
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -56,12 +56,20 @@ namespace nativehttp
 			token(string st, int i);
 		};
 
+		struct _chsetrule
+		{
+            string _from;
+            string _to;
+		};
+
 		class superstring
 		{
 			private:
 
 				vector<token>tokens;
 				bool rae;
+
+            protected:
 				bool lck;
 				unsigned int lpos;
 
@@ -101,6 +109,7 @@ namespace nativehttp
 				superstring(string s);
 				void set(string s);
 				void operator()(string s);
+				superstring& operator+=(string in);
 
                 string skip(string stb);
                 string tochar(string fend);
@@ -148,6 +157,8 @@ namespace nativehttp
 				string from(unsigned int sp);
 				string to(unsigned int ep);
 
+				superstring& remove(unsigned int from, unsigned int to);
+
 				/** 64bit integer functions */
                 static string str_from_int64(int64_t in);
 				static superstring sst_from_int64(int64_t in);
@@ -187,7 +198,24 @@ namespace nativehttp
 
 		};
 
+
+
+        class superstringset : public superstring
+        {
+            private:
+                vector<_chsetrule> chset_rules;
+
+            public:
+
+                superstringset& changeset_addRule(string from, string to);
+                superstringset& changeset_clean();
+                superstringset& changeset_removeRule(string from, string to);
+                int changeset_numRules();
+                superstringset& changeset_exec();
+        };
+
 		typedef superstring ss;
+		typedef superstringset ssSet;
 		typedef int clientid;
 
 		struct cfgfil

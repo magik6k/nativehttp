@@ -48,6 +48,8 @@ NHS = \
 	$(NHD)/data/superstring/typed/superstring/core.cpp \
 	$(NHD)/data/superstring/typed/superstring/misc.cpp \
 	$(NHD)/data/superstring/typed/superstring/position.cpp \
+	$(NHD)/data/superstringset/chset_base.cpp \
+	$(NHD)/data/superstringset/chset_exec.cpp \
 	$(NHD)/data/superstring/core.cpp \
 	$(NHD)/data/superstring/file.cpp \
 	$(NHD)/data/superstring/token.cpp \

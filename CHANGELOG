@@ -10,6 +10,7 @@ DEV:
 -FileSender Bugfixed
 -Many things may still behave strangely
 -Added on-thread-crash backtrace printing option
+-Added 'SuperStringSet'
 
 0108.13:
 -Stats - Multiple bugs fixed
