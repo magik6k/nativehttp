@@ -74,8 +74,8 @@ nativehttp::data::superstring& nativehttp::data::superstring::remove(unsigned in
 {
     char *out = new char[str.size()-(to-from)];
     out[str.size()-(to-from+1)]='\0';
-    memcpy(out,str.c_str(),from);
-    if(to < str.size())memcpy(out+from,str.c_str()+to,str.size()-to);
+    if(from > 0)memcpy(out,str.c_str(),from);
+    if(to+1 < str.size())memcpy(out+from,str.c_str()+to,str.size()-(to+1));
     str = out;
     delete[] out;
     if(pos > str.size())pos = str.size();

@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #include "nativehttp.h"
 #include <stdio.h>
 #include "data/queue.h"
-
+#include <iostream>
 #define SSLOCK if(lck)pos=lpos
 
 namespace nativehttp
@@ -38,7 +38,6 @@ namespace nativehttp
 
             for(;pos<str.size();pos++)
             {
-                out.str += str[pos];
                 for(unsigned int i=0;i<detect.size();i++)
                 {
                     if(str[pos] == chset_rules[i]._from[detect[i]])
@@ -46,18 +45,18 @@ namespace nativehttp
                         detect[i]++;
                         if(detect[i] == chset_rules[i]._from.size())
                         {
-                            out.remove(out.size()-chset_rules[i]._from.size(),out.size());
+                            out.remove(out.size()-chset_rules[i]._from.size(),out.size()-1);
                             for(unsigned int f=0;f<detect.size();f++)
                             {
-                                detect[i] = 0;
+                                detect[f] = 0;
                             }
                             out.str += chset_rules[i]._to;
                             break;
                         }
                     }
+                    else detect[i] = 0;
                 }
             }
-
             str = out.str;
 
             SSLOCK;

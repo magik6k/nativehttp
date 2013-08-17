@@ -8,9 +8,9 @@ DEV:
 -Detailed logging option
 -Tons of bugfixes
 -FileSender Bugfixed
--Many things may still behave strangely
 -Added on-thread-crash backtrace printing option
 -Added 'SuperStringSet'
+-Printing Backtrace when internal crash is detected(Debug only)
 
 0108.13:
 -Stats - Multiple bugs fixed

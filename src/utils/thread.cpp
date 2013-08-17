@@ -128,6 +128,7 @@ recheck:
         }
         if(!e)pthread_mutex_unlock(&cdx->mtx);
         else goto recheck;
+        return e;
     }
 
     int condex_recv_end(condex* cdx)
