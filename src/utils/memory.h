@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 #ifndef MEMORY_H_INCLUDED
 #define MEMORY_H_INCLUDED
 #include <sys/types.h>
+#include <new>
+#include "backtrace.h"
 #include "nativehttp.h"
 namespace utils
 {
@@ -38,12 +40,14 @@ namespace utils
             if(amount<=0)
             {
                 nativehttp::server::err("alloc@memory.h","Could not allocate 0 or less elements");
+                utils::debug::print_bt();
                 exit(1);
             }
-            T* tmptr = new T[amount];
+            T* tmptr = new (std::nothrow) T[amount];
             if(!tmptr)
             {
                 nativehttp::server::err("alloc@memory.h","Allocation failed(out of memory?)");
+                utils::debug::print_bt();
                 exit(1);
             }
             return tmptr;

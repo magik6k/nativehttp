@@ -171,14 +171,20 @@ int main(int argc, char *argv[])
 	http::netstart();
 	http::startsystem();
 
+
+
+    atexit([]()
+    {
 #ifdef NHDBG
-    if(http::log_detailed)
-        atexit([]()
+        if(http::log_detailed)
         {
             nativehttp::server::log("Detail@core", "PROCESS EXIT DETECTED");
             utils::debug::print_bt();
-        });
+        }
 #endif
+        nativehttp::server::log("CORE", "@@@@QUITING@@@@");
+    });
+
     set_terminate([]()
         {
             nativehttp::server::err("Detail@core", "@@@@@@REQUESTED TO TERMINATE@@@@@@");

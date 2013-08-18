@@ -21,11 +21,13 @@ freely, subject to the following restrictions:
    distribution.
 */
 #include "nativehttp.h"
+#include "utils/memory.h"
 #include <stdio.h>
 #include <cstring>
 
 #define SSLOCK if(lck)pos=lpos
 
+namespace um = utils::memory;
 
 string nativehttp::data::superstring::from(unsigned int sp)
 {
@@ -72,10 +74,10 @@ string nativehttp::data::superstring::to(unsigned int ep)
 
 nativehttp::data::superstring& nativehttp::data::superstring::remove(unsigned int from, unsigned int to)
 {
-    char *out = new char[str.size()-(to-from)];
-    out[str.size()-(to-from+1)]='\0';
+    char *out = um::alloc<char>(str.size()-(to-from));
     if(from > 0)memcpy(out,str.c_str(),from);
     if(to+1 < str.size())memcpy(out+from,str.c_str()+to,str.size()-(to+1));
+    out[str.size()-(to-from+1)]='\0';
     str = out;
     delete[] out;
     if(pos > str.size())pos = str.size();

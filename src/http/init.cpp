@@ -65,6 +65,7 @@ namespace http
         if (!cfg->get_var("log").empty())
         {
             logfile.open(cfg->get_var("log"), std::ofstream::out | std::ofstream::app);
+            nativehttp::server::log("CORE", "@@@@LOGGER SESSION@@@@");
             nativehttp::server::log("INIT","Openning logger file");
         }
 		http::maxConnections = cfg->get_int("maxconnections");
