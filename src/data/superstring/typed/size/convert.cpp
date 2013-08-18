@@ -28,6 +28,8 @@ freely, subject to the following restrictions:
 
 string nativehttp::data::superstring::str_from_size(int64_t in)
 {
+    bool m = false;
+    if(in<0){in = -in;m = true;}
 	float tcn = 0;
 	string end;
 	if (in >= 1099511627776LL)
@@ -64,7 +66,7 @@ string nativehttp::data::superstring::str_from_size(int64_t in)
 	}
 	ret += end;
 
-	return ret;
+	return m?("-"+ret):ret;
 }
 
 nativehttp::data::superstring nativehttp::data::superstring::sst_from_size(int64_t in)

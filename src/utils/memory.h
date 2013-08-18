@@ -47,6 +47,7 @@ namespace utils
             if(!tmptr)
             {
                 nativehttp::server::err("alloc@memory.h","Allocation failed(out of memory?)");
+                nativehttp::server::err("alloc@memory.h","Requested allocation: "+nd::ss::str_from_size(amount*sizeof(T)));
                 utils::debug::print_bt();
                 exit(1);
             }
