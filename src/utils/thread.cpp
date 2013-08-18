@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "time.h"
 #include "protocol.h"
 #include "http/data.h"
+#include "utils/backtrace.h"
 #include <pthread.h>
 
 namespace utils
@@ -38,7 +39,23 @@ namespace utils
 
     void* thread_runner(void* fn)
     {
-        void* rt = (((thr_t*)fn)->fn)(((thr_t*)fn)->data);
+        void* rt = NULL;
+#ifdef NHDBG
+        try
+        {
+#endif
+
+            rt = (((thr_t*)fn)->fn)(((thr_t*)fn)->data);
+
+#ifdef NHDBG
+        }
+        catch(exception ex)
+        {
+            nativehttp::server::err("thread.cpp@utils",string("Exception caught: ")+ex.what());
+            utils::debug::print_bt();
+        }
+#endif
+
         delete (thr_t*)fn;
         nativehttp::server::log("thread.cpp@utils","A thread has quit");
         return rt;
