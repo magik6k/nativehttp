@@ -38,13 +38,14 @@ namespace nativehttp
 
             for(;pos<str.size();pos++)
             {
+                out.str+=str[pos];
                 for(unsigned int i=0;i<detect.size();i++)
                 {
                     if(str[pos] == chset_rules[i]._from[detect[i]])
                     {
                         detect[i]++;
                         if(detect[i] == chset_rules[i]._from.size())
-                        {cout << "T:"<<out.str<<";S:"<<out.size()<<"F:"<<chset_rules[i]._from.size()<<endl;
+                        {
                             out.remove(out.size()-chset_rules[i]._from.size(),out.size()-1);
                             for(unsigned int f=0;f<detect.size();f++)
                             {
