@@ -179,6 +179,12 @@ int main(int argc, char *argv[])
             utils::debug::print_bt();
         });
 #endif
+    set_terminate([]()
+        {
+            nativehttp::server::err("Detail@core", "@@@@@@REQUESTED TO TERMINATE@@@@@@");
+            utils::debug::print_bt();
+            abort();
+        });
 
 	nativehttp::server::log("INIT", "Ready in "+nativehttp::data::superstring::str_from_double((utils::get_time())/1000.f)+"s");
 

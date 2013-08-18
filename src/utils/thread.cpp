@@ -39,22 +39,7 @@ namespace utils
 
     void* thread_runner(void* fn)
     {
-        void* rt = NULL;
-#ifdef NHDBG
-        try
-        {
-#endif
-
-            rt = (((thr_t*)fn)->fn)(((thr_t*)fn)->data);
-
-#ifdef NHDBG
-        }
-        catch(exception ex)
-        {
-            nativehttp::server::err("thread.cpp@utils",string("Exception caught: ")+ex.what());
-            utils::debug::print_bt();
-        }
-#endif
+        void* rt = (((thr_t*)fn)->fn)(((thr_t*)fn)->data);
 
         delete (thr_t*)fn;
         nativehttp::server::log("thread.cpp@utils","A thread has quit");

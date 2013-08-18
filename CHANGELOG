@@ -10,8 +10,7 @@ DEV:
 -FileSender Bugfixed
 -Added on-thread-crash backtrace printing option
 -Added 'SuperStringSet'
--Printing Backtrace when internal crash is detected(Debug only)
--Catching uncaught exceptions(Debug only)
+-Printing Backtrace when internal crash is detected(Debug only/may occur in release in some cases)
 
 0108.13:
 -Stats - Multiple bugs fixed
