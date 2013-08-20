@@ -41,7 +41,7 @@ int nhSend(SOCKET sock, const void *data, int len)
 			dp += len;
 		}
 	}
-	while ((left > 0) && ((len > 0) || (errno == EINTR)));
+	while (((left > 0) && ((len > 0) || (errno == EINTR)))&&(errno!=EPIPE&&errno!=ENOTCONN) );
 
 	return (sent);
 }
@@ -85,7 +85,7 @@ namespace http
 				http::tosend.pop();
                 utils::condex_recv_end(http::cdx_snd);
 
-				#ifdef NHDBG
+#ifdef NHDBG
 
                  if(http::log_detailed)nativehttp::server::log("DETAIL@sender.cpp>>>","Sending data; user = "+nativehttp::data::superstring::str_from_int(proc.uid)+"; datasize = "+
                         nativehttp::data::superstring::str_from_size(proc.size)+";");
@@ -103,7 +103,7 @@ namespace http
                     delete[] td;
                 }
 
-                #endif
+#endif
 
 				if (http::connected[proc.uid])
 				{
