@@ -43,6 +43,8 @@ namespace http
 
 #endif
 
+    bool log_requests_short = false;
+
     int backtrace_len;
 
 	int maxConnections = 0;

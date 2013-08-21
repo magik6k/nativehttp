@@ -11,6 +11,7 @@ DEV:
 -Added on-thread-crash backtrace printing option
 -Added 'SuperStringSet'
 -Printing Backtrace when internal crash is detected(Debug only/may occur in release in some cases)
+-Option for printing one-line request log
 
 0108.13:
 -Stats - Multiple bugs fixed

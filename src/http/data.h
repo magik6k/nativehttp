@@ -101,6 +101,8 @@ namespace http
 
 #endif
 
+    extern bool log_requests_short;
+
     extern int backtrace_len;
 
 	extern int maxConnections;

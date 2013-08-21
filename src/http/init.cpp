@@ -60,6 +60,8 @@ namespace http
 
 #endif
 
+        http::log_requests_short = cfg->get_int("log_requests_short");
+
         http::backtrace_len = cfg->get_int("backtrace_len");
 
         if (!cfg->get_var("log").empty())

@@ -148,6 +148,12 @@ namespace http
         {
 
             nativehttp::data::superstring rss(nativehttp::data::superstring(process->request).to("\n"));
+
+            if(http::log_requests_short)
+            {
+                nativehttp::server::log("Request",rss.str);
+            }
+
             rss.add_token(nativehttp::data::token(" ", 0));
             rss.add_token(nativehttp::data::token("GET", 1));
             rss.add_token(nativehttp::data::token("HEAD", 3));
