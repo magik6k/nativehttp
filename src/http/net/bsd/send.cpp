@@ -74,11 +74,27 @@ namespace http
 				}
 				if(proc.pktid!=http::packets_sent[proc.uid])
 				{
-                    utils::condex_recv_end(http::cdx_snd);
 
-                    utils::condex_send_begin(http::cdx_snd);
-                    http::tosend.front2back();
-                    utils::condex_send_end(http::cdx_snd);
+                    if(http::tosend.front().lost_ptk > 0)
+                    {
+                        utils::condex_recv_end(http::cdx_snd);
+                        utils::condex_send_begin(http::cdx_snd);
+
+                        http::tosend.front().lost_ptk--;
+                        http::tosend.front2back();
+
+                        utils::condex_send_end(http::cdx_snd);
+                    }
+                    else
+                    {
+                        nativehttp::server::err("error@senderB", "Dropping packet(invalid ptkid after "+nativehttp::data::superstring::str_from_int(LOST_TICKS)+" tries) - disconnecting user");
+                        if(http::tosend.front().fas)
+                            delete[] http::tosend.front().data;
+
+                        http::kickclient(http::tosend.front().uid);
+                        http::tosend.pop();
+                        utils::condex_recv_end(http::cdx_snd);
+                    }
 
 					continue;
 				}
@@ -112,7 +128,13 @@ namespace http
 					http::packets_sent[proc.uid]++;
 					http::statdata::onsend(proc.size);
 				}
+#ifdef NHDBG
+                else
+                {
+                    if(http::log_detailed)nativehttp::server::err("DETAIL@sender.cpp>>>","Data sending failure - user is disconnected");
+                }
 
+#endif
 
 				if (proc.fas)
 				{

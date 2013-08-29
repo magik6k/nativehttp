@@ -74,6 +74,7 @@ namespace http
 		const char *data;
 		bool fas;//free after sending
 		uint64_t pktid;
+		uint32_t lost_ptk;
 	};
 
 	struct Sexecutor

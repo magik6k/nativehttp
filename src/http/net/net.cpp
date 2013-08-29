@@ -25,6 +25,8 @@ freely, subject to the following restrictions:
 #include "ws/ws.h"
 #include "data/session/session.h"
 
+
+
 namespace http
 {
 	void send(int uid, unsigned long datasize, const char *data, bool free)
@@ -36,7 +38,7 @@ namespace http
 
 		utils::condex_send_begin(http::cdx_snd);
 
-        outdata t = {uid, datasize, data, free, http::packets_to_send[uid]};
+        outdata t = {uid, datasize, data, free, http::packets_to_send[uid], LOST_TICKS};
 		http::packets_to_send[uid]++;
 		http::tosend.push(t);
 

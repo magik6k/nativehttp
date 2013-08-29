@@ -38,6 +38,8 @@ freely, subject to the following restrictions:
 #endif
 #define INVALID_SOCKET	-1
 
+#define LOST_TICKS 1000
+
 namespace http
 {
 	void unlockclient(int i);
