@@ -55,7 +55,11 @@ namespace nativehttp
                             break;
                         }
                     }
-                    else detect[i] = 0;
+                    else
+                    {
+                        detect[i] = 0;
+                        if(str[pos] == chset_rules[i]._from[detect[i]])detect[i]++;
+                    }
                 }
             }
             str = out.str;
