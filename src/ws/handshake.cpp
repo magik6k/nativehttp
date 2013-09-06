@@ -71,6 +71,7 @@ namespace ws
                 rtn += "\r\nSec-WebSocket-Protocol: ";
                 rtn += ld.ws_prot;
                 rtn += "\r\n";
+                rtn += "Content-Type: text/html;charset=" + charset + "\r\n";
                 rtn += rd.cookie->gethead();
                 rtn += "\r\n";
 

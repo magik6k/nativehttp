@@ -1,6 +1,9 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
+DEV:
+-WebSocket - sending character encoding in handshake response
+
 Stable Alpha 1 (3008.13): 
 -NativeStat - more info on diagrams
 -Better thearding
