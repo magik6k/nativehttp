@@ -44,6 +44,11 @@ void deamonize()
 	}
 	if (pid > 0)
 	{
+        atexit([]()
+            {
+                nativehttp::server::log("System.cpp", "Leaving deamon");
+            });
+
 		exit(EXIT_SUCCESS);
 	}
 	umask(0);
