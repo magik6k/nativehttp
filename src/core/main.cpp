@@ -49,6 +49,25 @@ int main(int argc, char *argv[])
 	cout << "NativeHTTP DEV(API "<<NATIVEHTTP_API_VERSION<<")\nBy Lukasz Magiera\nfor more info visit nativehttp.org\n";
 	cout << "pre-init\n";
 
+    atexit([]()
+    {
+#ifdef NHDBG
+        if(http::log_detailed)
+        {
+            nativehttp::server::log("Detail@core", "PROCESS EXIT DETECTED");
+            utils::debug::print_bt();
+        }
+#endif
+        nativehttp::server::log("CORE", "@@@@QUITING@@@@");
+    });
+
+    set_terminate([]()
+        {
+            nativehttp::server::err("Detail@core", "@@@@@@REQUESTED TO TERMINATE@@@@@@");
+            utils::debug::print_bt();
+            abort();
+        });
+
 	prctl(PR_SET_NAME, "nativehttp", 0, 0, 0);
 	srand(time(0));
 	utils::init_time();
@@ -170,27 +189,6 @@ int main(int argc, char *argv[])
 	http::executorinit();
 	http::netstart();
 	http::startsystem();
-
-
-
-    atexit([]()
-    {
-#ifdef NHDBG
-        if(http::log_detailed)
-        {
-            nativehttp::server::log("Detail@core", "PROCESS EXIT DETECTED");
-            utils::debug::print_bt();
-        }
-#endif
-        nativehttp::server::log("CORE", "@@@@QUITING@@@@");
-    });
-
-    set_terminate([]()
-        {
-            nativehttp::server::err("Detail@core", "@@@@@@REQUESTED TO TERMINATE@@@@@@");
-            utils::debug::print_bt();
-            abort();
-        });
 
 	nativehttp::server::log("INIT", "Ready in "+nativehttp::data::superstring::str_from_double((utils::get_time())/1000.f)+"s");
 
