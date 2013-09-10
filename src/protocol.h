@@ -68,5 +68,7 @@ extern int postmax;
 extern string default_mime;
 extern bool deamonized;
 extern ofstream logfile;
+extern bool showExit;
+extern string conf;
 
 #endif // PROTOCOL_H_INCLUDED

@@ -104,4 +104,19 @@ namespace nativehttp
         return http::onssl;
     }
 
+    const char* server::getPageDirectory()
+    {
+        return http::manager::fileloc.c_str();
+    }
+
+    const char* server::getConfigFile()
+    {
+        return conf.c_str();
+    }
+
+    const nativehttp::data::Ccfg* server::getConfig()
+    {
+        return cfg;
+    }
+
 }

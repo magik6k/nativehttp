@@ -36,6 +36,9 @@ mimec *mime = NULL;
 nativehttp::data::Ccfg *cfg;
 string charset;
 
+bool showExit = true;
+string conf = "/etc/nativehttp/config.cfg";
+
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -52,7 +55,7 @@ int main(int argc, char *argv[])
     atexit([]()
     {
 #ifdef NHDBG
-        if(http::log_detailed)
+        if(http::log_detailed&&showExit)
         {
             nativehttp::server::log("Detail@core", "PROCESS EXIT DETECTED");
             utils::debug::print_bt();
@@ -74,7 +77,6 @@ int main(int argc, char *argv[])
 
 	bool dmnz = false;
 	bool gr = true;
-	string conf = "/etc/nativehttp/config.cfg";
 
 	for (int i = 1; i < argc; i++)
 	{

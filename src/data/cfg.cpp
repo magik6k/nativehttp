@@ -104,7 +104,7 @@ void nativehttp::data::Ccfg::parse_file(const char *f)
 }
 
 
-string nativehttp::data::Ccfg::get_var(string name)
+string nativehttp::data::Ccfg::get_var(string name) const
 {
 
 	unsigned int i = 0;
@@ -122,7 +122,7 @@ string nativehttp::data::Ccfg::get_var(string name)
 
 }
 
-int nativehttp::data::Ccfg::get_int(string name)
+int nativehttp::data::Ccfg::get_int(string name) const
 {
 	string s = this->get_var(name);
 	int tmp = 0;

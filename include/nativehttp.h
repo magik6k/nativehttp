@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 19
+#define NATIVEHTTP_API_VERSION 20
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -236,8 +236,8 @@ namespace nativehttp
 			public:
 
 				void parse_file(const char *f);
-				string get_var(string name);
-				int get_int(string name);
+				string get_var(string name) const;
+				int get_int(string name) const;
 				Ccfg(string f)
 				{
 					parse_file(f.c_str());
@@ -451,6 +451,10 @@ namespace nativehttp
 		void log(string lname, string value);
 		void err(string lname, string value);
 		void logid(int id, string lname, string value);
+
+		const char* getPageDirectory();
+		const char* getConfigFile();
+		const nativehttp::data::Ccfg* getConfig();
 
 		data::clientid maxClients();
 
