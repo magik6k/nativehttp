@@ -92,6 +92,9 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 
 				(*base)[pgi].type = page_native;
 				(*base)[pgi].timestamp = fatt;
+#ifdef NHDBG
+                    if(http::log_detailed)nativehttp::server::log("DETAIL@SORL","RELOADED: "+furi);
+#endif
 			}
 		}
 

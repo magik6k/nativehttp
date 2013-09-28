@@ -40,10 +40,10 @@ string parse_nhp(string nhp)
 	string thtm = "";
 	nativehttp::data::superstring data(nhp);
 	nhps scope = nhps_html;
-	bool iq = false;
+	bool iq = false;///In "
 	while (data.pos < data.str.size())
 	{
-		bool nap = false;
+		bool nap = false;//no append
 		//bool csc=false;
 		if (scope != nhps_html)
 		{

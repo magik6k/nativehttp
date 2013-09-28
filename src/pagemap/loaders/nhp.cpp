@@ -56,7 +56,7 @@ string page_mapper::nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf)
 	string pname = pgnam.back_to("/");
 	srand(rand());
 	pname += its(rand());
-	string command = cfg->get_var("cppcmp") + " -shared -fPIC " + cfg->get_var("flags") + " -I"+http::nhpc_include_dir+" -o /tmp/nativehttp/nhpage_" + pname + ".so /tmp/nativehttp/tmp.cpp";
+	string command = cfg->get_var("cppcmp") + " -shared -fPIC " + cfg->get_var("flags") + " -I"+http::nhpc_include_dir+" -o "+ temp_dir +"nativehttp/nhpage_" + pname + ".so /tmp/nativehttp/tmp.cpp";
 	bool shw;
 	if (cfg->get_int("cmpout") == 1)
 	{
@@ -92,7 +92,7 @@ string page_mapper::nhp_compile(const char *f, FILE*& nhpf, FILE*& tmf)
         abort = true;
 	}
 	cmout.clear();
-	return ("/tmp/nativehttp/nhpage_" + pname + ".so");
+	return (temp_dir+"nativehttp/nhpage_" + pname + ".so");
 
 }
 
@@ -100,11 +100,11 @@ bool page_mapper::nhp_prepare_env(const char *f, FILE*& nhpf, FILE*& tmf)
 {
 	struct stat st;
 drch:
-	if (stat("/tmp/nativehttp", &st) == 0)
+	if (stat((temp_dir+"nativehttp").c_str(), &st) == 0)
 	{
 		if (S_ISDIR(st.st_mode))
 		{
-			tmf = fopen("/tmp/nativehttp/tmp.cpp", "w");
+			tmf = fopen((temp_dir+"nativehttp/tmp.cpp").c_str(), "w");
 			if (tmf != NULL)
 			{
 				nhpf = fopen(f, "r");
@@ -121,17 +121,17 @@ drch:
 			}
 			else
 			{
-				cout << "can't create /tmp/nativehttp/tmp.cpp\n";
+				cout << "can't create "<< temp_dir <<"nativehttp/tmp.cpp\n";
 			}
 		}
 		else
 		{
-			cout << "/tmp/nativehttp IS NOT A DIRECTORY\n";
+			cout << temp_dir <<"nativehttp IS NOT A DIRECTORY\n";
 		}
 	}
 	else
 	{
-		mkdir("/tmp/nativehttp", 0755);
+		mkdir((temp_dir+"nativehttp").c_str(), 0755);
 		goto drch;
 	}
 	return false;

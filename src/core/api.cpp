@@ -119,4 +119,9 @@ namespace nativehttp
         return cfg;
     }
 
+    const char* server::getTempDir()
+    {
+        return temp_dir.c_str();
+    }
+
 }

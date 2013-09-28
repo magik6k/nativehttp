@@ -70,5 +70,6 @@ extern bool deamonized;
 extern ofstream logfile;
 extern bool showExit;
 extern string conf;
+extern string temp_dir;
 
 #endif // PROTOCOL_H_INCLUDED

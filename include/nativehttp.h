@@ -454,6 +454,7 @@ namespace nativehttp
 
 		const char* getPageDirectory();
 		const char* getConfigFile();
+		const char* getTempDir();
 		const nativehttp::data::Ccfg* getConfig();
 
 		data::clientid maxClients();

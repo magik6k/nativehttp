@@ -35,6 +35,7 @@ page_mapper pmap;
 mimec *mime = NULL;
 nativehttp::data::Ccfg *cfg;
 string charset;
+string temp_dir;
 
 bool showExit = true;
 string conf = "/etc/nativehttp/config.cfg";
@@ -77,6 +78,8 @@ int main(int argc, char *argv[])
 
 	bool dmnz = false;
 	bool gr = true;
+
+	temp_dir = "/tmp/";
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -128,12 +131,29 @@ int main(int argc, char *argv[])
 						exit(1);
 					}
                     break;
+                case 't':
+                    if (i + 1 < argc)
+					{
+                        temp_dir = argv[i+1];
+                        if(argv[i+1][strlen(argv[i+1])-1] != '/' )
+                        {
+                            temp_dir += "/";
+                        }
+                        i++;
+					}
+					else
+					{
+						cout << "ERROR: " << "No directory specified\n";
+						exit(1);
+					}
+                    break;
                 case 'h':
                     cout << " -h - Display this help" << endl;
                     cout << " -c [file] - Change configuration file" << endl;
                     cout << " -d - Deamonize after startup" << endl;
                     cout << " -w [file] - Change workind directory(triggers -k)" << endl;
                     cout << " -k - Do not 'cd' to root directory" << endl;
+                    cout << " -t - Set temporary files directory" << endl;
                     break;
 				default:
 					cout << "ERROR: " << "Unknown option: " << argv[i] << endl;
