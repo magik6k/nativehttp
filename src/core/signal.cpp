@@ -47,7 +47,13 @@ namespace manager
 
     void sig(int sig)
     {
-        if (sig == 11 || sig == 4 || sig == 8)
+        if (sig == SIGPIPE)
+        {
+            #ifdef NHDBG
+                    nativehttp::server::err("DEBUG@SIGHANDLER","Recvd SIGPIPE, ignoring");
+            #endif
+        }
+        else if (sig == 11 || sig == 4 || sig == 8)
         {
 
             utils::debug::print_bt();

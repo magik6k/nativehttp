@@ -177,6 +177,8 @@ int main(int argc, char *argv[])
 	signal(SIGFPE, manager::sig);
 	signal(SIGABRT, manager::sig);
 
+	signal(SIGPIPE, manager::sig);
+
 	signal(SIGINT, manager::quit);
     signal(SIGTERM, manager::quit);
 
