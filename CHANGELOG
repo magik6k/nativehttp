@@ -3,6 +3,10 @@ For more info visit http://nativehttp.org
 
 DEV:
 -WebSocket - sending character encoding in handshake response
+-More stable sander
+-Option to set temporary directory
+-Ip conversions in superstring
+-Option to ser user ip specified in header
 
 Stable Alpha 1 (3008.13): 
 -NativeStat - more info on diagrams

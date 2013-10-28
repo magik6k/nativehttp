@@ -161,6 +161,9 @@ namespace http
 
 	extern bool logger_colors;
 
+	extern bool http_realip_use;
+    extern string http_realip_str;
+
 	extern tms s_cdx_wakeup;
 
 	namespace headers

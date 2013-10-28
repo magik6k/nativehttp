@@ -103,6 +103,9 @@ namespace http
 
     bool logger_colors;
 
+    bool http_realip_use = false;
+    string http_realip_str;
+
     tms s_cdx_wakeup;
 
 	namespace headers

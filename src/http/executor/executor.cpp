@@ -127,6 +127,9 @@ namespace http
                 continue;
             }
 
+            rd.remoteIP = http::client_ips[process->uid];
+
+
             http::rproc::header(process, rd, ld);
 
             if(ld.d501)
@@ -289,8 +292,6 @@ namespace http
 
             delete[] process->request;
             process->request = NULL;
-
-            rd.remoteIP = http::client_ips[process->uid];
 
             nativehttp::data::pagedata result;
             exc->fd1 = rd.cookie;

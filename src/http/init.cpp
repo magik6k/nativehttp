@@ -148,6 +148,13 @@ namespace http
 
 		http::logger_colors = cfg->get_int("logger_colors");
 
+		if(!cfg->get_var("http_realip").empty())
+        {
+            http::http_realip_use = true;
+            http::http_realip_str = cfg->get_var("http_realip");
+            ns::log("Init","using custom ip");
+        }
+
 		http::s_cdx_wakeup.tv_nsec = cfg->get_int("cdx_sleep")%1000000000L;
 		http::s_cdx_wakeup.tv_sec = cfg->get_int("cdx_sleep")/1000000000L;
 

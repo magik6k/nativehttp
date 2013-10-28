@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 21
+#define NATIVEHTTP_API_VERSION 22
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -181,9 +181,12 @@ namespace nativehttp
 				size_t num_tokens();
 
 
-				/** Character functions*/
+				/** Character functions */
 				int count(const char c);
 
+				/** IP functions */
+                static unsigned int ip4_from_str(string str);
+                static string str_from_ip4(unsigned int ip);
 
 				/** File functions*/
 				static string file(string fn);

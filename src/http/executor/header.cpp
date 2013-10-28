@@ -68,8 +68,11 @@ namespace http
             hss.add_token(nativehttp::data::token("Connection: ", 7));
             hss.add_token(nativehttp::data::token("Upgrade: ", 8));
 
-            hss.add_token(nativehttp::data::token("Sec-WebSocket-Key: ", 1000));///WebSocket specific headers(100x)
+            hss.add_token(nativehttp::data::token("Sec-WebSocket-Key: ", 1000));///WebSocket specific headers(1xxx)
             hss.add_token(nativehttp::data::token("Sec-WebSocket-Protocol: ", 1001));
+
+            if(http::http_realip_use)
+                hss.add_token(nativehttp::data::token(http::http_realip_str, 2000));
 
             while (hss.pos < hss.str.size())
             {
@@ -136,6 +139,9 @@ namespace http
                         break;
                     case 1001:
                         ld.ws_prot = strdup(hss.to(SS("\n")).go_end().remove("\r").c_str());
+                        break;
+                    case 2000:
+                        rd.remoteIP = nd::ss::ip4_from_str(hss.to(SS("\n")).go_end().remove("\r").str);
                         break;
                 }
             }
