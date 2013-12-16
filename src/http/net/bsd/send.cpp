@@ -87,7 +87,7 @@ namespace http
                     }
                     else
                     {
-                        nativehttp::server::err("error@senderB", "Dropping packet(invalid ptkid after "+nativehttp::data::superstring::str_from_int(LOST_TICKS)+" tries) - disconnecting user");
+                        nativehttp::server::err("error@senderB", "Dropping packet(invalid ptkid after "+nativehttp::data::superstring::str_from_int(LOST_TICKS)+" tries(PI:"+nativehttp::data::superstring::str_from_int(proc.pktid)+", PS:"+nativehttp::data::superstring::str_from_int(http::packets_sent[proc.uid])+")) - disconnecting user");
                         if(http::tosend.front().fas)
                             delete[] http::tosend.front().data;
 
@@ -99,6 +99,8 @@ namespace http
 					continue;
 				}
 				http::tosend.pop();
+				http::packets_sent[proc.uid]++;//this here may cause that soma data packets will be disordered
+				///@TODO: assign output data to one sender thread
                 utils::condex_recv_end(http::cdx_snd);
 
 #ifdef NHDBG
@@ -125,7 +127,6 @@ namespace http
 				{
 
 					nhSend(http::connected[proc.uid], proc.data, proc.size);
-					http::packets_sent[proc.uid]++;
 					http::statdata::onsend(proc.size);
 				}
 #ifdef NHDBG

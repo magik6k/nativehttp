@@ -22,12 +22,14 @@ freely, subject to the following restrictions:
 */
 #ifndef BACKTRACE_H_INCLUDED
 #define BACKTRACE_H_INCLUDED
-
+#include <string>
+using namespace std;
 namespace utils
 {
     namespace debug
     {
         void print_bt();
+        string get_bt();
     }
 }
 

@@ -22,10 +22,12 @@ freely, subject to the following restrictions:
 */
 #include "nativehttp.h"
 #include "protocol.h"
+#include "utils/backtrace.h"
 #include "http/data.h"
 #include <string.h>
 
 ofstream logfile;
+namespace gu = utils;
 
 namespace nativehttp
 {
@@ -122,6 +124,11 @@ namespace nativehttp
     const char* server::getTempDir()
     {
         return temp_dir.c_str();
+    }
+
+    extern "C" string utils::getStackTrce()
+    {
+        return gu::debug::get_bt();
     }
 
 }

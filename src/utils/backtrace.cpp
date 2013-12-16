@@ -66,5 +66,33 @@ namespace utils
                 nativehttp::server::err("Backtrace","-----BACKTRACE END-----");
             }
         }
+        string get_bt()
+        {
+            string rt = "";
+            if(http::backtrace_len > 0)
+            {
+                void **addrbuf = new void*[http::backtrace_len];
+                char **strcont;
+
+                int n = backtrace(addrbuf, http::backtrace_len);
+                //nativehttp::server::err("Backtrace","Lenght: "+nativehttp::data::superstring::str_from_int(n));
+
+                strcont = backtrace_symbols(addrbuf, n);
+
+                if(!strcont)
+                {
+                    //nativehttp::server::err("Backtrace","-----Error-----");
+                }
+                else
+                {
+                    for (int i = 0; i < n; i++)
+                        rt += nativehttp::data::superstring::str_from_int(i)+": "+string(strcont[i]);
+
+                    free(strcont);
+                    delete[] addrbuf;
+                }
+            }
+            return rt;
+        }
     }
 }

@@ -1,12 +1,13 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
-DEV:
+Alpha 2 RC1 (0.2.1.0, API level: 23):
 -WebSocket - sending character encoding in handshake response
--More stable sander
+-More stable sender
 -Option to set temporary directory
 -Ip conversions in superstring
--Option to ser user ip specified in header
+-Option to pass ip with request data from http header(useful when NH is used with some reverse proxy)
+-Fixed ptkid issues(It's now recomended to use up to 1 sender thread, using more may disorder packets)
 
 Stable Alpha 1 (3008.13): 
 -NativeStat - more info on diagrams
