@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 #ifndef NATIVEHTTP_H_INCLUDED
 #define NATIVEHTTP_H_INCLUDED
 
-#define NATIVEHTTP_API_VERSION 23
+#define NATIVEHTTP_API_VERSION 24
 /*
 NOTE, that API version macro MUST be written with following style:
 #define[space - ASCII 32]NATIVEHTTP_API_VERSION[space - ASCII 32][Version - ASCII number(That Cpp compiller will see as normal integer)][newline]
@@ -233,7 +233,7 @@ namespace nativehttp
 		{
 			private:
 
-				string flie;
+				string file;
 				vector<cfgfil>fileds;
 
 			public:
@@ -241,6 +241,8 @@ namespace nativehttp
 				void parse_file(const char *f);
 				string get_var(string name) const;
 				int get_int(string name) const;
+				vector<cfgfil> get_all() const;
+				vector<cfgfil> get_prefix(string name) const;
 				Ccfg(string f)
 				{
 					parse_file(f.c_str());

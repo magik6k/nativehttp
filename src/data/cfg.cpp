@@ -138,4 +138,32 @@ int nativehttp::data::Ccfg::get_int(string name) const
 	return m ? -tmp : tmp;
 }
 
+vector<nativehttp::data::cfgfil> nativehttp::data::Ccfg::get_all() const
+{
+    return this->fileds;
+}
 
+vector<nativehttp::data::cfgfil> nativehttp::data::Ccfg::get_prefix(string name) const
+{
+    vector<nativehttp::data::cfgfil> rt;
+    size_t nlen = name.size();
+    bool* cand = new bool[this->fileds.size()];
+    for(size_t i = 0; i < nlen; ++i)
+    {
+        for(size_t j = 0; j < this->fileds.size(); ++j)
+        {
+            if(i == 0 && name.size() <= this->fileds[j].name.size()){cand[j] = true;}else{cand[j] = false; continue;}
+            if(cand[j] && name[i] == this->fileds[j].name[i] && name.size() - 1 == i)
+            {
+                rt.push_back(this->fileds[j]);
+                cand[j] = false;
+            }
+            if(cand[j] && name[i] != this->fileds[j].name[i])
+            {
+                cand[j] = false;
+            }
+        }
+    }
+    delete[] cand;
+    return rt;
+}
