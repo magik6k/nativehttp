@@ -81,7 +81,6 @@ namespace http
                                 }
                                 http::shq[i].fsize = fst.st_size;
 
-
                                 http::shq[i].buf = utils::memory::alloc<char>(http::fsnd_fb_size);
 
                                 if(http::shq[i].rngs < 0)
@@ -119,7 +118,14 @@ namespace http
 #endif
 
                                 http::send(http::shq[i].uid, snd.size(), hdbuf, true);
-                                http::shq[i].state = FSS_Reading;
+                                if(http::shq[i].fsize > 0)
+                                {
+                                    http::shq[i].state = FSS_Reading;
+                                }
+                                else
+                                {
+                                    http::shq[i].state = FSS_Done;
+                                }
 
                                 break;
                             }
@@ -195,10 +201,11 @@ namespace http
 
                                 if(brd <= 0)
                                 {
-#ifdef NHDBG
-                                    if(http::log_detailed)nativehttp::server::log("DETAIL@FileSender","Chunk read failed, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+
+
+                                    nativehttp::server::err("DETAIL@FileSender","Chunk read failed, user = "+nativehttp::data::superstring::str_from_int(http::shq[i].uid)+
                                         "; requesIDt = "+nativehttp::data::superstring::str_from_int(i)+";");
-#endif
+                                    nativehttp::server::err("Failed for",http::shq[i].file);
+
                                     http::send(http::shq[i].uid, http::error::e500.size, http::error::e500.data, false);
                                     http::unlockclient(http::shq[i].uid);
 

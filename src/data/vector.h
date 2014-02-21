@@ -23,6 +23,11 @@ freely, subject to the following restrictions:
 #ifndef VECTOR_H_INCLUDED
 #define VECTOR_H_INCLUDED
 #include <stdlib.h>
+#include "utils/backtrace.h"
+#include "nativehttp.h"
+#ifdef vector
+    #undef vector
+#endif
 
 namespace data
 {
@@ -53,13 +58,22 @@ namespace data
 	{
 		eptr = new T*[maxsize];
 		elems = 0;
+		msize = maxsize;
 	}
 
 	template<class T>void vector<T>::push_back(T tp)
 	{
-		eptr[elems] = new T;
-		*(eptr[elems]) = tp;
-		elems++;
+        if(elems < msize)
+        {
+            eptr[elems] = new T;
+            *(eptr[elems]) = tp;
+            elems++;
+		}
+		else
+		{
+            nativehttp::server::err("VECTOR","Max elements reached("+nativehttp::data::superstring::str_from_int(msize)+")");
+            utils::debug::print_bt();
+		}
 	}
 
 	template<class T>T &vector<T>::operator[](size_t id)

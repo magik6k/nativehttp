@@ -190,7 +190,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-        nativehttp::server::log("INIT","[ERROR]Configuration file does not exist");
+        nativehttp::server::err("INIT","Configuration file does not exist");
+        nativehttp::server::err("INIT","File name: "+conf);
         exit(1);
     }
 

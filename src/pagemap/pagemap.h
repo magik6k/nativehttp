@@ -65,17 +65,17 @@ struct page
 	time_t timestamp;
 };
 
-struct urimp
+struct urlDef
 {
-	char *u;
-	int sid;
+	char *url;
+	int siteId;
 };
 
 class page_mapper
 {
 	private:
 		vector<char*>files;
-		deque<urimp>uris;
+		deque<urlDef>uris;
 		int acp;
 		unsigned int adui;
 

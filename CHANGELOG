@@ -1,6 +1,9 @@
 NativeHTTP By Lukasz Magiera
 For more info visit http://nativehttp.org
 
+Devel:
+-Fix crash when sending empty file
+
 Alpha 2 RC1 (0.2.1.0, API level: 23):
 -WebSocket - sending character encoding in handshake response
 -More stable sender

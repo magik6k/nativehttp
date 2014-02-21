@@ -26,44 +26,44 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <string.h>
 
-void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
+void page_mapper::reload_so(int pageId, time_t fatt, string dir, const char *f)
 {
 	//pthread_mutex_lock(http::mtx_exec); - any idea how to repair this?
 	pthread_mutex_lock(http::mtx_exec2);
 
-	dlclose(((nativepage*)(*base)[pgi].data)->handle);
+	dlclose(((nativepage*)(*base)[pageId].data)->handle);
 	for (unsigned int i = 0; i < uris.size(); i++)
 	{
-		if (uris[i].sid == pgi)
+		if (uris[i].siteId == pageId)
 		{
-			delete[] uris[i].u;
+			delete[] uris[i].url;
 			uris.erase(uris.begin() + i);
 		}
 	}
-	((nativepage*)(*base)[pgi].data)->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
-	if (!((nativepage*)(*base)[pgi].data)->handle)
+	((nativepage*)(*base)[pageId].data)->handle = dlopen(f, RTLD_NOW | RTLD_LOCAL);
+	if (!((nativepage*)(*base)[pageId].data)->handle)
 	{
 		nativehttp::server::log("ERROR@reloaders/so.cpp", string("can't open shared file: ") + f);
 	}
 	else
 	{
-		((nativepage*)(*base)[pgi].data)->onload = (nativehttp::data::Tonload) dlsym(((nativepage*)(*base)[pgi].data)->handle, "onload");
-		((nativepage*)(*base)[pgi].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pgi].data)->handle, "page");
-		if (!((nativepage*)(*base)[pgi].data)->onload || !((nativepage*)(*base)[pgi].data)->page)
+		((nativepage*)(*base)[pageId].data)->onload = (nativehttp::data::Tonload) dlsym(((nativepage*)(*base)[pageId].data)->handle, "onload");
+		((nativepage*)(*base)[pageId].data)->page = (nativehttp::data::Tpage) dlsym(((nativepage*)(*base)[pageId].data)->handle, "page");
+		if (!((nativepage*)(*base)[pageId].data)->onload || !((nativepage*)(*base)[pageId].data)->page)
 		{
 			nativehttp::server::log("ERROR@reloaders/so.cpp", string("loading native symbols failed: ") + f);
-			dlclose(((nativepage*)(*base)[pgi].data)->handle);
+			dlclose(((nativepage*)(*base)[pageId].data)->handle);
 		}
 		else
 		{
-			acp = pgi;
-			int initstate = (*((nativepage*)(*base)[pgi].data)->onload)();
+			acp = pageId;
+			int initstate = (*((nativepage*)(*base)[pageId].data)->onload)();
 			if (initstate < 0)
 			{
 				if (initstate != -NATIVEHTTP_API_VERSION)
 				{
 					nativehttp::server::log("SO.loader@pagemap", "API version invalid: " + (string(f)));
-					dlclose(((nativepage*)(*base)[pgi].data)->handle);
+					dlclose(((nativepage*)(*base)[pageId].data)->handle);
 				}
 			}
 			else if (initstate == 1)
@@ -76,22 +76,22 @@ void page_mapper::reload_so(int pgi, time_t fatt, string dir, const char *f)
 			else
 			{
 				nativehttp::server::log("SO.loader@pagemap", "Page loading error(" + nativehttp::data::superstring::str_from_int(initstate - 2) + "): " + (string(f)));
-				dlclose(((nativepage*)(*base)[pgi].data)->handle);
+				dlclose(((nativepage*)(*base)[pageId].data)->handle);
 			}
 
 			if (initstate == -NATIVEHTTP_API_VERSION)
 			{
-				nativehttp::data::superstring pgac((*base)[pgi].file);
+				nativehttp::data::superstring pgac((*base)[pageId].file);
 				string furi = '/' + pgac.from(dir);
 				char *tfu = new char[furi.size() + 1];
 				memcpy(tfu, furi.c_str(), furi.size());
 				tfu[furi.size()] = '\0';
-				urimp tmu = {tfu, pgi};
+				urlDef tmu = {tfu, pageId};
 
 				uris.push_back(tmu);
 
-				(*base)[pgi].type = page_native;
-				(*base)[pgi].timestamp = fatt;
+				(*base)[pageId].type = page_native;
+				(*base)[pageId].timestamp = fatt;
 #ifdef NHDBG
                     if(http::log_detailed)nativehttp::server::log("DETAIL@SORL","RELOADED: "+furi);
 #endif

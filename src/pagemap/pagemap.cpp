@@ -39,6 +39,14 @@ page page_mapper::bscpageset(char *f)
 	if (rst != 0)
 	{
 		nativehttp::server::err("pagemap.cpp@pagemap", "stat error");
+		if(f != nullptr)
+		{
+            nativehttp::server::err("pagemap.cpp@pagemap", "NOTE:"+string(f));
+		}
+		else
+		{
+            nativehttp::server::err("pagemap.cpp@pagemap", "NOTE: NULL FILE NAME");
+		}
 		tmp.type = -1;
 		return tmp;
 	}
@@ -49,27 +57,27 @@ page page_mapper::bscpageset(char *f)
 	return tmp;
 }
 
-page page_mapper::by_uri(const char *u)
+page page_mapper::by_uri(const char *url)
 {
     page t = { -1, NULL};
-    if(!u)return t;
+    if(!url)return t;
 
 	vector<int>dn(uris.size(), 0);
-	for (unsigned int i = 0; i < strlen(u); i++)
+	for (unsigned int i = 0; i < strlen(url); i++)
 	{
 		for (unsigned int j = 0; j < dn.size(); j++)
 		{
 			if (dn[j] != -1)
 			{
-				if (uris[j].u[dn[j]] == u[i] || uris[j].u[dn[j]] == '*')
+				if (uris[j].url[dn[j]] == url[i] || uris[j].url[dn[j]] == '*')
 				{
-					if (strlen(uris[j].u) == unsigned(dn[j]) + 1 && strlen(uris[j].u) == unsigned(dn[j]) + 1 && strlen(u) == strlen(uris[j].u))
+					if (strlen(uris[j].url) == unsigned(dn[j]) + 1 && strlen(uris[j].url) == unsigned(dn[j]) + 1 && strlen(url) == strlen(uris[j].url))
 					{
-						return (*base)[uris[j].sid];
+						return (*base)[uris[j].siteId];
 					}
-					else if (strlen(uris[j].u) == unsigned(dn[j]) + 1 && uris[j].u[dn[j]] == '*')
+					else if (strlen(uris[j].url) == unsigned(dn[j]) + 1 && uris[j].url[dn[j]] == '*')
 					{
-						t = (*base)[uris[j].sid];
+						t = (*base)[uris[j].siteId];
 					}
 					dn[j]++;
 				}
@@ -89,7 +97,7 @@ void page_mapper::adduri(string u, bool top)
 	memcpy(cu, u.c_str(), u.size());
 	cu[u.size()] = '\0';
 
-	urimp tu = {cu, acp};
+	urlDef tu = {cu, acp};
 	if (top)
 	{
 		uris.push_front(tu);

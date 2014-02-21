@@ -112,7 +112,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 					memcpy(tfu, furi.c_str(), furi.size());
 					tfu[furi.size()] = '\0';
 
-					urimp tmu = {tfu, int(base->size()) - 1};
+					urlDef tmu = {tfu, int(base->size()) - 1};
 					uris.push_back(tmu);
 				}
 				else
@@ -123,7 +123,7 @@ void page_mapper::load_so(page &tmp, const char *f, string dir, const char *nhp)
 					memcpy(tfu, furi.c_str(), furi.size());
 					tfu[furi.size()] = '\0';
 
-					urimp tmu = {tfu, int(base->size()) - 1};
+					urlDef tmu = {tfu, int(base->size()) - 1};
 					uris.push_back(tmu);
 				}
 			}
